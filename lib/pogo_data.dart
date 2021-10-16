@@ -1,49 +1,62 @@
-import 'dart:convert';
-import 'dart:io';
-
-void main() async {
-  // Fetch the gamemaster JSON file
-  final gmFile = File('../assets/gamemaster.json');
-  // Parse into string form
-  final gmString = await gmFile.readAsString();
-  // Decode to a map
-  final gmJson = jsonDecode(gmString);
-  final gamemaster = GameMaster.fromJson(gmJson);
-  gamemaster.display();
-}
+import 'package:flutter/material.dart';
 
 /*
 GameMaster contains all necessary information about the game
 - A list of all Pokemon
 - A list of all moves
 */
+
 class GameMaster {
-  GameMaster({required this.pokemon});
+  GameMaster({
+    required this.pokemon,
+    required this.moves,
+  });
 
   // JSON -> OBJ conversion
   factory GameMaster.fromJson(Map<String, dynamic> data) {
     final List<dynamic> pokeList = data['pokemon'];
+    final List<dynamic> moveList = data['moves'];
 
     List<Pokemon> pokemon = [];
+    List<Move> moves = [];
 
     // Callback for 'forEach'
-    parsePkm(json) {
+    void parsePkm(json) {
       pokemon.add(Pokemon.fromJson(json));
     }
 
-    pokeList.forEach(parsePkm);
+    // Callback for 'forEach'
+    void parseMove(json) {
+      moves.add(Move.fromJson(json));
+    }
 
-    return GameMaster(pokemon: pokemon);
+    // Populate the lists
+    pokeList.forEach(parsePkm);
+    moveList.forEach(parseMove);
+
+    return GameMaster(
+      pokemon: pokemon,
+      moves: moves,
+    );
   }
 
-  // The pokemon list of ALL pokemon
+  // The master list of ALL pokemon
   List<Pokemon> pokemon;
+
+  // The master list of ALL moves
+  List<Move> moves;
 
   //DEBUG
   display() {
     pokemon.forEach((pkm) {
       pkm.display();
     });
+
+    /*
+    moves.forEach((mv) {
+      mv.display();
+    });
+    */
   }
 }
 
@@ -51,20 +64,23 @@ class GameMaster {
 Pokemon is the encapsulation of a single Pokemon and all of its characteristics
 GameMaster manages the list of all Pokemon which are of this class type
 */
-class Pokemon {
-  Pokemon(
-      {required this.dex,
-      required this.speciesName,
-      required this.speciesId,
-      required this.baseStats,
-      required this.types,
-      required this.fastMoves,
-      required this.chargedMoves,
-      required this.defaultIVs,
-      this.thirdMoveCost,
-      this.released,
-      this.tags,
-      this.eliteMoves});
+class Pokemon extends StatefulWidget {
+  const Pokemon({
+    Key? key,
+    required this.dex,
+    required this.speciesName,
+    required this.speciesId,
+    required this.baseStats,
+    required this.types,
+    required this.typeColor,
+    required this.fastMoves,
+    required this.chargedMoves,
+    required this.defaultIVs,
+    this.thirdMoveCost,
+    this.released,
+    this.tags,
+    this.eliteMoves,
+  });
 
   // JSON -> OBJ conversion
   factory Pokemon.fromJson(Map<String, dynamic> data) {
@@ -73,6 +89,7 @@ class Pokemon {
     final speciesId = data['speciesId'] as String;
     final baseStats = BaseStats.fromJson(data['baseStats']);
     final types = List<String>.from(data['types']);
+    final typeColor = typeColors[types[0]] as Color;
     final fastMoves = List<String>.from(data['fastMoves']);
     final chargedMoves = List<String>.from(data['chargedMoves']);
     final defaultIVs = DefaultIVs.fromJson(data['defaultIVs']);
@@ -96,18 +113,20 @@ class Pokemon {
     }
 
     return Pokemon(
-        dex: dex,
-        speciesName: speciesName,
-        speciesId: speciesId,
-        baseStats: baseStats,
-        types: types,
-        fastMoves: fastMoves,
-        chargedMoves: chargedMoves,
-        defaultIVs: defaultIVs,
-        thirdMoveCost: thirdMoveCost,
-        released: released,
-        tags: tags,
-        eliteMoves: eliteMoves);
+      dex: dex,
+      speciesName: speciesName,
+      speciesId: speciesId,
+      baseStats: baseStats,
+      types: types,
+      typeColor: typeColor,
+      fastMoves: fastMoves,
+      chargedMoves: chargedMoves,
+      defaultIVs: defaultIVs,
+      thirdMoveCost: thirdMoveCost,
+      released: released,
+      tags: tags,
+      eliteMoves: eliteMoves,
+    );
   }
 
   // REQUIRED
@@ -116,6 +135,7 @@ class Pokemon {
   final String speciesId;
   final BaseStats baseStats;
   final List<String> types;
+  final Color typeColor;
   final List<String> fastMoves;
   final List<String> chargedMoves;
   final DefaultIVs defaultIVs;
@@ -141,6 +161,54 @@ class Pokemon {
     print(tags);
     print(eliteMoves);
   }
+
+  @override
+  _PokemonState createState() => _PokemonState();
+}
+
+class _PokemonState extends State<Pokemon> {
+  Widget? pokemonButton;
+
+  _toTeamNode() {
+    setState(() {
+      pokemonButton = OutlinedButton(
+          child: Text(
+            widget.speciesName,
+            style: const TextStyle(color: Colors.white),
+          ),
+          onPressed: () {
+            //Navigator.pop(context, widget);
+          });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    pokemonButton = OutlinedButton(
+        child: Text(
+          widget.speciesName,
+          style: const TextStyle(color: Colors.white),
+        ),
+        onPressed: () {
+          _toTeamNode();
+          Navigator.pop(context, widget);
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(3.0),
+      child: pokemonButton,
+      decoration: BoxDecoration(
+        color: widget.typeColor,
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      width: 350,
+      height: 185,
+    );
+  }
 }
 
 /*
@@ -152,7 +220,11 @@ hp
 BaseStats encapsulates these stats
 */
 class BaseStats {
-  BaseStats({required this.atk, required this.def, required this.hp});
+  BaseStats({
+    required this.atk,
+    required this.def,
+    required this.hp,
+  });
 
   factory BaseStats.fromJson(Map<String, dynamic> data) {
     final atk = data['atk'] as int;
@@ -182,7 +254,11 @@ Every Pokemon contains it's best IV set for each respective league in GBL
 DefaultIVs encapsulates these IV values
 */
 class DefaultIVs {
-  DefaultIVs({required this.cp500, required this.cp1500, required this.cp2500});
+  DefaultIVs({
+    required this.cp500,
+    required this.cp1500,
+    required this.cp2500,
+  });
 
   // JSON -> OBJ conversion
   factory DefaultIVs.fromJson(Map<String, dynamic> data) {
@@ -204,3 +280,85 @@ class DefaultIVs {
     print(cp2500);
   }
 }
+
+class Move {
+  Move({
+    required this.moveId,
+    required this.name,
+    required this.type,
+    required this.typeColor,
+    required this.power,
+    required this.energy,
+    required this.cooldown,
+    this.archetype,
+    this.abbreviation,
+  });
+
+  factory Move.fromJson(Map<String, dynamic> json) {
+    final moveId = json['moveId'] as String;
+    final name = json['name'] as String;
+    final type = json['type'] as String;
+    final typeColor = typeColors[type] as Color;
+    final power = json['power'] as num;
+    final energy = json['energy'] as num;
+    final cooldown = json['cooldown'] as num;
+
+    final abbreviation = json['abbreviation'] as String?;
+    final archetype = json['archetype'] as String?;
+
+    return Move(
+      moveId: moveId,
+      name: name,
+      type: type,
+      typeColor: typeColor,
+      power: power,
+      energy: energy,
+      cooldown: cooldown,
+      abbreviation: abbreviation,
+      archetype: archetype,
+    );
+  }
+
+  final String moveId;
+  final String name;
+  final String type;
+  final Color typeColor;
+  final num power;
+  final num energy;
+  final num cooldown;
+  final String? abbreviation;
+  final String? archetype;
+
+  //DEBUG
+  display() {
+    print(moveId);
+    print(name);
+    print(type);
+    print(power);
+    print(energy);
+    print(cooldown);
+    print(abbreviation);
+    print(archetype);
+  }
+}
+
+final Map<String, Color> typeColors = {
+  "normal": const Color(0xFFA8A77A),
+  "fire": const Color(0xFFEE8130),
+  "water": const Color(0xFF6390F0),
+  "electric": const Color(0xFFF7D02C),
+  "grass": const Color(0xFF7AC74C),
+  "ice": const Color(0xFF96D9D6),
+  "fighting": const Color(0xFFC22E28),
+  "poison": const Color(0xFFA33EA1),
+  "ground": const Color(0xFFE2BF65),
+  "flying": const Color(0xFFA98FF3),
+  "psychic": const Color(0xFFF95587),
+  "bug": const Color(0xFFA6B91A),
+  "rock": const Color(0xFFB6A136),
+  "ghost": const Color(0xFF735797),
+  "dragon": const Color(0xFF6F35FC),
+  "dark": const Color(0xFF705746),
+  "steel": const Color(0xFFB7B7CE),
+  "fairy": const Color(0xFFD685AD)
+};
