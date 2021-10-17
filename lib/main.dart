@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
-import 'pokemon_search.dart';
-import 'pogo_data.dart';
+import 'package:pogo_teams/app_root.dart';
+import 'package:pogo_teams/pogo_data.dart';
 
 void main() async {
   // Create the gamemaster reference

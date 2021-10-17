@@ -9,20 +9,30 @@ GameMaster contains all necessary information about the game
 class GameMaster {
   GameMaster({
     required this.pokemon,
+    required this.shadowPokemon,
+    required this.shadowPokemonKeys,
     required this.moves,
   });
 
   // JSON -> OBJ conversion
   factory GameMaster.fromJson(Map<String, dynamic> data) {
     final List<dynamic> pokeList = data['pokemon'];
+    final shadowPokemonKeys = List<String>.from(data['shadowPokemon']);
     final List<dynamic> moveList = data['moves'];
 
     List<Pokemon> pokemon = [];
+    List<Pokemon> shadowPokemon = [];
     List<Move> moves = [];
 
     // Callback for 'forEach'
     void parsePkm(json) {
-      pokemon.add(Pokemon.fromJson(json));
+      final Pokemon pkm = Pokemon.fromJson(json);
+
+      if (pkm.tags!.contains('shadow')) {
+        shadowPokemon.add(pkm);
+      } else {
+        pokemon.add(pkm);
+      }
     }
 
     // Callback for 'forEach'
@@ -36,6 +46,8 @@ class GameMaster {
 
     return GameMaster(
       pokemon: pokemon,
+      shadowPokemon: shadowPokemon,
+      shadowPokemonKeys: shadowPokemonKeys,
       moves: moves,
     );
   }
@@ -43,14 +55,22 @@ class GameMaster {
   // The master list of ALL pokemon
   List<Pokemon> pokemon;
 
+  // The master list of ALL shadow pokemon
+  List<Pokemon> shadowPokemon;
+
+  // The master list of ALL Pokemon keys that are shadow eligible
+  List<String> shadowPokemonKeys;
+
   // The master list of ALL moves
   List<Move> moves;
 
   //DEBUG
   display() {
-    pokemon.forEach((pkm) {
+    /*
+    shadowPokemon.forEach((pkm) {
       pkm.display();
     });
+    */
 
     /*
     moves.forEach((mv) {
@@ -65,10 +85,9 @@ Pokemon is the encapsulation of a single Pokemon and all of its characteristics
 GameMaster manages the list of all Pokemon which are of this class type
 */
 class Pokemon {
-  const Pokemon({
+  Pokemon({
     required this.dex,
     required this.speciesName,
-    required this.isShadow,
     required this.speciesId,
     required this.baseStats,
     required this.types,
@@ -80,19 +99,13 @@ class Pokemon {
     this.released,
     this.tags,
     this.eliteMoves,
+    this.isShadow = false,
   });
 
   // JSON -> OBJ conversion
   factory Pokemon.fromJson(Map<String, dynamic> data) {
     final dex = data['dex'] as int;
-    String speciesName = data['speciesName'] as String;
-    bool isShadow = false;
-
-    if (speciesName.endsWith(' (Shadow)')) {
-      speciesName = speciesName.replaceAll(' (Shadow)', '');
-      isShadow = true;
-    }
-
+    final speciesName = data['speciesName'] as String;
     final speciesId = data['speciesId'] as String;
     final baseStats = BaseStats.fromJson(data['baseStats']);
     final types = List<String>.from(data['types']);
@@ -112,7 +125,7 @@ class Pokemon {
     List<String>? eliteMoves = [];
 
     if (data.containsKey('eliteMoves')) {
-      tags = List<String>.from(data['eliteMoves']);
+      eliteMoves = List<String>.from(data['eliteMoves']);
     }
 
     if (data.containsKey('tags')) {
@@ -122,7 +135,6 @@ class Pokemon {
     return Pokemon(
       dex: dex,
       speciesName: speciesName,
-      isShadow: isShadow,
       speciesId: speciesId,
       baseStats: baseStats,
       types: types,
@@ -140,7 +152,6 @@ class Pokemon {
   // REQUIRED
   final int dex;
   final String speciesName;
-  final bool isShadow;
   final String speciesId;
   final BaseStats baseStats;
   final List<String> types;
@@ -154,6 +165,28 @@ class Pokemon {
   final bool? released;
   final List<String>? tags;
   final List<String>? eliteMoves;
+
+  // VARIABLES
+  bool isShadow;
+
+  // form a string that describes this Pokemon's typing
+  String getTypeString() {
+    String typeString = types[0];
+
+    if ('none' == types[1]) {
+      return typeString;
+    }
+
+    return typeString + ' / ' + types[1];
+  }
+
+  String getMetaFastMove() {
+    return fastMoves[0];
+  }
+
+  List<String> getMetaChargedMoves() {
+    return <String>[chargedMoves[0], chargedMoves[1]];
+  }
 
   //DEBUG
   display() {
