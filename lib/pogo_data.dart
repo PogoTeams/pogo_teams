@@ -64,11 +64,11 @@ class GameMaster {
 Pokemon is the encapsulation of a single Pokemon and all of its characteristics
 GameMaster manages the list of all Pokemon which are of this class type
 */
-class Pokemon extends StatefulWidget {
+class Pokemon {
   const Pokemon({
-    Key? key,
     required this.dex,
     required this.speciesName,
+    required this.isShadow,
     required this.speciesId,
     required this.baseStats,
     required this.types,
@@ -85,7 +85,14 @@ class Pokemon extends StatefulWidget {
   // JSON -> OBJ conversion
   factory Pokemon.fromJson(Map<String, dynamic> data) {
     final dex = data['dex'] as int;
-    final speciesName = data['speciesName'] as String;
+    String speciesName = data['speciesName'] as String;
+    bool isShadow = false;
+
+    if (speciesName.endsWith(' (Shadow)')) {
+      speciesName = speciesName.replaceAll(' (Shadow)', '');
+      isShadow = true;
+    }
+
     final speciesId = data['speciesId'] as String;
     final baseStats = BaseStats.fromJson(data['baseStats']);
     final types = List<String>.from(data['types']);
@@ -115,6 +122,7 @@ class Pokemon extends StatefulWidget {
     return Pokemon(
       dex: dex,
       speciesName: speciesName,
+      isShadow: isShadow,
       speciesId: speciesId,
       baseStats: baseStats,
       types: types,
@@ -132,6 +140,7 @@ class Pokemon extends StatefulWidget {
   // REQUIRED
   final int dex;
   final String speciesName;
+  final bool isShadow;
   final String speciesId;
   final BaseStats baseStats;
   final List<String> types;
@@ -160,54 +169,6 @@ class Pokemon extends StatefulWidget {
     print(released);
     print(tags);
     print(eliteMoves);
-  }
-
-  @override
-  _PokemonState createState() => _PokemonState();
-}
-
-class _PokemonState extends State<Pokemon> {
-  Widget? pokemonButton;
-
-  _toTeamNode() {
-    setState(() {
-      pokemonButton = OutlinedButton(
-          child: Text(
-            widget.speciesName,
-            style: const TextStyle(color: Colors.white),
-          ),
-          onPressed: () {
-            //Navigator.pop(context, widget);
-          });
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    pokemonButton = OutlinedButton(
-        child: Text(
-          widget.speciesName,
-          style: const TextStyle(color: Colors.white),
-        ),
-        onPressed: () {
-          _toTeamNode();
-          Navigator.pop(context, widget);
-        });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(3.0),
-      child: pokemonButton,
-      decoration: BoxDecoration(
-        color: widget.typeColor,
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      width: 350,
-      height: 185,
-    );
   }
 }
 
