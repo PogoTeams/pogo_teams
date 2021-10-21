@@ -273,9 +273,12 @@ class _PokemonNodeState extends State<PokemonNode> {
           thickness: 1.5,
         ),
         MoveDropdowns(
-          pokemon: widget.pokemon,
           fastMoves: widget.pokemon.fastMoves,
           chargedMoves: widget.pokemon.chargedMoves,
+          fastMoveNames: widget.pokemon.getFastMoveNames(),
+          chargedMoveNames: widget.pokemon.getChargedMoveNames(),
+          metaFastMove: widget.pokemon.getMetaFastMove(),
+          metaChargedMoves: widget.pokemon.getMetaChargedMoves(),
         ),
         _buildNodeFooter(),
       ]),
@@ -290,14 +293,23 @@ class _PokemonNodeState extends State<PokemonNode> {
 class MoveDropdowns extends StatefulWidget {
   const MoveDropdowns({
     Key? key,
-    required this.pokemon,
     required this.fastMoves,
     required this.chargedMoves,
+    required this.fastMoveNames,
+    required this.chargedMoveNames,
+    required this.metaFastMove,
+    required this.metaChargedMoves,
   }) : super(key: key);
 
-  final Pokemon pokemon;
   final List<Move> fastMoves;
   final List<Move> chargedMoves;
+
+  // Lists of the moves a Pokemon can learn
+  final List<String> fastMoveNames;
+  final List<String> chargedMoveNames;
+
+  final Move metaFastMove;
+  final List<Move> metaChargedMoves;
 
   @override
   _MoveDropdownsState createState() => _MoveDropdownsState();
@@ -310,31 +322,61 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
   // 1: right charge move
   late List<Move> selectedChargedMoves;
 
+  // List of dropdown items for fast moves
   late List<DropdownMenuItem<String>> fastMoveOptions;
+
+  // List of charged move names
+  // These lists will filter out the selected move from the other list
+  // This prevents the user from selecting the same charge move twice
+  late List<String> chargedMoveNamesL;
+  late List<String> chargedMoveNamesR;
+
+  // List of dropdown items for charged moves
   late List<DropdownMenuItem<String>> chargedMoveOptionsL;
   late List<DropdownMenuItem<String>> chargedMoveOptionsR;
 
+  // Setup the move dropdown items
   void _initializeMoveData() {
-    selectedFastMove = widget.pokemon.getMetaFastMove();
-    selectedChargedMoves = widget.pokemon.getMetaChargedMoves();
+    selectedFastMove = widget.metaFastMove;
+    selectedChargedMoves = widget.metaChargedMoves;
 
-    fastMoveOptions =
-        widget.fastMoves.map<DropdownMenuItem<String>>((Move move) {
+    fastMoveOptions = _generateDropdownItems(widget.fastMoveNames);
+
+    _updateChargedMoveOptions();
+  }
+
+  // Upon initial build, update, or dropdown onChanged callback
+  // Filter the left and right charged move lists for the dropdowns
+  void _updateChargedMoveOptions() {
+    chargedMoveNamesL = widget.chargedMoveNames
+        .where((moveName) => moveName != selectedChargedMoves[1].name)
+        .toList();
+
+    chargedMoveNamesR = widget.chargedMoveNames
+        .where((moveName) => moveName != selectedChargedMoves[0].name)
+        .toList();
+
+    chargedMoveOptionsL = _generateDropdownItems(chargedMoveNamesL);
+    chargedMoveOptionsR = _generateDropdownItems(chargedMoveNamesR);
+  }
+
+  // Generate the list of dropdown items from moveOptionNames
+  // Called for each of the 3 move dropdowns
+  List<DropdownMenuItem<String>> _generateDropdownItems(
+      List<String> moveOptionNames) {
+    return moveOptionNames.map<DropdownMenuItem<String>>((String moveName) {
       return DropdownMenuItem<String>(
-        value: move.name,
-        child: MovePanel(move: move),
+        value: moveName,
+        child: Center(
+          child: Text(
+            moveName,
+            style: const TextStyle(
+              fontSize: 8.0,
+            ),
+          ),
+        ),
       );
     }).toList();
-
-    chargedMoveOptionsL =
-        widget.chargedMoves.map<DropdownMenuItem<String>>((Move move) {
-      return DropdownMenuItem<String>(
-        value: move.name,
-        child: MovePanel(move: move),
-      );
-    }).toList();
-
-    chargedMoveOptionsR = List.from(chargedMoveOptionsL);
   }
 
   // Called on first build
@@ -374,22 +416,28 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
             setState(() {
               selectedChargedMoves[0] = widget.chargedMoves
                   .firstWhere((move) => move.name == newChargedMove!);
+
+              _updateChargedMoveOptions();
             });
           }),
       MoveNode(
           label: 'C H A R G E  2',
           move: selectedChargedMoves[1],
-          options: chargedMoveOptionsL,
+          options: chargedMoveOptionsR,
           onChanged: (String? newChargedMove) {
             setState(() {
               selectedChargedMoves[1] = widget.chargedMoves
                   .firstWhere((move) => move.name == newChargedMove!);
+
+              _updateChargedMoveOptions();
             });
           }),
     ]);
   }
 }
 
+// The label and dropdown button for a given move
+// The _MovesDropdownsState will dynamically generate 3 of the nodes
 class MoveNode extends StatelessWidget {
   const MoveNode({
     Key? key,
@@ -442,44 +490,5 @@ class MoveNode extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class MovePanel extends StatelessWidget {
-  const MovePanel({
-    Key? key,
-    required this.move,
-  }) : super(key: key);
-
-  final Move move;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-        child: Text(move.name,
-            style: const TextStyle(
-              fontSize: 8.0,
-            )));
-    /*
-    return Container(
-      child: Center(
-        child: Text(
-          move.name,
-          style: const TextStyle(fontSize: 8.0),
-        ),
-      ),
-      margin: const EdgeInsets.only(top: 10.0),
-      width: 100.0,
-      height: 30.0,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.white,
-          width: 1.5,
-        ),
-        borderRadius: BorderRadius.circular(50.0),
-        color: move.typeColor,
-      ),
-    );
-    */
   }
 }
