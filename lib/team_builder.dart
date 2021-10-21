@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pogo_teams/pogo_data.dart';
-import 'package:pogo_teams/pokemon_search.dart';
+import 'pogo_data.dart';
+import 'pokemon_search.dart';
 
 // A column of 3 Team Nodes are displayed
 // These nodes represent the Pokemon that are in a particular team
@@ -21,31 +21,28 @@ class _TeamBuilderState extends State<TeamBuilder> {
   // The index cooresponding to the selected tab
   int _selectedTabIndex = 0;
 
-  // The currently displayed app body
-  // By initial default the 'Team Builder' body will display
-  Widget appBody = Center(
-    child: Column(
-      children: <Widget>[
-        TeamNode(),
-        TeamNode(),
-        TeamNode(),
-      ],
-    ),
+  // The column of nodes for the current team
+  final nodes = Column(
+    children: const [TeamNode(), TeamNode(), TeamNode()],
   );
 
+  // The currently displayed app body
+  // By initial default the 'Team Builder' body will display
+  late Widget appBody = Center(
+    child: nodes,
+  );
+
+  // Branching to the different pages in the application
+  // 0) Team Builder
+  // 1) Team Analysis
+  // 2) Team Info
   void _onNavTap(int index) {
     setState(() {
       _selectedTabIndex = index;
       switch (index) {
         case 0:
           appBody = Center(
-            child: Column(
-              children: <Widget>[
-                TeamNode(),
-                TeamNode(),
-                TeamNode(),
-              ],
-            ),
+            child: nodes,
           );
           break;
 
@@ -111,12 +108,15 @@ class _TeamNodeState extends State<TeamNode> {
   // If a Pokemon is selected in that page, the Pokemon reference will be kept
   // The node will then populate all data related to that Pokemon
   _searchMode() async {
-    final caughtPokemon = await Navigator.push(context,
-        MaterialPageRoute<Pokemon>(builder: (BuildContext context) {
-      return const PokemonSearch(title: 'POGO Search');
-    }));
+    final caughtPokemon = await Navigator.push(
+      context,
+      MaterialPageRoute<Pokemon>(builder: (BuildContext context) {
+        return const PokemonSearch(title: 'POGO Search');
+      }),
+    );
 
     // If a pokemon was returned from the search page, update the node
+    // Should only be null when the user exits the search page using the app bar
     if (caughtPokemon != null) {
       setState(() {
         pokemon = caughtPokemon;
@@ -133,15 +133,15 @@ class _TeamNodeState extends State<TeamNode> {
 
   @override
   Widget build(BuildContext context) {
-    if (pokemon == null) {
-      return EmptyNode(onPressed: _searchMode);
-    }
-
-    return PokemonNode(
-      pokemon: pokemon,
-      searchMode: _searchMode,
-      clear: _clearNode,
-    );
+    return (pokemon == null
+        ? EmptyNode(
+            onPressed: _searchMode,
+          )
+        : PokemonNode(
+            pokemon: pokemon as Pokemon,
+            searchMode: _searchMode,
+            clear: _clearNode,
+          ));
   }
 }
 
@@ -155,7 +155,7 @@ class EmptyNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(15.0),
+      margin: const EdgeInsets.only(top: 17.0, left: 14.0, right: 14.0),
       width: 400,
       height: 200,
       decoration: BoxDecoration(
@@ -177,6 +177,8 @@ class EmptyNode extends StatelessWidget {
   }
 }
 
+// A node that is occupied by a Pokemon
+// All necessary Pokemon GO information will be accessible in this node
 class PokemonNode extends StatefulWidget {
   const PokemonNode({
     Key? key,
@@ -185,157 +187,299 @@ class PokemonNode extends StatefulWidget {
     required this.clear,
   }) : super(key: key);
 
+  // The Pokemon this node currently manages
+  final Pokemon pokemon;
+
+  // Search for a new Pokemon
   final VoidCallback searchMode;
+
+  // Remove the Pokemon and restore to an EmptyNode
   final VoidCallback clear;
-  final Pokemon? pokemon;
 
   @override
   _PokemonNodeState createState() => _PokemonNodeState();
 }
 
 class _PokemonNodeState extends State<PokemonNode> {
-  String? fastMove;
-  String? chargedMoveL;
-  String? chargedMoveR;
+  // Display the Pokemon's name and typing at the top of the node
+  Row _buildNodeHeader() {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Container(
+        margin: const EdgeInsets.all(1.0),
+        padding: const EdgeInsets.all(7.0),
+        alignment: Alignment.topLeft,
+        child: Text(
+          widget.pokemon.speciesName,
+          style: TextStyle(
+            fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      Container(
+        margin: const EdgeInsets.all(1.0),
+        padding: const EdgeInsets.all(7.0),
+        alignment: Alignment.topRight,
+        child: Text(
+          widget.pokemon.getTypeString(),
+          style: TextStyle(
+            fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+            fontSize: 16.0,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ),
+    ]);
+  }
 
-  List<String>? fastMoves;
-  List<String>? chargedMovesL;
-  List<String>? chargedMovesR;
-
-  @override
-  void initState() {
-    super.initState();
+  // Build a row of icon buttons at the bottom of a Pokemon's Node
+  Row _buildNodeFooter() {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      IconButton(
+        //alignment: Alignment.centerRight,
+        onPressed: widget.clear,
+        icon: const Icon(Icons.clear),
+        tooltip: 'remove this pokemon from your team',
+        iconSize: 30.0,
+      ),
+      IconButton(
+        //alignment: Alignment.centerRight,
+        onPressed: widget.searchMode,
+        icon: const Icon(Icons.arrow_forward_ios_rounded),
+        tooltip: 'search for a different pokemon',
+        iconSize: 30.0,
+      ),
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
-    fastMoves = widget.pokemon!.fastMoves;
-    chargedMovesL = widget.pokemon!.chargedMoves;
-    chargedMovesR = chargedMovesL;
-
-    fastMove = widget.pokemon!.getMetaFastMove();
-    chargedMoveL = chargedMovesL![0];
-    chargedMoveR = chargedMovesR![0];
-
-    if (widget.pokemon == null) {
-      return EmptyNode(onPressed: widget.searchMode);
-    }
     return Container(
-      margin: const EdgeInsets.all(15.0),
-      padding: const EdgeInsets.all(10.0),
+      margin: const EdgeInsets.only(top: 17.0, left: 14.0, right: 14.0),
+      padding:
+          const EdgeInsets.only(top: 7.0, bottom: 2.0, left: 10.0, right: 10.0),
       width: 400,
       height: 200,
       decoration: BoxDecoration(
-        color: widget.pokemon!.typeColor,
+        color: widget.pokemon.typeColor,
         borderRadius: BorderRadius.circular(10.0),
       ),
       child:
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Container(
-            margin: const EdgeInsets.all(1.0),
-            padding: const EdgeInsets.all(7.0),
-            alignment: Alignment.topLeft,
-            child: Text(
-              widget.pokemon!.speciesName,
-              style: TextStyle(
-                fontFamily: DefaultTextStyle.of(context).style.fontFamily,
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(1.0),
-            padding: const EdgeInsets.all(7.0),
-            alignment: Alignment.topRight,
-            child: Text(
-              widget.pokemon!.getTypeString(),
-              style: TextStyle(
-                fontFamily: DefaultTextStyle.of(context).style.fontFamily,
-                fontSize: 16.0,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ),
-        ]),
+        _buildNodeHeader(),
         const Divider(
           color: Colors.white,
           thickness: 1.5,
         ),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          DropdownButton<String>(
-            items: fastMoves!.map<DropdownMenuItem<String>>((String move) {
-              return DropdownMenuItem<String>(
-                value: move,
-                child: Text(move),
-              );
-            }).toList(),
-            value: fastMove,
-            style: const TextStyle(fontSize: 11),
-            icon: const Icon(Icons.arrow_drop_down),
-            onChanged: (String? newValue) {
-              setState(() {
-                fastMove = newValue;
-              });
-            },
-          ),
-          DropdownButton<String>(
-            items: chargedMovesL!.map<DropdownMenuItem<String>>((String move) {
-              return DropdownMenuItem<String>(
-                value: move,
-                child: Text(move),
-              );
-            }).toList(),
-            value: chargedMoveL,
-            style: const TextStyle(fontSize: 11),
-            icon: const Icon(Icons.arrow_drop_down),
-            onChanged: (String? newValue) {
-              setState(() {
-                chargedMoveL = newValue as String;
-              });
-            },
-          ),
-          DropdownButton<String>(
-            items: chargedMovesR!.map<DropdownMenuItem<String>>((String move) {
-              return DropdownMenuItem<String>(
-                value: move,
-                child: Text(move),
-              );
-            }).toList(),
-            value: chargedMoveR,
-            style: const TextStyle(fontSize: 11),
-            icon: const Icon(Icons.arrow_drop_down),
-            onChanged: (String? newValue) {
-              setState(() {
-                chargedMoveR = newValue as String;
-              });
-            },
-          ),
-        ]),
-        /*
-        const Divider(
-          color: Colors.white,
-          thickness: 1.5,
+        MoveDropdowns(
+          pokemon: widget.pokemon,
+          fastMoves: widget.pokemon.fastMoves,
+          chargedMoves: widget.pokemon.chargedMoves,
         ),
-        */
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          IconButton(
-            //alignment: Alignment.centerRight,
-            onPressed: widget.clear,
-            icon: const Icon(Icons.clear),
-            tooltip: 'remove this pokemon from your team',
-            iconSize: 30.0,
-          ),
-          IconButton(
-            //alignment: Alignment.centerRight,
-            onPressed: widget.searchMode,
-            icon: const Icon(Icons.arrow_forward_ios_rounded),
-            tooltip: 'search for a different pokemon',
-            iconSize: 30.0,
-          ),
-        ]),
+        _buildNodeFooter(),
       ]),
     );
+  }
+}
+
+// This class manages the 3 dropdown menu buttons cooresponding to a Pokemon's :
+// Fast Move
+// Charge Move 1
+// Charge Move 2
+class MoveDropdowns extends StatefulWidget {
+  const MoveDropdowns({
+    Key? key,
+    required this.pokemon,
+    required this.fastMoves,
+    required this.chargedMoves,
+  }) : super(key: key);
+
+  final Pokemon pokemon;
+  final List<Move> fastMoves;
+  final List<Move> chargedMoves;
+
+  @override
+  _MoveDropdownsState createState() => _MoveDropdownsState();
+}
+
+class _MoveDropdownsState extends State<MoveDropdowns> {
+  // The current selected moves
+  late Move selectedFastMove;
+  // 0: left charge move
+  // 1: right charge move
+  late List<Move> selectedChargedMoves;
+
+  late List<DropdownMenuItem<String>> fastMoveOptions;
+  late List<DropdownMenuItem<String>> chargedMoveOptionsL;
+  late List<DropdownMenuItem<String>> chargedMoveOptionsR;
+
+  void _initializeMoveData() {
+    selectedFastMove = widget.pokemon.getMetaFastMove();
+    selectedChargedMoves = widget.pokemon.getMetaChargedMoves();
+
+    fastMoveOptions =
+        widget.fastMoves.map<DropdownMenuItem<String>>((Move move) {
+      return DropdownMenuItem<String>(
+        value: move.name,
+        child: MovePanel(move: move),
+      );
+    }).toList();
+
+    chargedMoveOptionsL =
+        widget.chargedMoves.map<DropdownMenuItem<String>>((Move move) {
+      return DropdownMenuItem<String>(
+        value: move.name,
+        child: MovePanel(move: move),
+      );
+    }).toList();
+
+    chargedMoveOptionsR = List.from(chargedMoveOptionsL);
+  }
+
+  // Called on first build
+  @override
+  void initState() {
+    super.initState();
+
+    _initializeMoveData();
+  }
+
+  // Called on any consecutive build
+  @override
+  void didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _initializeMoveData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      MoveNode(
+          label: 'F A S T',
+          move: selectedFastMove,
+          options: fastMoveOptions,
+          onChanged: (String? newFastMove) {
+            setState(() {
+              selectedFastMove = widget.fastMoves
+                  .firstWhere((move) => move.name == newFastMove!);
+            });
+          }),
+      MoveNode(
+          label: 'C H A R G E  1',
+          move: selectedChargedMoves[0],
+          options: chargedMoveOptionsL,
+          onChanged: (String? newChargedMove) {
+            setState(() {
+              selectedChargedMoves[0] = widget.chargedMoves
+                  .firstWhere((move) => move.name == newChargedMove!);
+            });
+          }),
+      MoveNode(
+          label: 'C H A R G E  2',
+          move: selectedChargedMoves[1],
+          options: chargedMoveOptionsL,
+          onChanged: (String? newChargedMove) {
+            setState(() {
+              selectedChargedMoves[1] = widget.chargedMoves
+                  .firstWhere((move) => move.name == newChargedMove!);
+            });
+          }),
+    ]);
+  }
+}
+
+class MoveNode extends StatelessWidget {
+  const MoveNode({
+    Key? key,
+    required this.label,
+    required this.move,
+    required this.options,
+    required this.onChanged,
+  }) : super(key: key);
+
+  final String label;
+  final Move move;
+  final List<DropdownMenuItem<String>> options;
+  final Function(String?) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 10.0,
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+        Container(
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton(
+              isExpanded: true,
+              value: move.name,
+              icon: const Icon(Icons.arrow_drop_down),
+              style: DefaultTextStyle.of(context).style,
+              items: options,
+              onChanged: onChanged,
+            ),
+          ),
+          margin: const EdgeInsets.only(top: 10.0),
+          width: 100.0,
+          height: 30.0,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.white,
+              width: 1.5,
+            ),
+            borderRadius: BorderRadius.circular(50.0),
+            color: move.typeColor,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class MovePanel extends StatelessWidget {
+  const MovePanel({
+    Key? key,
+    required this.move,
+  }) : super(key: key);
+
+  final Move move;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Text(move.name,
+            style: const TextStyle(
+              fontSize: 8.0,
+            )));
+    /*
+    return Container(
+      child: Center(
+        child: Text(
+          move.name,
+          style: const TextStyle(fontSize: 8.0),
+        ),
+      ),
+      margin: const EdgeInsets.only(top: 10.0),
+      width: 100.0,
+      height: 30.0,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.white,
+          width: 1.5,
+        ),
+        borderRadius: BorderRadius.circular(50.0),
+        color: move.typeColor,
+      ),
+    );
+    */
   }
 }

@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pogo_teams/pogo_data.dart';
-import 'package:pogo_teams/app_root.dart';
+import 'pogo_data.dart';
+import 'globals.dart' as globals;
 
 class PokemonSearch extends StatefulWidget {
   const PokemonSearch({Key? key, required this.title}) : super(key: key);
@@ -20,10 +20,10 @@ class _PokemonSearchState extends State<PokemonSearch> {
   final TextEditingController searchController = TextEditingController();
 
   // List of ALL Pokemon
-  List<Pokemon> pokemon = [];
+  final List<Pokemon> pokemon = globals.gamemaster.pokemon;
 
   // List of ALL Moves
-  List<Move> moves = [];
+  final List<Move> moves = globals.gamemaster.moves;
 
   // A variable list of Pokemon based on search bar text input
   List<Pokemon> filteredPokemon = [];
@@ -37,21 +37,12 @@ class _PokemonSearchState extends State<PokemonSearch> {
     searchController.addListener(_filterPokemonList);
   }
 
-  // Setup all Pokemon GO data needed for this page
+  /*
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
-
-    // Get the gamemaster reference
-    final GameMaster gamemaster =
-        context.dependOnInheritedWidgetOfExactType<PogoData>()!.gamemaster;
-
-    // Get the list of Pokemon
-    pokemon = gamemaster.pokemon;
-
-    // Get the list of Moves
-    moves = gamemaster.moves;
   }
+  */
 
   @override
   void dispose() {

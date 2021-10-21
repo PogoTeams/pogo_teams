@@ -25,8 +25,19 @@ class GameMaster {
     List<Move> moves = [];
 
     // Callback for 'forEach'
+    void parseMove(json) {
+      moves.add(Move.fromJson(json));
+    }
+
+    // Populate the move list
+    moveList.forEach(parseMove);
+
+    // Callback for 'forEach'
+    // Add the Pokemon to either the normal or shadow list
     void parsePkm(json) {
-      final Pokemon pkm = Pokemon.fromJson(json);
+      // Populate all pokemon data
+      // Retrieve the move objects from 'moves' internally for this Pokemon
+      final Pokemon pkm = Pokemon.fromJson(json, moves);
 
       if (pkm.tags!.contains('shadow')) {
         shadowPokemon.add(pkm);
@@ -35,14 +46,7 @@ class GameMaster {
       }
     }
 
-    // Callback for 'forEach'
-    void parseMove(json) {
-      moves.add(Move.fromJson(json));
-    }
-
-    // Populate the lists
     pokeList.forEach(parsePkm);
-    moveList.forEach(parseMove);
 
     return GameMaster(
       pokemon: pokemon,
@@ -52,25 +56,23 @@ class GameMaster {
     );
   }
 
+  // The master list of ALL moves
+  late List<Move> moves;
+
   // The master list of ALL pokemon
-  List<Pokemon> pokemon;
+  late List<Pokemon> pokemon;
 
   // The master list of ALL shadow pokemon
-  List<Pokemon> shadowPokemon;
+  late List<Pokemon> shadowPokemon;
 
   // The master list of ALL Pokemon keys that are shadow eligible
-  List<String> shadowPokemonKeys;
-
-  // The master list of ALL moves
-  List<Move> moves;
+  late List<String> shadowPokemonKeys;
 
   //DEBUG
   display() {
-    /*
-    shadowPokemon.forEach((pkm) {
+    pokemon.forEach((pkm) {
       pkm.display();
     });
-    */
 
     /*
     moves.forEach((mv) {
@@ -103,15 +105,22 @@ class Pokemon {
   });
 
   // JSON -> OBJ conversion
-  factory Pokemon.fromJson(Map<String, dynamic> data) {
+  factory Pokemon.fromJson(Map<String, dynamic> data, List<Move> moves) {
     final dex = data['dex'] as int;
     final speciesName = data['speciesName'] as String;
     final speciesId = data['speciesId'] as String;
     final baseStats = BaseStats.fromJson(data['baseStats']);
     final types = List<String>.from(data['types']);
     final typeColor = typeColors[types[0]] as Color;
-    final fastMoves = List<String>.from(data['fastMoves']);
-    final chargedMoves = List<String>.from(data['chargedMoves']);
+    final fastMoveKeys = List<String>.from(data['fastMoves']);
+    final chargedMoveKeys = List<String>.from(data['chargedMoves']);
+
+    // Setup the lists of Moves this Pokemon can learn
+    List<Move> fastMoves =
+        moves.where((move) => fastMoveKeys.contains(move.moveId)).toList();
+    List<Move> chargedMoves =
+        moves.where((move) => chargedMoveKeys.contains(move.moveId)).toList();
+
     final defaultIVs = DefaultIVs.fromJson(data['defaultIVs']);
 
     var thirdMoveCost = data['thirdMoveCost'];
@@ -156,8 +165,8 @@ class Pokemon {
   final BaseStats baseStats;
   final List<String> types;
   final Color typeColor;
-  final List<String> fastMoves;
-  final List<String> chargedMoves;
+  final List<Move> fastMoves;
+  final List<Move> chargedMoves;
   final DefaultIVs defaultIVs;
 
   // OPTIONAL
@@ -169,7 +178,7 @@ class Pokemon {
   // VARIABLES
   bool isShadow;
 
-  // form a string that describes this Pokemon's typing
+  // Form a string that describes this Pokemon's typing
   String getTypeString() {
     String typeString = types[0];
 
@@ -180,18 +189,37 @@ class Pokemon {
     return typeString + ' / ' + types[1];
   }
 
-  String getMetaFastMove() {
+  //TODO
+  // Determine the most meta-relevant fast move and return it
+  Move getMetaFastMove() {
     return fastMoves[0];
   }
 
-  List<String> getMetaChargedMoves() {
-    return <String>[chargedMoves[0], chargedMoves[1]];
+  //TODO
+  // Determine the most meta-relevant charged moves and return it
+  List<Move> getMetaChargedMoves() {
+    return [chargedMoves[0], chargedMoves[1]];
+  }
+
+  // Get a list of all fast move names
+  List<String> getFastMoveNames() {
+    return fastMoves.map<String>((Move move) {
+      return move.name;
+    }).toList();
+  }
+
+  // Get a list of all charged move names
+  List<String> getChargedMoveNames() {
+    return chargedMoves.map<String>((Move move) {
+      return move.name;
+    }).toList();
   }
 
   //DEBUG
   display() {
-    print(dex);
+    //print(dex);
     print(speciesName);
+    /*
     print(speciesId);
     baseStats.display();
     print(types);
@@ -202,6 +230,7 @@ class Pokemon {
     print(released);
     print(tags);
     print(eliteMoves);
+    */
   }
 }
 
