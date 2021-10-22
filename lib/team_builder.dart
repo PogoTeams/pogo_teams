@@ -5,6 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'pogo_data.dart';
 import 'pokemon_search.dart';
+import 'gohub_info.dart';
 
 // A column of 3 Team Nodes are displayed
 // These nodes represent the Pokemon that are in a particular team
@@ -51,7 +52,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
           break;
 
         case 2:
-          appBody = const Text('Info');
+          appBody = const GoHubInfo();
           break;
 
         default:
@@ -79,7 +80,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.info),
-            label: 'Team Info',
+            label: 'GoHub Info',
           ),
         ],
         onTap: _onNavTap,
