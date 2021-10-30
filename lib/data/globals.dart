@@ -1,9 +1,7 @@
-library globals;
-
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 import 'package:flutter/services.dart';
 import 'dart:convert';
-import 'pogo_data.dart';
+import 'gamemaster.dart';
 
 // Global reference to all Pokemon GO data
 late final GameMaster gamemaster;

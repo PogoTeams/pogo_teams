@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'team_builder.dart';
+import 'pages/team_builder.dart';
 
 //// APPLICATION ROOT
 class PogoTeamsApp extends StatelessWidget {
@@ -17,7 +17,7 @@ class PogoTeamsApp extends StatelessWidget {
 
       // There is a single page in this app
       // All navigation is delegated to a bottom tap bar
-      home: const TeamBuilder(title: 'Team Builder'),
+      home: const TeamBuilder(),
 
       //Removes the debug banner
       debugShowCheckedModeBanner: false,

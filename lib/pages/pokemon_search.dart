@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
-import 'pogo_data.dart';
-import 'globals.dart' as globals;
+import '../configs/size_config.dart';
+import '../data/pogo_data.dart';
+import '../buttons/exit_button.dart';
+import '../data/globals.dart' as globals;
 
 class PokemonSearch extends StatefulWidget {
   const PokemonSearch({Key? key, required this.title}) : super(key: key);
@@ -22,9 +24,6 @@ class _PokemonSearchState extends State<PokemonSearch> {
   // List of ALL Pokemon
   final List<Pokemon> pokemon = globals.gamemaster.pokemon;
 
-  // List of ALL Moves
-  final List<Move> moves = globals.gamemaster.moves;
-
   // A variable list of Pokemon based on search bar text input
   List<Pokemon> filteredPokemon = [];
 
@@ -36,13 +35,6 @@ class _PokemonSearchState extends State<PokemonSearch> {
     // Start listening to changes.
     searchController.addListener(_filterPokemonList);
   }
-
-  /*
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-  }
-  */
 
   @override
   void dispose() {
@@ -71,14 +63,20 @@ class _PokemonSearchState extends State<PokemonSearch> {
       filteredPokemon = pokemon;
     }
 
+    // Block size from MediaQuery
+    final double blockSize = SizeConfig.blockSizeHorizontal;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.only(
+          top: SizeConfig.blockSizeVertical * 7,
+          right: SizeConfig.screenWidth * .025,
+          left: SizeConfig.screenWidth * .025,
+        ),
         child: Column(
-          children: <Widget>[
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // User text input field
             TextField(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -87,12 +85,17 @@ class _PokemonSearchState extends State<PokemonSearch> {
               textAlign: TextAlign.center,
               controller: searchController,
             ),
-            const Divider(
-              height: 20,
-              thickness: 3.0,
-              indent: 20,
-              endIndent: 20,
+
+            // Horizontal divider
+            Divider(
+              height: blockSize * 5.0,
+              thickness: blockSize * 1.0,
+              indent: blockSize * 5.0,
+              endIndent: blockSize * 5.0,
             ),
+
+            // The list of Pokemon by species name
+            // rendered as a PokemonBarButton.
             Expanded(
               child: ListView.builder(
                 itemCount: filteredPokemon.length,
@@ -110,10 +113,20 @@ class _PokemonSearchState extends State<PokemonSearch> {
           ],
         ),
       ),
+
+      // Exit to Team Builder button
+      floatingActionButton: ExitButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
 
+// A simple button displaying a Pokemon's species name
+// The current filtered search list will render this widget for each Pokemon
 class PokemonBarButton extends StatelessWidget {
   const PokemonBarButton({
     Key? key,
@@ -136,21 +149,20 @@ class PokemonBarButton extends StatelessWidget {
           },
         ),
       ),
+
+      // Callbacks
       onPressed: onPressed,
       onLongPress: onLongPress,
-      child: RichText(
-          text: TextSpan(
-        style: DefaultTextStyle.of(context).style,
-        children: [
-          TextSpan(
-            text: pokemon.speciesName,
-            style: const TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      )),
+
+      // Pokemon name
+      child: Text(
+        pokemon.speciesName,
+        style: TextStyle(
+          fontSize: SizeConfig.blockSizeHorizontal * 4.3,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }

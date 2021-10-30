@@ -1,88 +1,6 @@
 import 'package:flutter/material.dart';
 
 /*
-GameMaster contains all necessary information about the game
-- A list of all Pokemon
-- A list of all moves
-*/
-
-class GameMaster {
-  GameMaster({
-    required this.pokemon,
-    required this.shadowPokemon,
-    required this.shadowPokemonKeys,
-    required this.moves,
-  });
-
-  // JSON -> OBJ conversion
-  factory GameMaster.fromJson(Map<String, dynamic> data) {
-    final List<dynamic> pokeList = data['pokemon'];
-    final shadowPokemonKeys = List<String>.from(data['shadowPokemon']);
-    final List<dynamic> moveList = data['moves'];
-
-    List<Pokemon> pokemon = [];
-    List<Pokemon> shadowPokemon = [];
-    List<Move> moves = [];
-
-    // Callback for 'forEach'
-    void parseMove(json) {
-      moves.add(Move.fromJson(json));
-    }
-
-    // Populate the move list
-    moveList.forEach(parseMove);
-
-    // Callback for 'forEach'
-    // Add the Pokemon to either the normal or shadow list
-    void parsePkm(json) {
-      // Populate all pokemon data
-      // Retrieve the move objects from 'moves' internally for this Pokemon
-      final Pokemon pkm = Pokemon.fromJson(json, moves);
-
-      if (pkm.tags!.contains('shadow')) {
-        shadowPokemon.add(pkm);
-      } else {
-        pokemon.add(pkm);
-      }
-    }
-
-    pokeList.forEach(parsePkm);
-
-    return GameMaster(
-      pokemon: pokemon,
-      shadowPokemon: shadowPokemon,
-      shadowPokemonKeys: shadowPokemonKeys,
-      moves: moves,
-    );
-  }
-
-  // The master list of ALL moves
-  late List<Move> moves;
-
-  // The master list of ALL pokemon
-  late List<Pokemon> pokemon;
-
-  // The master list of ALL shadow pokemon
-  late List<Pokemon> shadowPokemon;
-
-  // The master list of ALL Pokemon keys that are shadow eligible
-  late List<String> shadowPokemonKeys;
-
-  //DEBUG
-  display() {
-    pokemon.forEach((pkm) {
-      pkm.display();
-    });
-
-    /*
-    moves.forEach((mv) {
-      mv.display();
-    });
-    */
-  }
-}
-
-/*
 Pokemon is the encapsulation of a single Pokemon and all of its characteristics
 GameMaster manages the list of all Pokemon which are of this class type
 */
@@ -176,18 +94,9 @@ class Pokemon {
   final List<String>? eliteMoves;
 
   // VARIABLES
-  bool isShadow;
-
-  // Form a string that describes this Pokemon's typing
-  String getTypeString() {
-    String typeString = types[0];
-
-    if ('none' == types[1]) {
-      return typeString;
-    }
-
-    return typeString + ' / ' + types[1];
-  }
+  bool isShadow = false;
+  late Move selectedFastMove = getMetaFastMove();
+  late List<Move> selectedChargedMoves = getMetaChargedMoves();
 
   //TODO
   // Determine the most meta-relevant fast move and return it
@@ -199,6 +108,34 @@ class Pokemon {
   // Determine the most meta-relevant charged moves and return it
   List<Move> getMetaChargedMoves() {
     return [chargedMoves[0], chargedMoves[1]];
+  }
+
+  // Update the selected fast move slot with the provided name
+  void updateSelectedFastMove(String? newFastMove) {
+    if (newFastMove == null) return;
+
+    selectedFastMove = fastMoves.firstWhere((move) => move.name == newFastMove);
+  }
+
+  // 0) charged 1
+  // 1) charged 2
+  // Update the specified charged move slot with the provided name
+  void updateSelectedChargedMove(int index, String? newChargedMove) {
+    if (newChargedMove == null) return;
+
+    selectedChargedMoves[index] =
+        chargedMoves.firstWhere((move) => move.name == newChargedMove);
+  }
+
+  // Form a string that describes this Pokemon's typing
+  String getTypeString() {
+    String typeString = types[0];
+
+    if ('none' == types[1]) {
+      return typeString;
+    }
+
+    return typeString + ' / ' + types[1];
   }
 
   // Get a list of all fast move names
@@ -213,24 +150,6 @@ class Pokemon {
     return chargedMoves.map<String>((Move move) {
       return move.name;
     }).toList();
-  }
-
-  //DEBUG
-  display() {
-    //print(dex);
-    print(speciesName);
-    /*
-    print(speciesId);
-    baseStats.display();
-    print(types);
-    print(fastMoves);
-    print(chargedMoves);
-    defaultIVs.display();
-    print(thirdMoveCost);
-    print(released);
-    print(tags);
-    print(eliteMoves);
-    */
   }
 }
 
@@ -260,12 +179,6 @@ class BaseStats {
   final int atk;
   final int def;
   final int hp;
-
-  display() {
-    print(atk);
-    print(def);
-    print(hp);
-  }
 }
 
 /*
@@ -295,13 +208,6 @@ class DefaultIVs {
   final List<num> cp500;
   final List<num> cp1500;
   final List<num> cp2500;
-
-  //DEBUG
-  display() {
-    print(cp500);
-    print(cp1500);
-    print(cp2500);
-  }
 }
 
 class Move {
@@ -351,18 +257,6 @@ class Move {
   final num cooldown;
   final String? abbreviation;
   final String? archetype;
-
-  //DEBUG
-  display() {
-    print(moveId);
-    print(name);
-    print(type);
-    print(power);
-    print(energy);
-    print(cooldown);
-    print(abbreviation);
-    print(archetype);
-  }
 }
 
 final Map<String, Color> typeColors = {
@@ -384,4 +278,21 @@ final Map<String, Color> typeColors = {
   "dark": const Color(0xFF705746),
   "steel": const Color(0xFFB7B7CE),
   "fairy": const Color(0xFFD685AD)
+};
+
+class League {
+  League({
+    required this.title,
+    required this.cpCap,
+  });
+
+  final String title;
+  final int cpCap;
+  late Color leagueColor = leagueColors[title] as Color;
+}
+
+final Map<String, Color> leagueColors = {
+  "Great League": Colors.blue,
+  "Ultra League": const Color(0xFFC8B603),
+  "Master League": Colors.purple,
 };
