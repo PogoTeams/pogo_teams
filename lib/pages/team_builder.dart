@@ -1,16 +1,26 @@
+// Dart Imports
 import 'dart:ui';
-import 'package:dots_indicator/dots_indicator.dart';
+
+// Flutter Imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
+
+// Package Imports
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:provider/provider.dart';
-import '../data/globals.dart' as globals;
+
+// Local Imports
+import '../data/pokemon.dart';
+import '../data/cup.dart';
+import '../data/move.dart';
 import '../configs/size_config.dart';
-import '../data/pogo_data.dart';
+import '../widgets/node_decoration.dart';
 import 'pokemon_search.dart';
 import 'team_analysis.dart';
 import 'gohub_info.dart';
+import '../data/globals.dart' as globals;
 
 // A horizontally swipeable page view of all teams the user has made
 // Each page represents a single team that can be analyzed and edited
@@ -88,6 +98,7 @@ class _TeamsPagesState extends State<TeamsPages> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Horizontally swipeable team pages
         SizedBox(
           height: SizeConfig.screenHeight * .88,
           child: PageView(
@@ -97,6 +108,8 @@ class _TeamsPagesState extends State<TeamsPages> {
             onPageChanged: _updatePageIndex,
           ),
         ),
+
+        // Dots indicating the current team page
         DotsIndicator(
           dotsCount: teamCount,
           position: _pageIndex,
@@ -107,13 +120,18 @@ class _TeamsPagesState extends State<TeamsPages> {
 }
 
 // The Pokemon for data provided for a single team
+// There are 3 nodes that access and manipulate this team each of which have an
+// index.
+// [0] : top node
+// [1] : middle node
+// [2] : bottom node
 class PokemonTeam extends ChangeNotifier {
   // The list of 3 pokemon references
   List<Pokemon?> team = List.filled(3, null);
 
-  // The selected pvp league for this team
-  // Defaults to first in the list [Great League]
-  League league = globals.gamemaster.leagues.first;
+  // The selected pvp cup for this team
+  // Defaults to Great League
+  Cup cup = globals.gamemaster.cups.firstWhere((cup) => cup.name == 'great');
 
   // Get a pokemon from the list at index
   Pokemon getPokemon(int index) {
@@ -132,7 +150,7 @@ class PokemonTeam extends ChangeNotifier {
     notifyListeners();
   }
 
-  // True if the provided index of team is null
+  // Check if a pokemon occupies the nodes of specified index
   bool isNull(int index) {
     return team[index] == null;
   }
@@ -147,17 +165,16 @@ class PokemonTeam extends ChangeNotifier {
     return team[0] == null && team[1] == null && team[2] == null;
   }
 
-  // Switch to a different league with the specified leagueTitle
-  void switchLeagues(String leagueTitle) {
-    league = globals.gamemaster.leagues
-        .firstWhere((league) => league.title == leagueTitle);
+  // Switch to a different cup with the specified cupTitle
+  void switchCups(String cupTitle) {
+    cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == cupTitle);
 
     notifyListeners();
   }
 
-  // Get the current selected league
-  League getLeague() {
-    return league;
+  // Get the current selected cup
+  Cup getCup() {
+    return cup;
   }
 }
 
@@ -172,11 +189,103 @@ class TeamPage extends StatefulWidget {
 class _TeamPageState extends State<TeamPage>
     with AutomaticKeepAliveClientMixin {
   // The list of 3 TeamNodes that represent a single team
-  final List<TeamNode> nodes = const [
-    TeamNode(nodeIndex: 0),
-    TeamNode(nodeIndex: 1),
-    TeamNode(nodeIndex: 2),
+  final List<TeamNode> _nodes = [
+    TeamNode(key: GlobalKey(), nodeIndex: 0),
+    TeamNode(key: GlobalKey(), nodeIndex: 1),
+    TeamNode(key: GlobalKey(), nodeIndex: 2),
   ];
+
+  // Navigate to the analyze page. It is possible for the user to make changes
+  // to the team there, so any changes done there will be updated here upon
+  // navigating back.
+  void _analyzeTeamUpdate() async {
+    final List<Pokemon> oldTeam =
+        Provider.of<PokemonTeam>(context, listen: false).getPokemonTeam();
+
+    final cup = Provider.of<PokemonTeam>(context, listen: false).getCup();
+
+    // TODO update the new team
+    final newTeam = await Navigator.push(
+      context,
+      MaterialPageRoute<List<Pokemon?>>(builder: (BuildContext context) {
+        return TeamAnalysis(pokemonTeam: oldTeam, selectedCup: cup);
+      }),
+    );
+  }
+
+  Row _buildFooterButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Analyze button
+        SizedBox(
+          width: SizeConfig.screenWidth * .45,
+          height: SizeConfig.blockSizeVertical * 5.5,
+          child: TextButton.icon(
+            label: Text(
+              'Analyze',
+              style: TextStyle(
+                fontSize: SizeConfig.h2,
+                color: Colors.white,
+              ),
+            ),
+            icon: Icon(
+              Icons.analytics,
+              size: SizeConfig.blockSizeHorizontal * 7.0,
+              color: Colors.white,
+            ),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+                  return Colors.cyan;
+                },
+              ),
+            ),
+            onPressed: _analyzeTeamUpdate,
+          ),
+        ),
+
+        // GoHub Info button
+        SizedBox(
+          width: SizeConfig.screenWidth * .45,
+          height: SizeConfig.blockSizeVertical * 5.5,
+          child: TextButton.icon(
+            label: Text(
+              'GoHub Info',
+              style: TextStyle(
+                fontSize: SizeConfig.h2,
+                color: Colors.white,
+              ),
+            ),
+            icon: Icon(
+              Icons.info,
+              size: SizeConfig.blockSizeHorizontal * 7.0,
+              color: Colors.white,
+            ),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+                  return Colors.indigo;
+                },
+              ),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (BuildContext newContext) {
+                  return GoHubInfo(
+                    pokemonTeam:
+                        Provider.of<PokemonTeam>(context, listen: false)
+                            .getPokemonTeam(),
+                  );
+                }),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
 
   // Keeps page state upon swiping away in PageView
   @override
@@ -189,134 +298,48 @@ class _TeamPageState extends State<TeamPage>
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        // Dropdown for pvp league selection
-        const LeagueDropdown(),
+        // Dropdown for pvp cup selection
+        const CupDropdown(),
 
         // The 3 TeamNodes
-        nodes[0],
-        nodes[1],
-        nodes[2],
+        _nodes[0],
+        _nodes[1],
+        _nodes[2],
 
         // Navigational buttons that will use the Pokemon
         // to compute various information
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ProcessorButton(
-              icon: Icon(Icons.analytics,
-                  size: SizeConfig.blockSizeHorizontal * 7.0),
-              title: 'Analyze',
-              color: Colors.cyan,
-              onPressed: () async {
-                final List<Pokemon> oldTeam =
-                    Provider.of<PokemonTeam>(context, listen: false)
-                        .getPokemonTeam();
-
-                final league = Provider.of<PokemonTeam>(context, listen: false)
-                    .getLeague();
-
-                final newTeam = await Navigator.push(
-                  context,
-                  MaterialPageRoute<List<Pokemon?>>(
-                      builder: (BuildContext context) {
-                    return TeamAnalysis(
-                        pokemonTeam: oldTeam, selectedLeague: league);
-                  }),
-                );
-              },
-            ),
-            ProcessorButton(
-              icon:
-                  Icon(Icons.info, size: SizeConfig.blockSizeHorizontal * 7.0),
-              title: 'GoHub Info',
-              color: Colors.indigo,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (BuildContext context) {
-                    return const GoHubInfo();
-                  }),
-                );
-              },
-            ),
-          ],
-        ),
+        _buildFooterButtons(),
       ],
     );
   }
 }
 
-// A material button that will use a callback for analyzing a pokemon team
-class ProcessorButton extends StatelessWidget {
-  const ProcessorButton({
-    Key? key,
-    required this.icon,
-    required this.title,
-    required this.color,
-    required this.onPressed,
-  }) : super(key: key);
-
-  final String title;
-  final Icon icon;
-  final Color color;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: SizeConfig.screenWidth * .45,
-      height: SizeConfig.blockSizeVertical * 5.5,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-              return color;
-            },
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            icon,
-            Text(
-              title,
-              style: TextStyle(fontSize: SizeConfig.h2),
-            ),
-          ],
-        ),
-        onPressed: onPressed,
-      ),
-    );
-  }
-}
-
-// A single dropdown button to display all pvp league options.
-// The selected league will affect all meta calculations
+// A single dropdown button to display all pvp cup options.
+// The selected cup will affect all meta calculations
 // as well as the Pokemon's ideal IVs.
-class LeagueDropdown extends StatefulWidget {
-  const LeagueDropdown({Key? key}) : super(key: key);
+class CupDropdown extends StatefulWidget {
+  const CupDropdown({Key? key}) : super(key: key);
 
   @override
-  _LeagueDropdownState createState() => _LeagueDropdownState();
+  _CupDropdownState createState() => _CupDropdownState();
 }
 
-class _LeagueDropdownState extends State<LeagueDropdown>
+class _CupDropdownState extends State<CupDropdown>
     with AutomaticKeepAliveClientMixin {
-  // List of pvp leagues
-  final List<League> leagues = globals.gamemaster.leagues;
+  // List of pvp cups
+  final List<Cup> cups = globals.gamemaster.cups;
 
-  // List of pvp league names
-  late final List<String> leagueNames =
-      leagues.map((league) => league.title).toList();
+  // List of pvp cup names
+  late final List<String> cupNames = cups.map((cup) => cup.title).toList();
 
   // List of dropdown menu items
-  late final leagueOptions =
-      leagueNames.map<DropdownMenuItem<String>>((String leagueName) {
+  late final cupOptions =
+      cupNames.map<DropdownMenuItem<String>>((String cupName) {
     return DropdownMenuItem(
-      value: leagueName,
+      value: cupName,
       child: Center(
         child: Text(
-          leagueName,
+          cupName,
           style: TextStyle(
             fontSize: SizeConfig.h2,
           ),
@@ -325,7 +348,13 @@ class _LeagueDropdownState extends State<LeagueDropdown>
     );
   }).toList();
 
-  //late League _selectedLeague = leagues[0];
+  void _updateCup(String? newCup) {
+    if (newCup != null) {
+      setState(() {
+        Provider.of<PokemonTeam>(context, listen: false).switchCups(newCup);
+      });
+    }
+  }
 
   @override
   bool get wantKeepAlive => true;
@@ -334,8 +363,8 @@ class _LeagueDropdownState extends State<LeagueDropdown>
   Widget build(BuildContext context) {
     super.build(context);
 
-    final _selectedLeague =
-        Provider.of<PokemonTeam>(context, listen: false).getLeague();
+    final _selectedCup =
+        Provider.of<PokemonTeam>(context, listen: false).getCup();
 
     return Container(
       alignment: Alignment.center,
@@ -347,23 +376,16 @@ class _LeagueDropdownState extends State<LeagueDropdown>
           width: SizeConfig.blockSizeHorizontal * .4,
         ),
         borderRadius: BorderRadius.circular(100.0),
-        color: _selectedLeague.leagueColor,
+        color: _selectedCup.cupColor,
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton(
           isExpanded: true,
-          value: _selectedLeague.title,
+          value: _selectedCup.title,
           icon: const Icon(Icons.arrow_drop_down),
           style: DefaultTextStyle.of(context).style,
-          onChanged: (String? newLeague) {
-            if (newLeague != null) {
-              setState(() {
-                Provider.of<PokemonTeam>(context, listen: false)
-                    .switchLeagues(newLeague);
-              });
-            }
-          },
-          items: leagueOptions,
+          onChanged: _updateCup,
+          items: cupOptions,
         ),
       ),
     );
@@ -415,7 +437,7 @@ class _TeamNodeState extends State<TeamNode> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: SizeConfig.screenWidth * .95,
-      height: SizeConfig.screenHeight * .23,
+      height: SizeConfig.screenHeight * .205,
 
       // If the Pokemon ref is null, build an empty node
       // Otherwise build a Pokemon node with cooresponding data
@@ -486,9 +508,9 @@ class PokemonNode extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        // Pokemon name
         Container(
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
-          alignment: Alignment.topLeft,
           child: Text(
             pokemon.speciesName,
             style: TextStyle(
@@ -497,15 +519,13 @@ class PokemonNode extends StatelessWidget {
             ),
           ),
         ),
+
+        // Typing icon(s)
         Container(
-          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
           alignment: Alignment.topRight,
-          child: Text(
-            pokemon.getTypeString(),
-            style: TextStyle(
-              fontSize: SizeConfig.h2,
-              fontStyle: FontStyle.italic,
-            ),
+          height: SizeConfig.blockSizeHorizontal * 8.0,
+          child: Row(
+            children: pokemon.getTypeIcons(iconColor: 'white'),
           ),
         ),
       ],
@@ -515,7 +535,7 @@ class PokemonNode extends StatelessWidget {
   // Build a row of icon buttons at the bottom of a Pokemon's Node
   Row _buildNodeFooter() {
     // Size of the footer icons
-    final double iconSize = SizeConfig.blockSizeHorizontal * 5.0;
+    final double iconSize = SizeConfig.blockSizeHorizontal * 6.2;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -528,7 +548,7 @@ class PokemonNode extends StatelessWidget {
         ),
         IconButton(
           onPressed: searchMode,
-          icon: const Icon(Icons.arrow_forward_ios_rounded),
+          icon: const Icon(Icons.swap_horiz),
           tooltip: 'search for a different pokemon',
           iconSize: iconSize,
         ),
@@ -538,7 +558,7 @@ class PokemonNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the Pokemon ref
+    // Get the Pokemon this node manages
     final Pokemon pokemon =
         Provider.of<PokemonTeam>(context, listen: false).getPokemon(nodeIndex);
 
@@ -551,14 +571,14 @@ class PokemonNode extends StatelessWidget {
         bottom: blockSize * .5,
         left: blockSize * 2.5,
       ),
-      decoration: BoxDecoration(
-        color: pokemon.typeColor,
-        borderRadius: BorderRadius.circular(blockSize * 2.5),
-      ),
+      decoration: buildDecoration(pokemon),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Pokemon name, typing, and cp
           _buildNodeHeader(pokemon),
+
+          // A line divider
           Divider(
             color: Colors.white,
             thickness: blockSize * 0.2,
@@ -571,6 +591,8 @@ class PokemonNode extends StatelessWidget {
             fastMoveNames: pokemon.getFastMoveNames(),
             chargedMoveNames: pokemon.getChargedMoveNames(),
           ),
+
+          // Icon buttons to remove, replace or toggle shadow of a Pokemon
           _buildNodeFooter(),
         ],
       ),
@@ -736,6 +758,7 @@ class MoveNode extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        // Move name
         Text(
           label,
           style: TextStyle(
@@ -744,6 +767,8 @@ class MoveNode extends StatelessWidget {
             fontStyle: FontStyle.italic,
           ),
         ),
+
+        // Dropdown button
         Container(
           child: DropdownButtonHideUnderline(
             child: DropdownButton(

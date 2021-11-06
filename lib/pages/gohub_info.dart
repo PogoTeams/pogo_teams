@@ -1,29 +1,50 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import '../buttons/exit_button.dart';
+import '../data/pokemon.dart';
+import '../widgets/exit_button.dart';
 
-class GoHubInfo extends StatelessWidget {
-  const GoHubInfo({Key? key}) : super(key: key);
+class GoHubInfo extends StatefulWidget {
+  const GoHubInfo({
+    Key? key,
+    required this.pokemonTeam,
+  }) : super(key: key);
+
+  final List<Pokemon> pokemonTeam;
+  static const String goHubBaseUrl = 'https://db.pokemongohub.net/pokemon/';
+
+  @override
+  _GoHubInfoState createState() => _GoHubInfoState();
+}
+
+class _GoHubInfoState extends State<GoHubInfo> {
+  late StreamSubscription _subscription;
+
+  ListView _buildGoHubBody() {
+    return ListView(
+      shrinkWrap: true,
+      children: widget.pokemonTeam.map((pokemon) {
+        final String scraperRequest =
+            '{"URL": ' + GoHubInfo.goHubBaseUrl + pokemon.dex.toString() + '}';
+        return Text(scraperRequest);
+      }).toList(),
+    );
+  }
+
+  @override
+  void initState() {
+    // Setup for microservice request
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Image.network(
-                'https://db.pokemongohub.net/images/official/full/252.webp'),
-            Container(
-              padding: const EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
-              ),
-              child: const Text(
-                  "Treecko is a Grass type Pokémon in Pokémon GO. It has a max CP of 1190, with the following stats in Pokémon GO: 124 ATK, 94 DEF and 120 STA. Treecko's best moves in Pokémon GO are Pound and Grass Knot (8.30 DPS). Treecko is vulnerable to Bug, Fire, Flying, Ice and Poison type moves. Treecko is boosted by Sunny weather. It was originally found in the Hoenn region (Gen 3). It's Pokémon number is #252."),
-            ),
-          ],
-        ),
-      ),
+      body: _buildGoHubBody(),
       floatingActionButton: ExitButton(
         onPressed: () {
           Navigator.pop(context);

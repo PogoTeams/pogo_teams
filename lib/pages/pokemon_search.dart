@@ -3,9 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pogo_teams/widgets/node_decoration.dart';
 import '../configs/size_config.dart';
-import '../data/pogo_data.dart';
-import '../buttons/exit_button.dart';
+import '../data/pokemon.dart';
+import '../widgets/exit_button.dart';
 import '../data/globals.dart' as globals;
 
 class PokemonSearch extends StatefulWidget {
@@ -74,7 +75,7 @@ class _PokemonSearchState extends State<PokemonSearch> {
           left: SizeConfig.screenWidth * .025,
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // User text input field
             TextField(
@@ -97,17 +98,24 @@ class _PokemonSearchState extends State<PokemonSearch> {
             // The list of Pokemon by species name
             // rendered as a PokemonBarButton.
             Expanded(
-              child: ListView.builder(
-                itemCount: filteredPokemon.length,
-                itemBuilder: (context, index) {
-                  return PokemonBarButton(
+              // Remove the upper silver padding that ListView contains by
+              // default in a Scaffold.
+              child: MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                child: ListView.builder(
+                  itemCount: filteredPokemon.length,
+                  itemBuilder: (context, index) {
+                    return PokemonBarButton(
+                      pokemon: filteredPokemon[index],
                       onPressed: () {
                         Navigator.pop(context, filteredPokemon[index]);
                       },
                       onLongPress: () {},
-                      pokemon: filteredPokemon[index]);
-                },
-                physics: const BouncingScrollPhysics(),
+                    );
+                  },
+                  physics: const BouncingScrollPhysics(),
+                ),
               ),
             ),
           ],
@@ -130,39 +138,67 @@ class _PokemonSearchState extends State<PokemonSearch> {
 class PokemonBarButton extends StatelessWidget {
   const PokemonBarButton({
     Key? key,
+    required this.pokemon,
     required this.onPressed,
     required this.onLongPress,
-    required this.pokemon,
   }) : super(key: key);
 
+  final Pokemon pokemon;
   final VoidCallback onPressed;
   final VoidCallback onLongPress;
-  final Pokemon pokemon;
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith<Color>(
-          (states) {
-            return pokemon.typeColor;
-          },
-        ),
-      ),
-
+    return TextButton(
       // Callbacks
       onPressed: onPressed,
       onLongPress: onLongPress,
 
       // Pokemon name
-      child: Text(
-        pokemon.speciesName,
-        style: TextStyle(
-          fontSize: SizeConfig.blockSizeHorizontal * 4.3,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+      child: Container(
+        width: double.infinity,
+        height: SizeConfig.blockSizeVertical * 4.5,
+        decoration: buildDecoration(pokemon),
+        child: Center(
+          child: Text(
+            pokemon.speciesName,
+            style: TextStyle(
+              fontSize: SizeConfig.blockSizeHorizontal * 4.3,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
         ),
       ),
     );
+    /*
+    return Container(
+      decoration: buildDecoration(
+        pokemon,
+        /*
+        borderRadius: 0.0,
+        border: Border.all(
+          color: Colors.white,
+          width: SizeConfig.blockSizeHorizontal * .8,
+        ),
+        */
+      ),
+      child: TextButton(
+        // Callbacks
+        onPressed: onPressed,
+        onLongPress: onLongPress,
+
+        // Pokemon name
+        child: Text(
+          pokemon.speciesName,
+          style: TextStyle(
+            fontSize: SizeConfig.blockSizeHorizontal * 4.3,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+    */
   }
 }
