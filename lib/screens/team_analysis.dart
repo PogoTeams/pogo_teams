@@ -1,15 +1,26 @@
+// Flutter Imports
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:pogo_teams/widgets/node_decoration.dart';
+
+// Local Imports
+import '../widgets/colored_container.dart';
 import '../tools/pair.dart';
-import '../data/pokemon.dart';
+import '../data/pokemon/pokemon.dart';
 import '../data/cup.dart';
-import '../data/type_effectiveness.dart';
-import '../data/typing.dart';
-import '../data/move.dart';
+import '../data/masters/type_master.dart';
+import '../data/pokemon/typing.dart';
+import '../data/pokemon/move.dart';
 import '../widgets/exit_button.dart';
 import '../configs/size_config.dart';
 import '../data/globals.dart' as globals;
+
+/*
+-------------------------------------------------------------------------------
+Based on the PokemonTeam provided, various analysis will be displayed to the
+user. The user will also be able to make adjustments to the team, and see
+realtime analysis updates.
+-------------------------------------------------------------------------------
+*/
 
 class TeamAnalysis extends StatelessWidget {
   TeamAnalysis({
@@ -139,14 +150,14 @@ class CompactPokemonNode extends StatelessWidget {
   Widget build(BuildContext context) {
     final double blockSize = SizeConfig.blockSizeHorizontal;
 
-    return Container(
+    return ColoredContainer(
       padding: EdgeInsets.only(
         top: blockSize * 1.3,
         right: blockSize * 2.5,
         bottom: blockSize * 5.0,
         left: blockSize * 2.5,
       ),
-      decoration: buildDecoration(pokemon),
+      pokemon: pokemon,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -180,8 +191,8 @@ class CompactMoveNode extends StatelessWidget {
       child: Text(
         move.name,
         style: TextStyle(
-          fontSize: SizeConfig.blockSizeHorizontal * 3.0,
           fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+          fontSize: SizeConfig.h3,
         ),
       ),
       margin: EdgeInsets.only(
@@ -195,7 +206,7 @@ class CompactMoveNode extends StatelessWidget {
           width: 1.5,
         ),
         borderRadius: BorderRadius.circular(100.0),
-        color: move.typeColor,
+        color: move.type.typeColor,
       ),
     );
   }
@@ -211,7 +222,7 @@ class EffectivenessAnalysis extends StatelessWidget {
 
   // Determine the type effectiveneses of this team
   Widget _threats() {
-    List<Type> typeList = TypeEffectiveness.typeList;
+    List<Type> typeList = TypeMaster.typeList;
 
     // Bind a list of all types to a value
     // This value will represent their offensive effectiveness on this team

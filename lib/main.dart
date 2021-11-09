@@ -1,11 +1,15 @@
+// Flutter Imports
 import 'package:flutter/material.dart';
+
+// Local Imports
+import 'pogo_teams_app.dart';
 import 'data/globals.dart' as globals;
-import 'app_root.dart';
+import 'data/masters/gamemaster.dart';
 
 void main() async {
   // Global gamemaster reference setup
   // All Pokemon GO related data is in the gamemaster
-  globals.gamemaster = await globals.generateGameMaster();
+  globals.gamemaster = await GameMaster.generateGameMaster();
 
   runApp(const PogoTeamsApp());
 }

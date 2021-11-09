@@ -1,5 +1,16 @@
+// Flutter Imports
 import 'package:flutter/material.dart';
+
+// Local Imports
 import '../configs/size_config.dart';
+
+/*
+-------------------------------------------------------------------------------
+A floating action button that is docked at the bottom center. This is used to
+exit from the current screen, returning to the previous screen on the
+navigator stack. No information is returned from the current screen.
+-------------------------------------------------------------------------------
+*/
 
 class ExitButton extends StatelessWidget {
   const ExitButton({Key? key, required this.onPressed}) : super(key: key);

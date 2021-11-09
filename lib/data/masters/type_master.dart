@@ -1,11 +1,15 @@
-import 'typing.dart';
+// Local Imports
+import '../pokemon/typing.dart';
 
 /*
+-------------------------------------------------------------------------------
 All type effectiveness relationships are handled here. The effectivenessMaster
 map contains these numeric relationships, effectively scaling all type on type
 offense / defense scenerios that can occur.
+-------------------------------------------------------------------------------
 */
-class TypeEffectiveness {
+
+class TypeMaster {
   // type effectiveness damage scales
   static const double neutral = 1.0;
   static const double superEffective = 1.6;
@@ -23,6 +27,24 @@ class TypeEffectiveness {
 
   static List<Type> generateTypeList() {
     return List.from(typeList);
+  }
+
+  // Get a scale that represents 'type's ability to counter 'typing's weaknesses
+  static num getCounterScale(Typing typing, Type type) {
+    List<double> defense = typing.getDefenseEffectiveness();
+    final effectivenessMap = effectivenessMaster[type.typeKey];
+
+    num counterScale = 1.0;
+
+    int i = 0;
+    for (List<double> scales in effectivenessMap!.values) {
+      if (defense[i] < 1.0) {
+        counterScale *= scales[0];
+      }
+      ++i;
+    }
+
+    return counterScale;
   }
 
   // All type offense & defense effectiveness.

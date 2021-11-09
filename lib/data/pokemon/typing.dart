@@ -1,12 +1,18 @@
+// Flutter Imports
 import 'package:flutter/material.dart';
-import 'type_effectiveness.dart';
-import 'colors.dart';
-import '../data/globals.dart' as globals;
+
+// Local Imports
+import '../masters/type_master.dart';
+import '../colors.dart';
+import '../globals.dart' as globals;
 
 /*
+-------------------------------------------------------------------------------
 Manages a Pokemon's typing which can be exactly 1 or 2 types. This is basically
 a helper class that effectively handles the case of a Pokemon with 2 types.
+-------------------------------------------------------------------------------
 */
+
 class Typing {
   Typing(List<String> typeKeys)
       : typeA = Type(typeKey: typeKeys[0]),
@@ -46,6 +52,11 @@ class Typing {
 
     return aDefense;
   }
+
+  // True if type cooresponds to one of the types this typing contains
+  bool contains(Type type) {
+    return typeA.typeKey == type.typeKey || typeB.typeKey == type.typeKey;
+  }
 }
 
 /*
@@ -54,10 +65,11 @@ Pokemon's duo / mono typing or a Pokemon move.
 */
 class Type {
   Type({required this.typeKey}) {
-    typeColor = typeColors[typeKey] as Color;
-
     if ('none' != typeKey) {
-      typeEffectiveness = TypeEffectiveness.getEffectivenessMap(typeKey);
+      typeColor = typeColors[typeKey] as Color;
+      typeEffectiveness = TypeMaster.getEffectivenessMap(typeKey);
+    } else {
+      typeColor = Colors.black;
     }
   }
 
@@ -83,5 +95,17 @@ class Type {
     }
 
     return defenseEffectiveness;
+  }
+
+  List<double> getOffensiveEffectiveness() {
+    int i = 0;
+    List<double> offenseEffectiveness = List.filled(globals.typeCount, 0);
+
+    for (String typeKey in typeEffectiveness.keys) {
+      offenseEffectiveness[i] = typeEffectiveness[typeKey]![0];
+      ++i;
+    }
+
+    return offenseEffectiveness;
   }
 }

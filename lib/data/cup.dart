@@ -1,5 +1,15 @@
+// Flutter Imports
 import 'package:flutter/material.dart';
+
+// Local Imports
 import 'colors.dart';
+
+/*
+-------------------------------------------------------------------------------
+Every possible cup in PVP can be encapsulated here. The GameMaster will read
+in a list of cups from the assets/gamemaster.json.
+-------------------------------------------------------------------------------
+*/
 
 class Cup {
   Cup({

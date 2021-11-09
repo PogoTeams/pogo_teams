@@ -1,12 +1,23 @@
-import 'pokemon.dart';
-import 'move.dart';
-import 'cup.dart';
+// Dart Imports
+import 'dart:convert';
+
+// Flutter Imports
+import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
+import 'package:flutter/services.dart';
+
+// Local Imports
+import '../pokemon/pokemon.dart';
+import '../pokemon/move.dart';
+import '../cup.dart';
 
 /*
-GameMaster contains all necessary information about the game
-- A list of all Pokemon
-- A list of all moves
+-------------------------------------------------------------------------------
+The gamemaster contains all Pokemon Go data. A global GameMaster object is
+populated by assets/gamemaster.json. GameMaster can be considered the model of
+the entire app.
+-------------------------------------------------------------------------------
 */
+
 class GameMaster {
   GameMaster({
     required this.pokemon,
@@ -16,6 +27,19 @@ class GameMaster {
     required this.moves,
     required this.cups,
   });
+
+  // Read in gamemaster.json and populate the global GameMaster object
+  static Future<GameMaster> generateGameMaster() async {
+    // Ensure the application layer is built so gamemaster.json can be parsed
+    WidgetsFlutterBinding.ensureInitialized();
+    // Load the JSON string
+    final String gmString =
+        await rootBundle.loadString('assets/gamemaster.json');
+    // Decode to a map
+    final Map<String, dynamic> gmJson = jsonDecode(gmString);
+
+    return GameMaster.fromJson(gmJson);
+  }
 
   // JSON -> OBJ conversion
   factory GameMaster.fromJson(Map<String, dynamic> json) {

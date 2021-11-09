@@ -1,9 +1,13 @@
+// Flutter Imports
 import 'package:flutter/widgets.dart';
 
 /*
-All screen size queries are handled here.
-This class is initialized at the beginning of the app runtime.
+-------------------------------------------------------------------------------
+All screen size queries are handled here. This class is initialized via init
+upon the initial app build.
+-------------------------------------------------------------------------------
 */
+
 class SizeConfig {
   static late MediaQueryData _mediaQueryData;
   static late double screenWidth;
@@ -35,9 +39,9 @@ class SizeConfig {
     safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
 
-    h1 = blockSizeHorizontal * 5.0;
+    h1 = blockSizeHorizontal * 4.0;
     h2 = blockSizeHorizontal * 3.7;
-    h3 = blockSizeHorizontal * 2.4;
+    h3 = blockSizeHorizontal * 2.7;
     p = blockSizeHorizontal * 2.2;
   }
 }

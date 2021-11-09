@@ -1,4 +1,11 @@
+// Flutter Imports
 import 'package:flutter/material.dart';
+
+/*
+-------------------------------------------------------------------------------
+All color association is handled by the maps that are implemented here.
+-------------------------------------------------------------------------------
+*/
 
 final Map<String, Color> typeColors = {
   "none": Colors.black,

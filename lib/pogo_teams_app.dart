@@ -1,9 +1,14 @@
+// Dart Imports
 import 'dart:ui';
+
+// Flutter Imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'pages/team_builder.dart';
+
+// Local Imports
+import 'screens/team_builder.dart';
 
 //// APPLICATION ROOT
 class PogoTeamsApp extends StatelessWidget {
