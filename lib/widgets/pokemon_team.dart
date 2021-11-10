@@ -7,9 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
-// Package Imports
-import 'package:provider/provider.dart';
-
 // Local Imports
 import '../data/pokemon/pokemon.dart';
 import '../data/cup.dart';
@@ -17,61 +14,26 @@ import '../data/pokemon/move.dart';
 import '../configs/size_config.dart';
 import 'colored_container.dart';
 import '../screens/pokemon_search.dart';
-import '../screens/team_analysis.dart';
-import '../screens/gohub_info.dart';
 import '../data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
-These classes manage the widgets and data for a Pokemon team. The PokemonTeam
-provider allows all other widgets to inherit the Pokemon references, and a cup
-reference. From this, all PVP meta-related information can be computed. This
-model is primarily used by the Team Builder screen.
+The Pokemon Team data model contains a list of 3 nullable Pokemon references
+and a Cup reference. This collection represents a single Pokemon PVP Team.
+This Pokemon Team can then be used to compute various information throughout
+the app.
 -------------------------------------------------------------------------------
 */
 
-// The Pokemon for data provided for a single team
-// There are 3 nodes that access and manipulate this team each of which have an
-// index.
-// [0] : top node
-// [1] : middle node
-// [2] : bottom node
-class PokemonTeam extends ChangeNotifier {
+// The data model for a Pokemon PVP Team
+// Every team page manages one instance of this class
+class PokemonTeam {
   // The list of 3 pokemon references
   List<Pokemon?> team = List.filled(3, null);
 
-  // The selected pvp cup for this team
+  // The selected PVP cup for this team
   // Defaults to Great League
   Cup cup = globals.gamemaster.cups.firstWhere((cup) => cup.name == 'great');
-
-  // Get a pokemon from the list at index
-  Pokemon getPokemon(int index) {
-    return team[index] as Pokemon;
-  }
-
-  // Set the pokemon at the given index
-  void setPokemon(int index, Pokemon toSet) {
-    team[index] = toSet;
-    notifyListeners();
-  }
-
-  // Set the entire team to newTeam.
-  // This is used to reflect the changes to the team made on other screens.
-  void setTeam(List<Pokemon> newTeam) {
-    team = newTeam;
-    notifyListeners();
-  }
-
-  // Set the pokemon at the given index to null
-  void removePokemon(int index) {
-    team[index] = null;
-    notifyListeners();
-  }
-
-  // Check if a pokemon occupies the nodes of specified index
-  bool isNull(int index) {
-    return team[index] == null;
-  }
 
   // Get the list of non-null pokemon
   List<Pokemon> getPokemonTeam() {
@@ -86,19 +48,18 @@ class PokemonTeam extends ChangeNotifier {
   // Switch to a different cup with the specified cupTitle
   void setCup(String cupTitle) {
     cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == cupTitle);
-
-    notifyListeners();
-  }
-
-  // Get the current selected cup
-  Cup getCup() {
-    return cup;
   }
 }
 
 // A single page of 3 TeamNodes to represent a single Pokemon team
 class TeamPage extends StatefulWidget {
-  const TeamPage({Key? key}) : super(key: key);
+  const TeamPage({
+    Key? key,
+    required this.pokemonTeam,
+  }) : super(key: key);
+
+  // This team page's Pokemon team
+  final PokemonTeam pokemonTeam;
 
   @override
   _TeamPageState createState() => _TeamPageState();
@@ -106,52 +67,30 @@ class TeamPage extends StatefulWidget {
 
 class _TeamPageState extends State<TeamPage>
     with AutomaticKeepAliveClientMixin {
-  // The list of 3 TeamNodes that represent a single team
-  final List<TeamNode> _nodes = const [
-    TeamNode(nodeIndex: 0),
-    TeamNode(nodeIndex: 1),
-    TeamNode(nodeIndex: 2),
-  ];
+  void _onCupChanged(String? newCup) {
+    if (newCup == null) return;
 
-  // Push the team analysis screen onto the navigator stack.
-  // The pokemon team changes there will be reflected in newTeam
-  void _onAnalyzePressed() async {
-    final provider = Provider.of<PokemonTeam>(context, listen: false);
-
-    // If the team is empty, no action will be taken
-    if (provider.isEmpty()) return;
-
-    // TODO update the new team
-    final newTeam = await Navigator.push(
-      context,
-      MaterialPageRoute<List<Pokemon?>>(
-        builder: (BuildContext context) {
-          return TeamAnalysis(
-            pokemonTeam: provider.getPokemonTeam(),
-            selectedCup: provider.getCup(),
-          );
-        },
-      ),
-    );
+    setState(() {
+      widget.pokemonTeam.setCup(newCup);
+    });
   }
 
-  // Push the GoHubInfo screen onto the navigator stack
-  void _onGoHubPressed() {
-    final provider = Provider.of<PokemonTeam>(context, listen: false);
+  void _onLeadChanged(Pokemon? newLead) {
+    setState(() {
+      widget.pokemonTeam.team[0] = newLead;
+    });
+  }
 
-    // If the team is empty, no action will be taken
-    if (provider.isEmpty()) return;
+  void _onMidChanged(Pokemon? newMid) {
+    setState(() {
+      widget.pokemonTeam.team[1] = newMid;
+    });
+  }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return GoHubInfo(
-            pokemonTeam: provider.getPokemonTeam(),
-          );
-        },
-      ),
-    );
+  void _onCloserChanged(Pokemon? newCloser) {
+    setState(() {
+      widget.pokemonTeam.team[2] = newCloser;
+    });
   }
 
   // Keeps page state upon swiping away in PageView
@@ -162,101 +101,41 @@ class _TeamPageState extends State<TeamPage>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        // Dropdown for pvp cup selection
-        const CupDropdown(),
+    final team = widget.pokemonTeam.team;
+    final cup = widget.pokemonTeam.cup;
 
-        // The 3 TeamNodes
-        _nodes[0],
-        _nodes[1],
-        _nodes[2],
-
-        // Buttons at the bottom of the screen
-        // These will navigate to a new page
-        FooterButtons(
-          onAnalyzePressed: _onAnalyzePressed,
-          onGoHubPressed: _onGoHubPressed,
-        ),
-      ],
-    );
-  }
-}
-
-// A row of icon text buttons at the bottom of the screen
-// These buttons will use callbacks to push a new screen on the navigator
-class FooterButtons extends StatelessWidget {
-  const FooterButtons({
-    Key? key,
-    required this.onAnalyzePressed,
-    required this.onGoHubPressed,
-  }) : super(key: key);
-
-  final VoidCallback onAnalyzePressed;
-  final VoidCallback onGoHubPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Analyze button
-        SizedBox(
-          width: SizeConfig.screenWidth * .45,
-          height: SizeConfig.blockSizeVertical * 5.5,
-          child: TextButton.icon(
-            label: Text(
-              'Analyze',
-              style: TextStyle(
-                fontSize: SizeConfig.h2,
-                color: Colors.white,
-              ),
-            ),
-            icon: Icon(
-              Icons.analytics,
-              size: SizeConfig.blockSizeHorizontal * 7.0,
-              color: Colors.white,
-            ),
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-                  return Colors.cyan;
-                },
-              ),
-            ),
-            onPressed: onAnalyzePressed,
+    return Padding(
+      padding: EdgeInsets.only(
+        right: SizeConfig.screenWidth * .025,
+        left: SizeConfig.screenWidth * .025,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          // Dropdown for pvp cup selection
+          CupDropdown(
+            cup: cup,
+            onCupChanged: _onCupChanged,
           ),
-        ),
 
-        // GoHub Info button
-        SizedBox(
-          width: SizeConfig.screenWidth * .45,
-          height: SizeConfig.blockSizeVertical * 5.5,
-          child: TextButton.icon(
-            label: Text(
-              'GoHub Info',
-              style: TextStyle(
-                fontSize: SizeConfig.h2,
-                color: Colors.white,
-              ),
-            ),
-            icon: Icon(
-              Icons.info,
-              size: SizeConfig.blockSizeHorizontal * 7.0,
-              color: Colors.white,
-            ),
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-                  return Colors.indigo;
-                },
-              ),
-            ),
-            onPressed: onGoHubPressed,
+          // The 3 TeamNodes
+          TeamNode(
+            pokemon: team[0],
+            cup: cup,
+            onNodeChanged: _onLeadChanged,
           ),
-        ),
-      ],
+          TeamNode(
+            pokemon: team[1],
+            cup: cup,
+            onNodeChanged: _onMidChanged,
+          ),
+          TeamNode(
+            pokemon: team[2],
+            cup: cup,
+            onNodeChanged: _onCloserChanged,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -265,7 +144,14 @@ class FooterButtons extends StatelessWidget {
 // The selected cup will affect all meta calculations
 // as well as the Pokemon's ideal IVs.
 class CupDropdown extends StatefulWidget {
-  const CupDropdown({Key? key}) : super(key: key);
+  const CupDropdown({
+    Key? key,
+    required this.cup,
+    required this.onCupChanged,
+  }) : super(key: key);
+
+  final Cup cup;
+  final void Function(String?) onCupChanged;
 
   @override
   _CupDropdownState createState() => _CupDropdownState();
@@ -295,14 +181,6 @@ class _CupDropdownState extends State<CupDropdown>
     );
   }).toList();
 
-  void _updateCup(String? newCup) {
-    if (newCup != null) {
-      setState(() {
-        Provider.of<PokemonTeam>(context, listen: false).setCup(newCup);
-      });
-    }
-  }
-
   @override
   bool get wantKeepAlive => true;
 
@@ -310,8 +188,7 @@ class _CupDropdownState extends State<CupDropdown>
   Widget build(BuildContext context) {
     super.build(context);
 
-    final _selectedCup =
-        Provider.of<PokemonTeam>(context, listen: false).getCup();
+    final _selectedCup = widget.cup;
 
     return Container(
       alignment: Alignment.center,
@@ -333,7 +210,7 @@ class _CupDropdownState extends State<CupDropdown>
           value: _selectedCup.title,
           icon: const Icon(Icons.arrow_drop_down),
           style: DefaultTextStyle.of(context).style,
-          onChanged: _updateCup,
+          onChanged: widget.onCupChanged,
           items: cupOptions,
         ),
       ),
@@ -347,10 +224,14 @@ class _CupDropdownState extends State<CupDropdown>
 class TeamNode extends StatefulWidget {
   const TeamNode({
     Key? key,
-    required this.nodeIndex,
+    required this.pokemon,
+    required this.cup,
+    required this.onNodeChanged,
   }) : super(key: key);
 
-  final int nodeIndex;
+  final Pokemon? pokemon;
+  final Cup cup;
+  final Function(Pokemon?) onNodeChanged;
 
   @override
   _TeamNodeState createState() => _TeamNodeState();
@@ -361,7 +242,7 @@ class _TeamNodeState extends State<TeamNode> {
   // If a Pokemon is selected in that page, the Pokemon reference will be kept
   // The node will then populate all data related to that Pokemon
   _searchMode() async {
-    final caughtPokemon = await Navigator.push(
+    final newPokemon = await Navigator.push(
       context,
       MaterialPageRoute<Pokemon>(builder: (BuildContext context) {
         return const PokemonSearch();
@@ -370,16 +251,14 @@ class _TeamNodeState extends State<TeamNode> {
 
     // If a pokemon was returned from the search page, update the node
     // Should only be null when the user exits the search page using the app bar
-    if (caughtPokemon != null) {
-      Provider.of<PokemonTeam>(context, listen: false)
-          .setPokemon(widget.nodeIndex, caughtPokemon);
+    if (newPokemon != null) {
+      widget.onNodeChanged(newPokemon);
     }
   }
 
   // Revert a PokemonNode back to an EmptyNode
   _clearNode() {
-    Provider.of<PokemonTeam>(context, listen: false)
-        .removePokemon(widget.nodeIndex);
+    widget.onNodeChanged(null);
   }
 
   @override
@@ -390,12 +269,13 @@ class _TeamNodeState extends State<TeamNode> {
 
       // If the Pokemon ref is null, build an empty node
       // Otherwise build a Pokemon node with cooresponding data
-      child: (Provider.of<PokemonTeam>(context).isNull(widget.nodeIndex)
+      child: (widget.pokemon == null
           ? EmptyNode(
               onPressed: _searchMode,
             )
           : PokemonNode(
-              nodeIndex: widget.nodeIndex,
+              pokemon: widget.pokemon as Pokemon,
+              cup: widget.cup,
               searchMode: _searchMode,
               clear: _clearNode,
             )),
@@ -439,13 +319,15 @@ class EmptyNode extends StatelessWidget {
 class PokemonNode extends StatelessWidget {
   const PokemonNode({
     Key? key,
-    required this.nodeIndex,
+    required this.pokemon,
+    required this.cup,
     required this.searchMode,
     required this.clear,
   }) : super(key: key);
 
-  // Used to access the cooresponding Pokemon managed in PokemonTeam
-  final int nodeIndex;
+  final Pokemon pokemon;
+
+  final Cup cup;
 
   // Search for a new Pokemon
   final VoidCallback searchMode;
@@ -455,10 +337,6 @@ class PokemonNode extends StatelessWidget {
 
   // Display the Pokemon's name perfect PVP ivs and typing icon(s)
   Row _buildNodeHeader(Pokemon pokemon, BuildContext context) {
-    // Get the current selected cup, the cp field is used to determine
-    // the perfect PVP ivs for this Pokemon
-    final Cup cup = Provider.of<PokemonTeam>(context, listen: false).getCup();
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -516,10 +394,6 @@ class PokemonNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the Pokemon this node manages
-    final Pokemon pokemon =
-        Provider.of<PokemonTeam>(context, listen: false).getPokemon(nodeIndex);
-
     final double blockSize = SizeConfig.blockSizeHorizontal;
 
     return ColoredContainer(

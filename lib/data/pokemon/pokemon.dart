@@ -167,48 +167,12 @@ class Pokemon {
 
   // Determine the most meta-relevant fast move and return it
   Move getMetaFastMove() {
-    // DEBUG
-    /*
-    print(speciesName);
-    fastMoves.forEach((element) {
-      print('${element.name} : ${element.getScore(typing)}');
-    });
-    */
-    return fastMoves.reduce((bestMove, currentMove) {
-      return currentMove.getScore(typing) > bestMove.getScore(typing)
-          ? currentMove
-          : bestMove;
-    });
+    return fastMoves[0];
   }
 
   // Determine the most meta-relevant charged moves and return it
   List<Move> getMetaChargedMoves() {
-    // DEBUG
-    /*
-    chargedMoves.forEach((element) {
-      print('${element.name} : ${element.getScore(typing)}');
-    });
-    */
-
-    // First charged move
-    final Move c1 = chargedMoves.reduce((bestMove, currentMove) {
-      return currentMove.getScore(typing) > bestMove.getScore(typing)
-          ? currentMove
-          : bestMove;
-    });
-
-    // Generate a copy of the charged moves without the first meta move
-    final List<Move> chargedMoves2 = List.from(chargedMoves);
-    chargedMoves2.removeWhere((move) => move.moveId == c1.moveId);
-
-    // Second charged move (cannot be the same as c1)
-    final Move c2 = chargedMoves2.reduce((bestMove, currentMove) {
-      return currentMove.getScore(typing) > bestMove.getScore(typing)
-          ? currentMove
-          : bestMove;
-    });
-
-    return [c1, c2];
+    return [chargedMoves[0], chargedMoves[1]];
   }
 
   // Update the selected fast move slot with the provided name

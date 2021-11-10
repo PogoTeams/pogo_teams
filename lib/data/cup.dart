@@ -19,9 +19,7 @@ class Cup {
     required this.cupColor,
   });
 
-  factory Cup.fromJson(
-    Map<String, dynamic> json,
-  ) {
+  factory Cup.fromJson(Map<String, dynamic> json) {
     final name = json['name'] as String;
     final title = json['title'] as String;
     final cp = json['cp'] as int;

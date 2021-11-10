@@ -1,16 +1,15 @@
 // Flutter Imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
-// Package Imports
-import 'package:dots_indicator/dots_indicator.dart';
-import 'package:provider/provider.dart';
-
 // Local Imports
+import '../screens/team_analysis.dart';
+import 'team_info.dart';
 import '../configs/size_config.dart';
 import '../widgets/pokemon_team.dart';
+import '../widgets/footer_buttons.dart';
+import '../data/pokemon/pokemon.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -19,7 +18,7 @@ The user can build multiple teams via a horizontally swipeable PageView, which
 currently supports up to 5 teams. This would ideally be dynamically lengthed.
 They can specify the PVP cup for that team, and meta-relevant information
 on the Pokemon currently on the team will update in realtime. The user can
-navigate to the Anaysis or GoHub Info screen via footer buttons.
+navigate to the Anaysis or TeamInfo Info screen via footer buttons.
 -------------------------------------------------------------------------------
 */
 
@@ -33,15 +32,9 @@ class TeamBuilder extends StatelessWidget {
     // Perform media queries to scale app UI content
     SizeConfig().init(context);
 
-    return Scaffold(
+    return const Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(
-            right: SizeConfig.screenWidth * .025,
-            left: SizeConfig.screenWidth * .025,
-          ),
-          child: const TeamsPages(),
-        ),
+        child: TeamsPages(),
       ),
     );
   }
@@ -56,67 +49,127 @@ class TeamsPages extends StatefulWidget {
   _TeamsPagesState createState() => _TeamsPagesState();
 }
 
-class _TeamsPagesState extends State<TeamsPages> {
+class _TeamsPagesState extends State<TeamsPages>
+    with SingleTickerProviderStateMixin {
   // The number of editable teams available to the user
-  final int teamCount = 5;
+  int teamCount = 5;
 
-  // Used for the dot indicator
-  double _pageIndex = 0.0;
+  // The index cooresponding to the currently display page
+  int _selectedIndex = 0;
 
-  // Used for a horizontally swipeable PageView
-  final PageController _controller = PageController(
-    initialPage: 0,
-  );
+  // For handling the swipeable pages
+  late final TabController _controller;
 
-  // Currently, the user is given 5 editable team pages.
-  // Conditionally appending a new team could be a nice feature,
-  // in the event the user has used populated all available pages.
-  late final List<ChangeNotifierProvider<PokemonTeam>> pages = List.filled(
-    teamCount,
-    ChangeNotifierProvider<PokemonTeam>(
-      create: (context) => PokemonTeam(),
-      child: Consumer<PokemonTeam>(
-        builder: (context, pokemon, child) {
-          return const TeamPage();
+  // A list of pokemon teams and a list of their respective pages
+  late final List<PokemonTeam> _teams;
+  late final List<TeamPage> _pages;
+
+  // Push the team analysis screen onto the navigator stack.
+  // The pokemon team changes there will be reflected in newTeam
+  void _onAnalyzePressed() async {
+    final PokemonTeam selectedTeam = _teams[_selectedIndex];
+
+    // If the team is empty, no action will be taken
+    if (selectedTeam.isEmpty()) return;
+
+    // TODO update the new team
+    final newTeam = await Navigator.push(
+      context,
+      MaterialPageRoute<List<Pokemon?>>(
+        builder: (BuildContext context) {
+          return TeamAnalysis(
+            pokemonTeam: selectedTeam.getPokemonTeam(),
+            selectedCup: selectedTeam.cup,
+          );
         },
       ),
-    ),
-  );
+    );
+  }
 
-  // Update _pageIndex, consequently updating the dot indicatior
-  // newIndex is supplied by the PageView widget
-  void _updatePageIndex(int newIndex) {
-    setState(() {
-      _pageIndex = newIndex.toDouble();
+  // Push the TeamInfo screen onto the navigator stack
+  void _onTeamInfoPressed() {
+    final PokemonTeam selectedTeam = _teams[_selectedIndex];
+
+    // If the team is empty, no action will be taken
+    if (selectedTeam.isEmpty()) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return TeamInfo(pokemonTeam: selectedTeam.getPokemonTeam());
+        },
+      ),
+    );
+  }
+
+  // Setup the team list, and page list that cooresponds to each team
+  void _initializeLists() {
+    _teams = [
+      PokemonTeam(),
+      PokemonTeam(),
+      PokemonTeam(),
+      PokemonTeam(),
+      PokemonTeam(),
+    ];
+
+    _pages = _teams.map((team) {
+      return TeamPage(
+        key: GlobalKey(),
+        pokemonTeam: team,
+      );
+    }).toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initializeLists();
+    _controller = TabController(length: teamCount, vsync: this);
+
+    // Upon controller updating, update the local index
+    // This is used to access the Pokemon Team currently displayed
+    _controller.addListener(() {
+      _selectedIndex = _controller.index;
     });
   }
 
   @override
   void dispose() {
     _controller.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         // Horizontally swipeable team pages
         SizedBox(
-          height: SizeConfig.screenHeight * .88,
-          child: PageView(
-            scrollDirection: Axis.horizontal,
+          height: SizeConfig.screenHeight * 0.79,
+          child: TabBarView(
             controller: _controller,
-            children: pages,
-            onPageChanged: _updatePageIndex,
+            children: _pages,
           ),
         ),
 
-        // Dots indicating the current team page
-        DotsIndicator(
-          dotsCount: teamCount,
-          position: _pageIndex,
-        )
+        TabPageSelector(
+          controller: _controller,
+          indicatorSize: SizeConfig.blockSizeHorizontal * 3.0,
+        ),
+
+        // Spacer
+        SizedBox(height: SizeConfig.blockSizeVertical * 2.0),
+
+        // Buttons at the bottom of the screen
+        // These will navigate to a new page
+        FooterButtons(
+          onAnalyzePressed: _onAnalyzePressed,
+          onTeamInfoPressed: _onTeamInfoPressed,
+        ),
       ],
     );
   }
