@@ -10,9 +10,9 @@ import 'package:flutter/widgets.dart';
 // Local Imports
 import '../configs/size_config.dart';
 import '../data/pokemon/pokemon.dart';
+import '../data/cup.dart';
 import '../widgets/exit_button.dart';
 import '../widgets/pokemon_button.dart';
-import '../data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
@@ -23,7 +23,12 @@ will be returned via the Navigator.pop.
 */
 
 class PokemonSearch extends StatefulWidget {
-  const PokemonSearch({Key? key}) : super(key: key);
+  const PokemonSearch({
+    Key? key,
+    required this.cup,
+  }) : super(key: key);
+
+  final Cup cup;
 
   @override
   _PokemonSearchState createState() => _PokemonSearchState();
@@ -34,7 +39,7 @@ class _PokemonSearchState extends State<PokemonSearch> {
   final TextEditingController searchController = TextEditingController();
 
   // List of ALL Pokemon
-  final List<Pokemon> pokemon = globals.gamemaster.pokemon;
+  List<Pokemon> pokemon = [];
 
   // A variable list of Pokemon based on search bar text input
   List<Pokemon> filteredPokemon = [];
@@ -43,6 +48,8 @@ class _PokemonSearchState extends State<PokemonSearch> {
   @override
   void initState() {
     super.initState();
+
+    pokemon = widget.cup.getRankedPokemonList('overall');
 
     // Start listening to changes.
     searchController.addListener(_filterPokemonList);

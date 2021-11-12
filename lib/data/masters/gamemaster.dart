@@ -21,6 +21,7 @@ the entire app.
 class GameMaster {
   GameMaster({
     required this.pokemon,
+    required this.pokemonIdMap,
     required this.shadowPokemon,
     required this.shadowPokemonKeys,
     required this.xsPokemon,
@@ -57,6 +58,7 @@ class GameMaster {
     // Shadow Pokemon
     // XS Pokemon
     List<Pokemon> pokemon = [];
+    Map<String, Pokemon> pokemonIdMap = {};
     List<Pokemon> shadowPokemon = [];
     List<Pokemon> xsPokemon = [];
 
@@ -68,14 +70,11 @@ class GameMaster {
       // Populate all pokemon data
       // Retrieve the move objects from 'moves' internally for this Pokemon
       final Pokemon pkm = Pokemon.fromJson(pokemonJson, moves);
+      final id = pkm.speciesId;
 
-      // Assign the pokemon to either the shadow, xs, or standard list
-      if (pkm.tags!.contains('shadow')) {
-        shadowPokemon.add(pkm);
-      } else if (pkm.tags!.contains('xs')) {
-        xsPokemon.add(pkm);
-      } else {
+      if (!id.contains('shadow') && !id.contains('xs')) {
         pokemon.add(pkm);
+        pokemonIdMap[pkm.speciesId] = pkm;
       }
     }
 
@@ -84,6 +83,7 @@ class GameMaster {
 
     return GameMaster(
       pokemon: pokemon,
+      pokemonIdMap: pokemonIdMap,
       shadowPokemon: shadowPokemon,
       shadowPokemonKeys: shadowPokemonKeys,
       xsPokemon: xsPokemon,
@@ -92,11 +92,20 @@ class GameMaster {
     );
   }
 
+  // Load the Pokemon Rankings for each cup
+  void initializeRankings() {
+    void loadCup(Cup cup) => cup.loadRankings();
+    cups.forEach(loadCup);
+  }
+
   // The master list of ALL moves
   late final List<Move> moves;
 
   // The master list of ALL pokemon
   late final List<Pokemon> pokemon;
+
+  // A map of ALL pokemon to their speciesId
+  late final Map<String, Pokemon> pokemonIdMap;
 
   // The master list of ALL shadow pokemon
   late final List<Pokemon> shadowPokemon;

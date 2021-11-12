@@ -32,7 +32,6 @@ class Pokemon {
     this.released,
     this.tags,
     this.eliteMoves,
-    this.isShadow = false,
   });
 
   // JSON -> OBJ conversion
@@ -44,6 +43,17 @@ class Pokemon {
     final typing = Typing(List<String>.from(json['types']));
     final fastMoveKeys = List<String>.from(json['fastMoves']);
     final chargedMoveKeys = List<String>.from(json['chargedMoves']);
+    final released = json['released'] as bool?;
+    List<String>? tags = [];
+    List<String>? eliteMoves = [];
+
+    if (json.containsKey('tags')) {
+      tags = List<String>.from(json['tags']);
+
+      if (tags.contains('shadoweligible')) {
+        chargedMoveKeys.add('RETURN');
+      }
+    }
 
     // For UI purposes, any Pokemon with only 1 possible charged move will have
     // an additional 2nd charge move called 'none'.
@@ -63,16 +73,8 @@ class Pokemon {
       thirdMoveCost = 0;
     }
 
-    final released = json['released'] as bool?;
-    List<String>? tags = [];
-    List<String>? eliteMoves = [];
-
     if (json.containsKey('eliteMoves')) {
       eliteMoves = List<String>.from(json['eliteMoves']);
-    }
-
-    if (json.containsKey('tags')) {
-      tags = List<String>.from(json['tags']);
     }
 
     return Pokemon(
@@ -108,13 +110,14 @@ class Pokemon {
   final List<String>? eliteMoves;
 
   // VARIABLES
-  bool isShadow;
+  bool isShadow = false;
   late Move selectedFastMove;
   late List<Move> selectedChargedMoves;
+  num rating = 0;
 
   // Deep copy
   static Pokemon from(Pokemon other) {
-    return Pokemon(
+    final Pokemon pokemonCopy = Pokemon(
       dex: other.dex,
       speciesName: other.speciesName,
       speciesId: other.speciesId,
@@ -128,6 +131,14 @@ class Pokemon {
       tags: other.tags,
       eliteMoves: other.eliteMoves,
     );
+
+    pokemonCopy.setMoveset(other.selectedFastMove, other.selectedChargedMoves);
+
+    return pokemonCopy;
+  }
+
+  void setRating(num r) {
+    rating = r;
   }
 
   // Form a string that describes this Pokemon's typing
@@ -158,21 +169,43 @@ class Pokemon {
     return typing.getDefenseEffectiveness();
   }
 
+  // Set the moveset for this Pokemon (used in 'from' constructor)
+  void setMoveset(Move fastMove, List<Move> chargedMoves) {
+    selectedFastMove = fastMove;
+    selectedChargedMoves = chargedMoves;
+  }
+
   // Set the selected moves to the relatively most powerful moves
   // Because of ever-changing meta this is not necessarily a perfect algorithm
-  void initializeMetaMoves() {
-    selectedFastMove = getMetaFastMove();
-    selectedChargedMoves = getMetaChargedMoves();
+  void initializeMetaMoves(List<String> moveIds) {
+    /*
+    if (moveIds.isEmpty) {
+      selectedFastMove = fastMoves[0];
+      selectedChargedMoves = [chargedMoves[0], chargedMoves[1]];
+      return;
+    }
+    */
+    selectedFastMove = getMetaFastMove(moveIds[0]);
+    if (moveIds.length < 3) {
+      getMetaChargedMoves(moveIds[1], 'NONE');
+    } else {
+      selectedChargedMoves = getMetaChargedMoves(moveIds[1], moveIds[2]);
+    }
   }
 
   // Determine the most meta-relevant fast move and return it
-  Move getMetaFastMove() {
-    return fastMoves[0];
+  Move getMetaFastMove(String fastId) {
+    final Move? fast = fastMoves.firstWhere((move) => move.moveId == fastId);
+
+    return fast!;
   }
 
   // Determine the most meta-relevant charged moves and return it
-  List<Move> getMetaChargedMoves() {
-    return [chargedMoves[0], chargedMoves[1]];
+  List<Move> getMetaChargedMoves(String chargeId1, String chargeId2) {
+    final c1 = chargedMoves.firstWhere((move) => move.moveId == chargeId1);
+    final c2 = chargedMoves.firstWhere((move) => move.moveId == chargeId2);
+
+    return [c1, c2];
   }
 
   // Update the selected fast move slot with the provided name

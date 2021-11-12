@@ -10,6 +10,7 @@ void main() async {
   // Global gamemaster reference setup
   // All Pokemon GO related data is in the gamemaster
   globals.gamemaster = await GameMaster.generateGameMaster();
+  globals.gamemaster.initializeRankings();
 
   runApp(const PogoTeamsApp());
 }

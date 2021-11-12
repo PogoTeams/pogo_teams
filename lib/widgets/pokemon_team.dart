@@ -33,7 +33,7 @@ class PokemonTeam {
 
   // The selected PVP cup for this team
   // Defaults to Great League
-  Cup cup = globals.gamemaster.cups.firstWhere((cup) => cup.name == 'great');
+  Cup cup = globals.gamemaster.cups[0];
 
   // Get the list of non-null pokemon
   List<Pokemon> getPokemonTeam() {
@@ -245,7 +245,7 @@ class _TeamNodeState extends State<TeamNode> {
     final newPokemon = await Navigator.push(
       context,
       MaterialPageRoute<Pokemon>(builder: (BuildContext context) {
-        return const PokemonSearch();
+        return PokemonSearch(cup: widget.cup);
       }),
     );
 
@@ -516,7 +516,6 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    widget.pokemon.initializeMetaMoves();
 
     _initializeMoveData();
   }
@@ -526,7 +525,6 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
   void didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    widget.pokemon.initializeMetaMoves();
     _initializeMoveData();
   }
 

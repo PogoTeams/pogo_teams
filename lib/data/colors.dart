@@ -30,8 +30,7 @@ final Map<String, Color> typeColors = {
 };
 
 final Map<String, Color> cupColors = {
-  "little": Colors.cyan,
-  "great": Colors.blue,
-  "ultra": const Color(0xFFC8B603),
-  "master": Colors.purple,
+  "Great League": Colors.blue,
+  "Ultra League": const Color(0xFFC8B603),
+  "Master League": Colors.purple,
 };

@@ -29,28 +29,21 @@
     }],
     "cups": [
     {
-        "name": "little",
-        "title": "Little Cup",
-        "cp": 500,
-        "include": [],
-        "exclude": []
-    },
-    {
-        "name": "great",
+        "key": "gobattleleague",
         "title": "Great League",
         "cp": 1500,
         "include": [],
         "exclude": []
     },
     {
-        "name": "ultra",
+        "key": "gobattleleague",
         "title": "Ultra League",
         "cp": 2500,
         "include": [],
         "exclude": []
     },
     {
-        "name": "master",
+        "key": "gobattleleague",
         "title": "Master League",
         "cp": 10000,
         "include": [],

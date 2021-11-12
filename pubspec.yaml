@@ -62,6 +62,13 @@ flutter:
     - assets/
     - assets/color_type_icons/
     - assets/white_type_icons/
+    - assets/rankings/gobattleleague/attackers/
+    - assets/rankings/gobattleleague/chargers/
+    - assets/rankings/gobattleleague/closers/
+    - assets/rankings/gobattleleague/consistency/
+    - assets/rankings/gobattleleague/leads/
+    - assets/rankings/gobattleleague/overall/
+    - assets/rankings/gobattleleague/switches/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

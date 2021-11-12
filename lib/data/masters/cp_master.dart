@@ -25,26 +25,6 @@ class CpMaster {
             pow(cpMultipliers[levelIndex], 2) *
             .1)
         .toInt();
-    // Find the first cp breakpoint that goes over the cap
-    /*
-    while (cp < cpCap && levelIndex < 51) {
-      ++levelIndex;
-      print(cp);
-      cp = (stats[0] *
-              sqrt(stats[1]) *
-              sqrt(stats[2] * pow(cpMultipliers[levelIndex], 2)) ~/
-              10)
-          .floor();
-    }
-
-    // The previous level contains the max CP given the cpCap
-    --levelIndex;
-    return (stats[0] *
-            sqrt(stats[1]) *
-            sqrt(stats[2] * pow(cpMultipliers[levelIndex], 2)) ~/
-            10)
-        .floor();
-        */
   }
 
   // The scales used in calculating the cp increase
