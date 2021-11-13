@@ -57,6 +57,31 @@ class Typing {
   bool contains(Type type) {
     return typeA.typeKey == type.typeKey || typeB.typeKey == type.typeKey;
   }
+
+  // True of typeKeys contains a key that this typing manages
+  bool containsKey(List<String> typeKeys) {
+    final int typeKeyLen = typeKeys.length;
+    bool contains = false;
+
+    for (int i = 0; i < typeKeyLen && !contains; ++i) {
+      contains = typeKeys[i] == typeA.typeKey || typeKeys[i] == typeB.typeKey;
+    }
+
+    return contains;
+  }
+
+  // True if this typing is weak to the given type
+  // 'weak' counts as more than neutral damage
+  bool isWeakness(Type type) {
+    if (isMonoType()) {
+      return TypeMaster.effectivenessMaster[typeA.typeKey]![type.typeKey]![1] >
+          1;
+    }
+
+    return TypeMaster.effectivenessMaster[typeA.typeKey]![type.typeKey]![1] +
+            TypeMaster.effectivenessMaster[typeB.typeKey]![type.typeKey]![1] >
+        2.0;
+  }
 }
 
 /*
@@ -107,5 +132,18 @@ class Type {
     }
 
     return offenseEffectiveness;
+  }
+
+  // Get a list of counters to this type
+  List<Type> getCounters() {
+    List<Type> counters = [];
+
+    for (String typeKey in typeEffectiveness.keys) {
+      if (typeEffectiveness[typeKey]![1] > 1.0) {
+        counters.add(Type(typeKey: typeKey));
+      }
+    }
+
+    return counters.getRange(0, 2).toList();
   }
 }

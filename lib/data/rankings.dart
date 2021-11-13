@@ -104,14 +104,7 @@ class Rankings {
 
     for (int i = 0; i < jsonLen; ++i) {
       final rankedPokemon = RankedPokemon.fromJson(json[i]);
-      final id = rankedPokemon.speciesId;
-
-      // Exluding shadow and XL in ratings
-      // The ratings are used loosely to weight certain Pokemon recommendations
-      // This is a matter of opinionated design
-      if (!id.contains('shadow') && !id.contains('xs')) {
-        ratings.add(rankedPokemon);
-      }
+      ratings.add(rankedPokemon);
     }
 
     ratings.sort((a, b) => ((b.rating - a.rating) * 1000).toInt());
@@ -190,7 +183,7 @@ class RankedPokemon {
     );
   }
 
-  final String speciesId;
+  String speciesId;
   final num rating;
   final List<String> moveset;
 }

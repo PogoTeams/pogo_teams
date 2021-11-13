@@ -3,16 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 // Local Imports
-import '../widgets/colored_container.dart';
 import '../tools/pair.dart';
 import '../data/pokemon/pokemon.dart';
 import '../data/cup.dart';
 import '../data/masters/type_master.dart';
 import '../data/pokemon/typing.dart';
-import '../data/pokemon/move.dart';
-import '../widgets/exit_button.dart';
+import '../widgets/nodes/pokemon_nodes.dart';
+import '../widgets/buttons/exit_button.dart';
 import '../configs/size_config.dart';
-import '../data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
@@ -107,111 +105,6 @@ class TeamAnalysis extends StatelessWidget {
   }
 }
 
-class CompactPokemonNode extends StatelessWidget {
-  const CompactPokemonNode({
-    Key? key,
-    required this.pokemon,
-  }) : super(key: key);
-
-  final Pokemon pokemon;
-
-  // The Pokemon name and type icon(s)
-  Row _buildNodeHeader(Pokemon pokemon) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Pokemon name
-        Container(
-          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
-          alignment: Alignment.topLeft,
-          child: Text(
-            pokemon.speciesName,
-            style: TextStyle(
-              fontSize: SizeConfig.h1,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-
-        // Typing icon(s)
-        Container(
-          alignment: Alignment.topRight,
-          height: SizeConfig.blockSizeHorizontal * 8.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: pokemon.getTypeIcons(iconColor: 'white'),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final double blockSize = SizeConfig.blockSizeHorizontal;
-
-    return ColoredContainer(
-      padding: EdgeInsets.only(
-        top: blockSize * 1.3,
-        right: blockSize * 2.5,
-        bottom: blockSize * 5.0,
-        left: blockSize * 2.5,
-      ),
-      pokemon: pokemon,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildNodeHeader(pokemon),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              CompactMoveNode(move: pokemon.selectedFastMove),
-              CompactMoveNode(move: pokemon.selectedChargedMoves[0]),
-              CompactMoveNode(move: pokemon.selectedChargedMoves[1]),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CompactMoveNode extends StatelessWidget {
-  const CompactMoveNode({
-    Key? key,
-    required this.move,
-  }) : super(key: key);
-
-  final Move move;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Text(
-        move.name,
-        style: TextStyle(
-          fontFamily: DefaultTextStyle.of(context).style.fontFamily,
-          fontSize: SizeConfig.h3,
-        ),
-      ),
-      margin: EdgeInsets.only(
-        top: SizeConfig.blockSizeVertical * .7,
-      ),
-      width: SizeConfig.screenWidth * .28,
-      height: SizeConfig.blockSizeVertical * 3.5,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.white,
-          width: 1.5,
-        ),
-        borderRadius: BorderRadius.circular(100.0),
-        color: move.type.typeColor,
-      ),
-    );
-  }
-}
-
 class EffectivenessAnalysis extends StatelessWidget {
   const EffectivenessAnalysis({
     Key? key,
@@ -222,28 +115,12 @@ class EffectivenessAnalysis extends StatelessWidget {
 
   // Determine the type effectiveneses of this team
   Widget _threats() {
-    List<Type> typeList = TypeMaster.typeList;
+    final int teamLen = pokemonTeam.length;
 
-    // Bind a list of all types to a value
-    // This value will represent their offensive effectiveness on this team
     List<Pair<double, Type>> teamEffectiveness =
-        List.generate(globals.typeCount, (i) {
-      return Pair(a: 0.0, b: typeList[i]);
-    });
+        TypeMaster.getNetTypeEffectiveness(pokemonTeam);
 
-    final int teamLength = pokemonTeam.length;
-
-    // Accumulate team defensive type effectiveness for all types
-    for (int i = 0; i < teamLength; ++i) {
-      final List<double> effectiveness =
-          pokemonTeam[i].getDefenseEffectiveness();
-
-      for (int k = 0; k < globals.typeCount; ++k) {
-        teamEffectiveness[k].a += effectiveness[k];
-      }
-    }
-
-    teamEffectiveness.removeWhere((pair) => pair.a <= teamLength);
+    teamEffectiveness.removeWhere((pair) => pair.a <= teamLen);
 
     // Sort by teamEffectiveness and typeList by highest threat
     teamEffectiveness.sort((prev, curr) => ((curr.a - prev.a) * 1000).round());

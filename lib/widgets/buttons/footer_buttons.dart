@@ -8,7 +8,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import '../configs/size_config.dart';
+import '../../configs/size_config.dart';
 
 /*
 -------------------------------------------------------------------------------

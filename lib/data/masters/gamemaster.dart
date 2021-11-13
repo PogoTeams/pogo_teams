@@ -70,12 +70,9 @@ class GameMaster {
       // Populate all pokemon data
       // Retrieve the move objects from 'moves' internally for this Pokemon
       final Pokemon pkm = Pokemon.fromJson(pokemonJson, moves);
-      final id = pkm.speciesId;
 
-      if (!id.contains('shadow') && !id.contains('xs')) {
-        pokemon.add(pkm);
-        pokemonIdMap[pkm.speciesId] = pkm;
-      }
+      pokemon.add(pkm);
+      pokemonIdMap[pkm.speciesId] = pkm;
     }
 
     // Populate the pokemon list from json data

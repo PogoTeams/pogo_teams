@@ -8,9 +8,9 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import '../configs/size_config.dart';
-import '../data/pokemon/pokemon.dart';
-import 'colored_container.dart';
+import '../../data/pokemon/pokemon.dart';
+import '../nodes/pokemon_nodes.dart';
+import '../../configs/size_config.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -19,8 +19,8 @@ The current filtered search list will render this widget for each Pokemon.
 -------------------------------------------------------------------------------
 */
 
-class PokemonButton extends StatelessWidget {
-  const PokemonButton({
+class CompactPokemonNodeButton extends StatelessWidget {
+  const CompactPokemonNodeButton({
     Key? key,
     required this.pokemon,
     required this.onPressed,
@@ -33,26 +33,23 @@ class PokemonButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
+    final double blockSize = SizeConfig.blockSizeHorizontal;
+
+    return MaterialButton(
+      // Button Sizing
+      padding: EdgeInsets.only(
+        top: blockSize * 2.0,
+        right: blockSize * 4.0,
+        bottom: blockSize * 2.0,
+        left: blockSize * 4.0,
+      ),
+
       // Callbacks
       onPressed: onPressed,
       onLongPress: onLongPress,
 
       // Pokemon name and button styling
-      child: ColoredContainer(
-        pokemon: pokemon,
-        height: SizeConfig.blockSizeVertical * 4.5,
-        child: Center(
-          child: Text(
-            pokemon.speciesName + ' ' + pokemon.rating.toString(),
-            style: TextStyle(
-              fontSize: SizeConfig.h2,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
+      child: CompactPokemonNode(pokemon: pokemon),
     );
   }
 }

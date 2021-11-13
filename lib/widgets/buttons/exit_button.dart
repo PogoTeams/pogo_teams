@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../configs/size_config.dart';
+import '../../configs/size_config.dart';
 
 /*
 -------------------------------------------------------------------------------

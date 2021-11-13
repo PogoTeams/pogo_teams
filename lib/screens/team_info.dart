@@ -6,7 +6,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 // Local Imports
 import '../data/pokemon/pokemon.dart';
-import '../widgets/exit_button.dart';
+import '../widgets/buttons/exit_button.dart';
 
 /*
 -------------------------------------------------------------------------------

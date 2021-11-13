@@ -28,7 +28,9 @@ class Pokemon {
     required this.fastMoves,
     required this.chargedMoves,
     required this.defaultIVs,
-    this.thirdMoveCost,
+    required this.shadowEligible,
+    required this.isXs,
+    required this.isShadow,
     this.released,
     this.tags,
     this.eliteMoves,
@@ -37,7 +39,7 @@ class Pokemon {
   // JSON -> OBJ conversion
   factory Pokemon.fromJson(Map<String, dynamic> json, List<Move> moves) {
     final dex = json['dex'] as int;
-    final speciesName = json['speciesName'] as String;
+    String speciesName = json['speciesName'] as String;
     final speciesId = json['speciesId'] as String;
     final baseStats = BaseStats.fromJson(json['baseStats']);
     final typing = Typing(List<String>.from(json['types']));
@@ -46,13 +48,33 @@ class Pokemon {
     final released = json['released'] as bool?;
     List<String>? tags = [];
     List<String>? eliteMoves = [];
+    bool shadowEligible = false;
+    bool isXs = false;
+    bool isShadow = false;
 
     if (json.containsKey('tags')) {
       tags = List<String>.from(json['tags']);
 
+      // Add Frustration & Return to Pokemon that can be shadow / purified
       if (tags.contains('shadoweligible')) {
+        shadowEligible = true;
         chargedMoveKeys.add('RETURN');
+        chargedMoveKeys.add('FRUSTRATION');
       }
+      // There are shadow objects for each shadow eligible Pokemon too
+      // Idealy this would be contained in 1 Pokemon object
+      // Currently, the pvpoke ratings have shadows as a separate instance
+      else if (tags.contains('shadow')) {
+        isShadow = true;
+        shadowEligible = true;
+        chargedMoveKeys.add('FRUSTRATION');
+
+        // Instead of the name showing shadow, there will be an icon
+        speciesName = speciesName.replaceFirst(' (Shadow)', '');
+      }
+
+      // XL candy Pokemon
+      isXs = tags.contains('xs');
     }
 
     // For UI purposes, any Pokemon with only 1 possible charged move will have
@@ -67,12 +89,6 @@ class Pokemon {
 
     final defaultIVs = DefaultIVs.fromJson(json['defaultIVs']);
 
-    var thirdMoveCost = json['thirdMoveCost'];
-
-    if (thirdMoveCost.runtimeType == bool) {
-      thirdMoveCost = 0;
-    }
-
     if (json.containsKey('eliteMoves')) {
       eliteMoves = List<String>.from(json['eliteMoves']);
     }
@@ -86,10 +102,12 @@ class Pokemon {
       fastMoves: fastMoves,
       chargedMoves: chargedMoves,
       defaultIVs: defaultIVs,
-      thirdMoveCost: thirdMoveCost,
       released: released,
       tags: tags,
       eliteMoves: eliteMoves,
+      shadowEligible: shadowEligible,
+      isXs: isXs,
+      isShadow: isShadow,
     );
   }
 
@@ -102,15 +120,16 @@ class Pokemon {
   final List<Move> fastMoves;
   final List<Move> chargedMoves;
   final DefaultIVs defaultIVs;
+  final bool shadowEligible;
+  final bool isXs;
+  bool isShadow;
 
   // OPTIONAL
-  final int? thirdMoveCost;
   final bool? released;
   final List<String>? tags;
   final List<String>? eliteMoves;
 
   // VARIABLES
-  bool isShadow = false;
   late Move selectedFastMove;
   late List<Move> selectedChargedMoves;
   num rating = 0;
@@ -126,13 +145,16 @@ class Pokemon {
       fastMoves: other.fastMoves,
       chargedMoves: other.chargedMoves,
       defaultIVs: other.defaultIVs,
-      thirdMoveCost: other.thirdMoveCost,
+      shadowEligible: other.shadowEligible,
+      isXs: other.isXs,
+      isShadow: other.isShadow,
       released: other.released,
       tags: other.tags,
       eliteMoves: other.eliteMoves,
     );
 
     pokemonCopy.setMoveset(other.selectedFastMove, other.selectedChargedMoves);
+    pokemonCopy.setRating(other.rating);
 
     return pokemonCopy;
   }
@@ -160,6 +182,21 @@ class Pokemon {
             typing.typeA.getIcon(iconColor: iconColor),
             typing.typeB.getIcon(iconColor: iconColor),
           ];
+  }
+
+  bool containsMoveType(List<String> keys) {
+    bool contains = false;
+    int len = fastMoves.length;
+    for (int i = 0; i < len && !contains; ++i) {
+      contains = keys.contains('@' + fastMoves[i].type.typeKey);
+    }
+    len = chargedMoves.length;
+
+    for (int i = 0; i < len && !contains; ++i) {
+      contains = keys.contains('@' + chargedMoves[i].type.typeKey);
+    }
+
+    return contains;
   }
 
   // Get the defensive effectiveness of this Pokemon's typing.

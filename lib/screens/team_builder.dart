@@ -1,14 +1,18 @@
 // Flutter Imports
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+// Package Imports
+import 'package:dots_indicator/dots_indicator.dart';
 
 // Local Imports
 import '../screens/team_analysis.dart';
 import 'team_info.dart';
 import '../configs/size_config.dart';
 import '../widgets/pokemon_team.dart';
-import '../widgets/footer_buttons.dart';
+import '../widgets/buttons/footer_buttons.dart';
 import '../data/pokemon/pokemon.dart';
 
 /*
@@ -51,23 +55,26 @@ class TeamsPages extends StatefulWidget {
 
 class _TeamsPagesState extends State<TeamsPages>
     with SingleTickerProviderStateMixin {
+  final int maxTeamCount = 15;
+  final int minTeamCount = 2;
+
   // The number of editable teams available to the user
-  int teamCount = 5;
+  late int teamCount = minTeamCount;
 
   // The index cooresponding to the currently display page
-  int _selectedIndex = 0;
+  int _pageIndex = 0;
 
   // For handling the swipeable pages
-  late final TabController _controller;
+  final PageController _controller = PageController(initialPage: 0);
 
   // A list of pokemon teams and a list of their respective pages
-  late final List<PokemonTeam> _teams;
-  late final List<TeamPage> _pages;
+  late List<PokemonTeam> _teams;
+  late List<TeamPage> _pages;
 
   // Push the team analysis screen onto the navigator stack.
   // The pokemon team changes there will be reflected in newTeam
   void _onAnalyzePressed() async {
-    final PokemonTeam selectedTeam = _teams[_selectedIndex];
+    final PokemonTeam selectedTeam = _teams[_pageIndex];
 
     // If the team is empty, no action will be taken
     if (selectedTeam.isEmpty()) return;
@@ -88,7 +95,7 @@ class _TeamsPagesState extends State<TeamsPages>
 
   // Push the TeamInfo screen onto the navigator stack
   void _onTeamInfoPressed() {
-    final PokemonTeam selectedTeam = _teams[_selectedIndex];
+    final PokemonTeam selectedTeam = _teams[_pageIndex];
 
     // If the team is empty, no action will be taken
     if (selectedTeam.isEmpty()) return;
@@ -103,12 +110,49 @@ class _TeamsPagesState extends State<TeamsPages>
     );
   }
 
+  void _onPageChanged(int index, {bool jump = false}) {
+    // Swiped right
+    setState(() {
+      /*
+      TODO implement jump on tap
+      if (jump) {
+        _controller.animateToPage(index,
+            duration: Duration(milliseconds: 50), curve: Curves.bounceIn);
+      }
+      */
+
+      if (index > _pageIndex) {
+        _pageIndex = index;
+        if (teamCount == maxTeamCount || index < teamCount - 1) {
+          return;
+        }
+
+        ++teamCount;
+        _teams.add(PokemonTeam());
+        _pages.add(TeamPage(pokemonTeam: _teams[index]));
+      }
+
+      // Swiped Left
+      else {
+        _pageIndex = index;
+        if (teamCount == minTeamCount || index == maxTeamCount - minTeamCount) {
+          return;
+        }
+
+        if (index == teamCount - 3 &&
+            _teams.last.isEmpty() &&
+            _teams[index].isEmpty()) {
+          _teams.removeLast();
+          _pages.removeLast();
+          --teamCount;
+        }
+      }
+    });
+  }
+
   // Setup the team list, and page list that cooresponds to each team
   void _initializeLists() {
     _teams = [
-      PokemonTeam(),
-      PokemonTeam(),
-      PokemonTeam(),
       PokemonTeam(),
       PokemonTeam(),
     ];
@@ -126,13 +170,6 @@ class _TeamsPagesState extends State<TeamsPages>
     super.initState();
 
     _initializeLists();
-    _controller = TabController(length: teamCount, vsync: this);
-
-    // Upon controller updating, update the local index
-    // This is used to access the Pokemon Team currently displayed
-    _controller.addListener(() {
-      _selectedIndex = _controller.index;
-    });
   }
 
   @override
@@ -149,20 +186,35 @@ class _TeamsPagesState extends State<TeamsPages>
       children: [
         // Horizontally swipeable team pages
         SizedBox(
-          height: SizeConfig.screenHeight * 0.79,
-          child: TabBarView(
-            controller: _controller,
-            children: _pages,
+          height: SizeConfig.screenHeight * 0.77,
+          child: PageView.builder(
+            onPageChanged: _onPageChanged,
+            itemCount: _pages.length,
+            itemBuilder: (context, index) {
+              return _pages[index];
+            },
           ),
         ),
 
-        TabPageSelector(
-          controller: _controller,
-          indicatorSize: SizeConfig.blockSizeHorizontal * 3.0,
+        // Show dots indicator if there is more than 1 team
+        Container(
+          padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2.0),
+          //width: SizeConfig.screenWidth * 0.7,
+          child: DotsIndicator(
+            dotsCount: teamCount,
+            position: _pageIndex.toDouble(),
+            axis: Axis.horizontal,
+            decorator: const DotsDecorator(
+              activeColor: Colors.white,
+              color: Colors.grey,
+            ),
+            /*
+            onTap: (pos) {
+              _onPageChanged(pos.toInt(), jump: true);
+            },
+            */
+          ),
         ),
-
-        // Spacer
-        SizedBox(height: SizeConfig.blockSizeVertical * 2.0),
 
         // Buttons at the bottom of the screen
         // These will navigate to a new page
@@ -170,6 +222,8 @@ class _TeamsPagesState extends State<TeamsPages>
           onAnalyzePressed: _onAnalyzePressed,
           onTeamInfoPressed: _onTeamInfoPressed,
         ),
+
+        //SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
       ],
     );
   }
