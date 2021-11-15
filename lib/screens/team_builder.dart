@@ -3,6 +3,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/scheduler.dart';
 
 // Package Imports
 import 'package:dots_indicator/dots_indicator.dart';
@@ -56,7 +57,10 @@ class TeamsPages extends StatefulWidget {
 class _TeamsPagesState extends State<TeamsPages>
     with SingleTickerProviderStateMixin {
   final int maxTeamCount = 15;
-  final int minTeamCount = 2;
+  final int minTeamCount = 3;
+
+  // A flag to set whether the max page allocations has been met
+  bool maxed = false;
 
   // The number of editable teams available to the user
   late int teamCount = minTeamCount;
@@ -65,7 +69,10 @@ class _TeamsPagesState extends State<TeamsPages>
   int _pageIndex = 0;
 
   // For handling the swipeable pages
-  final PageController _controller = PageController(initialPage: 0);
+  final PageController _controller = PageController(
+    initialPage: 0,
+    keepPage: true,
+  );
 
   // A list of pokemon teams and a list of their respective pages
   late List<PokemonTeam> _teams;
@@ -85,8 +92,7 @@ class _TeamsPagesState extends State<TeamsPages>
       MaterialPageRoute<List<Pokemon?>>(
         builder: (BuildContext context) {
           return TeamAnalysis(
-            pokemonTeam: selectedTeam.getPokemonTeam(),
-            selectedCup: selectedTeam.cup,
+            team: selectedTeam,
           );
         },
       ),
@@ -110,49 +116,54 @@ class _TeamsPagesState extends State<TeamsPages>
     );
   }
 
-  void _onPageChanged(int index, {bool jump = false}) {
-    // Swiped right
+  // Called when a dot in the dot indicator is tapped
+  // The PageView will animate to the cooresponding page
+  void _jumpToPage(int index) {
     setState(() {
-      /*
-      TODO implement jump on tap
-      if (jump) {
+      if (_controller.hasClients) {
         _controller.animateToPage(index,
-            duration: Duration(milliseconds: 50), curve: Curves.bounceIn);
-      }
-      */
-
-      if (index > _pageIndex) {
-        _pageIndex = index;
-        if (teamCount == maxTeamCount || index < teamCount - 1) {
-          return;
-        }
-
-        ++teamCount;
-        _teams.add(PokemonTeam());
-        _pages.add(TeamPage(pokemonTeam: _teams[index]));
-      }
-
-      // Swiped Left
-      else {
-        _pageIndex = index;
-        if (teamCount == minTeamCount || index == maxTeamCount - minTeamCount) {
-          return;
-        }
-
-        if (index == teamCount - 3 &&
-            _teams.last.isEmpty() &&
-            _teams[index].isEmpty()) {
-          _teams.removeLast();
-          _pages.removeLast();
-          --teamCount;
-        }
+            duration: const Duration(seconds: 1), curve: Curves.easeInOut);
       }
     });
+  }
+
+  // Conditionally build the teams list
+  // There can be any where from 2 to maxTeamCount teams
+  void _onPageChanged(int index) {
+    // Attempting to go past the allocated page list which is null
+    if (index > maxTeamCount - 1) return;
+
+    setState(() {
+      // If moving to the last page in the list
+      if (index == teamCount - 1) {
+        _pageIndex = index;
+
+        // set a maxed flag to render the last dot
+        maxed = (!maxed ? teamCount == maxTeamCount : maxed);
+        if (maxed) return;
+
+        // Allocate a new page if the max hasn't been met
+        ++teamCount;
+        _teams.add(PokemonTeam());
+        _pages.add(TeamPage(
+          key: GlobalKey(),
+          pokemonTeam: _teams[index],
+        ));
+      } else {
+        _pageIndex = index;
+      }
+    });
+  }
+
+  // Edge cases for displaying the number of dots in the dot indicator
+  int _getDotCount() {
+    return (teamCount == maxTeamCount && maxed ? maxTeamCount : teamCount - 1);
   }
 
   // Setup the team list, and page list that cooresponds to each team
   void _initializeLists() {
     _teams = [
+      PokemonTeam(),
       PokemonTeam(),
       PokemonTeam(),
     ];
@@ -186,13 +197,11 @@ class _TeamsPagesState extends State<TeamsPages>
       children: [
         // Horizontally swipeable team pages
         SizedBox(
-          height: SizeConfig.screenHeight * 0.77,
-          child: PageView.builder(
+          height: SizeConfig.screenHeight * 0.79,
+          child: PageView(
+            controller: _controller,
             onPageChanged: _onPageChanged,
-            itemCount: _pages.length,
-            itemBuilder: (context, index) {
-              return _pages[index];
-            },
+            children: _pages,
           ),
         ),
 
@@ -201,18 +210,20 @@ class _TeamsPagesState extends State<TeamsPages>
           padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2.0),
           //width: SizeConfig.screenWidth * 0.7,
           child: DotsIndicator(
-            dotsCount: teamCount,
+            dotsCount: _getDotCount(),
             position: _pageIndex.toDouble(),
             axis: Axis.horizontal,
-            decorator: const DotsDecorator(
+            decorator: DotsDecorator(
               activeColor: Colors.white,
               color: Colors.grey,
+              spacing: EdgeInsets.only(
+                left: SizeConfig.blockSizeHorizontal * 2.0,
+                right: SizeConfig.blockSizeHorizontal * 2.0,
+              ),
             ),
-            /*
             onTap: (pos) {
-              _onPageChanged(pos.toInt(), jump: true);
+              _jumpToPage(pos.toInt());
             },
-            */
           ),
         ),
 
@@ -222,8 +233,6 @@ class _TeamsPagesState extends State<TeamsPages>
           onAnalyzePressed: _onAnalyzePressed,
           onTeamInfoPressed: _onTeamInfoPressed,
         ),
-
-        //SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
       ],
     );
   }

@@ -22,8 +22,8 @@ class ExitButton extends StatelessWidget {
     // Block size from MediaQuery
     final double blockSize = SizeConfig.blockSizeHorizontal;
     return Container(
-      height: blockSize * 10.0,
-      width: blockSize * 10.0,
+      height: blockSize * 11.0,
+      width: blockSize * 11.0,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,

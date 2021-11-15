@@ -41,21 +41,21 @@ class MoveDropdowns extends StatefulWidget {
 
 class _MoveDropdownsState extends State<MoveDropdowns> {
   // List of dropdown items for fast moves
-  late List<DropdownMenuItem<String>> fastMoveOptions;
+  late List<DropdownMenuItem<Move>> fastMoveOptions;
 
   // List of charged move names
   // These lists will filter out the selected move from the other list
   // This prevents the user from selecting the same charge move twice
-  late List<String> chargedMoveNamesL;
-  late List<String> chargedMoveNamesR;
+  late List<Move> chargedMoveNamesL;
+  late List<Move> chargedMoveNamesR;
 
   // List of dropdown items for charged moves
-  late List<DropdownMenuItem<String>> chargedMoveOptionsL;
-  late List<DropdownMenuItem<String>> chargedMoveOptionsR;
+  late List<DropdownMenuItem<Move>> chargedMoveOptionsL;
+  late List<DropdownMenuItem<Move>> chargedMoveOptionsR;
 
   // Setup the move dropdown items
   void _initializeMoveData() {
-    fastMoveOptions = _generateDropdownItems(widget.fastMoveNames);
+    fastMoveOptions = _generateDropdownItems(widget.pokemon.fastMoves);
 
     _updateChargedMoveOptions();
   }
@@ -63,14 +63,14 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
   // Upon initial build, update, or dropdown onChanged callback
   // Filter the left and right charged move lists for the dropdowns
   void _updateChargedMoveOptions() {
-    chargedMoveNamesL = widget.chargedMoveNames
-        .where((moveName) =>
-            moveName != widget.pokemon.selectedChargedMoves[1].name)
+    chargedMoveNamesL = widget.pokemon.chargedMoves
+        .where((move) =>
+            move.moveId != widget.pokemon.selectedChargedMoves[1].moveId)
         .toList();
 
-    chargedMoveNamesR = widget.chargedMoveNames
-        .where((moveName) =>
-            moveName != widget.pokemon.selectedChargedMoves[0].name)
+    chargedMoveNamesR = widget.pokemon.chargedMoves
+        .where((move) =>
+            move.moveId != widget.pokemon.selectedChargedMoves[0].moveId)
         .toList();
 
     chargedMoveOptionsL = _generateDropdownItems(chargedMoveNamesL);
@@ -79,14 +79,14 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
 
   // Generate the list of dropdown items from moveOptionNames
   // Called for each of the 3 move dropdowns
-  List<DropdownMenuItem<String>> _generateDropdownItems(
-      List<String> moveOptionNames) {
-    return moveOptionNames.map<DropdownMenuItem<String>>((String moveName) {
-      return DropdownMenuItem<String>(
-        value: moveName,
+  List<DropdownMenuItem<Move>> _generateDropdownItems(
+      List<Move> moveOptionNames) {
+    return moveOptionNames.map<DropdownMenuItem<Move>>((Move move) {
+      return DropdownMenuItem<Move>(
+        value: move,
         child: Center(
           child: Text(
-            moveName,
+            move.name,
             style: TextStyle(
               fontFamily: DefaultTextStyle.of(context).style.fontFamily,
               fontSize: SizeConfig.p,
@@ -122,7 +122,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
           label: 'F A S T',
           move: widget.pokemon.selectedFastMove,
           options: fastMoveOptions,
-          onChanged: (String? newFastMove) {
+          onChanged: (Move? newFastMove) {
             setState(() {
               widget.pokemon.updateSelectedFastMove(newFastMove);
             });
@@ -132,7 +132,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
           label: 'C H A R G E  1',
           move: widget.pokemon.selectedChargedMoves[0],
           options: chargedMoveOptionsL,
-          onChanged: (String? newChargedMove) {
+          onChanged: (Move? newChargedMove) {
             setState(() {
               widget.pokemon.updateSelectedChargedMove(0, newChargedMove);
               _updateChargedMoveOptions();
@@ -143,7 +143,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
           label: 'C H A R G E  2',
           move: widget.pokemon.selectedChargedMoves[1],
           options: chargedMoveOptionsR,
-          onChanged: (String? newChargedMove) {
+          onChanged: (Move? newChargedMove) {
             setState(() {
               widget.pokemon.updateSelectedChargedMove(1, newChargedMove);
               _updateChargedMoveOptions();
@@ -168,8 +168,8 @@ class MoveDropdown extends StatelessWidget {
 
   final String label;
   final Move move;
-  final List<DropdownMenuItem<String>> options;
-  final Function(String?) onChanged;
+  final List<DropdownMenuItem<Move>> options;
+  final Function(Move?) onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +191,7 @@ class MoveDropdown extends StatelessWidget {
           child: DropdownButtonHideUnderline(
             child: DropdownButton(
               isExpanded: true,
-              value: move.name,
+              value: move,
               icon: const Icon(Icons.arrow_drop_down),
               style: DefaultTextStyle.of(context).style,
               items: options,

@@ -25,8 +25,15 @@ class Move {
 
   factory Move.fromJson(Map<String, dynamic> json) {
     final moveId = json['moveId'] as String;
-    final name = json['name'] as String;
-    final type = Type(typeKey: json['type'] as String);
+    String name = json['name'] as String;
+
+    // Remove typing in weather ball name
+    // Colors will indicate the type
+    if (name.contains('Weather Ball')) {
+      name = name.replaceRange(12, name.length, '');
+    }
+
+    final type = TypeMaster.typeMap[json['type'] as String] as Type;
     final power = json['power'] as num;
     final energy = json['energy'] as num;
     final energyGain = json['energyGain'] as num;

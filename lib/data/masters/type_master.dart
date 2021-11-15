@@ -20,105 +20,98 @@ class TypeMaster {
   static const double immune = 0.390625;
 
   // The master list of ALL type objects
-  static final typeList =
-      effectivenessMaster.keys.map((key) => Type(typeKey: key)).toList();
+  static final List<Type> typeList = [
+    Type(typeKey: 'normal'),
+    Type(typeKey: 'fire'),
+    Type(typeKey: 'water'),
+    Type(typeKey: 'grass'),
+    Type(typeKey: 'electric'),
+    Type(typeKey: 'ice'),
+    Type(typeKey: 'fighting'),
+    Type(typeKey: 'poison'),
+    Type(typeKey: 'ground'),
+    Type(typeKey: 'flying'),
+    Type(typeKey: 'psychic'),
+    Type(typeKey: 'bug'),
+    Type(typeKey: 'rock'),
+    Type(typeKey: 'ghost'),
+    Type(typeKey: 'dragon'),
+    Type(typeKey: 'dark'),
+    Type(typeKey: 'steel'),
+    Type(typeKey: 'fairy'),
+    Type(typeKey: 'none'),
+  ];
+
+  // A master map of ALL type objects
+  static late final Map<String, Type> typeMap = {
+    'normal': typeList[0],
+    'fire': typeList[1],
+    'water': typeList[2],
+    'grass': typeList[3],
+    'electric': typeList[4],
+    'ice': typeList[5],
+    'fighting': typeList[6],
+    'poison': typeList[7],
+    'ground': typeList[8],
+    'flying': typeList[9],
+    'psychic': typeList[10],
+    'bug': typeList[11],
+    'rock': typeList[12],
+    'ghost': typeList[13],
+    'dragon': typeList[14],
+    'dark': typeList[15],
+    'steel': typeList[16],
+    'fairy': typeList[17],
+    'none': typeList[18],
+  };
 
   // Get the map of type effectiveness cooresponding to the typeKey
   static Map<String, List<double>> getEffectivenessMap(String typeKey) {
     return effectivenessMaster[typeKey] as Map<String, List<double>>;
   }
 
-  static List<Type> generateTypeList() {
-    return List.from(typeList);
-  }
+  // Get a list of the provided pokemon team's net effectiveness
+  // [0] : offensive
+  // [1] : defensive
+  static List<List<double>> getNetEffectiveness(List<Pokemon> team) {
+    List<List<double>> netEffectiveness = List.generate(
+      globals.typeCount,
+      (index) => [0.0, 0.0],
+    );
 
-  // Get a scale that represents 'type's ability to counter 'typing's weaknesses
-  static num getCounterScale(Typing typing, Type type) {
-    List<double> defense = typing.getDefenseEffectiveness();
-    final effectivenessMap = effectivenessMaster[type.typeKey];
-
-    num counterScale = 1.0;
-
-    int i = 0;
-    for (List<double> scales in effectivenessMap!.values) {
-      if (defense[i] < 1.0) {
-        counterScale *= scales[0];
-      }
-      ++i;
-    }
-
-    return counterScale;
-  }
-
-  // Get a list of pairs, where each type has a value
-  // These values coorespond to the team's net type effectiveness
-  static List<Pair<double, Type>> getNetTypeEffectiveness(List<Pokemon> team) {
-    // Bind a list of all types to a value
-    // This value will represent their offensive effectiveness on this team
-    List<Pair<double, Type>> teamEffectiveness =
-        List.generate(globals.typeCount, (i) {
-      return Pair(a: 0.0, b: typeList[i]);
-    });
-
-    final int teamLength = team.length;
+    final int teamLen = team.length;
 
     // Accumulate team defensive type effectiveness for all types
-    for (int i = 0; i < teamLength; ++i) {
-      final List<double> effectiveness = team[i].getDefenseEffectiveness();
+    for (int i = 0; i < teamLen; ++i) {
+      final List<List<double>> effectiveness = team[i].getEffectiveness();
 
       for (int k = 0; k < globals.typeCount; ++k) {
-        teamEffectiveness[k].a += effectiveness[k];
+        netEffectiveness[k][0] += effectiveness[k][0];
+        netEffectiveness[k][1] += effectiveness[k][1];
       }
     }
 
-    return teamEffectiveness;
+    return netEffectiveness;
   }
 
-  // Find the net weaknesses of the team
-  // Then find the counters to those weaknesses and return them
-  static List<Type> getCounters(List<Pokemon> team) {
-    final int teamLen = team.length;
-    if (teamLen == 0) return [];
+  // Get a sorted list of types given the effectiveness
+  // Used in analyzing team type threats
+  static List<Pair<Type, double>> getSortedEffectivenessList(
+      List<List<double>> effectiveness,
+      {double bound = 1.0}) {
+    List<Pair<Type, double>> sortedEffectiveness = [];
 
-    final List<Pair<double, Type>> effectiveness =
-        getNetTypeEffectiveness(team);
-
-    List<Type> counters = [];
-
-    // Sort by the highest team weaknesses
-    effectiveness.sort((pairA, pairB) => ((pairB.a - pairA.a) * 100).toInt());
-
-    // Get the counters of the 3 highest threats
-    for (int i = 0; i < 3; ++i) {
-      if (effectiveness[i].a > teamLen) {
-        counters.addAll(effectiveness[i].b.getCounters());
+    for (int i = 0; i < globals.typeCount; ++i) {
+      if (effectiveness[i][1] > bound) {
+        sortedEffectiveness.add(Pair(a: typeList[i], b: effectiveness[i][1]));
       }
     }
 
-    return counters;
-  }
+    sortedEffectiveness
+        .sort((prev, curr) => ((prev.b - curr.b) * 1000).round());
 
-  // A master list of all type keys
-  static const List<String> typeKeys = [
-    'normal',
-    'fire',
-    'water',
-    'grass',
-    'electric',
-    'ice',
-    'fighting',
-    'poison',
-    'ground',
-    'flying',
-    'psychic',
-    'bug',
-    'rock',
-    'ghost',
-    'dragon',
-    'dark',
-    'steel',
-    'fairy',
-  ];
+    return sortedEffectiveness;
+  }
 
   // All type offense & defense effectiveness.
   // The first key accesses a map of all type effectivnesses cooresponding

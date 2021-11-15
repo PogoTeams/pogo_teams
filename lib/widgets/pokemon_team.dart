@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'nodes/pokemon_nodes.dart';
 import 'nodes/empty_node.dart';
 import 'dropdowns/cup_dropdown.dart';
+import '../data/masters/type_master.dart';
 import '../data/pokemon/pokemon.dart';
 import '../data/cup.dart';
 import '../configs/size_config.dart';
@@ -26,12 +27,26 @@ the app.
 // The data model for a Pokemon PVP Team
 // Every team page manages one instance of this class
 class PokemonTeam {
-  // The list of 3 pokemon references
+  // The list of 3 pokemon references that make up the team
   List<Pokemon?> team = List.filled(3, null);
+
+  // A list of this pokemon team's net effectiveness
+  // [0] : offensive
+  // [1] : defensive
+  List<List<double>> effectiveness = List.generate(
+    globals.typeCount,
+    (index) => [0.0, 0.0],
+  );
 
   // The selected PVP cup for this team
   // Defaults to Great League
   Cup cup = globals.gamemaster.cups[0];
+
+  // Set the specified Pokemon in the team by the specified index
+  void setPokemon(int index, Pokemon? pokemon) {
+    team[index] = pokemon;
+    _updateEffectiveness();
+  }
 
   // Get the list of non-null pokemon
   List<Pokemon> getPokemonTeam() {
@@ -40,12 +55,18 @@ class PokemonTeam {
 
   // True if there are no pokemon on the team
   bool isEmpty() {
-    return team[0] == null && team[1] == null && team[2] == null;
+    return (team[0] == null && team[1] == null && team[2] == null);
   }
 
   // Switch to a different cup with the specified cupTitle
   void setCup(String cupTitle) {
     cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == cupTitle);
+  }
+
+  // Update the type effectiveness of this Pokemon team
+  // Called whenever the team is changed
+  void _updateEffectiveness() {
+    effectiveness = TypeMaster.getNetEffectiveness(getPokemonTeam());
   }
 }
 
@@ -65,6 +86,7 @@ class TeamPage extends StatefulWidget {
 
 class _TeamPageState extends State<TeamPage>
     with AutomaticKeepAliveClientMixin {
+  // SETTER CALLBACKS
   void _onCupChanged(String? newCup) {
     if (newCup == null) return;
 
@@ -75,19 +97,19 @@ class _TeamPageState extends State<TeamPage>
 
   void _onLeadChanged(Pokemon? newLead) {
     setState(() {
-      widget.pokemonTeam.team[0] = newLead;
+      widget.pokemonTeam.setPokemon(0, newLead);
     });
   }
 
   void _onMidChanged(Pokemon? newMid) {
     setState(() {
-      widget.pokemonTeam.team[1] = newMid;
+      widget.pokemonTeam.setPokemon(1, newMid);
     });
   }
 
   void _onCloserChanged(Pokemon? newCloser) {
     setState(() {
-      widget.pokemonTeam.team[2] = newCloser;
+      widget.pokemonTeam.setPokemon(2, newCloser);
     });
   }
 
@@ -154,7 +176,7 @@ class _TeamPageState extends State<TeamPage>
 // Each container has a different role, specifying the different team roles
 // -- lead   - The first Pokemon in battle
 // -- mid    - Idealy the switch or second Pokemon in battle
-// -- closer - Idealy the last Pokemin in battle
+// -- closer - Idealy the last Pokemon in battle
 class TeamContainer extends StatefulWidget {
   const TeamContainer({
     Key? key,

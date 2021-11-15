@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 // Local Imports
-import '../tools/pair.dart';
+import '../../tools/pair.dart';
+import '../widgets/pokemon_team.dart';
 import '../data/pokemon/pokemon.dart';
-import '../data/cup.dart';
 import '../data/masters/type_master.dart';
 import '../data/pokemon/typing.dart';
 import '../widgets/nodes/pokemon_nodes.dart';
@@ -23,16 +23,15 @@ realtime analysis updates.
 class TeamAnalysis extends StatelessWidget {
   TeamAnalysis({
     Key? key,
-    required this.pokemonTeam,
-    required this.selectedCup,
+    required this.team,
   }) : super(key: key);
 
-  List<Pokemon> pokemonTeam;
-  final Cup selectedCup;
+  PokemonTeam team;
 
   @override
   Widget build(BuildContext context) {
     final double blockSize = SizeConfig.blockSizeHorizontal;
+    final List<Pokemon> pokemonTeam = team.getPokemonTeam();
 
     return Scaffold(
       body: SafeArea(
@@ -49,9 +48,9 @@ class TeamAnalysis extends StatelessWidget {
                   width: SizeConfig.blockSizeHorizontal * .4,
                 ),
                 borderRadius: BorderRadius.circular(100.0),
-                color: selectedCup.cupColor,
+                color: team.cup.cupColor,
               ),
-              child: Text(selectedCup.title),
+              child: Text(team.cup.title),
             ),
 
             // Spacer
@@ -91,7 +90,10 @@ class TeamAnalysis extends StatelessWidget {
               height: blockSize * 3.5,
             ),
 
-            EffectivenessAnalysis(pokemonTeam: pokemonTeam),
+            EffectivenessAnalysis(
+              pokemonTeam: pokemonTeam,
+              teamEffectiveness: team.effectiveness,
+            ),
           ],
         ),
       ),
@@ -109,25 +111,18 @@ class EffectivenessAnalysis extends StatelessWidget {
   const EffectivenessAnalysis({
     Key? key,
     required this.pokemonTeam,
+    required this.teamEffectiveness,
   }) : super(key: key);
 
   final List<Pokemon> pokemonTeam;
+  final List<List<double>> teamEffectiveness;
 
   // Determine the type effectiveneses of this team
   Widget _threats() {
-    final int teamLen = pokemonTeam.length;
-
-    List<Pair<double, Type>> teamEffectiveness =
-        TypeMaster.getNetTypeEffectiveness(pokemonTeam);
-
-    teamEffectiveness.removeWhere((pair) => pair.a <= teamLen);
-
-    // Sort by teamEffectiveness and typeList by highest threat
-    teamEffectiveness.sort((prev, curr) => ((curr.a - prev.a) * 1000).round());
-
-    // DEBUG
-    //print('DEFENSE EFFECTIVENESS');
-    //teamEffectiveness.forEach((i) => print(i.b.typeKey + " " + i.a.toString()));
+    List<Pair<Type, double>> weaknesses = TypeMaster.getSortedEffectivenessList(
+      teamEffectiveness,
+      bound: pokemonTeam.length.toDouble(),
+    );
 
     return Expanded(
       child: Padding(
@@ -140,9 +135,9 @@ class EffectivenessAnalysis extends StatelessWidget {
           crossAxisSpacing: SizeConfig.blockSizeHorizontal * 5.0,
           mainAxisSpacing: SizeConfig.blockSizeVertical * 4.0,
           physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: teamEffectiveness.length,
-          children: teamEffectiveness.map((pair) {
-            return pair.b.getIcon();
+          crossAxisCount: weaknesses.length,
+          children: weaknesses.map((pair) {
+            return pair.a.getIcon();
           }).toList(),
         ),
       ),

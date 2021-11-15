@@ -15,8 +15,8 @@ a helper class that effectively handles the case of a Pokemon with 2 types.
 
 class Typing {
   Typing(List<String> typeKeys)
-      : typeA = Type(typeKey: typeKeys[0]),
-        typeB = Type(typeKey: typeKeys[1]);
+      : typeA = TypeMaster.typeMap[typeKeys[0]]!,
+        typeB = TypeMaster.typeMap[typeKeys[1]]!;
 
   late final Type typeA;
   late final Type typeB;
@@ -26,35 +26,8 @@ class Typing {
     return 'none' == typeB.typeKey;
   }
 
-  @override
-  String toString() {
-    return isMonoType() ? typeA.typeKey : typeA.typeKey + " / " + typeB.typeKey;
-  }
-
-  List<Color> getColors() {
-    return isMonoType()
-        ? [typeA.typeColor]
-        : [typeA.typeColor, typeB.typeColor];
-  }
-
-  // Calculate defensive type effectiveness
-  List<double> getDefenseEffectiveness() {
-    if (isMonoType()) return typeA.getDefenseEffectiveness();
-
-    List<double> aDefense = typeA.getDefenseEffectiveness();
-    List<double> bDefense = typeB.getDefenseEffectiveness();
-
-    // Calculate duo-type scaling
-    int length = aDefense.length;
-    for (int i = 0; i < length; ++i) {
-      aDefense[i] *= bDefense[i];
-    }
-
-    return aDefense;
-  }
-
   // True if type cooresponds to one of the types this typing contains
-  bool contains(Type type) {
+  bool containsType(Type type) {
     return typeA.typeKey == type.typeKey || typeB.typeKey == type.typeKey;
   }
 
@@ -68,6 +41,36 @@ class Typing {
     }
 
     return contains;
+  }
+
+  List<Color> getColors() {
+    return isMonoType()
+        ? [typeA.typeColor]
+        : [typeA.typeColor, typeB.typeColor];
+  }
+
+  List<List<double>> getEffectiveness(List<Type> movesetTypes) {
+    if (isMonoType()) return typeA.getEffectiveness();
+
+    List<List<double>> aEffectiveness = typeA.getEffectiveness();
+    List<List<double>> bEffectiveness = typeB.getEffectiveness();
+
+    // Calculate duo-type effectiveness
+    for (int i = 0; i < globals.typeCount; ++i) {
+      aEffectiveness[i][0] *= bEffectiveness[i][0];
+      aEffectiveness[i][1] *= bEffectiveness[i][1];
+
+      // Weigh in attack super effective scenarios
+      for (int k = 0; k < 3; ++k) {
+        aEffectiveness[i][0] *= (movesetTypes[k]
+                    .effectivenessMap[TypeMaster.typeList[i].typeKey]![0] >
+                1.0
+            ? 1.6
+            : 1.0);
+      }
+    }
+
+    return aEffectiveness;
   }
 
   // True if this typing is weak to the given type
@@ -90,60 +93,38 @@ Pokemon's duo / mono typing or a Pokemon move.
 */
 class Type {
   Type({required this.typeKey}) {
+    typeColor = typeColors[typeKey]!;
+
     if ('none' != typeKey) {
-      typeColor = typeColors[typeKey] as Color;
-      typeEffectiveness = TypeMaster.getEffectivenessMap(typeKey);
-    } else {
-      typeColor = Colors.black;
+      effectivenessMap = TypeMaster.getEffectivenessMap(typeKey);
     }
   }
 
   final String typeKey;
   late final Color typeColor;
 
-  // The offensive and defensive effectivness of this type on all types
-  late final Map<String, List<double>> typeEffectiveness;
+  // The offensive and defensive effectivness of this type to all types
+  // [0] : offensive
+  // [1] : defensive
+  late final Map<String, List<double>> effectivenessMap;
 
   Image getIcon({String iconColor = 'color'}) {
     return Image.asset(
         'assets/' + iconColor + '_type_icons/' + typeKey + '.png');
   }
 
-  // Accumulate the effectivness scales for all types attacking this type
-  List<double> getDefenseEffectiveness() {
-    int i = 0;
-    List<double> defenseEffectiveness = List.filled(globals.typeCount, 0);
+  List<List<double>> getEffectiveness() {
+    List<List<double>> effectiveness =
+        List.generate(globals.typeCount, (index) => [0.0, 0.0]);
 
-    for (String typeKey in typeEffectiveness.keys) {
-      defenseEffectiveness[i] = typeEffectiveness[typeKey]![1];
+    int i = 0;
+
+    for (List<double> effectivenessVal in effectivenessMap.values) {
+      effectiveness[i][0] = effectivenessVal[0];
+      effectiveness[i][1] = effectivenessVal[1];
       ++i;
     }
 
-    return defenseEffectiveness;
-  }
-
-  List<double> getOffensiveEffectiveness() {
-    int i = 0;
-    List<double> offenseEffectiveness = List.filled(globals.typeCount, 0);
-
-    for (String typeKey in typeEffectiveness.keys) {
-      offenseEffectiveness[i] = typeEffectiveness[typeKey]![0];
-      ++i;
-    }
-
-    return offenseEffectiveness;
-  }
-
-  // Get a list of counters to this type
-  List<Type> getCounters() {
-    List<Type> counters = [];
-
-    for (String typeKey in typeEffectiveness.keys) {
-      if (typeEffectiveness[typeKey]![1] > 1.0) {
-        counters.add(Type(typeKey: typeKey));
-      }
-    }
-
-    return counters.getRange(0, 2).toList();
+    return effectiveness;
   }
 }

@@ -16,7 +16,6 @@ import '../widgets/buttons/exit_button.dart';
 import '../widgets/buttons/compact_pokemon_node_button.dart';
 import '../widgets/buttons/filter_button.dart';
 import '../widgets/pokemon_team.dart';
-import '../data/masters/type_master.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -111,18 +110,6 @@ class _PokemonSearchState extends State<PokemonSearch> {
     });
   }
 
-  void _setCountersFilters() {
-    final counters = TypeMaster.getCounters(pokemonTeam);
-    final int countersLen = counters.length;
-
-    for (int i = 0; i < countersLen; ++i) {
-      _searchController.text += counters[i].typeKey;
-      if (1 + i < countersLen) {
-        _searchController.text += ', ';
-      }
-    }
-  }
-
   // Setup the input controller
   @override
   void initState() {
@@ -161,25 +148,16 @@ class _PokemonSearchState extends State<PokemonSearch> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // User text input field
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
-                  width: SizeConfig.screenWidth * 0.75,
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Search for a Pokemon',
-                    ),
-                    textAlign: TextAlign.center,
-                    controller: _searchController,
-                  ),
+            SizedBox(
+              width: SizeConfig.screenWidth * 0.9,
+              child: TextField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Search for a Pokemon',
                 ),
-                FilterButton(
-                  onSelected: _filterCategory,
-                  selectedCategory: _selectedCategory,
-                ),
-              ],
+                textAlign: TextAlign.center,
+                controller: _searchController,
+              ),
             ),
 
             // Horizontal divider
@@ -221,12 +199,28 @@ class _PokemonSearchState extends State<PokemonSearch> {
       ),
 
       // Exit to Team Builder button
-      floatingActionButton: ExitButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            padding: EdgeInsets.only(left: blockSize * 25),
+            width: blockSize * 80,
+            child: ExitButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          SizedBox(
+            width: blockSize * 20,
+            child: FilterButton(
+              onSelected: _filterCategory,
+              selectedCategory: _selectedCategory,
+            ),
+          ),
+        ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      //floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 }

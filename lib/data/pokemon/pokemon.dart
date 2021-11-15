@@ -184,26 +184,13 @@ class Pokemon {
           ];
   }
 
-  bool containsMoveType(List<String> keys) {
-    bool contains = false;
-    int len = fastMoves.length;
-    for (int i = 0; i < len && !contains; ++i) {
-      contains = keys.contains('@' + fastMoves[i].type.typeKey);
-    }
-    len = chargedMoves.length;
-
-    for (int i = 0; i < len && !contains; ++i) {
-      contains = keys.contains('@' + chargedMoves[i].type.typeKey);
-    }
-
-    return contains;
-  }
-
-  // Get the defensive effectiveness of this Pokemon's typing.
-  // Each index of the list represents the accumulative effectiveness
-  // scale of a given type on this Pokemon's typing.
-  List<double> getDefenseEffectiveness() {
-    return typing.getDefenseEffectiveness();
+  // Get the type effectiveness of this Pokemon, factoring in current moveset
+  List<List<double>> getEffectiveness() {
+    return typing.getEffectiveness([
+      selectedFastMove.type,
+      selectedChargedMoves[0].type,
+      selectedChargedMoves[1].type,
+    ]);
   }
 
   // Set the moveset for this Pokemon (used in 'from' constructor)
@@ -215,13 +202,6 @@ class Pokemon {
   // Set the selected moves to the relatively most powerful moves
   // Because of ever-changing meta this is not necessarily a perfect algorithm
   void initializeMetaMoves(List<String> moveIds) {
-    /*
-    if (moveIds.isEmpty) {
-      selectedFastMove = fastMoves[0];
-      selectedChargedMoves = [chargedMoves[0], chargedMoves[1]];
-      return;
-    }
-    */
     selectedFastMove = getMetaFastMove(moveIds[0]);
     if (moveIds.length < 3) {
       getMetaChargedMoves(moveIds[1], 'NONE');
@@ -246,33 +226,32 @@ class Pokemon {
   }
 
   // Update the selected fast move slot with the provided name
-  void updateSelectedFastMove(String? newFastMove) {
+  void updateSelectedFastMove(Move? newFastMove) {
     if (newFastMove == null) return;
 
-    selectedFastMove = fastMoves.firstWhere((move) => move.name == newFastMove);
+    selectedFastMove = newFastMove;
   }
 
   // 0) charged 1
   // 1) charged 2
   // Update the specified charged move slot with the provided name
-  void updateSelectedChargedMove(int index, String? newChargedMove) {
+  void updateSelectedChargedMove(int index, Move? newChargedMove) {
     if (newChargedMove == null) return;
 
-    selectedChargedMoves[index] =
-        chargedMoves.firstWhere((move) => move.name == newChargedMove);
+    selectedChargedMoves[index] = newChargedMove;
   }
 
   // Get a list of all fast move names
   List<String> getFastMoveNames() {
     return fastMoves.map<String>((Move move) {
-      return move.name;
+      return move.moveId;
     }).toList();
   }
 
   // Get a list of all charged move names
   List<String> getChargedMoveNames() {
     return chargedMoves.map<String>((Move move) {
-      return move.name;
+      return move.moveId;
     }).toList();
   }
 
