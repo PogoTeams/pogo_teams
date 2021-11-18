@@ -15,7 +15,8 @@ import '../data/cup.dart';
 import '../widgets/buttons/exit_button.dart';
 import '../widgets/buttons/compact_pokemon_node_button.dart';
 import '../widgets/buttons/filter_button.dart';
-import '../widgets/pokemon_team.dart';
+import '../data/pokemon/pokemon_team.dart';
+import '../data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
@@ -40,8 +41,6 @@ class PokemonSearch extends StatefulWidget {
 }
 
 class _PokemonSearchState extends State<PokemonSearch> {
-  // The current team info to filter helpful suggestions
-  late final List<Pokemon> pokemonTeam;
   late final Cup cup;
 
   // Search bar text input controller
@@ -55,42 +54,24 @@ class _PokemonSearchState extends State<PokemonSearch> {
 
   String _selectedCategory = 'overall';
 
-  // The default ranking list will depend on :
-  //    - The selected node's role
-  //    - The current type weaknesses of the team
-  // The most balanced picks will be brought to the top for the user
-  void _setDefaultRankingsList(String role) {
-    switch (role) {
-      case 'lead':
-        _selectedCategory = 'leads';
-        break;
-
-      case 'mid':
-        _selectedCategory = 'overall';
-        break;
-
-      case 'closer':
-        _selectedCategory = 'closers';
-        break;
-
-      default:
-        _selectedCategory = 'overall';
-        break;
-    }
-
-    pokemon = cup.getRankedPokemonList(_selectedCategory);
-  }
-
   // Callback for the FilterButton
   // Sets the ranking list associated with rankingsCategory
   void _filterCategory(dynamic rankingsCategory) {
     _selectedCategory = rankingsCategory;
-    pokemon = cup.getRankedPokemonList(_selectedCategory);
+
+    // Dex is a special case where all Pokemon are in the list
+    // Otherwise get the list from the ratings category
+    if ('dex' == _selectedCategory) {
+      pokemon = globals.gamemaster.pokemon;
+    } else {
+      pokemon = cup.getRankedPokemonList(_selectedCategory);
+    }
 
     _filterPokemonList();
   }
 
   // Generate a filtered list of Pokemon based off of the search bar user input
+  // Can filter by Pokemon name and types
   void _filterPokemonList() {
     // Get the lowercase user input
     final String input = _searchController.text.toLowerCase();
@@ -98,11 +79,18 @@ class _PokemonSearchState extends State<PokemonSearch> {
     setState(() {
       // Split any comma seperated list into individual search terms
       final List<String> terms = input.split(', ');
+      final int termsLen = terms.length;
 
       // Callback to filter Pokemon by the search terms
       bool filterPokemon(Pokemon pokemon) {
-        return pokemon.speciesName.toLowerCase().contains(input) ||
-            pokemon.typing.containsKey(terms);
+        bool isMatch = false;
+
+        for (int i = 0; i < termsLen && !isMatch; ++i) {
+          isMatch = pokemon.speciesName.toLowerCase().startsWith(terms[i]) ||
+              pokemon.typing.containsKey(terms[i]);
+        }
+
+        return isMatch;
       }
 
       // Filter by the search terms
@@ -115,11 +103,9 @@ class _PokemonSearchState extends State<PokemonSearch> {
   void initState() {
     super.initState();
 
-    // Get the Pokemon team and cup
-    pokemonTeam = widget.team.getPokemonTeam();
+    // Get the selected cup and list of Pokemon based on the category
     cup = widget.team.cup;
-
-    _setDefaultRankingsList(widget.role);
+    pokemon = cup.getRankedPokemonList(_selectedCategory);
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);
@@ -135,7 +121,7 @@ class _PokemonSearchState extends State<PokemonSearch> {
   @override
   Widget build(BuildContext context) {
     //Display all Pokemon if there is no input
-    if (filteredPokemon.isEmpty) {
+    if (filteredPokemon.isEmpty && _searchController.text.isEmpty) {
       filteredPokemon = pokemon;
     }
 
@@ -151,9 +137,21 @@ class _PokemonSearchState extends State<PokemonSearch> {
             SizedBox(
               width: SizeConfig.screenWidth * 0.9,
               child: TextField(
+                keyboardAppearance: Brightness.dark,
+                toolbarOptions: const ToolbarOptions(
+                  copy: true,
+                  cut: true,
+                  paste: true,
+                  selectAll: true,
+                ),
+                cursorColor: Colors.greenAccent,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.greenAccent)),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.greenAccent)),
                   labelText: 'Search for a Pokemon',
+                  labelStyle: TextStyle(color: Colors.greenAccent),
                 ),
                 textAlign: TextAlign.center,
                 controller: _searchController,
@@ -220,7 +218,6 @@ class _PokemonSearchState extends State<PokemonSearch> {
           ),
         ],
       ),
-      //floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 }

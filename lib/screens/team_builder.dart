@@ -1,20 +1,19 @@
 // Flutter Imports
-import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/scheduler.dart';
 
 // Package Imports
 import 'package:dots_indicator/dots_indicator.dart';
 
 // Local Imports
-import '../screens/team_analysis.dart';
 import 'team_info.dart';
+import '../screens/team_analysis.dart';
 import '../configs/size_config.dart';
-import '../widgets/pokemon_team.dart';
-import '../widgets/buttons/footer_buttons.dart';
+import '../data/pokemon/pokemon_team.dart';
 import '../data/pokemon/pokemon.dart';
+import '../widgets/buttons/footer_buttons.dart';
+import '../widgets/team_page.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -140,15 +139,9 @@ class _TeamsPagesState extends State<TeamsPages>
 
         // set a maxed flag to render the last dot
         maxed = (!maxed ? teamCount == maxTeamCount : maxed);
-        if (maxed) return;
 
-        // Allocate a new page if the max hasn't been met
-        ++teamCount;
-        _teams.add(PokemonTeam());
-        _pages.add(TeamPage(
-          key: GlobalKey(),
-          pokemonTeam: _teams[index],
-        ));
+        // If max not reached, increment team count
+        if (!maxed) ++teamCount;
       } else {
         _pageIndex = index;
       }
@@ -162,18 +155,14 @@ class _TeamsPagesState extends State<TeamsPages>
 
   // Setup the team list, and page list that cooresponds to each team
   void _initializeLists() {
-    _teams = [
-      PokemonTeam(),
-      PokemonTeam(),
-      PokemonTeam(),
-    ];
-
-    _pages = _teams.map((team) {
-      return TeamPage(
-        key: GlobalKey(),
-        pokemonTeam: team,
-      );
-    }).toList();
+    _teams = List.generate(maxTeamCount, (index) => PokemonTeam());
+    _pages = List.generate(
+      maxTeamCount,
+      (index) => TeamPage(
+        key: UniqueKey(),
+        pokemonTeam: _teams[index],
+      ),
+    );
   }
 
   @override
@@ -208,7 +197,6 @@ class _TeamsPagesState extends State<TeamsPages>
         // Show dots indicator if there is more than 1 team
         Container(
           padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2.0),
-          //width: SizeConfig.screenWidth * 0.7,
           child: DotsIndicator(
             dotsCount: _getDotCount(),
             position: _pageIndex.toDouble(),
@@ -217,8 +205,8 @@ class _TeamsPagesState extends State<TeamsPages>
               activeColor: Colors.white,
               color: Colors.grey,
               spacing: EdgeInsets.only(
-                left: SizeConfig.blockSizeHorizontal * 2.0,
-                right: SizeConfig.blockSizeHorizontal * 2.0,
+                left: SizeConfig.blockSizeHorizontal * 1.5,
+                right: SizeConfig.blockSizeHorizontal * 1.5,
               ),
             ),
             onTap: (pos) {

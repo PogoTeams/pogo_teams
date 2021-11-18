@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 // Local Imports
 import 'pokemon/pokemon.dart';
+import 'pokemon/typing.dart';
 import '../data/globals.dart' as globals;
 
 /*
@@ -46,33 +47,33 @@ class Rankings {
     List<RankedPokemon> overall = [];
     List<RankedPokemon> switches = [];
 
-    strBuffer = await loadCategory(cupKey, 'attackers', cpString);
+    strBuffer = await _loadCategory(cupKey, 'attackers', cpString);
     jsonBuffer = jsonDecode(strBuffer);
-    attackers = loadJson(jsonBuffer);
+    attackers = _loadJson(jsonBuffer);
 
-    strBuffer = await loadCategory(cupKey, 'chargers', cpString);
+    strBuffer = await _loadCategory(cupKey, 'chargers', cpString);
     jsonBuffer = jsonDecode(strBuffer);
-    chargers = loadJson(jsonBuffer);
+    chargers = _loadJson(jsonBuffer);
 
-    strBuffer = await loadCategory(cupKey, 'closers', cpString);
+    strBuffer = await _loadCategory(cupKey, 'closers', cpString);
     jsonBuffer = jsonDecode(strBuffer);
-    closers = loadJson(jsonBuffer);
+    closers = _loadJson(jsonBuffer);
 
-    strBuffer = await loadCategory(cupKey, 'consistency', cpString);
+    strBuffer = await _loadCategory(cupKey, 'consistency', cpString);
     jsonBuffer = jsonDecode(strBuffer);
-    consistency = loadJson(jsonBuffer);
+    consistency = _loadJson(jsonBuffer);
 
-    strBuffer = await loadCategory(cupKey, 'leads', cpString);
+    strBuffer = await _loadCategory(cupKey, 'leads', cpString);
     jsonBuffer = jsonDecode(strBuffer);
-    leads = loadJson(jsonBuffer);
+    leads = _loadJson(jsonBuffer);
 
-    strBuffer = await loadCategory(cupKey, 'overall', cpString);
+    strBuffer = await _loadCategory(cupKey, 'overall', cpString);
     jsonBuffer = jsonDecode(strBuffer);
-    overall = loadJson(jsonBuffer);
+    overall = _loadJson(jsonBuffer);
 
-    strBuffer = await loadCategory(cupKey, 'switches', cpString);
+    strBuffer = await _loadCategory(cupKey, 'switches', cpString);
     jsonBuffer = jsonDecode(strBuffer);
-    switches = loadJson(jsonBuffer);
+    switches = _loadJson(jsonBuffer);
 
     return Rankings(
       attackers: attackers,
@@ -86,7 +87,7 @@ class Rankings {
   }
 
   // Used in fromJson to load a ranking category's json
-  static Future<String> loadCategory(
+  static Future<String> _loadCategory(
       String cupKey, String category, String cp) {
     return rootBundle.loadString('assets/rankings/' +
         cupKey +
@@ -98,7 +99,7 @@ class Rankings {
   }
 
   // Used in fromJson to load the json's pokemon into their list
-  static List<RankedPokemon> loadJson(List<dynamic> json) {
+  static List<RankedPokemon> _loadJson(List<dynamic> json) {
     List<RankedPokemon> ratings = [];
     int jsonLen = json.length;
 
@@ -115,34 +116,34 @@ class Rankings {
   List<Pokemon> getRankedPokemonList(String rankingsCategory) {
     switch (rankingsCategory) {
       case 'attackers':
-        return getRankedList(attackers);
+        return _getRankedList(attackers);
 
       case 'chargers':
-        return getRankedList(chargers);
+        return _getRankedList(chargers);
 
       case 'closers':
-        return getRankedList(closers);
+        return _getRankedList(closers);
 
       case 'consistency':
-        return getRankedList(consistency);
+        return _getRankedList(consistency);
 
       case 'leads':
-        return getRankedList(leads);
+        return _getRankedList(leads);
 
       case 'overall':
-        return getRankedList(overall);
+        return _getRankedList(overall);
 
       case 'switches':
-        return getRankedList(switches);
+        return _getRankedList(switches);
 
       default:
         break;
     }
-    return getRankedList(overall);
+    return _getRankedList(overall);
   }
 
   // Generate a list of Pokemon objects from the global id map
-  List<Pokemon> getRankedList(List<RankedPokemon> rankingsList) {
+  List<Pokemon> _getRankedList(List<RankedPokemon> rankingsList) {
     final idMap = globals.gamemaster.pokemonIdMap;
 
     return rankingsList.map<Pokemon>((RankedPokemon rankedPokemon) {
@@ -151,6 +152,17 @@ class Rankings {
       pokemon.setRating(rankedPokemon.rating);
       return pokemon;
     }).toList();
+  }
+
+  List<Pokemon> getFilteredRankedPokemonList(
+      List<Type> types, String rankingsCategory, int limit) {
+    List<Pokemon> rankedList = getRankedPokemonList(rankingsCategory);
+
+    return rankedList
+        .where((pokemon) => pokemon.hasType(types))
+        .toList()
+        .getRange(0, limit)
+        .toList();
   }
 
   late final List<RankedPokemon> attackers;

@@ -45,30 +45,9 @@ class FilterButton extends StatelessWidget {
         iconSize: blockSize * 7.0,
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           PopupMenuItem<String>(
-            value: 'attackers',
+            value: 'overall',
             child: PopupItem(
-              category: 'attackers',
-              selectedCategory: selectedCategory,
-            ),
-          ),
-          PopupMenuItem<String>(
-            value: 'chargers',
-            child: PopupItem(
-              category: 'chargers',
-              selectedCategory: selectedCategory,
-            ),
-          ),
-          PopupMenuItem<String>(
-            value: 'closers',
-            child: PopupItem(
-              category: 'closers',
-              selectedCategory: selectedCategory,
-            ),
-          ),
-          PopupMenuItem<String>(
-            value: 'consistency',
-            child: PopupItem(
-              category: 'consistency',
+              category: 'overall',
               selectedCategory: selectedCategory,
             ),
           ),
@@ -80,9 +59,30 @@ class FilterButton extends StatelessWidget {
             ),
           ),
           PopupMenuItem<String>(
-            value: 'overall',
+            value: 'attackers',
             child: PopupItem(
-              category: 'overall',
+              category: 'attackers',
+              selectedCategory: selectedCategory,
+            ),
+          ),
+          PopupMenuItem<String>(
+            value: 'closers',
+            child: PopupItem(
+              category: 'closers',
+              selectedCategory: selectedCategory,
+            ),
+          ),
+          PopupMenuItem<String>(
+            value: 'chargers',
+            child: PopupItem(
+              category: 'chargers',
+              selectedCategory: selectedCategory,
+            ),
+          ),
+          PopupMenuItem<String>(
+            value: 'consistency',
+            child: PopupItem(
+              category: 'consistency',
               selectedCategory: selectedCategory,
             ),
           ),
@@ -90,6 +90,13 @@ class FilterButton extends StatelessWidget {
             value: 'switches',
             child: PopupItem(
               category: 'switches',
+              selectedCategory: selectedCategory,
+            ),
+          ),
+          PopupMenuItem<String>(
+            value: 'dex',
+            child: PopupItem(
+              category: 'dex',
               selectedCategory: selectedCategory,
             ),
           ),

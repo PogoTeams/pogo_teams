@@ -91,32 +91,25 @@ class ShadowIcon extends StatelessWidget {
   }
 }
 
+// Currently unused, but may prove to be useful
 class MetaIcon extends StatelessWidget {
   const MetaIcon({Key? key, required this.rating}) : super(key: key);
 
   final num rating;
 
-  Color _getRatingColor() {
-    if (rating > 650) {
-      return Colors.yellow[600]!;
-    }
-
-    return Colors.blue[700]!;
-  }
-
   @override
   Widget build(BuildContext context) {
     final double blockSize = SizeConfig.blockSizeHorizontal;
 
-    return rating > 600
+    return rating > 650
         ? Padding(
             padding: EdgeInsets.only(
               left: blockSize * 2.0,
               right: blockSize * 2.0,
             ),
             child: Icon(
-              Icons.star,
-              color: _getRatingColor(),
+              Icons.star_rounded,
+              color: Colors.yellow[600],
             ),
           )
         : Container();

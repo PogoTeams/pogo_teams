@@ -8,67 +8,11 @@ import 'package:flutter/widgets.dart';
 import 'nodes/pokemon_nodes.dart';
 import 'nodes/empty_node.dart';
 import 'dropdowns/cup_dropdown.dart';
-import '../data/masters/type_master.dart';
+import '../data/pokemon/pokemon_team.dart';
 import '../data/pokemon/pokemon.dart';
 import '../data/cup.dart';
 import '../configs/size_config.dart';
 import '../screens/pokemon_search.dart';
-import '../data/globals.dart' as globals;
-
-/*
--------------------------------------------------------------------------------
-The Pokemon Team data model contains a list of 3 nullable Pokemon references
-and a Cup reference. This collection represents a single Pokemon PVP Team.
-This Pokemon Team can then be used to compute various information throughout
-the app.
--------------------------------------------------------------------------------
-*/
-
-// The data model for a Pokemon PVP Team
-// Every team page manages one instance of this class
-class PokemonTeam {
-  // The list of 3 pokemon references that make up the team
-  List<Pokemon?> team = List.filled(3, null);
-
-  // A list of this pokemon team's net effectiveness
-  // [0] : offensive
-  // [1] : defensive
-  List<List<double>> effectiveness = List.generate(
-    globals.typeCount,
-    (index) => [0.0, 0.0],
-  );
-
-  // The selected PVP cup for this team
-  // Defaults to Great League
-  Cup cup = globals.gamemaster.cups[0];
-
-  // Set the specified Pokemon in the team by the specified index
-  void setPokemon(int index, Pokemon? pokemon) {
-    team[index] = pokemon;
-    _updateEffectiveness();
-  }
-
-  // Get the list of non-null pokemon
-  List<Pokemon> getPokemonTeam() {
-    return team.whereType<Pokemon>().toList();
-  }
-
-  // True if there are no pokemon on the team
-  bool isEmpty() {
-    return (team[0] == null && team[1] == null && team[2] == null);
-  }
-
-  // Switch to a different cup with the specified cupTitle
-  void setCup(String cupTitle) {
-    cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == cupTitle);
-  }
-
-  // Update the type effectiveness of this Pokemon team
-  // Called whenever the team is changed
-  void _updateEffectiveness() {
-    effectiveness = TypeMaster.getNetEffectiveness(getPokemonTeam());
-  }
-}
 
 // A single page of 3 TeamContainers to represent a single Pokemon team
 class TeamPage extends StatefulWidget {
@@ -113,20 +57,21 @@ class _TeamPageState extends State<TeamPage>
     });
   }
 
+  // Team getter for child widgets
+  PokemonTeam getTeam() {
+    return widget.pokemonTeam;
+  }
+
   // Keeps page state upon swiping away in PageView
   @override
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     final team = widget.pokemonTeam.team;
     final cup = widget.pokemonTeam.cup;
 
-    PokemonTeam getTeam() {
-      return widget.pokemonTeam;
-    }
+    super.build(context);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -144,6 +89,7 @@ class _TeamPageState extends State<TeamPage>
 
           // The 3 TeamContainers
           TeamContainer(
+            key: UniqueKey(),
             role: 'lead',
             pokemon: team[0],
             cup: cup,
@@ -151,6 +97,7 @@ class _TeamPageState extends State<TeamPage>
             teamGetter: getTeam,
           ),
           TeamContainer(
+            key: UniqueKey(),
             role: 'mid',
             pokemon: team[1],
             cup: cup,
@@ -158,6 +105,7 @@ class _TeamPageState extends State<TeamPage>
             teamGetter: getTeam,
           ),
           TeamContainer(
+            key: UniqueKey(),
             role: 'closer',
             pokemon: team[2],
             cup: cup,

@@ -14,10 +14,14 @@ offense / defense scenerios that can occur.
 
 class TypeMaster {
   // type effectiveness damage scales
-  static const double neutral = 1.0;
   static const double superEffective = 1.6;
-  static const double notEffective = 0.0625;
+  static const double neutral = 1.0;
+  static const double notEffective = 0.625;
   static const double immune = 0.390625;
+
+  // duo-typing effectiveness bounds
+  static const double duoSuperEffective = 2.56;
+  static const double duoImmune = 0.152587890625;
 
   // The master list of ALL type objects
   static final List<Type> typeList = [
@@ -73,51 +77,86 @@ class TypeMaster {
   // Get a list of the provided pokemon team's net effectiveness
   // [0] : offensive
   // [1] : defensive
-  static List<List<double>> getNetEffectiveness(List<Pokemon> team) {
-    List<List<double>> netEffectiveness = List.generate(
+  static List<double> getNetEffectiveness(List<Pokemon> team) {
+    List<double> netEffectiveness = List.generate(
       globals.typeCount,
-      (index) => [0.0, 0.0],
+      (index) => 0.0,
     );
 
     final int teamLen = team.length;
 
     // Accumulate team defensive type effectiveness for all types
     for (int i = 0; i < teamLen; ++i) {
-      final List<List<double>> effectiveness = team[i].getEffectiveness();
+      final List<double> effectiveness = team[i].getDefenseEffectiveness();
 
       for (int k = 0; k < globals.typeCount; ++k) {
-        netEffectiveness[k][0] += effectiveness[k][0];
-        netEffectiveness[k][1] += effectiveness[k][1];
+        netEffectiveness[k] += effectiveness[k];
       }
     }
 
     return netEffectiveness;
   }
 
-  // Get a sorted list of types given the effectiveness
-  // Used in analyzing team type threats
-  static List<Pair<Type, double>> getSortedEffectivenessList(
-      List<List<double>> effectiveness,
-      {double bound = 1.0}) {
-    List<Pair<Type, double>> sortedEffectiveness = [];
+  // Get a list of types given the effectiveness
+  // Used in analyzing team type coverages
+  static List<Pair<Type, double>> getDefenseCoverage(
+      List<double> effectiveness) {
+    List<Pair<Type, double>> effectivenessList = [];
 
     for (int i = 0; i < globals.typeCount; ++i) {
-      if (effectiveness[i][1] > bound) {
-        sortedEffectiveness.add(Pair(a: typeList[i], b: effectiveness[i][1]));
+      effectivenessList.add(Pair(a: typeList[i], b: effectiveness[i]));
+    }
+
+    return effectivenessList;
+  }
+
+  // Get a list of offense coverage given a team's moveset
+  static List<Pair<Type, double>> getOffenseCoverage(List<Pokemon> team) {
+    List<Pair<Type, double>> offenseList = List.generate(
+        globals.typeCount, (index) => Pair(a: typeList[index], b: 0.0));
+
+    final int teamLen = team.length;
+
+    for (int i = 0; i < teamLen; ++i) {
+      final movesetEffectiveness = team[i].getOffenseCoverage();
+
+      for (int k = 0; k < globals.typeCount; ++k) {
+        offenseList[k].b += movesetEffectiveness[k];
       }
     }
 
-    sortedEffectiveness
-        .sort((prev, curr) => ((prev.b - curr.b) * 1000).round());
+    return offenseList;
+  }
 
-    return sortedEffectiveness;
+  // Get the effectiveness given the defense effectiveness and offense coverage
+  // Used to display a net effectiveness graph on a team analysis page
+  static List<Pair<Type, double>> getMovesWeightedEffectiveness(
+      List<Pair<Type, double>> defense,
+      List<Pair<Type, double>> offense,
+      int teamSize) {
+    List<Pair<Type, double>> movesWeightedEffectiveness = List.generate(
+        globals.typeCount, (index) => Pair(a: typeList[index], b: 0.0));
+
+    for (int i = 0; i < globals.typeCount; ++i) {
+      movesWeightedEffectiveness[i].b =
+          _normalize(defense[i].b * offense[i].b, 0.0, 20.0);
+    }
+
+    return movesWeightedEffectiveness;
+  }
+
+  // Normalize val given a min and max
+  static double _normalize(double val, double min, double max) {
+    if (val < min) return min;
+    if (val > max) return max;
+    return (val - min) / (max - min);
   }
 
   // All type offense & defense effectiveness.
   // The first key accesses a map of all type effectivnesses cooresponding
   // to that particular type. The 2 element list represents :
-  // [0] : offensive effectiveness
-  // [1] : defensive effectiveness
+  // [0] : parent key offensive effectiveness
+  // [1] : parent key defensive effectiveness
   static const Map<String, Map<String, List<double>>> effectivenessMaster = {
     'normal': {
       'normal': [neutral, neutral],

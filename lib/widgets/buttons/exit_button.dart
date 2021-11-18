@@ -22,19 +22,19 @@ class ExitButton extends StatelessWidget {
     // Block size from MediaQuery
     final double blockSize = SizeConfig.blockSizeHorizontal;
     return Container(
-      height: blockSize * 11.0,
-      width: blockSize * 11.0,
+      height: blockSize * 9.0,
+      width: blockSize * 9.0,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: blockSize * .7,
+          width: blockSize * 0.7,
         ),
         shape: BoxShape.circle,
       ),
       child: FloatingActionButton(
         child: Icon(
           Icons.close,
-          size: SizeConfig.blockSizeHorizontal * 7.5,
+          size: SizeConfig.blockSizeHorizontal * 5.0,
         ),
         foregroundColor: Colors.white,
         backgroundColor: Colors.teal,

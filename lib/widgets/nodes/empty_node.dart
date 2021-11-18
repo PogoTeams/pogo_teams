@@ -55,7 +55,7 @@ class EmptyNode extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           color: roleColor,
-          width: blockSize * .8,
+          width: blockSize * 0.8,
         ),
         borderRadius: BorderRadius.circular(blockSize * 2.5),
       ),

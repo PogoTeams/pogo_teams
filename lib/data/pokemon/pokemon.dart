@@ -7,6 +7,7 @@ import 'move.dart';
 import 'stats.dart';
 import '../cup.dart';
 import '../masters/cp_master.dart';
+import '../globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
@@ -130,8 +131,8 @@ class Pokemon {
   final List<String>? eliteMoves;
 
   // VARIABLES
-  late Move selectedFastMove;
-  late List<Move> selectedChargedMoves;
+  late Move selectedFastMove = fastMoves[0];
+  late List<Move> selectedChargedMoves = [chargedMoves[0], chargedMoves[1]];
   num rating = 0;
 
   // Deep copy
@@ -168,6 +169,10 @@ class Pokemon {
     return typing.toString();
   }
 
+  bool hasType(List<Type> types) {
+    return typing.containsType(types);
+  }
+
   // Get the color(s) of this Pokemon's typing
   // If this Pokemon is monotype, this will be a single element list
   List<Color> getTypeColors() {
@@ -185,12 +190,39 @@ class Pokemon {
   }
 
   // Get the type effectiveness of this Pokemon, factoring in current moveset
-  List<List<double>> getEffectiveness() {
-    return typing.getEffectiveness([
-      selectedFastMove.type,
-      selectedChargedMoves[0].type,
-      selectedChargedMoves[1].type,
-    ]);
+  List<double> getDefenseEffectiveness() {
+    return typing.getDefenseEffectiveness();
+  }
+
+  // Go through the moveset typing, accumulate the best type effectiveness
+  List<double> getOffenseCoverage() {
+    List<double> offenseCoverage = [];
+    final fast = selectedFastMove.type.getOffenseEffectiveness();
+    final c1 = selectedChargedMoves[0].type.getOffenseEffectiveness();
+    List<double> c2;
+
+    if ((selectedChargedMoves[1].moveId == 'NONE')) {
+      c2 = List.filled(globals.typeCount, 0.0);
+    } else {
+      c2 = selectedChargedMoves[1].type.getOffenseEffectiveness();
+    }
+
+    for (int i = 0; i < globals.typeCount; ++i) {
+      offenseCoverage.add(_max(fast[i], c1[i], c2[i]));
+    }
+
+    return offenseCoverage;
+  }
+
+  // Get the max value among the 3 provided values
+  double _max(double v1, double v2, double v3) {
+    if (v1 > v2) {
+      if (v1 > v3) return v1;
+      return v3;
+    }
+
+    if (v2 > v3) return v2;
+    return v3;
   }
 
   // Set the moveset for this Pokemon (used in 'from' constructor)

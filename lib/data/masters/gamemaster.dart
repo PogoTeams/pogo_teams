@@ -39,15 +39,22 @@ class GameMaster {
     // Decode to a map
     final Map<String, dynamic> gmJson = jsonDecode(gmString);
 
-    return GameMaster.fromJson(gmJson);
+    final List<dynamic> cupsJsonList = gmJson['cups'];
+
+    final List<Cup> cups =
+        await Future.wait(cupsJsonList.map((dynamic cupJson) async {
+      return Cup.generateCup(cupJson);
+    }).toList());
+
+    return GameMaster.fromJson(gmJson, cups);
   }
 
   // JSON -> OBJ conversion
-  factory GameMaster.fromJson(Map<String, dynamic> json) {
+  factory GameMaster.fromJson(Map<String, dynamic> json, List<Cup> cups) {
     final List<dynamic> pokemonJsonList = json['pokemon'];
     final shadowPokemonKeys = List<String>.from(json['shadowPokemon']);
     final List<dynamic> moveJsonList = json['moves'];
-    final List<dynamic> cupsJsonList = json['cups'];
+    //final List<dynamic> cupsJsonList = json['cups'];
 
     final List<Move> moves = moveJsonList.map<Move>((dynamic moveJson) {
       return Move.fromJson(moveJson);
@@ -62,9 +69,11 @@ class GameMaster {
     List<Pokemon> shadowPokemon = [];
     List<Pokemon> xsPokemon = [];
 
+    /*
     final List<Cup> cups = cupsJsonList.map<Cup>((dynamic cupJson) {
       return Cup.fromJson(cupJson);
     }).toList();
+    */
 
     void _parsePokemon(dynamic pokemonJson) {
       // Populate all pokemon data
@@ -87,12 +96,6 @@ class GameMaster {
       moves: moves,
       cups: cups,
     );
-  }
-
-  // Load the Pokemon Rankings for each cup
-  void initializeRankings() {
-    void loadCup(Cup cup) => cup.loadRankings();
-    cups.forEach(loadCup);
   }
 
   // The master list of ALL moves

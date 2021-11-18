@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 import 'rankings.dart';
 import 'pokemon/pokemon.dart';
+import 'pokemon/typing.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -20,12 +21,22 @@ class Cup {
     required this.title,
     required this.cp,
     required this.cupColor,
+    required this.rankings,
   });
 
-  factory Cup.fromJson(Map<String, dynamic> json) {
+  // Called to load in the given cup from a JSON
+  // Rankings.load will load all jsons from the pvpoke supplied 'data' directory
+  static Future<Cup> generateCup(Map<String, dynamic> json) async {
     final key = json['key'] as String;
-    final title = json['title'] as String;
     final cp = json['cp'] as int;
+    final rankings = await Rankings.load(key, cp);
+
+    return Cup.fromJson(json, key, cp, rankings);
+  }
+
+  factory Cup.fromJson(
+      Map<String, dynamic> json, String key, int cp, Rankings rankings) {
+    final title = json['title'] as String;
     final cupColor = cupColors[title] as Color;
 
     return Cup(
@@ -33,12 +44,8 @@ class Cup {
       title: title,
       cp: cp,
       cupColor: cupColor,
+      rankings: rankings,
     );
-  }
-
-  // Load the rankings information for this cup
-  void loadRankings() async {
-    rankings = await Rankings.load(key, cp);
   }
 
   // Get a sorted list of ranked pokemon for this cup, given a category
@@ -46,9 +53,16 @@ class Cup {
     return rankings.getRankedPokemonList(rankingsCategory);
   }
 
+  List<Pokemon> getFilteredRankedPokemonList(
+      List<Type> types, String rankingsCategory,
+      {int limit = 20}) {
+    return rankings.getFilteredRankedPokemonList(
+        types, rankingsCategory, limit);
+  }
+
   final String key;
   final String title;
   final int cp;
   final Color cupColor;
-  late Rankings rankings;
+  final Rankings rankings;
 }

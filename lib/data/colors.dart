@@ -11,7 +11,7 @@ final Map<String, Color> typeColors = {
   'normal': const Color(0xFFA8A77A),
   'fire': const Color(0xFFEE8130),
   'water': const Color(0xFF6390F0),
-  'electric': const Color(0xFFF7D02C),
+  'electric': const Color(0xFFC7B000),
   'grass': const Color(0xFF7AC74C),
   'ice': const Color(0xFF96D9D6),
   'fighting': const Color(0xFFC22E28),
