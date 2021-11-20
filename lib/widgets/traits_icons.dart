@@ -11,7 +11,6 @@ These icons will appear in a row in a Pokemon's node. Here are the current
 possible icons :
 XL - XL candy Pokemon
 Flame - Shadow Pokemon
-Start - Meta relevant Pokemon
 -------------------------------------------------------------------------------
 */
 
@@ -31,7 +30,6 @@ class TraitsIcons extends StatelessWidget {
         children: [
           pokemon.isXs ? const XlIcon() : Container(),
           pokemon.isShadow ? const ShadowIcon() : Container(),
-          MetaIcon(rating: pokemon.rating),
         ],
       ),
     );

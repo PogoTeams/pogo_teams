@@ -139,7 +139,7 @@ class TypeMaster {
 
     for (int i = 0; i < globals.typeCount; ++i) {
       movesWeightedEffectiveness[i].b =
-          _normalize(defense[i].b * offense[i].b, 0.0, 20.0);
+          _normalize(offense[i].b / defense[i].b, 0.1, 1.6);
     }
 
     return movesWeightedEffectiveness;
@@ -150,6 +150,31 @@ class TypeMaster {
     if (val < min) return min;
     if (val > max) return max;
     return (val - min) / (max - min);
+  }
+
+  // Given a list of type, return the top 5 counters to those types
+  static List<Type> getCounters(List<Type> types) {
+    List<Pair<Type, double>> netTypeEffectiveness = List.generate(
+        globals.typeCount, (index) => Pair(a: typeList[index], b: 0.0));
+
+    List<Type> counters = [];
+    final int typesLen = types.length;
+
+    for (int i = 0; i < typesLen; ++i) {
+      final List<double> effectiveness = types[i].getDefenseEffectiveness();
+      for (int i = 0; i < globals.typeCount; ++i) {
+        netTypeEffectiveness[i].b += effectiveness[i];
+      }
+    }
+
+    netTypeEffectiveness
+        .sort((prev, curr) => ((prev.b - curr.b) * 100).toInt());
+
+    for (int i = 0; i < 5; ++i) {
+      counters.add(netTypeEffectiveness[i].a);
+    }
+
+    return counters;
   }
 
   // All type offense & defense effectiveness.

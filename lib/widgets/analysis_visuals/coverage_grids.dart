@@ -28,6 +28,7 @@ class CoverageGrids extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double blockSize = SizeConfig.blockSizeHorizontal;
+    final double verticalBlockSize = SizeConfig.blockSizeVertical;
     // Row length for the coverage grid views
     final crossAxisCount =
         defenseThreats.length < 8 ? defenseThreats.length : 8;
@@ -52,19 +53,33 @@ class CoverageGrids extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header
-                Text(
-                  'DEFENSE THREATS',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    letterSpacing: SizeConfig.blockSizeHorizontal * .8,
-                    fontSize: SizeConfig.h3,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'DEFENSE THREATS',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        letterSpacing: SizeConfig.blockSizeHorizontal * .8,
+                        fontSize: SizeConfig.h3,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${defenseThreats.length} / 18',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        letterSpacing: SizeConfig.blockSizeHorizontal * .8,
+                        fontSize: SizeConfig.h3,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
                 ),
 
                 // Spacer
                 SizedBox(
-                  height: blockSize * 2.5,
+                  height: verticalBlockSize * 2.5,
                 ),
 
                 // Threat type Icons
@@ -91,7 +106,7 @@ class CoverageGrids extends StatelessWidget {
 
         // Spacer
         SizedBox(
-          height: blockSize * 2.5,
+          height: verticalBlockSize * 2.5,
         ),
 
         // List of coverage
@@ -112,18 +127,32 @@ class CoverageGrids extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header
-                Text(
-                  'OFFENSE COVERAGE',
-                  style: TextStyle(
-                    letterSpacing: SizeConfig.blockSizeHorizontal * .8,
-                    fontSize: SizeConfig.h3,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'OFFENSE COVERAGE',
+                      style: TextStyle(
+                        letterSpacing: SizeConfig.blockSizeHorizontal * .8,
+                        fontSize: SizeConfig.h3,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${offenseCoverage.length} / 18',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        letterSpacing: SizeConfig.blockSizeHorizontal * .8,
+                        fontSize: SizeConfig.h3,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
                 ),
 
                 // Spacer
                 SizedBox(
-                  height: blockSize * 2.5,
+                  height: verticalBlockSize * 2.5,
                 ),
 
                 // Coverage type Icons

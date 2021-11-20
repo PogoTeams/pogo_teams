@@ -7,12 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 
 // Local Imports
-import 'team_info.dart';
-import '../screens/team_analysis.dart';
 import '../configs/size_config.dart';
 import '../data/pokemon/pokemon_team.dart';
-import '../data/pokemon/pokemon.dart';
-import '../widgets/buttons/footer_buttons.dart';
 import '../widgets/team_page.dart';
 
 /*
@@ -35,12 +31,7 @@ class TeamBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     // Perform media queries to scale app UI content
     SizeConfig().init(context);
-
-    return const Scaffold(
-      body: SafeArea(
-        child: TeamsPages(),
-      ),
-    );
+    return const TeamsPages();
   }
 }
 
@@ -68,7 +59,7 @@ class _TeamsPagesState extends State<TeamsPages>
   int _pageIndex = 0;
 
   // For handling the swipeable pages
-  final PageController _controller = PageController(
+  final PageController _pageController = PageController(
     initialPage: 0,
     keepPage: true,
   );
@@ -77,51 +68,16 @@ class _TeamsPagesState extends State<TeamsPages>
   late List<PokemonTeam> _teams;
   late List<TeamPage> _pages;
 
-  // Push the team analysis screen onto the navigator stack.
-  // The pokemon team changes there will be reflected in newTeam
-  void _onAnalyzePressed() async {
-    final PokemonTeam selectedTeam = _teams[_pageIndex];
-
-    // If the team is empty, no action will be taken
-    if (selectedTeam.isEmpty()) return;
-
-    // TODO update the new team
-    final newTeam = await Navigator.push(
-      context,
-      MaterialPageRoute<List<Pokemon?>>(
-        builder: (BuildContext context) {
-          return TeamAnalysis(
-            team: selectedTeam,
-          );
-        },
-      ),
-    );
-  }
-
-  // Push the TeamInfo screen onto the navigator stack
-  void _onTeamInfoPressed() {
-    final PokemonTeam selectedTeam = _teams[_pageIndex];
-
-    // If the team is empty, no action will be taken
-    if (selectedTeam.isEmpty()) return;
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return TeamInfo(pokemonTeam: selectedTeam.getPokemonTeam());
-        },
-      ),
-    );
-  }
-
   // Called when a dot in the dot indicator is tapped
   // The PageView will animate to the cooresponding page
   void _jumpToPage(int index) {
     setState(() {
-      if (_controller.hasClients) {
-        _controller.animateToPage(index,
-            duration: const Duration(seconds: 1), curve: Curves.easeInOut);
+      if (_pageController.hasClients) {
+        _pageController.animateToPage(
+          index,
+          duration: const Duration(seconds: 1),
+          curve: Curves.easeInOut,
+        );
       }
     });
   }
@@ -160,7 +116,7 @@ class _TeamsPagesState extends State<TeamsPages>
       maxTeamCount,
       (index) => TeamPage(
         key: UniqueKey(),
-        pokemonTeam: _teams[index],
+        team: _teams[index],
       ),
     );
   }
@@ -174,54 +130,51 @@ class _TeamsPagesState extends State<TeamsPages>
 
   @override
   void dispose() {
-    _controller.dispose();
+    _pageController.dispose();
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        // Horizontally swipeable team pages
-        SizedBox(
-          height: SizeConfig.screenHeight * 0.79,
+    return Scaffold(
+      // Horizontally swipeable team pages
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: SizeConfig.safeBlockHorizontal * .25,
+            right: SizeConfig.safeBlockHorizontal * .25,
+          ),
           child: PageView(
-            controller: _controller,
+            controller: _pageController,
             onPageChanged: _onPageChanged,
             children: _pages,
           ),
         ),
+      ),
 
-        // Show dots indicator if there is more than 1 team
-        Container(
-          padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2.0),
-          child: DotsIndicator(
-            dotsCount: _getDotCount(),
-            position: _pageIndex.toDouble(),
-            axis: Axis.horizontal,
-            decorator: DotsDecorator(
-              activeColor: Colors.white,
-              color: Colors.grey,
-              spacing: EdgeInsets.only(
-                left: SizeConfig.blockSizeHorizontal * 1.5,
-                right: SizeConfig.blockSizeHorizontal * 1.5,
-              ),
+      // Show dots indicator if there is more than 1 team
+      bottomNavigationBar: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        height: SizeConfig.screenHeight * .08,
+        padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2.0),
+        child: DotsIndicator(
+          dotsCount: _getDotCount(),
+          position: _pageIndex.toDouble(),
+          axis: Axis.horizontal,
+          decorator: DotsDecorator(
+            activeColor: Colors.white,
+            color: Colors.grey,
+            spacing: EdgeInsets.only(
+              left: SizeConfig.blockSizeHorizontal * 1.5,
+              right: SizeConfig.blockSizeHorizontal * 1.5,
             ),
-            onTap: (pos) {
-              _jumpToPage(pos.toInt());
-            },
           ),
+          onTap: (pos) {
+            _jumpToPage(pos.toInt());
+          },
         ),
-
-        // Buttons at the bottom of the screen
-        // These will navigate to a new page
-        FooterButtons(
-          onAnalyzePressed: _onAnalyzePressed,
-          onTeamInfoPressed: _onTeamInfoPressed,
-        ),
-      ],
+      ),
     );
   }
 }

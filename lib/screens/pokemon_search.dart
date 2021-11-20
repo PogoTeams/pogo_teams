@@ -30,11 +30,9 @@ class PokemonSearch extends StatefulWidget {
   const PokemonSearch({
     Key? key,
     required this.team,
-    required this.role,
   }) : super(key: key);
 
   final PokemonTeam team;
-  final String role;
 
   @override
   _PokemonSearchState createState() => _PokemonSearchState();
@@ -127,6 +125,7 @@ class _PokemonSearchState extends State<PokemonSearch> {
 
     // Block size from MediaQuery
     final double blockSize = SizeConfig.blockSizeHorizontal;
+    final double verticalBlockSize = SizeConfig.blockSizeVertical;
 
     return Scaffold(
       body: SafeArea(
@@ -160,7 +159,7 @@ class _PokemonSearchState extends State<PokemonSearch> {
 
             // Horizontal divider
             Divider(
-              height: blockSize * 5.0,
+              height: verticalBlockSize * 5.0,
               thickness: blockSize * 1.0,
               indent: blockSize * 5.0,
               endIndent: blockSize * 5.0,

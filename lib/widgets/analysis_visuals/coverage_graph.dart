@@ -36,7 +36,8 @@ class CoverageGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double blockSize = SizeConfig.blockSizeHorizontal;
+    final double verticalBlockSize = SizeConfig.blockSizeVertical;
+
     // Graph row mapping
     return Column(
       children: [
@@ -47,36 +48,22 @@ class CoverageGraph extends StatelessWidget {
 
         // Spacer
         SizedBox(
-          height: blockSize * 2.5,
-        ),
-
-        // Horizontal divider
-        Divider(
-          height: blockSize * 5.0,
-          thickness: blockSize * .5,
-          indent: blockSize * 1.5,
-          endIndent: blockSize * 1.5,
-          color: Colors.white54,
-        ),
-
-        // Spacer
-        SizedBox(
-          height: blockSize * 1.5,
+          height: verticalBlockSize * 2.5,
         ),
 
         // Header
         Text(
-          'Net Type Coverage',
+          'NET TYPE COVERAGE',
           style: TextStyle(
             letterSpacing: SizeConfig.blockSizeHorizontal * .8,
-            fontSize: SizeConfig.h1,
+            fontSize: SizeConfig.h2,
             fontWeight: FontWeight.bold,
           ),
         ),
 
         // Spacer
         SizedBox(
-          height: blockSize * 2.5,
+          height: verticalBlockSize * 2.5,
         ),
 
         ListView(
@@ -107,8 +94,8 @@ class GraphRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Safety check on normalized values overflowing
-    double barLength = min(typeData.b, 1.0);
-    barLength = max(0.0, barLength);
+    double barLength = min(typeData.b, 1.6);
+    barLength = max(0.1, barLength);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -126,7 +113,7 @@ class GraphRow extends StatelessWidget {
                 BorderRadius.circular(SizeConfig.blockSizeHorizontal * .9),
             color: typeData.a.typeColor,
           ),
-          width: SizeConfig.screenWidth * .85 * barLength,
+          width: SizeConfig.screenWidth * .52 * barLength,
           height: SizeConfig.blockSizeVertical * 1.7,
         ),
       ],

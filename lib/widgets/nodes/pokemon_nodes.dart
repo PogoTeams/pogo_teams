@@ -5,7 +5,6 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import 'move_node.dart';
 import '../../data/pokemon/pokemon.dart';
 import '../../data/cup.dart';
 import '../colored_container.dart';
@@ -26,14 +25,16 @@ themes and more.
 class PokemonNode extends StatelessWidget {
   const PokemonNode({
     Key? key,
+    required this.nodeIndex,
     required this.pokemon,
     required this.cup,
     required this.searchMode,
     required this.clear,
+    required this.onNodeChanged,
   }) : super(key: key);
 
+  final int nodeIndex;
   final Pokemon pokemon;
-
   final Cup cup;
 
   // Search for a new Pokemon
@@ -41,6 +42,13 @@ class PokemonNode extends StatelessWidget {
 
   // Remove the Pokemon and restore to an EmptyNode
   final VoidCallback clear;
+
+  // Callback to rebuild page when a Pokemon move is changed
+  final Function(int, Pokemon) onNodeChanged;
+
+  void _onMoveNodeChanged() {
+    onNodeChanged(nodeIndex, pokemon);
+  }
 
   // Display the Pokemon's name perfect PVP ivs and typing icon(s)
   Row _buildNodeHeader(Pokemon pokemon, BuildContext context) {
@@ -111,9 +119,9 @@ class PokemonNode extends StatelessWidget {
     return ColoredContainer(
       padding: EdgeInsets.only(
         top: blockSize * 1.0,
-        right: blockSize * 2.5,
+        right: blockSize * 2.2,
         bottom: blockSize * .5,
-        left: blockSize * 2.5,
+        left: blockSize * 2.2,
       ),
       pokemon: pokemon,
       child: Column(
@@ -134,6 +142,7 @@ class PokemonNode extends StatelessWidget {
             pokemon: pokemon,
             fastMoveNames: pokemon.getFastMoveNames(),
             chargedMoveNames: pokemon.getChargedMoveNames(),
+            onNodeChanged: _onMoveNodeChanged,
           ),
 
           // Icon buttons to remove, replace or toggle shadow of a Pokemon
@@ -193,23 +202,118 @@ class CompactPokemonNode extends StatelessWidget {
     return ColoredContainer(
       padding: EdgeInsets.only(
         top: blockSize * 1.3,
-        right: blockSize * 2.5,
+        right: blockSize * 2.2,
         bottom: blockSize * 5.0,
-        left: blockSize * 2.5,
+        left: blockSize * 2.2,
       ),
       pokemon: pokemon,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildNodeHeader(pokemon),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              MoveNode(move: pokemon.selectedFastMove),
-              MoveNode(move: pokemon.selectedChargedMoves[0]),
-              MoveNode(move: pokemon.selectedChargedMoves[1]),
-            ],
+
+          // A line divider
+          Divider(
+            color: Colors.white,
+            thickness: blockSize * 0.2,
           ),
+
+          // The dropdowns for the Pokemon's moves
+          // Defaults to the most meta relavent moves
+          MoveDropdowns(
+            pokemon: pokemon,
+            fastMoveNames: pokemon.getFastMoveNames(),
+            chargedMoveNames: pokemon.getChargedMoveNames(),
+            onNodeChanged: () {},
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FooterPokemonNode extends StatelessWidget {
+  const FooterPokemonNode({
+    Key? key,
+    required this.pokemon,
+    required this.footerChild,
+  }) : super(key: key);
+
+  final Pokemon pokemon;
+  final Widget footerChild;
+
+  // The Pokemon name and type icon(s)
+  Row _buildNodeHeader(Pokemon pokemon) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Pokemon name
+        Container(
+          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
+          alignment: Alignment.topLeft,
+          child: Text(
+            pokemon.speciesName,
+            style: TextStyle(
+              fontSize: SizeConfig.h1,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+
+        // Traits Icons
+        TraitsIcons(pokemon: pokemon),
+
+        // Typing icon(s)
+        Container(
+          alignment: Alignment.topRight,
+          height: SizeConfig.blockSizeHorizontal * 8.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: pokemon.getTypeIcons(iconColor: 'white'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final double blockSize = SizeConfig.blockSizeHorizontal;
+
+    return ColoredContainer(
+      padding: EdgeInsets.only(
+        top: blockSize * 1.3,
+        right: blockSize * 2.2,
+        bottom: blockSize * 5.0,
+        left: blockSize * 2.2,
+      ),
+      pokemon: pokemon,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildNodeHeader(pokemon),
+
+          // A line divider
+          Divider(
+            color: Colors.white,
+            thickness: blockSize * 0.2,
+          ),
+
+          // The dropdowns for the Pokemon's moves
+          // Defaults to the most meta relavent moves
+          MoveDropdowns(
+            pokemon: pokemon,
+            fastMoveNames: pokemon.getFastMoveNames(),
+            chargedMoveNames: pokemon.getChargedMoveNames(),
+            onNodeChanged: () {},
+          ),
+
+          // Spacer
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 2.0,
+          ),
+
+          footerChild,
         ],
       ),
     );

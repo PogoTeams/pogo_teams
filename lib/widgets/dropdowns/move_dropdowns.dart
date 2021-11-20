@@ -27,6 +27,7 @@ class MoveDropdowns extends StatefulWidget {
     required this.pokemon,
     required this.fastMoveNames,
     required this.chargedMoveNames,
+    required this.onNodeChanged,
   }) : super(key: key);
 
   final Pokemon pokemon;
@@ -34,6 +35,8 @@ class MoveDropdowns extends StatefulWidget {
   // Lists of the moves a Pokemon can learn
   final List<String> fastMoveNames;
   final List<String> chargedMoveNames;
+
+  final VoidCallback onNodeChanged;
 
   @override
   _MoveDropdownsState createState() => _MoveDropdownsState();
@@ -125,6 +128,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
           onChanged: (Move? newFastMove) {
             setState(() {
               widget.pokemon.updateSelectedFastMove(newFastMove);
+              widget.onNodeChanged();
             });
           },
         ),
@@ -136,6 +140,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
             setState(() {
               widget.pokemon.updateSelectedChargedMove(0, newChargedMove);
               _updateChargedMoveOptions();
+              widget.onNodeChanged();
             });
           },
         ),
@@ -147,6 +152,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
             setState(() {
               widget.pokemon.updateSelectedChargedMove(1, newChargedMove);
               _updateChargedMoveOptions();
+              widget.onNodeChanged();
             });
           },
         ),
@@ -180,7 +186,7 @@ class MoveDropdown extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: SizeConfig.h3,
+            fontSize: SizeConfig.p,
             fontWeight: FontWeight.w600,
             fontStyle: FontStyle.italic,
           ),
@@ -192,13 +198,22 @@ class MoveDropdown extends StatelessWidget {
             child: DropdownButton(
               isExpanded: true,
               value: move,
-              icon: const Icon(Icons.arrow_drop_down),
-              style: DefaultTextStyle.of(context).style,
+              icon: const Icon(Icons.arrow_drop_down_circle),
+              iconSize: SizeConfig.blockSizeHorizontal * 4.0,
+              style: TextStyle(
+                fontSize: SizeConfig.p,
+                fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+              ),
               items: options,
               onChanged: onChanged,
             ),
           ),
-          margin: EdgeInsets.only(top: SizeConfig.blockSizeVertical * .7),
+          padding: EdgeInsets.only(
+            right: SizeConfig.blockSizeVertical * .7,
+          ),
+          margin: EdgeInsets.only(
+            top: SizeConfig.blockSizeVertical * .7,
+          ),
           width: SizeConfig.screenWidth * .28,
           height: SizeConfig.blockSizeVertical * 3.5,
           decoration: BoxDecoration(
