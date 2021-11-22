@@ -22,9 +22,6 @@ class GameMaster {
   GameMaster({
     required this.pokemon,
     required this.pokemonIdMap,
-    required this.shadowPokemon,
-    required this.shadowPokemonKeys,
-    required this.xsPokemon,
     required this.moves,
     required this.cups,
   });
@@ -52,31 +49,16 @@ class GameMaster {
   // JSON -> OBJ conversion
   factory GameMaster.fromJson(Map<String, dynamic> json, List<Cup> cups) {
     final List<dynamic> pokemonJsonList = json['pokemon'];
-    final shadowPokemonKeys = List<String>.from(json['shadowPokemon']);
     final List<dynamic> moveJsonList = json['moves'];
-    //final List<dynamic> cupsJsonList = json['cups'];
 
     final List<Move> moves = moveJsonList.map<Move>((dynamic moveJson) {
       return Move.fromJson(moveJson);
     }).toList();
 
-    // Pokemon are separated into 3 separate lists
-    // Standard Pokemon
-    // Shadow Pokemon
-    // XS Pokemon
     List<Pokemon> pokemon = [];
     Map<String, Pokemon> pokemonIdMap = {};
-    List<Pokemon> shadowPokemon = [];
-    List<Pokemon> xsPokemon = [];
-
-    /*
-    final List<Cup> cups = cupsJsonList.map<Cup>((dynamic cupJson) {
-      return Cup.fromJson(cupJson);
-    }).toList();
-    */
 
     void _parsePokemon(dynamic pokemonJson) {
-      // Populate all pokemon data
       // Retrieve the move objects from 'moves' internally for this Pokemon
       final Pokemon pkm = Pokemon.fromJson(pokemonJson, moves);
 
@@ -90,9 +72,6 @@ class GameMaster {
     return GameMaster(
       pokemon: pokemon,
       pokemonIdMap: pokemonIdMap,
-      shadowPokemon: shadowPokemon,
-      shadowPokemonKeys: shadowPokemonKeys,
-      xsPokemon: xsPokemon,
       moves: moves,
       cups: cups,
     );
@@ -106,17 +85,6 @@ class GameMaster {
 
   // A map of ALL pokemon to their speciesId
   late final Map<String, Pokemon> pokemonIdMap;
-
-  // The master list of ALL shadow pokemon
-  late final List<Pokemon> shadowPokemon;
-
-  // The master list of ALL Pokemon keys that are shadow eligible
-  late final List<String> shadowPokemonKeys;
-
-  // Pokemon that benefit from the XL  candy power up.
-  // This option is presented to the user as an alternative
-  // due to how inaccessible XL candy are.
-  late final List<Pokemon> xsPokemon;
 
   // The master list of ALL cups
   late final List<Cup> cups;

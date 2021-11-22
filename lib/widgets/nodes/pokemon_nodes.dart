@@ -140,8 +140,8 @@ class PokemonNode extends StatelessWidget {
           // Defaults to the most meta relavent moves
           MoveDropdowns(
             pokemon: pokemon,
-            fastMoveNames: pokemon.getFastMoveNames(),
-            chargedMoveNames: pokemon.getChargedMoveNames(),
+            fastMoveNames: pokemon.getFastMoveIds(),
+            chargedMoveNames: pokemon.getChargedMoveIds(),
             onNodeChanged: _onMoveNodeChanged,
           ),
 
@@ -222,8 +222,8 @@ class CompactPokemonNode extends StatelessWidget {
           // Defaults to the most meta relavent moves
           MoveDropdowns(
             pokemon: pokemon,
-            fastMoveNames: pokemon.getFastMoveNames(),
-            chargedMoveNames: pokemon.getChargedMoveNames(),
+            fastMoveNames: pokemon.getFastMoveIds(),
+            chargedMoveNames: pokemon.getChargedMoveIds(),
             onNodeChanged: () {},
           ),
         ],
@@ -303,8 +303,8 @@ class FooterPokemonNode extends StatelessWidget {
           // Defaults to the most meta relavent moves
           MoveDropdowns(
             pokemon: pokemon,
-            fastMoveNames: pokemon.getFastMoveNames(),
-            chargedMoveNames: pokemon.getChargedMoveNames(),
+            fastMoveNames: pokemon.getFastMoveIds(),
+            chargedMoveNames: pokemon.getChargedMoveIds(),
             onNodeChanged: () {},
           ),
 

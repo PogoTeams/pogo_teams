@@ -38,6 +38,7 @@ class EmptyNode extends StatelessWidget {
         borderRadius: BorderRadius.circular(blockSize * 2.5),
       ),
       child: IconButton(
+        tooltip: 'Add a Pokemon to Your Team!',
         icon: Icon(
           Icons.add,
           size: blockSize * 8.5,

@@ -25,11 +25,11 @@ class TeamAnalysis extends StatefulWidget {
   const TeamAnalysis({
     Key? key,
     required this.team,
-    required this.onTeamSwap,
+    required this.onTeamChanged,
   }) : super(key: key);
 
   final PokemonTeam team;
-  final Function(Pokemon) onTeamSwap;
+  final Function(List<Pokemon>) onTeamChanged;
 
   @override
   _TeamAnalysisState createState() => _TeamAnalysisState();
@@ -104,7 +104,7 @@ class _TeamAnalysisState extends State<TeamAnalysis> {
         expandedValue: SwapList(
           team: widget.team,
           types: defenseThreatTypes,
-          onTeamSwap: widget.onTeamSwap,
+          onTeamChanged: widget.onTeamChanged,
         ),
         isExpanded: false,
       ),
@@ -122,7 +122,7 @@ class _TeamAnalysisState extends State<TeamAnalysis> {
         expandedValue: SwapList(
           team: widget.team,
           types: threatCounterTypes,
-          onTeamSwap: widget.onTeamSwap,
+          onTeamChanged: widget.onTeamChanged,
         ),
         isExpanded: false,
       ),

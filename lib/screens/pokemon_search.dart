@@ -129,69 +129,74 @@ class _PokemonSearchState extends State<PokemonSearch> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // User text input field
-            SizedBox(
-              width: SizeConfig.screenWidth * 0.9,
-              child: TextField(
-                keyboardAppearance: Brightness.dark,
-                toolbarOptions: const ToolbarOptions(
-                  copy: true,
-                  cut: true,
-                  paste: true,
-                  selectAll: true,
-                ),
-                cursorColor: Colors.greenAccent,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.greenAccent)),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.greenAccent)),
-                  labelText: 'Search for a Pokemon',
-                  labelStyle: TextStyle(color: Colors.greenAccent),
-                ),
-                textAlign: TextAlign.center,
-                controller: _searchController,
-              ),
-            ),
-
-            // Horizontal divider
-            Divider(
-              height: verticalBlockSize * 5.0,
-              thickness: blockSize * 1.0,
-              indent: blockSize * 5.0,
-              endIndent: blockSize * 5.0,
-            ),
-
-            // The list of Pokemon by species name
-            // rendered as a PokemonButton.
-            Expanded(
-              // Remove the upper silver padding that ListView contains by
-              // default in a Scaffold.
-              child: MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: ListView.builder(
-                  itemCount: filteredPokemon.length,
-                  itemBuilder: (context, index) {
-                    return CompactPokemonNodeButton(
-                      pokemon: filteredPokemon[index],
-                      onPressed: () {
-                        Navigator.pop(
-                          context,
-                          Pokemon.from(filteredPokemon[index]),
-                        );
-                      },
-                      onLongPress: () {},
-                    );
-                  },
-                  physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: SizeConfig.blockSizeVertical * 1.0,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // User text input field
+              SizedBox(
+                width: SizeConfig.screenWidth * 0.9,
+                child: TextField(
+                  keyboardAppearance: Brightness.dark,
+                  toolbarOptions: const ToolbarOptions(
+                    copy: true,
+                    cut: true,
+                    paste: true,
+                    selectAll: true,
+                  ),
+                  cursorColor: Colors.greenAccent,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.greenAccent)),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.greenAccent)),
+                    labelText: 'Search for a Pokemon',
+                    labelStyle: TextStyle(color: Colors.greenAccent),
+                  ),
+                  textAlign: TextAlign.center,
+                  controller: _searchController,
                 ),
               ),
-            ),
-          ],
+
+              // Horizontal divider
+              Divider(
+                height: verticalBlockSize * 5.0,
+                thickness: blockSize * 1.0,
+                indent: blockSize * 5.0,
+                endIndent: blockSize * 5.0,
+              ),
+
+              // The list of Pokemon by species name
+              // rendered as a PokemonButton.
+              Expanded(
+                // Remove the upper silver padding that ListView contains by
+                // default in a Scaffold.
+                child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: ListView.builder(
+                    itemCount: filteredPokemon.length,
+                    itemBuilder: (context, index) {
+                      return CompactPokemonNodeButton(
+                        pokemon: filteredPokemon[index],
+                        onPressed: () {
+                          Navigator.pop(
+                            context,
+                            Pokemon.from(filteredPokemon[index]),
+                          );
+                        },
+                        onLongPress: () {},
+                      );
+                    },
+                    physics: const BouncingScrollPhysics(),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
 

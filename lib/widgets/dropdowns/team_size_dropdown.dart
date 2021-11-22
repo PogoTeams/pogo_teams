@@ -29,7 +29,7 @@ class TeamSizeDropdown extends StatefulWidget {
 class _TeamSizeDropdownState extends State<TeamSizeDropdown>
     with AutomaticKeepAliveClientMixin {
   // List of pvp cup names
-  final List<int> sizes = [3, 4, 5, 6];
+  final List<int> sizes = [3, 6];
 
   @override
   bool get wantKeepAlive => true;

@@ -17,7 +17,7 @@ the app.
 // Every team page manages one instance of this class
 class PokemonTeam {
   // The list of 3 pokemon references that make up the team
-  List<Pokemon?> team = List.filled(3, null, growable: true);
+  List<Pokemon?> team = List.filled(3, null);
 
   // A list of this pokemon team's net effectiveness
   List<double> effectiveness = List.generate(
@@ -29,8 +29,11 @@ class PokemonTeam {
   // Defaults to Great League
   Cup cup = globals.gamemaster.cups[0];
 
+  // Make a copy of the newTeam, keeping the size of the original team
   void setTeam(List<Pokemon?> newTeam) {
-    team = newTeam;
+    team = List.generate(
+        team.length, (index) => index < newTeam.length ? newTeam[index] : null);
+    _updateEffectiveness();
   }
 
   // Set the specified Pokemon in the team by the specified index
@@ -53,12 +56,13 @@ class PokemonTeam {
   void addPokemon(Pokemon newPokemon) {
     bool added = false;
 
-    for (int i = 0; i < 3 && !added; ++i) {
+    for (int i = 0; i < team.length && !added; ++i) {
       if (team[i] == null) {
         team[i] = newPokemon;
         added = true;
       }
     }
+    _updateEffectiveness();
   }
 
   // True if the Pokemon ref is null at the given index
@@ -68,7 +72,22 @@ class PokemonTeam {
 
   // True if there are no Pokemon on the team
   bool isEmpty() {
-    return (team[0] == null && team[1] == null && team[2] == null);
+    bool empty = true;
+    for (int i = 0; i < team.length && empty; ++i) {
+      empty = team[i] == null;
+    }
+
+    return empty;
+  }
+
+  // True if one of the team refs is null
+  bool hasSpace() {
+    bool space = false;
+    for (int i = 0; i < team.length && !space; ++i) {
+      space = team[i] == null;
+    }
+
+    return space;
   }
 
   // The size of the Pokemon team (1 - 3)
@@ -87,7 +106,6 @@ class PokemonTeam {
     team = List<Pokemon?>.generate(
       newSize,
       (index) => index < team.length ? team[index] : null,
-      growable: true,
     );
   }
 

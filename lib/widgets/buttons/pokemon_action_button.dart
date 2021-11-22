@@ -11,22 +11,28 @@ import '../../data/pokemon/pokemon.dart';
 /*
 -------------------------------------------------------------------------------
 A button that displays at the bottom of a Pokemon node, indicating the user
-can swap this Pokemon with another in their team.
+can perform an action with that Pokemon.
 -------------------------------------------------------------------------------
 */
 
-class TeamSwapButton extends StatelessWidget {
-  const TeamSwapButton({
+class PokemonActionButton extends StatelessWidget {
+  const PokemonActionButton({
     Key? key,
+    this.width = double.infinity,
     required this.pokemon,
-    required this.onTeamSwap,
+    required this.label,
+    required this.icon,
+    required this.onPressed,
   }) : super(key: key);
 
+  final double width;
   final Pokemon pokemon;
-  final Function(Pokemon) onTeamSwap;
+  final String label;
+  final Icon icon;
+  final Function(Pokemon) onPressed;
 
   void _onPressed() {
-    onTeamSwap(pokemon);
+    onPressed(pokemon);
   }
 
   @override
@@ -35,6 +41,7 @@ class TeamSwapButton extends StatelessWidget {
       onPressed: _onPressed,
       child: Container(
         height: SizeConfig.blockSizeVertical * 4.0,
+        width: width,
         decoration: BoxDecoration(
           borderRadius:
               BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
@@ -43,13 +50,9 @@ class TeamSwapButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Icon(
-              Icons.swap_horiz_rounded,
-              size: SizeConfig.blockSizeHorizontal * 5.0,
-              color: Colors.white,
-            ),
+            icon,
             Text(
-              'Team Swap',
+              label,
               style: TextStyle(
                 fontSize: SizeConfig.h3,
                 color: Colors.white,

@@ -142,6 +142,7 @@ class _TeamsPagesState extends State<TeamsPages>
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(
+            top: SizeConfig.blockSizeVertical * 1.0,
             left: SizeConfig.safeBlockHorizontal * .25,
             right: SizeConfig.safeBlockHorizontal * .25,
           ),
@@ -153,7 +154,7 @@ class _TeamsPagesState extends State<TeamsPages>
         ),
       ),
 
-      // Show dots indicator if there is more than 1 team
+      // Dots indicator
       bottomNavigationBar: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
         height: SizeConfig.screenHeight * .08,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'typing.dart';
 import 'move.dart';
 import 'stats.dart';
+import '../../tools/max.dart';
 import '../cup.dart';
 import '../masters/cp_master.dart';
 import '../globals.dart' as globals;
@@ -56,16 +57,12 @@ class Pokemon {
     if (json.containsKey('tags')) {
       tags = List<String>.from(json['tags']);
 
-      // Add Frustration & Return to Pokemon that can be shadow / purified
+      // Add Return to Pokemon that can be shadow / purified
+      // Currently, the pvpoke ratings have shadows as a separate instance
       if (tags.contains('shadoweligible')) {
         shadowEligible = true;
         chargedMoveKeys.add('RETURN');
-        chargedMoveKeys.add('FRUSTRATION');
-      }
-      // There are shadow objects for each shadow eligible Pokemon too
-      // Idealy this would be contained in 1 Pokemon object
-      // Currently, the pvpoke ratings have shadows as a separate instance
-      else if (tags.contains('shadow')) {
+      } else if (tags.contains('shadow')) {
         isShadow = true;
         shadowEligible = true;
         chargedMoveKeys.add('FRUSTRATION');
@@ -169,6 +166,7 @@ class Pokemon {
     return typing.toString();
   }
 
+  // True if one of the specified types exists in this Pokemon's typing
   bool hasType(List<Type> types) {
     return typing.containsType(types);
   }
@@ -180,7 +178,7 @@ class Pokemon {
   }
 
   // Get the icon(s) of this Pokemon's typing
-  List<Image> getTypeIcons({String iconColor = 'color'}) {
+  List<Image> getTypeIcons({String iconColor = 'white'}) {
     return typing.isMonoType()
         ? [typing.typeA.getIcon(iconColor: iconColor)]
         : [
@@ -208,21 +206,10 @@ class Pokemon {
     }
 
     for (int i = 0; i < globals.typeCount; ++i) {
-      offenseCoverage.add(_max(fast[i], c1[i], c2[i]));
+      offenseCoverage.add(max(fast[i], c1[i], c2[i]));
     }
 
     return offenseCoverage;
-  }
-
-  // Get the max value among the 3 provided values
-  double _max(double v1, double v2, double v3) {
-    if (v1 > v2) {
-      if (v1 > v3) return v1;
-      return v3;
-    }
-
-    if (v2 > v3) return v2;
-    return v3;
   }
 
   // Set the moveset for this Pokemon (used in 'from' constructor)
@@ -274,22 +261,17 @@ class Pokemon {
   }
 
   // Get a list of all fast move names
-  List<String> getFastMoveNames() {
+  List<String> getFastMoveIds() {
     return fastMoves.map<String>((Move move) {
       return move.moveId;
     }).toList();
   }
 
   // Get a list of all charged move names
-  List<String> getChargedMoveNames() {
+  List<String> getChargedMoveIds() {
     return chargedMoves.map<String>((Move move) {
       return move.moveId;
     }).toList();
-  }
-
-  // Return the perfect PVP ivs this Pokemon has for the provided cup
-  List<num> getPerfectPvpIvs(Cup cup) {
-    return defaultIVs.getIvs(cup.cp);
   }
 
   // Given a cpCap cooresponding to a PVP cup :
@@ -299,10 +281,8 @@ class Pokemon {
   // [2] : def iv
   // [3] : hp iv
   // [4] : cp
-  // TODO : class abstraction
   List<num> getPerfectPvpStats(int cpCap) {
     // Get the perfect PVP ivs
-    // [0] is the Pokemon's level cooresponding to those ivs
     List<num> pvpStats = defaultIVs.getIvs(cpCap);
 
     // Get the maxCp

@@ -182,7 +182,7 @@ class MoveDropdown extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Move name
+        // Move label
         Text(
           label,
           style: TextStyle(

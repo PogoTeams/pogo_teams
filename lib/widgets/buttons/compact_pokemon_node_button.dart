@@ -36,7 +36,6 @@ class CompactPokemonNodeButton extends StatelessWidget {
     final double blockSize = SizeConfig.blockSizeHorizontal;
 
     return MaterialButton(
-      // Button Sizing
       padding: EdgeInsets.only(
         top: blockSize * 2.0,
         right: blockSize * 4.0,

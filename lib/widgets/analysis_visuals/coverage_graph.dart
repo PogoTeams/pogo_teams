@@ -93,7 +93,7 @@ class GraphRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Safety check on normalized values overflowing
+    // Safety check on normalized values
     double barLength = min(typeData.b, 1.6);
     barLength = max(0.1, barLength);
 

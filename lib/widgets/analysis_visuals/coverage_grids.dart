@@ -10,7 +10,7 @@ import '../../configs/size_config.dart';
 
 /*
 -------------------------------------------------------------------------------
-2 Grids, displaying the type icons that are top defense threats team, and a
+2 grids, displaying the type icons that are top defense threats team, and a
 teams offense coverage based on movesets.
 -------------------------------------------------------------------------------
 */
@@ -30,8 +30,9 @@ class CoverageGrids extends StatelessWidget {
     final double blockSize = SizeConfig.blockSizeHorizontal;
     final double verticalBlockSize = SizeConfig.blockSizeVertical;
     // Row length for the coverage grid views
-    final crossAxisCount =
-        defenseThreats.length < 8 ? defenseThreats.length : 8;
+    int crossAxisCount = defenseThreats.length < 8 ? defenseThreats.length : 8;
+
+    if (crossAxisCount < 3) crossAxisCount = 3;
 
     // List of top defensiveThreats
     return Column(

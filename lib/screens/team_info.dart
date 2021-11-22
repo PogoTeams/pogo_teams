@@ -1,5 +1,4 @@
 // Flutter Imports
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -145,22 +144,54 @@ class PokemonEntry extends StatelessWidget {
   final Image image;
   final AsyncSnapshot snapshot;
   late String pokemonDescription;
+  late String moveset;
 
   // Parse the json from snapshot into pokemonDescription
   void _parseJson() async {
     final Map<String, dynamic> json = jsonDecode(snapshot.data);
-    pokemonDescription = json['response'] as String;
+    final rawDescription = json['response'] as String;
+
+    int splitPoint = rawDescription.indexOf('Offense');
+    pokemonDescription =
+        rawDescription.replaceRange(splitPoint - 1, rawDescription.length, '');
+
+    moveset = rawDescription.replaceRange(0, splitPoint, '');
   }
 
   @override
   Widget build(BuildContext context) {
     if (snapshot.hasData) {
+      final verticalBlockSize = SizeConfig.blockSizeVertical;
+      final blockSize = SizeConfig.blockSizeHorizontal;
       _parseJson();
-      return Column(
-        children: [
-          image,
-          Text(pokemonDescription),
-        ],
+      return Padding(
+        padding: EdgeInsets.only(
+          left: blockSize * 2.0,
+          right: blockSize * 2.0,
+        ),
+        child: Column(
+          children: [
+            image,
+
+            // Horizontal divider
+            Divider(
+              height: verticalBlockSize * 5.0,
+              thickness: blockSize * 1.0,
+            ),
+
+            Text(
+              pokemonDescription,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
+
+            // Horizontal divider
+            Divider(
+              height: verticalBlockSize * 5.0,
+              thickness: blockSize * 1.0,
+            ),
+          ],
+        ),
       );
     }
 

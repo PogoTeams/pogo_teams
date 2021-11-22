@@ -11,19 +11,15 @@ import 'package:flutter/widgets.dart';
 // Local Imports
 import '../configs/size_config.dart';
 import '../data/pokemon/pokemon.dart';
-import '../data/cup.dart';
 import '../widgets/buttons/exit_button.dart';
+import '../widgets/buttons/pokemon_action_button.dart';
 import '../widgets/nodes/pokemon_nodes.dart';
-import '../widgets/buttons/compact_pokemon_node_button.dart';
-import '../widgets/buttons/filter_button.dart';
 import '../data/pokemon/pokemon_team.dart';
-import '../data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
-A list of Pokemon are displayed here, which will filter based on text input.
-Every Pokemon node displayed can be tapped, from which that Pokemon reference
-will be returned via the Navigator.pop.
+The user will be able to swap any of the current Pokemon in their team with
+the swap Pokemon. Movesets may also be edited here.
 -------------------------------------------------------------------------------
 */
 
@@ -42,24 +38,15 @@ class TeamSwap extends StatefulWidget {
 }
 
 class _TeamSwapState extends State<TeamSwap> {
-  late List<Pokemon> editableList;
-
-  void _onReorder(int oldIndex, int newIndex) {
-    setState(() {
-      if (oldIndex < newIndex) {
-        newIndex -= 1;
-      }
-
-      final Pokemon pokemon = editableList.removeAt(oldIndex);
-      editableList.insert(newIndex, pokemon);
-    });
-  }
+  late List<Pokemon> _teamList;
+  late Pokemon _swap;
+  bool _changed = false;
 
   @override
   void initState() {
     super.initState();
-    editableList = widget.team.getPokemonTeam();
-    editableList.add(widget.swap);
+    _teamList = widget.team.getPokemonTeam();
+    _swap = widget.swap;
   }
 
   @override
@@ -68,52 +55,88 @@ class _TeamSwapState extends State<TeamSwap> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(
+            top: SizeConfig.blockSizeVertical * 1.0,
             left: SizeConfig.blockSizeHorizontal * 2.0,
             right: SizeConfig.blockSizeHorizontal * 2.0,
           ),
-          child: Center(
-            child: ReorderableListView.builder(
-              itemCount: editableList.length,
-              itemBuilder: (context, index) {
-                if (index == editableList.length - 1) {
-                  return Container(
-                    key: UniqueKey(),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.yellow[400]!,
-                        width: SizeConfig.blockSizeHorizontal * 1.3,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.yellow,
-                          spreadRadius: SizeConfig.blockSizeHorizontal * 1.4,
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(
-                          SizeConfig.blockSizeHorizontal * 2.5),
+          child: ListView(
+            children: [
+              // The Pokemon to swap out
+              CompactPokemonNode(pokemon: _swap),
+
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 2.0,
+              ),
+
+              Center(
+                child: Text(
+                  'Team Swap',
+                  style: TextStyle(
+                    fontSize: SizeConfig.h2,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: SizeConfig.blockSizeHorizontal * .5,
+                  ),
+                ),
+              ),
+
+              // Horizontal divider
+              Divider(
+                height: SizeConfig.blockSizeVertical * 5.0,
+                thickness: SizeConfig.blockSizeHorizontal * 1.0,
+                indent: SizeConfig.blockSizeHorizontal * 5.0,
+                endIndent: SizeConfig.blockSizeHorizontal * 5.0,
+              ),
+
+              // List of the current selected team
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: _teamList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      top: SizeConfig.blockSizeVertical * .5,
+                      bottom: SizeConfig.blockSizeVertical * .5,
                     ),
-                    child: CompactPokemonNode(
+                    child: FooterPokemonNode(
                       key: UniqueKey(),
-                      pokemon: editableList[index],
+                      pokemon: _teamList[index],
+                      // Swap Pokemon
+                      footerChild: PokemonActionButton(
+                        pokemon: _teamList[index],
+                        label: 'Swap Out',
+                        icon: Icon(
+                          Icons.swap_horiz_rounded,
+                          size: SizeConfig.blockSizeHorizontal * 5.0,
+                          color: Colors.white,
+                        ),
+                        onPressed: (newSwapPokemon) {
+                          setState(() {
+                            _changed = true;
+                            _teamList[index] = _swap;
+                            _swap = newSwapPokemon;
+                          });
+                        },
+                      ),
                     ),
                   );
-                }
-
-                return CompactPokemonNode(
-                  key: UniqueKey(),
-                  pokemon: editableList[index],
-                );
-              },
-              onReorder: _onReorder,
-              physics: const NeverScrollableScrollPhysics(),
-            ),
+                },
+                physics: const NeverScrollableScrollPhysics(),
+              ),
+            ],
           ),
         ),
       ),
       // Exit to Team Builder button
       floatingActionButton: ExitButton(
         onPressed: () {
-          Navigator.pop(context);
+          if (_changed) {
+            Navigator.pop(
+              context,
+              _teamList,
+            );
+          } else {
+            Navigator.pop(context);
+          }
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
