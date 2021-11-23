@@ -4,6 +4,7 @@ import 'dart:convert';
 // Flutter Imports
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 import 'package:flutter/services.dart';
+import 'package:pogo_teams/data/masters/type_master.dart';
 
 // Local Imports
 import '../pokemon/pokemon.dart';
@@ -54,6 +55,19 @@ class GameMaster {
     final List<Move> moves = moveJsonList.map<Move>((dynamic moveJson) {
       return Move.fromJson(moveJson);
     }).toList();
+
+    // Many Pokemon only possess 1 charged move
+    // NONE will take that 2nd slot in that case
+    moves.add(
+      Move(
+          moveId: 'NONE',
+          name: 'none',
+          type: TypeMaster.typeList[18],
+          power: 0.0,
+          energy: 0.0,
+          energyGain: 0.0,
+          cooldown: 0.0),
+    );
 
     List<Pokemon> pokemon = [];
     Map<String, Pokemon> pokemonIdMap = {};

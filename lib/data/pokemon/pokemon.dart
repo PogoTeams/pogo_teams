@@ -200,12 +200,12 @@ class Pokemon {
   }
 
   // Get the icon(s) of this Pokemon's typing
-  List<Image> getTypeIcons({String iconColor = 'white'}) {
+  List<Image> getTypeIcons() {
     return typing.isMonoType()
-        ? [typing.typeA.getIcon(iconColor: iconColor)]
+        ? [typing.typeA.getIcon()]
         : [
-            typing.typeA.getIcon(iconColor: iconColor),
-            typing.typeB.getIcon(iconColor: iconColor),
+            typing.typeA.getIcon(),
+            typing.typeB.getIcon(),
           ];
   }
 

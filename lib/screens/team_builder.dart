@@ -47,6 +47,7 @@ class TeamsPages extends StatefulWidget {
 
 class _TeamsPagesState extends State<TeamsPages>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  // Local storage for data persistance across app sessions
   final LocalStorage _storage = LocalStorage('teams_data.json');
   bool initialized = false;
 
@@ -63,12 +64,21 @@ class _TeamsPagesState extends State<TeamsPages>
   late int _pageIndex = 0;
 
   // For handling the swipeable pages
-  late final PageController _pageController =
-      PageController(initialPage: 0, keepPage: true);
+  late final PageController _pageController;
 
   // A list of pokemon teams and a list of their respective pages
   late List<PokemonTeam> _teams;
   late List<TeamPage> _pages;
+
+  late final AnimationController _animController = AnimationController(
+    duration: const Duration(seconds: 2),
+    vsync: this,
+  );
+
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _animController,
+    curve: Curves.easeIn,
+  );
 
   // Called when a dot in the dot indicator is tapped
   // The PageView will animate to the cooresponding page
@@ -128,6 +138,7 @@ class _TeamsPagesState extends State<TeamsPages>
 
   void _saveToStorage() async {
     await _storage.setItem('teamCount', teamCount);
+    await _storage.setItem('pageIndex', _pageIndex);
   }
 
   void _clearStorage() async {
@@ -135,6 +146,7 @@ class _TeamsPagesState extends State<TeamsPages>
 
     setState(() {
       teamCount = minTeamCount;
+      _pageIndex = 0;
       _saveToStorage();
     });
   }
@@ -150,6 +162,7 @@ class _TeamsPagesState extends State<TeamsPages>
   void dispose() {
     _pageController.dispose();
     _storage.dispose();
+    _animController.dispose();
 
     super.dispose();
   }
@@ -160,16 +173,14 @@ class _TeamsPagesState extends State<TeamsPages>
         future: _storage.ready,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.data == null) {
-            return const Scaffold(
-              body: Center(
-                child: LinearProgressIndicator(),
-              ),
-            );
+            return Container();
           }
 
           if (!initialized) {
-            //_clearStorage();
             teamCount = (_storage.getItem('teamCount') ?? minTeamCount) as int;
+            _pageIndex = (_storage.getItem('pageIndex') ?? 0) as int;
+            _pageController =
+                PageController(initialPage: _pageIndex, keepPage: true);
             _maxed = teamCount == maxTeamCount;
 
             for (int i = 0; i < maxTeamCount; ++i) {
@@ -179,44 +190,48 @@ class _TeamsPagesState extends State<TeamsPages>
             initialized = true;
           }
 
-          return Scaffold(
-            // Horizontally swipeable team pages
-            body: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: SizeConfig.blockSizeVertical * 1.0,
-                  left: SizeConfig.safeBlockHorizontal * .25,
-                  right: SizeConfig.safeBlockHorizontal * .25,
-                ),
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: _onPageChanged,
-                  children: _pages,
-                ),
-              ),
-            ),
+          // Begin fade in animation
+          _animController.forward();
 
-            // Dots indicator
-            bottomNavigationBar: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              height: SizeConfig.screenHeight * .08,
-              padding:
-                  EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2.0),
-              child: DotsIndicator(
-                dotsCount: _getDotCount(),
-                position: _pageIndex.toDouble(),
-                axis: Axis.horizontal,
-                decorator: DotsDecorator(
-                  activeColor: Colors.white,
-                  color: Colors.grey,
-                  spacing: EdgeInsets.only(
-                    left: SizeConfig.blockSizeHorizontal * 1.5,
-                    right: SizeConfig.blockSizeHorizontal * 1.5,
+          return FadeTransition(
+            opacity: _animation,
+            child: Scaffold(
+              // Horizontally swipeable team pages
+              body: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.blockSizeVertical * 1.0,
+                  ),
+                  child: PageView(
+                    controller: _pageController,
+                    onPageChanged: _onPageChanged,
+                    children: _pages,
                   ),
                 ),
-                onTap: (pos) {
-                  _jumpToPage(pos.toInt());
-                },
+              ),
+
+              // Dots indicator
+              bottomNavigationBar: Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                height: SizeConfig.screenHeight * .08,
+                padding:
+                    EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2.0),
+                child: DotsIndicator(
+                  dotsCount: _getDotCount(),
+                  position: _pageIndex.toDouble(),
+                  axis: Axis.horizontal,
+                  decorator: DotsDecorator(
+                    activeColor: Colors.white,
+                    color: Colors.grey,
+                    spacing: EdgeInsets.only(
+                      left: SizeConfig.blockSizeHorizontal * 1.5,
+                      right: SizeConfig.blockSizeHorizontal * 1.5,
+                    ),
+                  ),
+                  onTap: (pos) {
+                    _jumpToPage(pos.toInt());
+                  },
+                ),
               ),
             ),
           );

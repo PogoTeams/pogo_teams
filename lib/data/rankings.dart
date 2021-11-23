@@ -101,9 +101,8 @@ class Rankings {
   // Used in fromJson to load the json's pokemon into their list
   static List<RankedPokemon> _loadJson(List<dynamic> json) {
     List<RankedPokemon> ratings = [];
-    int jsonLen = json.length;
 
-    for (int i = 0; i < jsonLen; ++i) {
+    for (int i = 0; i < json.length; ++i) {
       final rankedPokemon = RankedPokemon.fromJson(json[i]);
       ratings.add(rankedPokemon);
     }
@@ -147,7 +146,7 @@ class Rankings {
     final idMap = globals.gamemaster.pokemonIdMap;
 
     return rankingsList.map<Pokemon>((RankedPokemon rankedPokemon) {
-      final Pokemon pokemon = idMap[rankedPokemon.speciesId]!;
+      final Pokemon pokemon = Pokemon.from(idMap[rankedPokemon.speciesId]!);
       pokemon.initializeMetaMoves(rankedPokemon.moveset);
       pokemon.setRating(rankedPokemon.rating);
       return pokemon;

@@ -13,9 +13,16 @@ navigator stack. No information is returned from the current screen.
 */
 
 class ExitButton extends StatelessWidget {
-  const ExitButton({Key? key, required this.onPressed}) : super(key: key);
+  const ExitButton({
+    Key? key,
+    required this.onPressed,
+    this.icon = const Icon(Icons.close),
+    this.backgroundColor = Colors.teal,
+  }) : super(key: key);
 
   final VoidCallback onPressed;
+  final Icon icon;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +39,13 @@ class ExitButton extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: FloatingActionButton(
+        heroTag: key,
         child: Icon(
-          Icons.close,
+          icon.icon,
           size: SizeConfig.blockSizeHorizontal * 5.0,
         ),
         foregroundColor: Colors.white,
-        backgroundColor: Colors.teal,
+        backgroundColor: backgroundColor,
 
         // Callback
         onPressed: onPressed,

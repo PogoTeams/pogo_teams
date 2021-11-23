@@ -122,22 +122,46 @@ class _TeamSwapState extends State<TeamSwap> {
                 },
                 physics: const NeverScrollableScrollPhysics(),
               ),
+
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 5.0,
+              ),
             ],
           ),
         ),
       ),
       // Exit to Team Builder button
-      floatingActionButton: ExitButton(
-        onPressed: () {
-          if (_changed) {
-            Navigator.pop(
-              context,
-              _teamList,
-            );
-          } else {
-            Navigator.pop(context);
-          }
-        },
+      floatingActionButton: SizedBox(
+        width: SizeConfig.screenWidth * .87,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Cancel exit button
+            ExitButton(
+              key: UniqueKey(),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              backgroundColor: Colors.red[400]!,
+            ),
+
+            // Confirm exit button
+            ExitButton(
+              key: UniqueKey(),
+              onPressed: () {
+                if (_changed) {
+                  Navigator.pop(
+                    context,
+                    _teamList,
+                  );
+                } else {
+                  Navigator.pop(context);
+                }
+              },
+              icon: const Icon(Icons.check),
+            ),
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

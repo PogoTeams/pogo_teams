@@ -85,9 +85,9 @@ class Type {
   // [1] : defensive
   late final Map<String, List<double>> effectivenessMap;
 
-  Image getIcon({String iconColor = 'color', double scale = 1.0}) {
+  Image getIcon({double scale = 1.0}) {
     return Image.asset(
-      'assets/' + iconColor + '_type_icons/' + typeKey + '.png',
+      'assets/white_type_icons/' + typeKey + '.png',
       scale: scale,
     );
   }

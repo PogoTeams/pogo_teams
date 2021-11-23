@@ -106,7 +106,7 @@ class _TeamAnalysisState extends State<TeamAnalysis> {
           types: defenseThreatTypes,
           onTeamChanged: widget.onTeamChanged,
         ),
-        isExpanded: false,
+        isExpanded: true,
       ),
 
       // Team Alternatives (Threat Counters)
@@ -124,7 +124,7 @@ class _TeamAnalysisState extends State<TeamAnalysis> {
           types: threatCounterTypes,
           onTeamChanged: widget.onTeamChanged,
         ),
-        isExpanded: false,
+        isExpanded: true,
       ),
     ];
   }

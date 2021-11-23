@@ -63,15 +63,14 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-    - assets/color_type_icons/
     - assets/white_type_icons/
-    - assets/rankings/gobattleleague/attackers/
-    - assets/rankings/gobattleleague/chargers/
-    - assets/rankings/gobattleleague/closers/
-    - assets/rankings/gobattleleague/consistency/
-    - assets/rankings/gobattleleague/leads/
-    - assets/rankings/gobattleleague/overall/
-    - assets/rankings/gobattleleague/switches/
+    - assets/rankings/all/attackers/
+    - assets/rankings/all/chargers/
+    - assets/rankings/all/closers/
+    - assets/rankings/all/consistency/
+    - assets/rankings/all/leads/
+    - assets/rankings/all/overall/
+    - assets/rankings/all/switches/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

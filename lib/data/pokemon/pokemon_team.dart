@@ -72,7 +72,6 @@ class PokemonTeam {
       }
     }
     _updateEffectiveness();
-    _saveToStorage();
   }
 
   // True if the Pokemon ref is null at the given index

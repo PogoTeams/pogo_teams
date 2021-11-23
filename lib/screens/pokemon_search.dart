@@ -177,6 +177,8 @@ class _PokemonSearchState extends State<PokemonSearch> {
                 child: MediaQuery.removePadding(
                   context: context,
                   removeTop: true,
+                  removeLeft: true,
+                  removeRight: true,
                   child: ListView.builder(
                     itemCount: filteredPokemon.length,
                     itemBuilder: (context, index) {

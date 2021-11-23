@@ -77,7 +77,7 @@ class PokemonNode extends StatelessWidget {
           alignment: Alignment.topRight,
           height: SizeConfig.blockSizeHorizontal * 8.0,
           child: Row(
-            children: pokemon.getTypeIcons(iconColor: 'white'),
+            children: pokemon.getTypeIcons(),
           ),
         ),
       ],
@@ -188,7 +188,7 @@ class CompactPokemonNode extends StatelessWidget {
           height: SizeConfig.blockSizeHorizontal * 8.0,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: pokemon.getTypeIcons(iconColor: 'white'),
+            children: pokemon.getTypeIcons(),
           ),
         ),
       ],
@@ -269,7 +269,7 @@ class FooterPokemonNode extends StatelessWidget {
           height: SizeConfig.blockSizeHorizontal * 8.0,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: pokemon.getTypeIcons(iconColor: 'white'),
+            children: pokemon.getTypeIcons(),
           ),
         ),
       ],

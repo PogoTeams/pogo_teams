@@ -94,7 +94,6 @@ class CoverageGrids extends StatelessWidget {
                   children: defenseThreats
                       .map(
                         (pair) => pair.a.getIcon(
-                          iconColor: 'white',
                           scale: SizeConfig.blockSizeHorizontal * 1.0,
                         ),
                       )
@@ -167,7 +166,6 @@ class CoverageGrids extends StatelessWidget {
                   children: offenseCoverage
                       .map(
                         (pair) => pair.a.getIcon(
-                          iconColor: 'white',
                           scale: SizeConfig.blockSizeHorizontal * 1.0,
                         ),
                       )
