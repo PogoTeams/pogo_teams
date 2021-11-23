@@ -60,6 +60,10 @@ class Cup {
         types, rankingsCategory, limit);
   }
 
+  Map<String, dynamic> toJson() {
+    return {'cup': title};
+  }
+
   final String key;
   final String title;
   final int cp;

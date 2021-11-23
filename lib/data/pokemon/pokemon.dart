@@ -6,7 +6,6 @@ import 'typing.dart';
 import 'move.dart';
 import 'stats.dart';
 import '../../tools/max.dart';
-import '../cup.dart';
 import '../masters/cp_master.dart';
 import '../globals.dart' as globals;
 
@@ -107,6 +106,29 @@ class Pokemon {
       isXs: isXs,
       isShadow: isShadow,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'speciesId': speciesId,
+      'selectedFastMove': selectedFastMove.moveId,
+      'selectedChargedMoves': [
+        selectedChargedMoves[0].moveId,
+        selectedChargedMoves[1].moveId,
+      ],
+    };
+  }
+
+  // This json will contain moveset info and an id
+  // This id is used to retrieve an actual Pokemon ref from the idMap
+  static Pokemon readFromStorage(
+      Map<String, dynamic> json, Map<String, Pokemon> idMap) {
+    Pokemon fromStorage = Pokemon.from(idMap[json['speciesId']]!);
+
+    fromStorage.setMovesetByIds(json['selectedFastMove'] as String,
+        List<String>.from(json['selectedChargedMoves']));
+
+    return fromStorage;
   }
 
   // REQUIRED
@@ -216,6 +238,16 @@ class Pokemon {
   void setMoveset(Move fastMove, List<Move> chargedMoves) {
     selectedFastMove = fastMove;
     selectedChargedMoves = chargedMoves;
+  }
+
+  void setMovesetByIds(String fastMoveId, List<String> chargedMoveIds) {
+    selectedFastMove =
+        fastMoves.firstWhere((move) => move.moveId == fastMoveId);
+
+    for (int i = 0; i < 2; ++i) {
+      selectedChargedMoves[i] =
+          chargedMoves.firstWhere((move) => move.moveId == chargedMoveIds[i]);
+    }
   }
 
   // Set the selected moves to the relatively most powerful moves

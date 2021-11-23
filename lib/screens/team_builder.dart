@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 
 // Package Imports
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:localstorage/localstorage.dart';
 
 // Local Imports
 import '../configs/size_config.dart';
@@ -45,24 +46,25 @@ class TeamsPages extends StatefulWidget {
 }
 
 class _TeamsPagesState extends State<TeamsPages>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  final LocalStorage _storage = LocalStorage('teams_data.json');
+  bool initialized = false;
+
   final int maxTeamCount = 15;
   final int minTeamCount = 3;
 
   // A flag to set whether the max page allocations has been met
-  bool maxed = false;
+  late bool _maxed = false;
 
   // The number of editable teams available to the user
   late int teamCount = minTeamCount;
 
   // The index cooresponding to the currently display page
-  int _pageIndex = 0;
+  late int _pageIndex = 0;
 
   // For handling the swipeable pages
-  final PageController _pageController = PageController(
-    initialPage: 0,
-    keepPage: true,
-  );
+  late final PageController _pageController =
+      PageController(initialPage: 0, keepPage: true);
 
   // A list of pokemon teams and a list of their respective pages
   late List<PokemonTeam> _teams;
@@ -93,20 +95,23 @@ class _TeamsPagesState extends State<TeamsPages>
       if (index == teamCount - 1) {
         _pageIndex = index;
 
-        // set a maxed flag to render the last dot
-        maxed = (!maxed ? teamCount == maxTeamCount : maxed);
-
-        // If max not reached, increment team count
-        if (!maxed) ++teamCount;
+        // set a _maxed flag to render the last dot
+        if (!_maxed && teamCount == maxTeamCount) {
+          _maxed = true;
+        } else if (!_maxed) {
+          // If max not reached, increment team count
+          ++teamCount;
+        }
       } else {
         _pageIndex = index;
       }
+      _saveToStorage();
     });
   }
 
   // Edge cases for displaying the number of dots in the dot indicator
   int _getDotCount() {
-    return (teamCount == maxTeamCount && maxed ? maxTeamCount : teamCount - 1);
+    return (teamCount == maxTeamCount && _maxed ? maxTeamCount : teamCount - 1);
   }
 
   // Setup the team list, and page list that cooresponds to each team
@@ -121,6 +126,19 @@ class _TeamsPagesState extends State<TeamsPages>
     );
   }
 
+  void _saveToStorage() async {
+    await _storage.setItem('teamCount', teamCount);
+  }
+
+  void _clearStorage() async {
+    await _storage.clear();
+
+    setState(() {
+      teamCount = minTeamCount;
+      _saveToStorage();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -131,51 +149,77 @@ class _TeamsPagesState extends State<TeamsPages>
   @override
   void dispose() {
     _pageController.dispose();
+    _storage.dispose();
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Horizontally swipeable team pages
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: SizeConfig.blockSizeVertical * 1.0,
-            left: SizeConfig.safeBlockHorizontal * .25,
-            right: SizeConfig.safeBlockHorizontal * .25,
-          ),
-          child: PageView(
-            controller: _pageController,
-            onPageChanged: _onPageChanged,
-            children: _pages,
-          ),
-        ),
-      ),
+    return FutureBuilder(
+        future: _storage.ready,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.data == null) {
+            return const Scaffold(
+              body: Center(
+                child: LinearProgressIndicator(),
+              ),
+            );
+          }
 
-      // Dots indicator
-      bottomNavigationBar: Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        height: SizeConfig.screenHeight * .08,
-        padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2.0),
-        child: DotsIndicator(
-          dotsCount: _getDotCount(),
-          position: _pageIndex.toDouble(),
-          axis: Axis.horizontal,
-          decorator: DotsDecorator(
-            activeColor: Colors.white,
-            color: Colors.grey,
-            spacing: EdgeInsets.only(
-              left: SizeConfig.blockSizeHorizontal * 1.5,
-              right: SizeConfig.blockSizeHorizontal * 1.5,
+          if (!initialized) {
+            //_clearStorage();
+            teamCount = (_storage.getItem('teamCount') ?? minTeamCount) as int;
+            _maxed = teamCount == maxTeamCount;
+
+            for (int i = 0; i < maxTeamCount; ++i) {
+              _teams[i].readFromStorage(i, _storage);
+            }
+
+            initialized = true;
+          }
+
+          return Scaffold(
+            // Horizontally swipeable team pages
+            body: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: SizeConfig.blockSizeVertical * 1.0,
+                  left: SizeConfig.safeBlockHorizontal * .25,
+                  right: SizeConfig.safeBlockHorizontal * .25,
+                ),
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: _onPageChanged,
+                  children: _pages,
+                ),
+              ),
             ),
-          ),
-          onTap: (pos) {
-            _jumpToPage(pos.toInt());
-          },
-        ),
-      ),
-    );
+
+            // Dots indicator
+            bottomNavigationBar: Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              height: SizeConfig.screenHeight * .08,
+              padding:
+                  EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2.0),
+              child: DotsIndicator(
+                dotsCount: _getDotCount(),
+                position: _pageIndex.toDouble(),
+                axis: Axis.horizontal,
+                decorator: DotsDecorator(
+                  activeColor: Colors.white,
+                  color: Colors.grey,
+                  spacing: EdgeInsets.only(
+                    left: SizeConfig.blockSizeHorizontal * 1.5,
+                    right: SizeConfig.blockSizeHorizontal * 1.5,
+                  ),
+                ),
+                onTap: (pos) {
+                  _jumpToPage(pos.toInt());
+                },
+              ),
+            ),
+          );
+        });
   }
 }

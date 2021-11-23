@@ -24,6 +24,9 @@ class PogoTeamsApp extends StatelessWidget {
       // All navigation is delegated to a bottom tap bar
       home: const TeamBuilder(),
 
+      // App state restoration
+      restorationScopeId: 'root',
+
       //Removes the debug banner
       debugShowCheckedModeBanner: false,
     );
