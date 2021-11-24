@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 
 // Local Imports
 import 'nodes/team_node.dart';
-import '../screens/team_info.dart';
 import 'dropdowns/cup_dropdown.dart';
 import 'dropdowns/team_size_dropdown.dart';
 import '../widgets/team_analysis.dart';
@@ -152,7 +151,7 @@ class _TeamPageState extends State<TeamPage>
 
           // Spacer
           SizedBox(
-            height: SizeConfig.blockSizeVertical * 1.5,
+            height: SizeConfig.blockSizeVertical * 1.0,
           ),
 
           // The list of team nodes

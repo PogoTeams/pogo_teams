@@ -65,9 +65,12 @@ class Typing {
 }
 
 /*
+-------------------------------------------------------------------------------
 Manages all data cooresponding to a single type. This can be a type from a
 Pokemon's duo / mono typing or a Pokemon move.
+-------------------------------------------------------------------------------
 */
+
 class Type {
   Type({required this.typeKey}) {
     typeColor = typeColors[typeKey]!;

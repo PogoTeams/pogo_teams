@@ -12,34 +12,31 @@ import 'package:flutter/widgets.dart';
 import '../configs/size_config.dart';
 import '../data/pokemon/pokemon.dart';
 import '../data/cup.dart';
-import '../widgets/buttons/exit_button.dart';
+import '../widgets/dropdowns/cup_dropdown.dart';
+import '../widgets/pogo_drawer.dart';
 import '../widgets/buttons/compact_pokemon_node_button.dart';
 import '../widgets/buttons/filter_button.dart';
-import '../data/pokemon/pokemon_team.dart';
 import '../data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
-A list of Pokemon are displayed here, which will filter based on text input.
-Every Pokemon node displayed can be tapped, from which that Pokemon reference
-will be returned via the Navigator.pop.
+This screen will display a list of rankings based on selected cup, and
+category. These categories and ranking information are all currently used from
+The PvPoke model.
 -------------------------------------------------------------------------------
 */
 
-class PokemonSearch extends StatefulWidget {
-  const PokemonSearch({
+class Rankings extends StatefulWidget {
+  const Rankings({
     Key? key,
-    required this.team,
   }) : super(key: key);
 
-  final PokemonTeam team;
-
   @override
-  _PokemonSearchState createState() => _PokemonSearchState();
+  _RankingsState createState() => _RankingsState();
 }
 
-class _PokemonSearchState extends State<PokemonSearch> {
-  late final Cup cup;
+class _RankingsState extends State<Rankings> {
+  late Cup cup;
 
   // Search bar text input controller
   final TextEditingController _searchController = TextEditingController();
@@ -51,6 +48,15 @@ class _PokemonSearchState extends State<PokemonSearch> {
   List<Pokemon> filteredPokemon = [];
 
   String _selectedCategory = 'overall';
+
+  void _onCupChanged(String? newCup) {
+    if (newCup == null) return;
+
+    setState(() {
+      cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == newCup);
+      _filterCategory(_selectedCategory);
+    });
+  }
 
   // Callback for the FilterButton
   // Sets the ranking list associated with rankingsCategory
@@ -101,8 +107,7 @@ class _PokemonSearchState extends State<PokemonSearch> {
   void initState() {
     super.initState();
 
-    // Get the selected cup and list of Pokemon based on the category
-    cup = widget.team.cup;
+    cup = globals.gamemaster.cups[0];
     pokemon = cup.getRankedPokemonList(_selectedCategory);
 
     // Start listening to changes.
@@ -124,14 +129,63 @@ class _PokemonSearchState extends State<PokemonSearch> {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              'Rankings',
+              style: TextStyle(
+                fontSize: SizeConfig.h2,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+
+            // Spacer
+            SizedBox(
+              width: SizeConfig.blockSizeHorizontal * 3.0,
+            ),
+
+            Icon(
+              Icons.bar_chart,
+              size: SizeConfig.blockSizeHorizontal * 6.0,
+            ),
+          ],
+        ),
+      ),
+
+      // App drawer
+      drawer: const PogoDrawer(),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(
-            top: SizeConfig.blockSizeVertical * 1.0,
+            top: SizeConfig.blockSizeVertical * 2.0,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // Dropdown for pvp cup selection
+                  CupDropdown(
+                    cup: cup,
+                    onCupChanged: _onCupChanged,
+                    //width: SizeConfig.screenWidth * .9,
+                  ),
+
+                  FilterButton(
+                    onSelected: _filterCategory,
+                    selectedCategory: _selectedCategory,
+                    size: SizeConfig.blockSizeHorizontal * 11.0,
+                  ),
+                ],
+              ),
+
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 2.0,
+              ),
+
               // User text input field
               SizedBox(
                 width: SizeConfig.screenWidth * 0.9,
@@ -157,12 +211,8 @@ class _PokemonSearchState extends State<PokemonSearch> {
                 ),
               ),
 
-              // Horizontal divider
-              Divider(
-                height: SizeConfig.blockSizeVertical * 5.0,
-                thickness: SizeConfig.blockSizeHorizontal * 1.0,
-                indent: SizeConfig.blockSizeHorizontal * 5.0,
-                endIndent: SizeConfig.blockSizeHorizontal * 5.0,
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 2.0,
               ),
 
               // The list of Pokemon by species name
@@ -180,12 +230,7 @@ class _PokemonSearchState extends State<PokemonSearch> {
                     itemBuilder: (context, index) {
                       return CompactPokemonNodeButton(
                         pokemon: filteredPokemon[index],
-                        onPressed: () {
-                          Navigator.pop(
-                            context,
-                            Pokemon.from(filteredPokemon[index]),
-                          );
-                        },
+                        onPressed: () {},
                         onLongPress: () {},
                       );
                     },
@@ -198,28 +243,15 @@ class _PokemonSearchState extends State<PokemonSearch> {
         ),
       ),
 
-      // Exit to Team Builder button
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 25),
-            width: SizeConfig.blockSizeHorizontal * 80,
-            child: ExitButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-          SizedBox(
-            width: SizeConfig.blockSizeHorizontal * 20,
-            child: FilterButton(
-              onSelected: _filterCategory,
-              selectedCategory: _selectedCategory,
-            ),
-          ),
-        ],
+      // The filter by category button
+      /*
+      floatingActionButton: 
+      FilterButton(
+        onSelected: _filterCategory,
+        selectedCategory: _selectedCategory,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      */
     );
   }
 }

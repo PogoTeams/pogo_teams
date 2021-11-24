@@ -36,8 +36,6 @@ class CoverageGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double verticalBlockSize = SizeConfig.blockSizeVertical;
-
     // Graph row mapping
     return Column(
       children: [
@@ -48,7 +46,7 @@ class CoverageGraph extends StatelessWidget {
 
         // Spacer
         SizedBox(
-          height: verticalBlockSize * 2.5,
+          height: SizeConfig.blockSizeVertical * 2.5,
         ),
 
         // Header
@@ -63,7 +61,7 @@ class CoverageGraph extends StatelessWidget {
 
         // Spacer
         SizedBox(
-          height: verticalBlockSize * 2.5,
+          height: SizeConfig.blockSizeVertical * 2.5,
         ),
 
         ListView(

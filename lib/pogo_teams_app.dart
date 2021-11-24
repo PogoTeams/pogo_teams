@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 
 // Local Imports
 import 'screens/team_builder.dart';
+import 'screens/rankings.dart';
 
 //// APPLICATION ROOT
 class PogoTeamsApp extends StatelessWidget {
@@ -23,9 +24,9 @@ class PogoTeamsApp extends StatelessWidget {
       // There is a single page in this app
       // All navigation is delegated to a bottom tap bar
       home: const TeamBuilder(),
-
-      // App state restoration
-      restorationScopeId: 'root',
+      routes: <String, WidgetBuilder>{
+        '/rankings': (BuildContext context) => const Rankings(),
+      },
 
       //Removes the debug banner
       debugShowCheckedModeBanner: false,

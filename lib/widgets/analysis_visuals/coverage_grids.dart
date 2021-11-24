@@ -27,8 +27,6 @@ class CoverageGrids extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double blockSize = SizeConfig.blockSizeHorizontal;
-    final double verticalBlockSize = SizeConfig.blockSizeVertical;
     // Row length for the coverage grid views
     int crossAxisCount = defenseThreats.length < 8 ? defenseThreats.length : 8;
 
@@ -40,9 +38,10 @@ class CoverageGrids extends StatelessWidget {
         SizedBox(
           width: SizeConfig.screenWidth * .95,
           child: Container(
-            padding: EdgeInsets.all(blockSize * 2.0),
+            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(blockSize * 0.9),
+              borderRadius:
+                  BorderRadius.circular(SizeConfig.blockSizeHorizontal * 0.9),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -80,7 +79,7 @@ class CoverageGrids extends StatelessWidget {
 
                 // Spacer
                 SizedBox(
-                  height: verticalBlockSize * 2.5,
+                  height: SizeConfig.blockSizeVertical * 2.5,
                 ),
 
                 // Threat type Icons
@@ -88,7 +87,7 @@ class CoverageGrids extends StatelessWidget {
                   shrinkWrap: true,
                   crossAxisSpacing: SizeConfig.blockSizeHorizontal * .1,
                   mainAxisSpacing: SizeConfig.blockSizeVertical * 1.2,
-                  childAspectRatio: blockSize * .5,
+                  childAspectRatio: SizeConfig.blockSizeHorizontal * .5,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: crossAxisCount,
                   children: defenseThreats
@@ -106,16 +105,17 @@ class CoverageGrids extends StatelessWidget {
 
         // Spacer
         SizedBox(
-          height: verticalBlockSize * 2.5,
+          height: SizeConfig.blockSizeVertical * 2.5,
         ),
 
         // List of coverage
         SizedBox(
           width: SizeConfig.screenWidth * .95,
           child: Container(
-            padding: EdgeInsets.all(blockSize * 2.0),
+            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(blockSize * 0.9),
+              borderRadius:
+                  BorderRadius.circular(SizeConfig.blockSizeHorizontal * 0.9),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -152,7 +152,7 @@ class CoverageGrids extends StatelessWidget {
 
                 // Spacer
                 SizedBox(
-                  height: verticalBlockSize * 2.5,
+                  height: SizeConfig.blockSizeVertical * 2.5,
                 ),
 
                 // Coverage type Icons
@@ -160,7 +160,7 @@ class CoverageGrids extends StatelessWidget {
                   shrinkWrap: true,
                   crossAxisSpacing: SizeConfig.blockSizeHorizontal * .1,
                   mainAxisSpacing: SizeConfig.blockSizeVertical * 1.2,
-                  childAspectRatio: blockSize * .5,
+                  childAspectRatio: SizeConfig.blockSizeHorizontal * .5,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: crossAxisCount,
                   children: offenseCoverage

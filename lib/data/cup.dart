@@ -53,6 +53,8 @@ class Cup {
     return rankings.getRankedPokemonList(rankingsCategory);
   }
 
+  // Given a list of types, and category, generate a list of the top Pokemon
+  // the size of the list will at most be the provided limit
   List<Pokemon> getFilteredRankedPokemonList(
       List<Type> types, String rankingsCategory,
       {int limit = 20}) {

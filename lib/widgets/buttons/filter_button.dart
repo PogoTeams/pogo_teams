@@ -19,30 +19,34 @@ class FilterButton extends StatelessWidget {
     Key? key,
     required this.onSelected,
     required this.selectedCategory,
+    this.size,
   }) : super(key: key);
 
   final void Function(dynamic) onSelected;
   final String selectedCategory;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
-    final double blockSize = SizeConfig.blockSizeHorizontal;
+    final _size = size ?? SizeConfig.blockSizeHorizontal * 14.0;
 
     return Container(
-      height: blockSize * 14.0,
-      width: blockSize * 14.0,
+      height: _size,
+      width: _size,
       decoration: BoxDecoration(
         color: Colors.teal,
         border: Border.all(
           color: Colors.white,
-          width: blockSize * .7,
+          width: SizeConfig.blockSizeHorizontal * .7,
         ),
         shape: BoxShape.circle,
       ),
       child: PopupMenuButton<String>(
         onSelected: onSelected,
         icon: const Icon(Icons.sort_sharp),
-        iconSize: blockSize * 7.0,
+        iconSize: _size / 2,
+
+        // Category options
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           PopupMenuItem<String>(
             value: 'overall',

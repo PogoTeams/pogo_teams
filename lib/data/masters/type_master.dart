@@ -2,6 +2,7 @@
 import '../../tools/pair.dart';
 import '../pokemon/typing.dart';
 import '../pokemon/pokemon.dart';
+import '../../tools/logic.dart';
 import '../globals.dart' as globals;
 
 /*
@@ -139,17 +140,10 @@ class TypeMaster {
 
     for (int i = 0; i < globals.typeCount; ++i) {
       movesWeightedEffectiveness[i].b =
-          _normalize(offense[i].b / defense[i].b, 0.1, 1.6);
+          normalize(offense[i].b / defense[i].b, 0.1, 1.6);
     }
 
     return movesWeightedEffectiveness;
-  }
-
-  // Normalize val given a min and max
-  static double _normalize(double val, double min, double max) {
-    if (val < min) return min;
-    if (val > max) return max;
-    return (val - min) / (max - min);
   }
 
   // Given a list of type, return the top 5 counters to those types
