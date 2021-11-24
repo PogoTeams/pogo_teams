@@ -126,6 +126,14 @@ class PokemonTeam {
     effectiveness = TypeMaster.getNetEffectiveness(getPokemonTeam());
   }
 
+  // Clear and reset all team data
+  void clear() {
+    void _clearPokemon(pokemon) => pokemon = null;
+
+    team.forEach(_clearPokemon);
+    cup = globals.gamemaster.cups.firstWhere((c) => c.title == 'Great League');
+  }
+
   void readFromStorage(int teamIndex, LocalStorage storage) {
     _teamIndex = teamIndex;
     _storage = storage;

@@ -9,7 +9,7 @@ import '../screens/team_info.dart';
 import 'dropdowns/cup_dropdown.dart';
 import 'dropdowns/team_size_dropdown.dart';
 import '../widgets/team_analysis.dart';
-import '../widgets/buttons/footer_buttons.dart';
+import 'buttons/analyze_button.dart';
 import '../data/pokemon/pokemon_team.dart';
 import '../data/pokemon/pokemon.dart';
 import '../configs/size_config.dart';
@@ -84,26 +84,11 @@ class _TeamPageState extends State<TeamPage>
 
     setState(() {
       _scrollController.animateTo(
-        SizeConfig.screenHeight,
+        SizeConfig.screenHeight * .8,
         duration: const Duration(seconds: 2),
         curve: Curves.easeInOut,
       );
     });
-  }
-
-  // Push the TeamInfo screen onto the navigator stack
-  void _onTeamInfoPressed() {
-    // If the team is empty, no action will be taken
-    if (widget.team.isEmpty()) return;
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return TeamInfo(pokemonTeam: widget.team.getPokemonTeam());
-        },
-      ),
-    );
   }
 
   @override
@@ -181,9 +166,9 @@ class _TeamPageState extends State<TeamPage>
           SizedBox(
             height: SizeConfig.blockSizeVertical * 1.5,
           ),
-          FooterButtons(
+
+          AnalyzeButton(
             onAnalyzePressed: _onAnalyzePressed,
-            onTeamInfoPressed: _onTeamInfoPressed,
           ),
 
           // The team analysis content

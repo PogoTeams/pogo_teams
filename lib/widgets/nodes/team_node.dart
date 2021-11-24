@@ -63,7 +63,7 @@ class _TeamNodeState extends State<TeamNode> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: SizeConfig.screenHeight * .205,
+      height: SizeConfig.screenHeight * .19,
 
       // If the Pokemon ref is null, build an empty node
       // Otherwise build a Pokemon node with cooresponding data

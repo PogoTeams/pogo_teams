@@ -6,11 +6,13 @@ import 'package:flutter/widgets.dart';
 // Package Imports
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:localstorage/localstorage.dart';
+//import 'package:showcaseview/showcaseview.dart';
 
 // Local Imports
 import '../configs/size_config.dart';
 import '../data/pokemon/pokemon_team.dart';
 import '../widgets/team_page.dart';
+import '../screens/team_info.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -119,6 +121,23 @@ class _TeamsPagesState extends State<TeamsPages>
     });
   }
 
+  // Push the TeamInfo screen onto the navigator stack
+  void _onTeamInfoPressed() {
+    final team = _teams[_pageIndex];
+
+    // If the team is empty, no action will be taken
+    if (team.isEmpty()) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return TeamInfo(pokemonTeam: team.getPokemonTeam());
+        },
+      ),
+    );
+  }
+
   // Edge cases for displaying the number of dots in the dot indicator
   int _getDotCount() {
     return (teamCount == maxTeamCount && _maxed ? maxTeamCount : teamCount - 1);
@@ -143,12 +162,149 @@ class _TeamsPagesState extends State<TeamsPages>
 
   void _clearStorage() async {
     await _storage.clear();
+  }
 
-    setState(() {
-      teamCount = minTeamCount;
-      _pageIndex = 0;
-      _saveToStorage();
-    });
+  // Build the drawer widget for this screen's scaffold
+  Widget _buildDrawer(BuildContext context) {
+    // Callback for clear all option
+    _onClearAll() async {
+      // The options
+      Widget cancelButton = MaterialButton(
+        child: Text(
+          'Cancel',
+          style: TextStyle(
+            fontSize: SizeConfig.h2,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        onPressed: () {
+          Navigator.pop(context, false);
+        },
+      );
+
+      Widget continueButton = MaterialButton(
+        child: Text(
+          'Remove All',
+          style: TextStyle(
+            fontSize: SizeConfig.h2,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        onPressed: () {
+          Navigator.pop(context, true);
+        },
+      );
+
+      bool? clearAll = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'Remove ALL Teams',
+                style: TextStyle(
+                  fontSize: SizeConfig.h2,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              content: Text(
+                'Are you sure you want to remove all teams from the team builder?',
+                style: TextStyle(
+                  fontSize: SizeConfig.h2,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              actions: [
+                cancelButton,
+                continueButton,
+              ],
+            );
+          });
+
+      if (clearAll != null && clearAll) {
+        // Reinitialize the lists
+        _initializeLists();
+
+        // Clear the local storage
+        _clearStorage();
+
+        // Pop from the drawer
+        Navigator.pop(context);
+
+        // Animate to the first page in the team builder
+        if (_pageController.hasClients) {
+          await _pageController.animateToPage(
+            0,
+            duration: const Duration(seconds: 1),
+            curve: Curves.easeInOut,
+          );
+        }
+
+        // Set defaults
+        setState(() {
+          teamCount = minTeamCount;
+          _pageIndex = 0;
+          _maxed = false;
+
+          // Relink the storage to the new teams
+          for (int i = 0; i < maxTeamCount; ++i) {
+            _teams[i].readFromStorage(i, _storage);
+          }
+        });
+      }
+    }
+
+    return Drawer(
+      child: ListView(
+        children: [
+          DrawerHeader(
+            child: Text(
+              'PO GO  Teams',
+              style: TextStyle(
+                fontSize: SizeConfig.h1 * 2.0,
+              ),
+            ),
+          ),
+          ListTile(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Team Info',
+                  style: TextStyle(fontSize: SizeConfig.h1),
+                ),
+                SizedBox(
+                  width: SizeConfig.blockSizeHorizontal * 3.0,
+                ),
+                Icon(
+                  Icons.info_outline,
+                  size: SizeConfig.blockSizeHorizontal * 5.0,
+                ),
+              ],
+            ),
+            onTap: _onTeamInfoPressed,
+          ),
+          ListTile(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Remove All Teams',
+                  style: TextStyle(fontSize: SizeConfig.h1),
+                ),
+                SizedBox(
+                  width: SizeConfig.blockSizeHorizontal * 3.0,
+                ),
+                Icon(
+                  Icons.clear,
+                  size: SizeConfig.blockSizeHorizontal * 5.0,
+                ),
+              ],
+            ),
+            onTap: _onClearAll,
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -177,6 +333,7 @@ class _TeamsPagesState extends State<TeamsPages>
           }
 
           if (!initialized) {
+            _clearStorage();
             teamCount = (_storage.getItem('teamCount') ?? minTeamCount) as int;
             _pageIndex = (_storage.getItem('pageIndex') ?? 0) as int;
             _pageController =
@@ -196,6 +353,19 @@ class _TeamsPagesState extends State<TeamsPages>
           return FadeTransition(
             opacity: _animation,
             child: Scaffold(
+              appBar: AppBar(
+                title: Align(
+                  alignment: Alignment.topRight,
+                  child: Text(
+                    'Team Builder',
+                    style: TextStyle(
+                      fontSize: SizeConfig.h2,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+              ),
+              drawer: _buildDrawer(context),
               // Horizontally swipeable team pages
               body: SafeArea(
                 child: Padding(
