@@ -102,6 +102,143 @@ class _RankingsState extends State<Rankings> {
     });
   }
 
+  // Build the scaffold for this page
+  Widget _buildScaffold(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: _buildScaffoldTitle(),
+      ),
+      drawer: const PogoDrawer(),
+      body: _buildScaffoldBody(),
+    );
+  }
+
+  Widget _buildScaffoldTitle() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          'Rankings',
+          style: TextStyle(
+            fontSize: SizeConfig.h2,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+
+        // Spacer
+        SizedBox(
+          width: SizeConfig.blockSizeHorizontal * 3.0,
+        ),
+
+        Icon(
+          Icons.bar_chart,
+          size: SizeConfig.blockSizeHorizontal * 6.0,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildScaffoldBody() {
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: SizeConfig.blockSizeVertical * 2.0,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildDropdowns(),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2.0,
+            ),
+            _buildTextField(),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2.0,
+            ),
+            _buildPokemonList(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdowns() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        // Dropdown for pvp cup selection
+        CupDropdown(
+          cup: cup,
+          onCupChanged: _onCupChanged,
+          //width: SizeConfig.screenWidth * .9,
+        ),
+
+        FilterButton(
+          onSelected: _filterCategory,
+          selectedCategory: _selectedCategory,
+          size: SizeConfig.blockSizeHorizontal * 11.0,
+        ),
+      ],
+    );
+  }
+
+  // Build the user input text field
+  Widget _buildTextField() {
+    return SizedBox(
+      width: SizeConfig.screenWidth * 0.9,
+      child: TextField(
+        // Native toolbar options
+        toolbarOptions: const ToolbarOptions(
+          copy: true,
+          cut: true,
+          paste: true,
+          selectAll: true,
+        ),
+
+        // Styling
+        keyboardAppearance: Brightness.dark,
+        cursorColor: Colors.greenAccent,
+        decoration: const InputDecoration(
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.greenAccent)),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.greenAccent)),
+          labelText: 'Search for a Pokemon',
+          labelStyle: TextStyle(color: Colors.greenAccent),
+        ),
+        textAlign: TextAlign.center,
+        controller: _searchController,
+      ),
+    );
+  }
+
+  // The list of Pokemon based on categories and search input
+  Widget _buildPokemonList() {
+    return Expanded(
+      // Remove the upper silver padding that ListView contains by
+      // default in a Scaffold.
+      child: MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        removeLeft: true,
+        removeRight: true,
+
+        // Build list
+        child: ListView.builder(
+          itemCount: filteredPokemon.length,
+          itemBuilder: (context, index) {
+            return CompactPokemonNodeButton(
+              pokemon: filteredPokemon[index],
+              onPressed: () {},
+              onLongPress: () {},
+            );
+          },
+          physics: const BouncingScrollPhysics(),
+        ),
+      ),
+    );
+  }
+
   // Setup the input controller
   @override
   void initState() {
@@ -128,130 +265,6 @@ class _RankingsState extends State<Rankings> {
       filteredPokemon = pokemon;
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              'Rankings',
-              style: TextStyle(
-                fontSize: SizeConfig.h2,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-
-            // Spacer
-            SizedBox(
-              width: SizeConfig.blockSizeHorizontal * 3.0,
-            ),
-
-            Icon(
-              Icons.bar_chart,
-              size: SizeConfig.blockSizeHorizontal * 6.0,
-            ),
-          ],
-        ),
-      ),
-
-      // App drawer
-      drawer: const PogoDrawer(),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: SizeConfig.blockSizeVertical * 2.0,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  // Dropdown for pvp cup selection
-                  CupDropdown(
-                    cup: cup,
-                    onCupChanged: _onCupChanged,
-                    //width: SizeConfig.screenWidth * .9,
-                  ),
-
-                  FilterButton(
-                    onSelected: _filterCategory,
-                    selectedCategory: _selectedCategory,
-                    size: SizeConfig.blockSizeHorizontal * 11.0,
-                  ),
-                ],
-              ),
-
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 2.0,
-              ),
-
-              // User text input field
-              SizedBox(
-                width: SizeConfig.screenWidth * 0.9,
-                child: TextField(
-                  keyboardAppearance: Brightness.dark,
-                  toolbarOptions: const ToolbarOptions(
-                    copy: true,
-                    cut: true,
-                    paste: true,
-                    selectAll: true,
-                  ),
-                  cursorColor: Colors.greenAccent,
-                  decoration: const InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.greenAccent)),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.greenAccent)),
-                    labelText: 'Search for a Pokemon',
-                    labelStyle: TextStyle(color: Colors.greenAccent),
-                  ),
-                  textAlign: TextAlign.center,
-                  controller: _searchController,
-                ),
-              ),
-
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 2.0,
-              ),
-
-              // The list of Pokemon by species name
-              // rendered as a PokemonButton.
-              Expanded(
-                // Remove the upper silver padding that ListView contains by
-                // default in a Scaffold.
-                child: MediaQuery.removePadding(
-                  context: context,
-                  removeTop: true,
-                  removeLeft: true,
-                  removeRight: true,
-                  child: ListView.builder(
-                    itemCount: filteredPokemon.length,
-                    itemBuilder: (context, index) {
-                      return CompactPokemonNodeButton(
-                        pokemon: filteredPokemon[index],
-                        onPressed: () {},
-                        onLongPress: () {},
-                      );
-                    },
-                    physics: const BouncingScrollPhysics(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-
-      // The filter by category button
-      /*
-      floatingActionButton: 
-      FilterButton(
-        onSelected: _filterCategory,
-        selectedCategory: _selectedCategory,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      */
-    );
+    return _buildScaffold(context);
   }
 }

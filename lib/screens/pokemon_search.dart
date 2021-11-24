@@ -96,6 +96,124 @@ class _PokemonSearchState extends State<PokemonSearch> {
     });
   }
 
+  // Build the scaffold for this page
+  Widget _buildScaffold(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: SizeConfig.blockSizeVertical * 1.0,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildTextField(),
+
+              // Horizontal divider
+              Divider(
+                height: SizeConfig.blockSizeVertical * 5.0,
+                thickness: SizeConfig.blockSizeHorizontal * 1.0,
+                indent: SizeConfig.blockSizeHorizontal * 5.0,
+                endIndent: SizeConfig.blockSizeHorizontal * 5.0,
+              ),
+
+              _buildPokemonList(),
+            ],
+          ),
+        ),
+      ),
+
+      // Exit to Team Builder button
+      floatingActionButton: _buildFloatingActionButtons(context),
+    );
+  }
+
+  // Build the user input text field
+  Widget _buildTextField() {
+    return SizedBox(
+      width: SizeConfig.screenWidth * 0.9,
+      child: TextField(
+        // Native toolbar options
+        toolbarOptions: const ToolbarOptions(
+          copy: true,
+          cut: true,
+          paste: true,
+          selectAll: true,
+        ),
+
+        // Styling
+        keyboardAppearance: Brightness.dark,
+        cursorColor: Colors.greenAccent,
+        decoration: const InputDecoration(
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.greenAccent)),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.greenAccent)),
+          labelText: 'Search for a Pokemon',
+          labelStyle: TextStyle(color: Colors.greenAccent),
+        ),
+        textAlign: TextAlign.center,
+        controller: _searchController,
+      ),
+    );
+  }
+
+  // The list of Pokemon based on categories and search input
+  Widget _buildPokemonList() {
+    return Expanded(
+      // Remove the upper silver padding that ListView contains by
+      // default in a Scaffold.
+      child: MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        removeLeft: true,
+        removeRight: true,
+
+        // List building
+        child: ListView.builder(
+          itemCount: filteredPokemon.length,
+          itemBuilder: (context, index) {
+            return CompactPokemonNodeButton(
+              pokemon: filteredPokemon[index],
+              onPressed: () {
+                Navigator.pop(
+                  context,
+                  Pokemon.from(filteredPokemon[index]),
+                );
+              },
+              onLongPress: () {},
+            );
+          },
+          physics: const BouncingScrollPhysics(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFloatingActionButtons(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 25),
+          width: SizeConfig.blockSizeHorizontal * 80,
+          child: ExitButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        SizedBox(
+          width: SizeConfig.blockSizeHorizontal * 20,
+          child: FilterButton(
+            onSelected: _filterCategory,
+            selectedCategory: _selectedCategory,
+          ),
+        ),
+      ],
+    );
+  }
+
   // Setup the input controller
   @override
   void initState() {
@@ -123,103 +241,6 @@ class _PokemonSearchState extends State<PokemonSearch> {
       filteredPokemon = pokemon;
     }
 
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: SizeConfig.blockSizeVertical * 1.0,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // User text input field
-              SizedBox(
-                width: SizeConfig.screenWidth * 0.9,
-                child: TextField(
-                  keyboardAppearance: Brightness.dark,
-                  toolbarOptions: const ToolbarOptions(
-                    copy: true,
-                    cut: true,
-                    paste: true,
-                    selectAll: true,
-                  ),
-                  cursorColor: Colors.greenAccent,
-                  decoration: const InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.greenAccent)),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.greenAccent)),
-                    labelText: 'Search for a Pokemon',
-                    labelStyle: TextStyle(color: Colors.greenAccent),
-                  ),
-                  textAlign: TextAlign.center,
-                  controller: _searchController,
-                ),
-              ),
-
-              // Horizontal divider
-              Divider(
-                height: SizeConfig.blockSizeVertical * 5.0,
-                thickness: SizeConfig.blockSizeHorizontal * 1.0,
-                indent: SizeConfig.blockSizeHorizontal * 5.0,
-                endIndent: SizeConfig.blockSizeHorizontal * 5.0,
-              ),
-
-              // The list of Pokemon by species name
-              // rendered as a PokemonButton.
-              Expanded(
-                // Remove the upper silver padding that ListView contains by
-                // default in a Scaffold.
-                child: MediaQuery.removePadding(
-                  context: context,
-                  removeTop: true,
-                  removeLeft: true,
-                  removeRight: true,
-                  child: ListView.builder(
-                    itemCount: filteredPokemon.length,
-                    itemBuilder: (context, index) {
-                      return CompactPokemonNodeButton(
-                        pokemon: filteredPokemon[index],
-                        onPressed: () {
-                          Navigator.pop(
-                            context,
-                            Pokemon.from(filteredPokemon[index]),
-                          );
-                        },
-                        onLongPress: () {},
-                      );
-                    },
-                    physics: const BouncingScrollPhysics(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-
-      // Exit to Team Builder button
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 25),
-            width: SizeConfig.blockSizeHorizontal * 80,
-            child: ExitButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-          SizedBox(
-            width: SizeConfig.blockSizeHorizontal * 20,
-            child: FilterButton(
-              onSelected: _filterCategory,
-              selectedCategory: _selectedCategory,
-            ),
-          ),
-        ],
-      ),
-    );
+    return _buildScaffold(context);
   }
 }

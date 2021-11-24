@@ -6,6 +6,13 @@ import 'package:flutter/widgets.dart';
 // Local Imports
 import '../configs/size_config.dart';
 
+/*
+-------------------------------------------------------------------------------
+The drawer that handles all app navigation and some other functionality. It is
+accessible to the user by any screen that contains a scaffold app bar.
+-------------------------------------------------------------------------------
+*/
+
 class PogoDrawer extends StatelessWidget {
   const PogoDrawer({
     Key? key,
@@ -21,7 +28,7 @@ class PogoDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             child: Text(
-              'PO GO  Teams',
+              'POGO  Teams',
               style: TextStyle(
                 fontSize: SizeConfig.h1 * 2.0,
               ),
