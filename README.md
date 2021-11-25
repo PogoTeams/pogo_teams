@@ -1,4 +1,5 @@
 # POGO Teams
+![PogoTeamsIcon](https://user-images.githubusercontent.com/41221800/143391296-e61059a4-1e63-4a66-9e1f-fe41a686b769.png)
 
 *A Pokemon Go resource for the GBL (Go Battle League). Available on iPhone & Android devices.*
 
