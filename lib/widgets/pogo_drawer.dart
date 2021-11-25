@@ -21,91 +21,119 @@ class PogoDrawer extends StatelessWidget {
 
   final VoidCallback? onClearAll;
 
+  // The background gradient on the drawer
+  BoxDecoration _buildGradientDecoration() {
+    return const BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Color(0xFF29F19C), Color(0xFF02A1F9)],
+        tileMode: TileMode.clamp,
+      ),
+    );
+  }
+
+  Widget _buildDrawerHeader() {
+    return SizedBox(
+      height: SizeConfig.blockSizeVertical * 30.0,
+      child: DrawerHeader(
+        child: Image.asset(
+          'assets/pogo_teams_icon.png',
+          scale: SizeConfig.blockSizeHorizontal * .5,
+        ),
+      ),
+    );
+  }
+
+  // Conditionally build the option to remove all teams
+  // This will only build if a onClearAll callback was provided
+  Widget _buildRemoveAllIfValid() {
+    return onClearAll == null
+        ? Container()
+        : ListTile(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Remove All Teams',
+                  style: TextStyle(fontSize: SizeConfig.h1),
+                ),
+                SizedBox(
+                  width: SizeConfig.blockSizeHorizontal * 3.0,
+                ),
+                Icon(
+                  Icons.remove_circle,
+                  size: SizeConfig.blockSizeHorizontal * 5.0,
+                ),
+              ],
+            ),
+            onTap: onClearAll,
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        children: [
-          DrawerHeader(
-            child: Text(
-              'POGO  Teams',
-              style: TextStyle(
-                fontSize: SizeConfig.h1 * 2.0,
-              ),
-            ),
-          ),
-          ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Team Builder',
-                  style: TextStyle(fontSize: SizeConfig.h1),
-                ),
-                SizedBox(
-                  width: SizeConfig.blockSizeHorizontal * 3.0,
-                ),
-                Icon(
-                  Icons.build_circle,
-                  size: SizeConfig.blockSizeHorizontal * 5.0,
-                ),
-              ],
-            ),
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                '/',
-              );
-            },
-          ),
-          ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Rankings',
-                  style: TextStyle(fontSize: SizeConfig.h1),
-                ),
-                SizedBox(
-                  width: SizeConfig.blockSizeHorizontal * 3.0,
-                ),
-                Icon(
-                  Icons.bar_chart,
-                  size: SizeConfig.blockSizeHorizontal * 5.0,
-                ),
-              ],
-            ),
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                '/rankings',
-              );
-            },
-          ),
+      child: Container(
+        decoration: _buildGradientDecoration(),
+        child: ListView(
+          children: [
+            _buildDrawerHeader(),
 
-          // Only build this option if the clear all is provided
-          onClearAll == null
-              ? Container()
-              : ListTile(
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Remove All Teams',
-                        style: TextStyle(fontSize: SizeConfig.h1),
-                      ),
-                      SizedBox(
-                        width: SizeConfig.blockSizeHorizontal * 3.0,
-                      ),
-                      Icon(
-                        Icons.remove_circle,
-                        size: SizeConfig.blockSizeHorizontal * 5.0,
-                      ),
-                    ],
+            // Navigation options
+            ListTile(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Team Builder',
+                    style: TextStyle(fontSize: SizeConfig.h1),
                   ),
-                  onTap: onClearAll,
-                ),
-        ],
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 3.0,
+                  ),
+                  Icon(
+                    Icons.build_circle,
+                    size: SizeConfig.blockSizeHorizontal * 5.0,
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/',
+                );
+              },
+            ),
+            ListTile(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Rankings',
+                    style: TextStyle(fontSize: SizeConfig.h1),
+                  ),
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 3.0,
+                  ),
+                  Icon(
+                    Icons.bar_chart,
+                    size: SizeConfig.blockSizeHorizontal * 5.0,
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/rankings',
+                );
+              },
+            ),
+
+            // Conditional remove all option
+            _buildRemoveAllIfValid(),
+          ],
+        ),
       ),
     );
   }

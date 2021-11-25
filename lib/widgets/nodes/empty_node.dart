@@ -27,21 +27,20 @@ class EmptyNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double blockSize = SizeConfig.blockSizeHorizontal;
-
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: blockSize * 0.8,
+          width: SizeConfig.blockSizeHorizontal * 0.8,
         ),
-        borderRadius: BorderRadius.circular(blockSize * 2.5),
+        borderRadius:
+            BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
       ),
       child: IconButton(
         tooltip: 'Add a Pokemon to Your Team!',
         icon: Icon(
           Icons.add,
-          size: blockSize * 8.5,
+          size: SizeConfig.blockSizeHorizontal * 8.5,
           color: Colors.white,
         ),
         onPressed: onPressed,

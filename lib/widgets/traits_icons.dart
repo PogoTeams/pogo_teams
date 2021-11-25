@@ -41,17 +41,16 @@ class XlIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double blockSize = SizeConfig.blockSizeHorizontal;
-
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.black45,
-        borderRadius: BorderRadius.circular(blockSize * 2.5),
+        borderRadius:
+            BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
       ),
       child: Padding(
         padding: EdgeInsets.only(
-          left: blockSize * 2.0,
-          right: blockSize * 2.0,
+          left: SizeConfig.blockSizeHorizontal * 2.0,
+          right: SizeConfig.blockSizeHorizontal * 2.0,
         ),
         child: SizedBox(
           height: SizeConfig.blockSizeVertical * 3.0,
@@ -75,11 +74,10 @@ class ShadowIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double blockSize = SizeConfig.blockSizeHorizontal;
     return Padding(
       padding: EdgeInsets.only(
-        left: blockSize * 2.0,
-        right: blockSize * 2.0,
+        left: SizeConfig.blockSizeHorizontal * 2.0,
+        right: SizeConfig.blockSizeHorizontal * 2.0,
       ),
       child: Icon(
         Icons.local_fire_department_rounded,
@@ -97,13 +95,11 @@ class MetaIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double blockSize = SizeConfig.blockSizeHorizontal;
-
     return rating > 650
         ? Padding(
             padding: EdgeInsets.only(
-              left: blockSize * 2.0,
-              right: blockSize * 2.0,
+              left: SizeConfig.blockSizeHorizontal * 2.0,
+              right: SizeConfig.blockSizeHorizontal * 2.0,
             ),
             child: Icon(
               Icons.star_rounded,

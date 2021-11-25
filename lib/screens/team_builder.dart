@@ -54,6 +54,7 @@ class _TeamBuilderState extends State<TeamBuilder>
   late List<PokemonTeam> _teams;
   late List<TeamPage> _pages;
 
+  // Fade in animation on page startup
   late final AnimationController _animController = AnimationController(
     duration: const Duration(seconds: 2),
     vsync: this,
@@ -173,9 +174,6 @@ class _TeamBuilderState extends State<TeamBuilder>
   // Build the scaffold once local storage has been read in
   // A glorious fade in will occur for max cool-ness
   Widget _buildScaffold(BuildContext context) {
-    // Begin fade in animation
-    _animController.forward();
-
     return Scaffold(
       appBar: AppBar(
         title: _buildScaffoldTitle(),
@@ -214,6 +212,9 @@ class _TeamBuilderState extends State<TeamBuilder>
   }
 
   Widget _buildScaffoldBody() {
+    // Begin fade in animation
+    _animController.forward();
+
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.only(

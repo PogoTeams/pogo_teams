@@ -1,5 +1,5 @@
 name: pogo_teams
-description: A new Flutter project.
+description: A Team Building resource for Niantic's Pokemon GO PVP (Go Battle League)
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

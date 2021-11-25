@@ -27,27 +27,25 @@ class AnalyzeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Analyze button
-    return SizedBox(
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xBF29F19C), Color(0xFF02A1F9)],
+          tileMode: TileMode.clamp,
+        ),
+        borderRadius:
+            BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
+      ),
       width: SizeConfig.screenWidth * 0.95,
       height: SizeConfig.blockSizeVertical * 5.5,
-      child: TextButton.icon(
-        label: Text(
+      child: TextButton(
+        child: Text(
           'Analyze',
           style: TextStyle(
-            fontSize: SizeConfig.h2,
+            fontSize: SizeConfig.h1,
             color: Colors.white,
-          ),
-        ),
-        icon: Icon(
-          Icons.analytics,
-          size: SizeConfig.blockSizeHorizontal * 7.0,
-          color: Colors.white,
-        ),
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-              return Colors.cyan;
-            },
           ),
         ),
         onPressed: onAnalyzePressed,

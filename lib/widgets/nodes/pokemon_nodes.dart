@@ -114,14 +114,12 @@ class PokemonNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double blockSize = SizeConfig.blockSizeHorizontal;
-
     return ColoredContainer(
       padding: EdgeInsets.only(
-        top: blockSize * 1.0,
-        right: blockSize * 2.2,
-        bottom: blockSize * .5,
-        left: blockSize * 2.2,
+        top: SizeConfig.blockSizeHorizontal * 1.0,
+        right: SizeConfig.blockSizeHorizontal * 2.2,
+        bottom: SizeConfig.blockSizeHorizontal * .5,
+        left: SizeConfig.blockSizeHorizontal * 2.2,
       ),
       pokemon: pokemon,
       child: Column(
@@ -133,7 +131,7 @@ class PokemonNode extends StatelessWidget {
           // A line divider
           Divider(
             color: Colors.white,
-            thickness: blockSize * 0.2,
+            thickness: SizeConfig.blockSizeHorizontal * 0.2,
           ),
 
           // The dropdowns for the Pokemon's moves
@@ -197,14 +195,12 @@ class CompactPokemonNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double blockSize = SizeConfig.blockSizeHorizontal;
-
     return ColoredContainer(
       padding: EdgeInsets.only(
-        top: blockSize * 1.3,
-        right: blockSize * 2.2,
-        bottom: blockSize * 5.0,
-        left: blockSize * 2.2,
+        top: SizeConfig.blockSizeHorizontal * 1.3,
+        right: SizeConfig.blockSizeHorizontal * 2.2,
+        bottom: SizeConfig.blockSizeHorizontal * 5.0,
+        left: SizeConfig.blockSizeHorizontal * 2.2,
       ),
       pokemon: pokemon,
       child: Column(
@@ -215,7 +211,7 @@ class CompactPokemonNode extends StatelessWidget {
           // A line divider
           Divider(
             color: Colors.white,
-            thickness: blockSize * 0.2,
+            thickness: SizeConfig.blockSizeHorizontal * 0.2,
           ),
 
           // The dropdowns for the Pokemon's moves
@@ -278,14 +274,12 @@ class FooterPokemonNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double blockSize = SizeConfig.blockSizeHorizontal;
-
     return ColoredContainer(
       padding: EdgeInsets.only(
-        top: blockSize * 1.3,
-        right: blockSize * 2.2,
-        bottom: blockSize * 5.0,
-        left: blockSize * 2.2,
+        top: SizeConfig.blockSizeHorizontal * 1.3,
+        right: SizeConfig.blockSizeHorizontal * 2.2,
+        bottom: SizeConfig.blockSizeHorizontal * 5.0,
+        left: SizeConfig.blockSizeHorizontal * 2.2,
       ),
       pokemon: pokemon,
       child: Column(
@@ -296,7 +290,7 @@ class FooterPokemonNode extends StatelessWidget {
           // A line divider
           Divider(
             color: Colors.white,
-            thickness: blockSize * 0.2,
+            thickness: SizeConfig.blockSizeHorizontal * 0.2,
           ),
 
           // The dropdowns for the Pokemon's moves

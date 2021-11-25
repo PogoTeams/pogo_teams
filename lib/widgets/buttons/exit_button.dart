@@ -27,14 +27,13 @@ class ExitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Block size from MediaQuery
-    final double blockSize = SizeConfig.blockSizeHorizontal;
     return Container(
-      height: blockSize * 9.0,
-      width: blockSize * 9.0,
+      height: SizeConfig.blockSizeHorizontal * 9.0,
+      width: SizeConfig.blockSizeHorizontal * 9.0,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: blockSize * 0.7,
+          width: SizeConfig.blockSizeHorizontal * 0.7,
         ),
         shape: BoxShape.circle,
       ),

@@ -78,7 +78,13 @@ class _CupDropdownState extends State<CupDropdown>
           width: SizeConfig.blockSizeHorizontal * .4,
         ),
         borderRadius: BorderRadius.circular(100.0),
-        color: _selectedCup.cupColor,
+        gradient: LinearGradient(
+          begin: Alignment.bottomCenter,
+          end: Alignment.centerRight,
+          colors: [_selectedCup.cupColor, Colors.transparent],
+          tileMode: TileMode.clamp,
+        ),
+        //color: _selectedCup.cupColor,
       ),
 
       // Cup dropdown button

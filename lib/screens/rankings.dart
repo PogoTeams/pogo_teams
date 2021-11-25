@@ -35,7 +35,8 @@ class Rankings extends StatefulWidget {
   _RankingsState createState() => _RankingsState();
 }
 
-class _RankingsState extends State<Rankings> {
+class _RankingsState extends State<Rankings>
+    with SingleTickerProviderStateMixin {
   late Cup cup;
 
   // Search bar text input controller
@@ -48,6 +49,17 @@ class _RankingsState extends State<Rankings> {
   List<Pokemon> filteredPokemon = [];
 
   String _selectedCategory = 'overall';
+
+  // Fade in animation on page startup
+  late final AnimationController _animController = AnimationController(
+    duration: const Duration(seconds: 2),
+    vsync: this,
+  );
+
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _animController,
+    curve: Curves.easeIn,
+  );
 
   void _onCupChanged(String? newCup) {
     if (newCup == null) return;
@@ -139,24 +151,30 @@ class _RankingsState extends State<Rankings> {
   }
 
   Widget _buildScaffoldBody() {
+    // Begin fade in animation
+    _animController.forward();
+
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.only(
           top: SizeConfig.blockSizeVertical * 2.0,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildDropdowns(),
-            SizedBox(
-              height: SizeConfig.blockSizeVertical * 2.0,
-            ),
-            _buildTextField(),
-            SizedBox(
-              height: SizeConfig.blockSizeVertical * 2.0,
-            ),
-            _buildPokemonList(),
-          ],
+        child: FadeTransition(
+          opacity: _animation,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildDropdowns(),
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 2.0,
+              ),
+              _buildTextField(),
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 2.0,
+              ),
+              _buildPokemonList(),
+            ],
+          ),
         ),
       ),
     );
