@@ -75,15 +75,14 @@ class _TeamPageState extends State<TeamPage>
     });
   }
 
-  // Scroll to the analyze portion of the screen
-  // This is 1 vertical screen length below the team builder
+  // Scroll to the analysis portion of the screen
   void _onAnalyzePressed() async {
     // If the team is empty, no action will be taken
     if (widget.team.isEmpty()) return;
 
     setState(() {
       _scrollController.animateTo(
-        SizeConfig.screenHeight * .8,
+        SizeConfig.screenHeight * (widget.team.team.length == 3 ? .78 : 1.42),
         duration: const Duration(seconds: 2),
         curve: Curves.easeInOut,
       );
@@ -112,8 +111,8 @@ class _TeamPageState extends State<TeamPage>
       pokemonTeam.length,
       (index) => Padding(
         padding: EdgeInsets.only(
-          top: SizeConfig.blockSizeVertical * 1.5,
-          bottom: SizeConfig.blockSizeVertical * 1.5,
+          top: SizeConfig.blockSizeVertical * 1.1,
+          bottom: SizeConfig.blockSizeVertical * 1.1,
         ),
         child: TeamNode(
           key: UniqueKey(),
@@ -166,8 +165,10 @@ class _TeamPageState extends State<TeamPage>
             height: SizeConfig.blockSizeVertical * 1.5,
           ),
 
-          AnalyzeButton(
-            onAnalyzePressed: _onAnalyzePressed,
+          AnalysisButton(
+            key: UniqueKey(),
+            isEmpty: widget.team.isEmpty(),
+            onPressed: _onAnalyzePressed,
           ),
 
           // The team analysis content

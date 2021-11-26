@@ -84,7 +84,6 @@ class _CupDropdownState extends State<CupDropdown>
           colors: [_selectedCup.cupColor, Colors.transparent],
           tileMode: TileMode.clamp,
         ),
-        //color: _selectedCup.cupColor,
       ),
 
       // Cup dropdown button

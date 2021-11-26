@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 // Flutter Imports
-import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 import 'package:flutter/services.dart';
 import 'package:pogo_teams/data/masters/type_master.dart';
 
@@ -29,8 +28,6 @@ class GameMaster {
 
   // Read in gamemaster.json and populate the global GameMaster object
   static Future<GameMaster> generateGameMaster() async {
-    // Ensure the application layer is built so gamemaster.json can be parsed
-    WidgetsFlutterBinding.ensureInitialized();
     // Load the JSON string
     final String gmString =
         await rootBundle.loadString('assets/gamemaster.json');

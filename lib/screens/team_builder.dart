@@ -215,18 +215,16 @@ class _TeamBuilderState extends State<TeamBuilder>
     // Begin fade in animation
     _animController.forward();
 
-    return SafeArea(
+    return FadeTransition(
+      opacity: _animation,
       child: Padding(
         padding: EdgeInsets.only(
           top: SizeConfig.blockSizeVertical * 2.0,
         ),
-        child: FadeTransition(
-          opacity: _animation,
-          child: PageView(
-            controller: _pageController,
-            onPageChanged: _onPageChanged,
-            children: _pages,
-          ),
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: _onPageChanged,
+          children: _pages,
         ),
       ),
     );
