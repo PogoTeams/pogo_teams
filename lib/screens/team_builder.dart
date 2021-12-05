@@ -32,7 +32,7 @@ class TeamBuilder extends StatefulWidget {
 class _TeamBuilderState extends State<TeamBuilder>
     with SingleTickerProviderStateMixin {
   // Local storage for data persistance across app sessions
-  final LocalStorage _storage = LocalStorage('teams_data.json');
+  final LocalStorage _storage = LocalStorage('team_builder.json');
   bool initialized = false;
 
   final int maxTeamCount = 15;
@@ -111,7 +111,14 @@ class _TeamBuilderState extends State<TeamBuilder>
 
   // Setup the team list, and page list that cooresponds to each team
   void _initializeLists() {
-    _teams = List.generate(maxTeamCount, (index) => PokemonTeam());
+    _teams = List.generate(
+      maxTeamCount,
+      (index) => PokemonTeam(
+        key: 'builder',
+        index: index,
+      ),
+    );
+
     _pages = List.generate(
       maxTeamCount,
       (index) => TeamPage(
@@ -128,6 +135,10 @@ class _TeamBuilderState extends State<TeamBuilder>
 
   void _clearStorage() async {
     await _storage.clear();
+
+    for (int i = 0; i < teamCount; ++i) {
+      _teams[i].clear();
+    }
   }
 
   // Initialize all data once the local storage has been linked
@@ -137,10 +148,6 @@ class _TeamBuilderState extends State<TeamBuilder>
       _pageIndex = (_storage.getItem('pageIndex') ?? 0) as int;
       _pageController = PageController(initialPage: _pageIndex, keepPage: true);
       _maxed = teamCount == maxTeamCount;
-
-      for (int i = 0; i < maxTeamCount; ++i) {
-        _teams[i].readFromStorage(i, _storage);
-      }
 
       initialized = true;
     }
@@ -251,7 +258,6 @@ class _TeamBuilderState extends State<TeamBuilder>
     Navigator.pop(context);
 
     // Animate to the first page in the team builder
-    //_jumpToPage(0);
     if (_pageController.hasClients) {
       await _pageController.animateToPage(
         0,
@@ -265,11 +271,6 @@ class _TeamBuilderState extends State<TeamBuilder>
       teamCount = minTeamCount;
       _pageIndex = 0;
       _maxed = false;
-
-      // Relink the storage to the new teams
-      for (int i = 0; i < maxTeamCount; ++i) {
-        _teams[i].readFromStorage(i, _storage);
-      }
     });
   }
 

@@ -108,6 +108,7 @@ class Pokemon {
     );
   }
 
+  // For writing out to local storage
   Map<String, dynamic> toJson() {
     return {
       'speciesId': speciesId,

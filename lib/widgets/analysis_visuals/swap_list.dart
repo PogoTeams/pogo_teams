@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import '../../data/pokemon/typing.dart';
 import '../../data/pokemon/pokemon_team.dart';
 import '../../data/pokemon/pokemon.dart';
+import '../../data/cup.dart';
 import '../nodes/pokemon_nodes.dart';
 import '../../configs/size_config.dart';
 import '../buttons/pokemon_action_button.dart';
@@ -115,6 +116,40 @@ class SwapList extends StatelessWidget {
               child: FooterPokemonNode(
                 pokemon: pokemon,
                 footerChild: _buildFooter(context, pokemon),
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+class LogSwapList extends StatelessWidget {
+  const LogSwapList({
+    Key? key,
+    required this.cup,
+    required this.types,
+    required this.onTeamChanged,
+  }) : super(key: key);
+
+  final Cup cup;
+  final List<Type> types;
+  final Function(List<Pokemon>) onTeamChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Pokemon> counters =
+        cup.getFilteredRankedPokemonList(types, 'overall', limit: 20);
+
+    return Column(
+      children: counters
+          .map(
+            (pokemon) => Padding(
+              padding: EdgeInsets.only(
+                bottom: SizeConfig.blockSizeHorizontal * 2.0,
+              ),
+              child: CompactPokemonNode(
+                pokemon: pokemon,
               ),
             ),
           )

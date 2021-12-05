@@ -23,22 +23,15 @@ class TeamsList extends StatelessWidget {
   const TeamsList({
     Key? key,
     required this.teams,
-    required this.onClear,
+    required this.cupColor,
+    required this.onTeamCleared,
     required this.onEdit,
   }) : super(key: key);
 
-  final List<PokemonTeam> teams;
-  final VoidCallback onClear;
-  final Function(List<Pokemon?>) onEdit;
-
-  // Remove a team from the list
-  // A callback for the 'clear' icon button within a team container
-  void _onTeamCleared(int index) {
-    teams.removeAt(index);
-
-    // Invoke parent callback to rebuild
-    onClear();
-  }
+  final List<List<Pokemon?>> teams;
+  final Color cupColor;
+  final Function(int) onTeamCleared;
+  final Function(List<Pokemon?>, int) onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +41,10 @@ class TeamsList extends StatelessWidget {
         itemCount: teams.length,
         itemBuilder: (context, index) {
           return TeamContainer(
-            team: teams[index].team,
+            team: teams[index],
+            cupColor: cupColor,
             teamIndex: index,
-            onClear: _onTeamCleared,
+            onClear: onTeamCleared,
             onEdit: onEdit,
           );
         },
@@ -64,15 +58,17 @@ class TeamContainer extends StatelessWidget {
   const TeamContainer({
     Key? key,
     required this.team,
+    required this.cupColor,
     required this.teamIndex,
     required this.onClear,
     required this.onEdit,
   }) : super(key: key);
 
   final List<Pokemon?> team;
+  final Color cupColor;
   final int teamIndex;
   final Function(int) onClear;
-  final Function(List<Pokemon?>) onEdit;
+  final Function(List<Pokemon?>, int) onEdit;
 
   // Build a row of icon buttons at the bottom of a Pokemon's Node
   Row _buildNodeFooter() {
@@ -92,7 +88,7 @@ class TeamContainer extends StatelessWidget {
         ),
         IconButton(
           onPressed: () {
-            onEdit(team);
+            onEdit(team, teamIndex);
           },
           icon: const Icon(Icons.swap_horiz),
           tooltip: 'Edit Team',
@@ -114,9 +110,12 @@ class TeamContainer extends StatelessWidget {
       child: Container(
         height: SizeConfig.screenHeight * .22,
         decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.white,
-            width: SizeConfig.blockSizeHorizontal * 0.5,
+          color: cupColor,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [cupColor, Colors.transparent],
+            tileMode: TileMode.clamp,
           ),
           borderRadius:
               BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),

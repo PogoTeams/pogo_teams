@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:localstorage/localstorage.dart';
 
 // Local Imports
 import '../configs/size_config.dart';
@@ -14,9 +13,6 @@ import '../widgets/pokemon_search_list.dart';
 import '../widgets/buttons/exit_button.dart';
 import '../widgets/pogo_text_field.dart';
 import '../widgets/teams_list.dart';
-import '../widgets/buttons/filter_button.dart';
-import '../data/pokemon/pokemon_team.dart';
-import '../data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
@@ -40,7 +36,7 @@ class TeamBuilderSearch extends StatefulWidget {
 class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   // The current index of the team the user is editing
   int _workingIndex = 0;
-  late final List<Pokemon?> _team;
+  late List<Pokemon?> _team;
 
   // Search bar text input controller
   final TextEditingController _searchController = TextEditingController();
@@ -130,7 +126,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
             ExitButton(
               key: UniqueKey(),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context, null);
               },
               backgroundColor: Colors.red[400]!,
             ),

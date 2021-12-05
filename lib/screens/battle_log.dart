@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Package Imports
-import 'package:dots_indicator/dots_indicator.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:pogo_teams/widgets/buttons/gradient_button.dart';
+import 'package:pogo_teams/screens/log_analysis.dart';
+import 'package:pogo_teams/widgets/buttons/analyze_button.dart';
 
 // Local Imports
 import 'team_builder_search.dart';
@@ -15,7 +15,6 @@ import '../widgets/dropdowns/cup_dropdown.dart';
 import '../widgets/pogo_drawer.dart';
 import '../widgets/teams_list.dart';
 import '../data/cup.dart';
-import '../data/pokemon/pokemon_team.dart';
 import '../data/pokemon/pokemon.dart';
 import '../data/globals.dart' as globals;
 
@@ -35,10 +34,11 @@ class _BattleLogState extends State<BattleLog>
     with SingleTickerProviderStateMixin {
   // The local storage for battle logs
   final LocalStorage _storage = LocalStorage('battle_logs.json');
+  bool initialized = false;
 
   late Cup cup;
   late int teamCount;
-  List<PokemonTeam> teams = [];
+  List<List<Pokemon?>> teams = List.empty(growable: true);
 
   // Fade in animation on page startup
   late final AnimationController _animController = AnimationController(
@@ -50,6 +50,35 @@ class _BattleLogState extends State<BattleLog>
     parent: _animController,
     curve: Curves.easeIn,
   );
+
+  // Initialize data values with local storage
+  void _initializeData() {
+    if (!initialized) {
+      // Get the cup from locals storage
+      final cupTitle = _storage.getItem('cup');
+      if (cupTitle == null) {
+        cup = globals.gamemaster.cups[0];
+      } else {
+        cup =
+            globals.gamemaster.cups.firstWhere((cup) => cup.title == cupTitle);
+      }
+
+      teamCount = _storage.getItem('teamCount') ?? 0;
+      final idMap = globals.gamemaster.pokemonIdMap;
+
+      // Initialize all teams from local storage
+      for (int i = 0; i < teamCount; ++i) {
+        final List<dynamic> jsonList = _storage.getItem('log_team_$i');
+        teams.add(List.empty(growable: true));
+
+        for (int k = 0; k < jsonList.length; ++k) {
+          teams[i].add(Pokemon.readFromStorage(jsonList[k], idMap));
+        }
+      }
+
+      initialized = true;
+    }
+  }
 
   // Build the scaffold once local storage has been read in
   // A glorious fade in will occur for max cool-ness
@@ -112,7 +141,8 @@ class _BattleLogState extends State<BattleLog>
             // The list of opponent teams
             TeamsList(
               teams: teams,
-              onClear: _onClear,
+              cupColor: cup.cupColor,
+              onTeamCleared: _onTeamCleared,
               onEdit: _onEdit,
             ),
           ],
@@ -123,26 +153,52 @@ class _BattleLogState extends State<BattleLog>
 
   // Build the header options for the log screen
   Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        // Dropdown for pvp cup selection
-        CupDropdown(
-          cup: cup,
-          onCupChanged: _onCupChanged,
-          width: SizeConfig.screenWidth * .7,
+        AnalyzeButton(
+          isEmpty: teams.isEmpty,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute<Pokemon>(builder: (BuildContext context) {
+                return LogAnalysis(
+                  teams: teams,
+                  cup: cup,
+                );
+              }),
+            );
+          },
         ),
 
-        // Add team button
+        // Spacer
         SizedBox(
-          width: SizeConfig.blockSizeHorizontal * 20.0,
-          child: IconButton(
-            icon: const Icon(Icons.add_circle),
-            iconSize: SizeConfig.blockSizeHorizontal * 7.0,
-            onPressed: _onAddTeam,
-            tooltip: 'Log a new team',
-          ),
+          height: SizeConfig.blockSizeVertical * 2.0,
         ),
+
+        // The cup dropdown and add team button
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Dropdown for pvp cup selection
+            CupDropdown(
+              cup: cup,
+              onCupChanged: _onCupChanged,
+              width: SizeConfig.screenWidth * .7,
+            ),
+
+            // Add team button
+            SizedBox(
+              width: SizeConfig.blockSizeHorizontal * 20.0,
+              child: IconButton(
+                icon: const Icon(Icons.add_circle),
+                iconSize: SizeConfig.blockSizeHorizontal * 7.0,
+                onPressed: _onAddTeam,
+                tooltip: 'Log a new team',
+              ),
+            ),
+          ],
+        )
       ],
     );
   }
@@ -155,22 +211,19 @@ class _BattleLogState extends State<BattleLog>
       }),
     );
 
+    if (newTeam == null) return;
+
     // Add a new team to the list
     setState(() {
-      PokemonTeam newPokemonTeam = PokemonTeam();
-      newPokemonTeam.readFromStorage(teamCount, _storage);
-
-      // If a team was built in the initial search screen
-      if (newTeam != null) {
-        newPokemonTeam.setTeam(newTeam);
-      }
-
-      teams.add(newPokemonTeam);
+      teams.add(newTeam);
       ++teamCount;
     });
+
+    await _storage.setItem('teamCount', teamCount);
+    _saveTeamsToStorage();
   }
 
-  void _onEdit(List<Pokemon?> teamToEdit) async {
+  void _onEdit(List<Pokemon?> teamToEdit, int index) async {
     final newTeam = await Navigator.push(
       context,
       MaterialPageRoute<List<Pokemon?>>(builder: (BuildContext context) {
@@ -187,47 +240,48 @@ class _BattleLogState extends State<BattleLog>
 
     if (newTeam != null) {
       setState(() {
-        teamToEdit = newTeam;
+        teams[index] = newTeam;
       });
+
+      _saveTeamsToStorage();
     }
   }
 
-  void _onCupChanged(String? newCup) {
+  void _saveTeamsToStorage() async {
+    for (int i = 0; i < teamCount; ++i) {
+      await _storage.setItem('log_team_$i', [
+        teams[i][0] == null ? null : teams[i][0]!.toJson(),
+        teams[i][1] == null ? null : teams[i][1]!.toJson(),
+        teams[i][2] == null ? null : teams[i][2]!.toJson(),
+      ]);
+    }
+  }
+
+  void _onCupChanged(String? newCup) async {
     if (newCup == null) return;
 
     setState(() {
       cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == newCup);
     });
+
+    await _storage.setItem('cup', newCup);
   }
 
   // When a team is cleared from the list, invoke a rebuild
-  void _onClear() async {
+  void _onTeamCleared(int index) async {
+    teams[index].clear();
+
     setState(() {
+      teams.removeAt(index);
       --teamCount;
     });
 
     await _storage.setItem('teamCount', teamCount);
   }
 
-  // Initialize data values with local storage
-  void _initializeData() {
-    cup = globals.gamemaster.cups[0];
-    teamCount = _storage.getItem('teamCount') ?? 0;
-
-    for (int i = 0; i < teamCount; ++i) {
-      teams.add(PokemonTeam());
-      teams[i].readFromStorage(i, _storage);
-    }
-  }
-
-  // Setup the input controller
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   void dispose() {
+    _storage.dispose();
     super.dispose();
   }
 

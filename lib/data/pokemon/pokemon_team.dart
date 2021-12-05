@@ -19,7 +19,20 @@ the app.
 // The data model for a Pokemon PVP Team
 // Every team page manages one instance of this class
 class PokemonTeam {
-  late final LocalStorage _storage;
+  PokemonTeam({
+    required this.key,
+    required this.index,
+  }) {
+    readFromStorage();
+  }
+
+  final String key;
+
+  // A unique index identifier
+  final int index;
+
+  // Local storage to restore team states
+  late final LocalStorage storage = LocalStorage('${key}_team_$index.json');
 
   // The list of 3 pokemon references that make up the team
   List<Pokemon?> team = List.filled(3, null);
@@ -34,12 +47,11 @@ class PokemonTeam {
   // Defaults to Great League
   Cup cup = globals.gamemaster.cups[0];
 
-  int _teamIndex = 0;
-
   // Make a copy of the newTeam, keeping the size of the original team
   void setTeam(List<Pokemon?> newTeam) {
     team = List.generate(
         team.length, (index) => index < newTeam.length ? newTeam[index] : null);
+
     _updateEffectiveness();
     _saveToStorage();
   }
@@ -71,7 +83,10 @@ class PokemonTeam {
         added = true;
       }
     }
-    _updateEffectiveness();
+    if (added) {
+      _updateEffectiveness();
+      _saveToStorage();
+    }
   }
 
   // True if the Pokemon ref is null at the given index
@@ -127,56 +142,47 @@ class PokemonTeam {
   }
 
   // Clear and reset all team data
-  void clear() {
+  void clear() async {
     void _clearPokemon(pokemon) => pokemon = null;
 
     team.forEach(_clearPokemon);
-    cup = globals.gamemaster.cups.firstWhere((c) => c.title == 'Great League');
+    cup = globals.gamemaster.cups[0];
+    await storage.clear();
   }
 
-  void readFromStorage(int teamIndex, LocalStorage storage) {
-    _teamIndex = teamIndex;
-    _storage = storage;
-
-    final Map<String, dynamic>? teamJson = _storage.getItem('team_$_teamIndex');
-
-    if (teamJson == null) {
-      return;
-    }
+  // Read in team state from local storage
+  void readFromStorage() async {
+    await storage.ready;
 
     // Set the cup from storage
-    final cups = globals.gamemaster.cups;
-    final cupTitle = (teamJson['cup'] ?? 'Great League') as String;
-    cup = cups.firstWhere((c) => c.title == cupTitle);
+    final cupTitle = (storage.getItem('cup') ?? 'Great League') as String;
+    setCup(cupTitle);
 
-    final int teamSize = (teamJson['teamSize'] ?? 3) as int;
+    final int teamSize = (storage.getItem('teamSize') ?? 3) as int;
     team = List.filled(teamSize, null);
 
-    // Set the Pokemon team from storage
     final idMap = globals.gamemaster.pokemonIdMap;
-    bool teamReadIn = false;
 
-    for (int i = 0; i < team.length && !teamReadIn; ++i) {
-      if (teamJson.containsKey('pokemon_$i')) {
-        team[i] = Pokemon.readFromStorage(teamJson['pokemon_$i'], idMap);
-      } else {
-        teamReadIn = true;
+    // Read in the Pokemon Team from storage
+    for (int i = 0; i < team.length; ++i) {
+      final pokemonJson = storage.getItem('pokemon_$i');
+
+      if (pokemonJson != null) {
+        team[i] = Pokemon.readFromStorage(pokemonJson, idMap);
       }
     }
 
     _updateEffectiveness();
   }
 
+  // Write out the team state to local storage
   void _saveToStorage() async {
-    Map<String, dynamic> teamJson = {};
-    teamJson['cup'] = cup.title;
-    teamJson['teamSize'] = team.length;
-    for (int i = 0; i < team.length; ++i) {
-      if (team[i] != null) {
-        teamJson['pokemon_$i'] = team[i]!.toJson();
-      }
-    }
+    await storage.setItem('cup', cup.title);
+    await storage.setItem('teamSize', team.length);
 
-    await _storage.setItem('team_$_teamIndex', teamJson);
+    for (int i = 0; i < team.length; ++i) {
+      await storage.setItem(
+          'pokemon_$i', (team[i] == null ? null : team[i]!.toJson()));
+    }
   }
 }
