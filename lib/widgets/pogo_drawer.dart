@@ -17,9 +17,11 @@ class PogoDrawer extends StatelessWidget {
   const PogoDrawer({
     Key? key,
     this.onClearAll,
+    this.clearText,
   }) : super(key: key);
 
   final VoidCallback? onClearAll;
+  final String? clearText;
 
   // The background gradient on the drawer
   BoxDecoration _buildGradientDecoration() {
@@ -47,15 +49,15 @@ class PogoDrawer extends StatelessWidget {
 
   // Conditionally build the option to remove all teams
   // This will only build if a onClearAll callback was provided
-  Widget _buildRemoveAllIfValid() {
-    return onClearAll == null
+  Widget _buildClearOption() {
+    return onClearAll == null || clearText == null
         ? Container()
         : ListTile(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'Remove All Teams',
+                  clearText!,
                   style: TextStyle(fontSize: SizeConfig.h1),
                 ),
                 SizedBox(
@@ -75,63 +77,104 @@ class PogoDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
+        padding: EdgeInsets.only(
+          bottom: SizeConfig.blockSizeVertical * 4.0,
+        ),
         decoration: _buildGradientDecoration(),
-        child: ListView(
+        child: Column(
           children: [
-            _buildDrawerHeader(),
-
-            // Navigation options
-            ListTile(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+            Expanded(
+              child: Column(
                 children: [
-                  Text(
-                    'Team Builder',
-                    style: TextStyle(fontSize: SizeConfig.h1),
+                  _buildDrawerHeader(),
+
+                  // Navigation options
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Team Builder',
+                          style: TextStyle(fontSize: SizeConfig.h1),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.blockSizeHorizontal * 3.0,
+                        ),
+                        Icon(
+                          Icons.build_circle,
+                          size: SizeConfig.blockSizeHorizontal * 5.0,
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/',
+                      );
+                    },
                   ),
-                  SizedBox(
-                    width: SizeConfig.blockSizeHorizontal * 3.0,
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Battle Log',
+                          style: TextStyle(fontSize: SizeConfig.h1),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.blockSizeHorizontal * 3.0,
+                        ),
+                        Icon(
+                          Icons.query_stats,
+                          size: SizeConfig.blockSizeHorizontal * 5.0,
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/battle_log',
+                      );
+                    },
                   ),
-                  Icon(
-                    Icons.build_circle,
-                    size: SizeConfig.blockSizeHorizontal * 5.0,
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Rankings',
+                          style: TextStyle(fontSize: SizeConfig.h1),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.blockSizeHorizontal * 3.0,
+                        ),
+                        Icon(
+                          Icons.bar_chart,
+                          size: SizeConfig.blockSizeHorizontal * 5.0,
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/rankings',
+                      );
+                    },
                   ),
                 ],
               ),
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  '/',
-                );
-              },
             ),
-            ListTile(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Rankings',
-                    style: TextStyle(fontSize: SizeConfig.h1),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.blockSizeHorizontal * 3.0,
-                  ),
-                  Icon(
-                    Icons.bar_chart,
-                    size: SizeConfig.blockSizeHorizontal * 5.0,
-                  ),
-                ],
+            _buildClearOption(),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2.0,
+            ),
+            Text(
+              'V 0.0.4 [Beta]',
+              style: TextStyle(
+                fontSize: SizeConfig.h2,
+                fontStyle: FontStyle.italic,
               ),
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  '/rankings',
-                );
-              },
             ),
-
-            // Conditional remove all option
-            _buildRemoveAllIfValid(),
           ],
         ),
       ),

@@ -12,6 +12,7 @@ import 'package:flutter/widgets.dart';
 import '../configs/size_config.dart';
 import '../data/pokemon/pokemon.dart';
 import '../data/cup.dart';
+import '../widgets/pogo_text_field.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
 import '../widgets/pogo_drawer.dart';
 import '../widgets/buttons/compact_pokemon_node_button.dart';
@@ -168,7 +169,7 @@ class _RankingsState extends State<Rankings>
               SizedBox(
                 height: SizeConfig.blockSizeVertical * 2.0,
               ),
-              _buildTextField(),
+              PogoTextField(controller: _searchController),
               SizedBox(
                 height: SizeConfig.blockSizeVertical * 2.0,
               ),
@@ -188,7 +189,7 @@ class _RankingsState extends State<Rankings>
         CupDropdown(
           cup: cup,
           onCupChanged: _onCupChanged,
-          //width: SizeConfig.screenWidth * .9,
+          width: SizeConfig.screenWidth * .7,
         ),
 
         FilterButton(
@@ -197,36 +198,6 @@ class _RankingsState extends State<Rankings>
           size: SizeConfig.blockSizeHorizontal * 11.0,
         ),
       ],
-    );
-  }
-
-  // Build the user input text field
-  Widget _buildTextField() {
-    return SizedBox(
-      width: SizeConfig.screenWidth * 0.9,
-      child: TextField(
-        // Native toolbar options
-        toolbarOptions: const ToolbarOptions(
-          copy: true,
-          cut: true,
-          paste: true,
-          selectAll: true,
-        ),
-
-        // Styling
-        keyboardAppearance: Brightness.dark,
-        cursorColor: Colors.greenAccent,
-        decoration: const InputDecoration(
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.greenAccent)),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.greenAccent)),
-          labelText: 'Search for a Pokemon',
-          labelStyle: TextStyle(color: Colors.greenAccent),
-        ),
-        textAlign: TextAlign.center,
-        controller: _searchController,
-      ),
     );
   }
 

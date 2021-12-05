@@ -179,7 +179,8 @@ class _TeamBuilderState extends State<TeamBuilder>
         title: _buildScaffoldTitle(),
       ),
       drawer: PogoDrawer(
-        onClearAll: _onRemoveAllTeamsPressed,
+        onClearAll: _onClearTeamBuilderPressed,
+        clearText: 'Clear Team Builder',
       ),
       body: _buildScaffoldBody(),
       bottomNavigationBar: _buildDotsIndicator(context),
@@ -232,7 +233,7 @@ class _TeamBuilderState extends State<TeamBuilder>
 
   // Callback for remove all teams in the app drawer
   // Confirm that the user wants to remove all teams, then do the deed
-  void _onRemoveAllTeamsPressed() async {
+  void _onClearTeamBuilderPressed() async {
     bool clearAll = await confirmationDialog(context);
 
     if (clearAll) _clearAllData();

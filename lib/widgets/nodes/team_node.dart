@@ -10,6 +10,7 @@ import '../../data/pokemon/pokemon_team.dart';
 import '../../data/pokemon/pokemon.dart';
 import '../../configs/size_config.dart';
 import '../../screens/pokemon_search.dart';
+
 /*
 -------------------------------------------------------------------------------
 A TeamNode is either an EmptyNode or PokemonNode. An EmptyNode can be tapped

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:localstorage/localstorage.dart';
 
 // Local Imports
 import '../configs/size_config.dart';
@@ -12,32 +13,34 @@ import '../data/cup.dart';
 import '../widgets/pokemon_search_list.dart';
 import '../widgets/buttons/exit_button.dart';
 import '../widgets/pogo_text_field.dart';
+import '../widgets/teams_list.dart';
 import '../widgets/buttons/filter_button.dart';
 import '../data/pokemon/pokemon_team.dart';
 import '../data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
-A list of Pokemon are displayed here, which will filter based on text input.
-Every Pokemon node displayed can be tapped, from which that Pokemon reference
-will be returned via the Navigator.pop.
 -------------------------------------------------------------------------------
 */
 
-class PokemonSearch extends StatefulWidget {
-  const PokemonSearch({
+class TeamBuilderSearch extends StatefulWidget {
+  const TeamBuilderSearch({
     Key? key,
-    required this.team,
+    required this.cup,
+    this.team,
   }) : super(key: key);
 
-  final PokemonTeam team;
+  final Cup cup;
+  final List<Pokemon?>? team;
 
   @override
-  _PokemonSearchState createState() => _PokemonSearchState();
+  _TeamBuilderSearchState createState() => _TeamBuilderSearchState();
 }
 
-class _PokemonSearchState extends State<PokemonSearch> {
-  late final Cup cup;
+class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
+  // The current index of the team the user is editing
+  int _workingIndex = 0;
+  late final List<Pokemon?> _team;
 
   // Search bar text input controller
   final TextEditingController _searchController = TextEditingController();
@@ -47,24 +50,6 @@ class _PokemonSearchState extends State<PokemonSearch> {
 
   // A variable list of Pokemon based on search bar text input
   List<Pokemon> filteredPokemon = [];
-
-  String _selectedCategory = 'overall';
-
-  // Callback for the FilterButton
-  // Sets the ranking list associated with rankingsCategory
-  void _filterCategory(dynamic rankingsCategory) {
-    _selectedCategory = rankingsCategory;
-
-    // Dex is a special case where all Pokemon are in the list
-    // Otherwise get the list from the ratings category
-    if ('dex' == _selectedCategory) {
-      pokemon = globals.gamemaster.pokemon;
-    } else {
-      pokemon = cup.getRankedPokemonList(_selectedCategory);
-    }
-
-    _filterPokemonList();
-  }
 
   // Generate a filtered list of Pokemon based off of the text field input.
   // List can filter by Pokemon name (speciesName) and types.
@@ -105,6 +90,13 @@ class _PokemonSearchState extends State<PokemonSearch> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              TeamBuilderList(team: _team),
+
+              // Spacer
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 2.0,
+              ),
+
               PogoTextField(controller: _searchController),
 
               // Horizontal divider
@@ -119,44 +111,50 @@ class _PokemonSearchState extends State<PokemonSearch> {
               PokemonList(
                 pokemon: filteredPokemon,
                 onPokemonSelected: (pokemon) {
-                  Navigator.pop(
-                    context,
-                    Pokemon.from(pokemon),
-                  );
+                  setState(() {
+                    _team[_workingIndex] = pokemon;
+                    _updateWorkingIndex(_workingIndex + 1);
+                  });
                 },
               ),
             ],
           ),
         ),
       ),
+      floatingActionButton: SizedBox(
+        width: SizeConfig.screenWidth * .87,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Cancel exit button
+            ExitButton(
+              key: UniqueKey(),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              backgroundColor: Colors.red[400]!,
+            ),
 
-      // Exit to Team Builder button
-      floatingActionButton: _buildFloatingActionButtons(context),
+            // Confirm exit button
+            ExitButton(
+              key: UniqueKey(),
+              onPressed: () {
+                Navigator.pop(context, _team);
+              },
+              icon: const Icon(Icons.check),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
-  Widget _buildFloatingActionButtons(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 25),
-          width: SizeConfig.blockSizeHorizontal * 80,
-          child: ExitButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        SizedBox(
-          width: SizeConfig.blockSizeHorizontal * 20,
-          child: FilterButton(
-            onSelected: _filterCategory,
-            selectedCategory: _selectedCategory,
-          ),
-        ),
-      ],
-    );
+  // Update the working index, will be set via a callback or
+  // when a user selects a Pokemon for the team, moving the working index
+  // in a round-robin fashion.
+  void _updateWorkingIndex(int index) {
+    _workingIndex = (index == 3 ? 0 : index);
   }
 
   // Setup the input controller
@@ -164,9 +162,14 @@ class _PokemonSearchState extends State<PokemonSearch> {
   void initState() {
     super.initState();
 
+    if (widget.team == null) {
+      _team = List.generate(3, (index) => null);
+    } else {
+      _team = widget.team!;
+    }
+
     // Get the selected cup and list of Pokemon based on the category
-    cup = widget.team.cup;
-    pokemon = cup.getRankedPokemonList(_selectedCategory);
+    pokemon = widget.cup.getRankedPokemonList('overall');
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);
@@ -187,5 +190,29 @@ class _PokemonSearchState extends State<PokemonSearch> {
     }
 
     return _buildScaffold(context);
+  }
+}
+
+class TeamBuilderList extends StatefulWidget {
+  const TeamBuilderList({
+    Key? key,
+    required this.team,
+  }) : super(key: key);
+
+  final List<Pokemon?> team;
+
+  @override
+  _TeamBuilderListState createState() => _TeamBuilderListState();
+}
+
+class _TeamBuilderListState extends State<TeamBuilderList> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: widget.team
+          .map((pokemon) => SquareTeamNode(pokemon: pokemon))
+          .toList(),
+    );
   }
 }

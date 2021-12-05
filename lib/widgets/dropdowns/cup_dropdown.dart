@@ -22,10 +22,12 @@ class CupDropdown extends StatefulWidget {
     Key? key,
     required this.cup,
     required this.onCupChanged,
+    required this.width,
   }) : super(key: key);
 
   final Cup cup;
   final void Function(String?) onCupChanged;
+  final double width;
 
   @override
   _CupDropdownState createState() => _CupDropdownState();
@@ -67,7 +69,7 @@ class _CupDropdownState extends State<CupDropdown>
 
     return Container(
       alignment: Alignment.center,
-      width: SizeConfig.screenWidth * .7,
+      width: widget.width,
       height: SizeConfig.blockSizeVertical * 4.5,
       padding: EdgeInsets.only(
         right: SizeConfig.blockSizeHorizontal * 2.0,

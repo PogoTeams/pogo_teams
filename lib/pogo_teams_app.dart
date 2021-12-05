@@ -10,6 +10,7 @@ import 'package:flutter/widgets.dart';
 // Local Imports
 import 'screens/team_builder.dart';
 import 'screens/rankings.dart';
+import 'screens/battle_log.dart';
 
 //// APPLICATION ROOT
 class PogoTeamsApp extends StatelessWidget {
@@ -26,6 +27,7 @@ class PogoTeamsApp extends StatelessWidget {
       home: const TeamBuilder(),
       routes: <String, WidgetBuilder>{
         '/rankings': (BuildContext context) => const Rankings(),
+        '/battle_log': (BuildContext context) => const BattleLog(),
       },
 
       //Removes the debug banner

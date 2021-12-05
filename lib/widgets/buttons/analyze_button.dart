@@ -8,6 +8,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
+import 'gradient_button.dart';
 import '../../configs/size_config.dart';
 
 /*
@@ -17,8 +18,8 @@ team is empty, the button will take up that same space as blank space.
 -------------------------------------------------------------------------------
 */
 
-class AnalysisButton extends StatelessWidget {
-  const AnalysisButton({
+class AnalyzeButton extends StatelessWidget {
+  const AnalyzeButton({
     Key? key,
     required this.isEmpty,
     required this.onPressed,
@@ -34,29 +35,16 @@ class AnalysisButton extends StatelessWidget {
         ? SizedBox(
             height: SizeConfig.blockSizeVertical * 5.5,
           )
-        : Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xBF29F19C), Color(0xFF02A1F9)],
-                tileMode: TileMode.clamp,
+        : GradientButton(
+            child: Text(
+              'Analyze',
+              style: TextStyle(
+                fontSize: SizeConfig.h1,
+                color: Colors.white,
               ),
-              borderRadius:
-                  BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
             ),
+            onPressed: onPressed,
             width: SizeConfig.screenWidth * 0.95,
-            height: SizeConfig.blockSizeVertical * 5.5,
-            child: MaterialButton(
-              child: Text(
-                'Analyze',
-                style: TextStyle(
-                  fontSize: SizeConfig.h1,
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: onPressed,
-            ),
           );
   }
 }

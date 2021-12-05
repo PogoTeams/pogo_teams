@@ -138,6 +138,7 @@ class _TeamPageState extends State<TeamPage>
               CupDropdown(
                 cup: cup,
                 onCupChanged: _onCupChanged,
+                width: SizeConfig.screenWidth * .7,
               ),
 
               // Dropdown to select team size
@@ -165,7 +166,7 @@ class _TeamPageState extends State<TeamPage>
             height: SizeConfig.blockSizeVertical * 1.5,
           ),
 
-          AnalysisButton(
+          AnalyzeButton(
             key: UniqueKey(),
             isEmpty: widget.team.isEmpty(),
             onPressed: _onAnalyzePressed,

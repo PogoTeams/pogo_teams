@@ -160,7 +160,7 @@ class PokemonTeam {
       if (teamJson.containsKey('pokemon_$i')) {
         team[i] = Pokemon.readFromStorage(teamJson['pokemon_$i'], idMap);
       } else {
-        teamReadIn = false;
+        teamReadIn = true;
       }
     }
 
