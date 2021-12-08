@@ -13,7 +13,7 @@ import '../configs/size_config.dart';
 import '../data/pokemon/pokemon.dart';
 import '../widgets/buttons/exit_button.dart';
 import '../widgets/buttons/pokemon_action_button.dart';
-import '../widgets/nodes/pokemon_nodes.dart';
+import '../widgets/nodes/pokemon_node.dart';
 import '../data/pokemon/pokemon_team.dart';
 
 /*

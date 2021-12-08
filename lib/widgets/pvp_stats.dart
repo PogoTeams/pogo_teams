@@ -6,6 +6,11 @@ import 'package:flutter/widgets.dart';
 
 // Local Imports
 import '../configs/size_config.dart';
+/*
+-------------------------------------------------------------------------------
+A display of a Pokemon's max CP and perfect IVs, given the cup in question.
+-------------------------------------------------------------------------------
+*/
 
 class PvpStats extends StatelessWidget {
   const PvpStats({

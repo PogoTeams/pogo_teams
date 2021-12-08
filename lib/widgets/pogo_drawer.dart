@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 
 // Local Imports
 import '../configs/size_config.dart';
+import '../data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
@@ -16,12 +17,10 @@ accessible to the user by any screen that contains a scaffold app bar.
 class PogoDrawer extends StatelessWidget {
   const PogoDrawer({
     Key? key,
-    this.onClearAll,
-    this.clearText,
+    required this.onNavSelected,
   }) : super(key: key);
 
-  final VoidCallback? onClearAll;
-  final String? clearText;
+  final Function(String) onNavSelected;
 
   // The background gradient on the drawer
   BoxDecoration _buildGradientDecoration() {
@@ -45,32 +44,6 @@ class PogoDrawer extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  // Conditionally build the option to remove all teams
-  // This will only build if a onClearAll callback was provided
-  Widget _buildClearOption() {
-    return onClearAll == null || clearText == null
-        ? Container()
-        : ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  clearText!,
-                  style: TextStyle(fontSize: SizeConfig.h1),
-                ),
-                SizedBox(
-                  width: SizeConfig.blockSizeHorizontal * 3.0,
-                ),
-                Icon(
-                  Icons.remove_circle,
-                  size: SizeConfig.blockSizeHorizontal * 5.0,
-                ),
-              ],
-            ),
-            onTap: onClearAll,
-          );
   }
 
   @override
@@ -107,10 +80,8 @@ class PogoDrawer extends StatelessWidget {
                       ],
                     ),
                     onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/',
-                      );
+                      Navigator.pop(context);
+                      onNavSelected('Team Builder');
                     },
                   ),
                   ListTile(
@@ -131,10 +102,8 @@ class PogoDrawer extends StatelessWidget {
                       ],
                     ),
                     onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/battle_log',
-                      );
+                      Navigator.pop(context);
+                      onNavSelected('Battle Log');
                     },
                   ),
                   ListTile(
@@ -155,21 +124,22 @@ class PogoDrawer extends StatelessWidget {
                       ],
                     ),
                     onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/rankings',
-                      );
+                      Navigator.pop(context);
+                      onNavSelected('Rankings');
                     },
                   ),
                 ],
               ),
             ),
-            _buildClearOption(),
+
+            // Spacer
             SizedBox(
               height: SizeConfig.blockSizeVertical * 2.0,
             ),
+
+            // Versioning
             Text(
-              'V 0.0.4 [Beta]',
+              globals.version,
               style: TextStyle(
                 fontSize: SizeConfig.h2,
                 fontStyle: FontStyle.italic,

@@ -2,10 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// Package Imports
+import 'package:provider/provider.dart';
+
 // Local Imports
 import 'pogo_teams_app.dart';
-import 'data/globals.dart' as globals;
+import 'data/pokemon/pokemon_team.dart';
 import 'data/masters/gamemaster.dart';
+import 'data/globals.dart' as globals;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,5 +22,11 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  runApp(const PogoTeamsApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => PokemonTeams(),
+      child: const PogoTeamsApp(),
+      lazy: false,
+    ),
+  );
 }

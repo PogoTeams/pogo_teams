@@ -22,21 +22,16 @@ the Pokemon.
 */
 
 class MoveDropdowns extends StatefulWidget {
-  const MoveDropdowns({
+  MoveDropdowns({
     Key? key,
     required this.pokemon,
-    required this.fastMoveNames,
-    required this.chargedMoveNames,
-    required this.onNodeChanged,
   }) : super(key: key);
 
   final Pokemon pokemon;
 
   // Lists of the moves a Pokemon can learn
-  final List<String> fastMoveNames;
-  final List<String> chargedMoveNames;
-
-  final VoidCallback onNodeChanged;
+  late final List<String> fastMoveNames = pokemon.getFastMoveIds();
+  late final List<String> chargedMoveNames = pokemon.getChargedMoveIds();
 
   @override
   _MoveDropdownsState createState() => _MoveDropdownsState();
@@ -128,7 +123,6 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
           onChanged: (Move? newFastMove) {
             setState(() {
               widget.pokemon.updateSelectedFastMove(newFastMove);
-              widget.onNodeChanged();
             });
           },
         ),
@@ -140,7 +134,6 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
             setState(() {
               widget.pokemon.updateSelectedChargedMove(0, newChargedMove);
               _updateChargedMoveOptions();
-              widget.onNodeChanged();
             });
           },
         ),
@@ -152,7 +145,6 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
             setState(() {
               widget.pokemon.updateSelectedChargedMove(1, newChargedMove);
               _updateChargedMoveOptions();
-              widget.onNodeChanged();
             });
           },
         ),

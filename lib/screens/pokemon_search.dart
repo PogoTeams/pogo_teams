@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 import '../configs/size_config.dart';
 import '../data/pokemon/pokemon.dart';
 import '../data/cup.dart';
-import '../widgets/pokemon_search_list.dart';
+import '../widgets/pokemon_list.dart';
 import '../widgets/buttons/exit_button.dart';
 import '../widgets/pogo_text_field.dart';
 import '../widgets/buttons/filter_button.dart';

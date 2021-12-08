@@ -14,7 +14,6 @@ import '../data/pokemon/pokemon.dart';
 import '../data/cup.dart';
 import '../widgets/pogo_text_field.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
-import '../widgets/pogo_drawer.dart';
 import '../widgets/buttons/compact_pokemon_node_button.dart';
 import '../widgets/buttons/filter_button.dart';
 import '../data/globals.dart' as globals;
@@ -121,7 +120,6 @@ class _RankingsState extends State<Rankings>
       appBar: AppBar(
         title: _buildScaffoldTitle(),
       ),
-      drawer: const PogoDrawer(),
       body: _buildScaffoldBody(),
     );
   }

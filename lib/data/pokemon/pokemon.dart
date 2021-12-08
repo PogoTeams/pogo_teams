@@ -153,6 +153,8 @@ class Pokemon {
   // VARIABLES
   late Move selectedFastMove = fastMoves[0];
   late List<Move> selectedChargedMoves = [chargedMoves[0], chargedMoves[1]];
+
+  // The rating of this Pokemon given a cup
   num rating = 0;
 
   // Deep copy
@@ -208,6 +210,14 @@ class Pokemon {
             typing.typeA.getIcon(),
             typing.typeB.getIcon(),
           ];
+  }
+
+  List<Color> getMoveColors() {
+    return [
+      selectedFastMove.type.typeColor,
+      selectedChargedMoves[0].type.typeColor,
+      selectedChargedMoves[1].type.typeColor,
+    ];
   }
 
   // Get the type effectiveness of this Pokemon, factoring in current moveset

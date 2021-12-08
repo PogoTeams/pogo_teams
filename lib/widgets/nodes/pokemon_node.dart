@@ -5,32 +5,94 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import '../../data/pokemon/pokemon.dart';
-import '../../data/cup.dart';
+import 'empty_node.dart';
+import '../pvp_stats.dart';
 import '../colored_container.dart';
 import '../traits_icons.dart';
-import '../../configs/size_config.dart';
-import '../pvp_stats.dart';
 import '../dropdowns/move_dropdowns.dart';
+import '../../data/pokemon/pokemon.dart';
+import '../../data/pokemon/pokemon_team.dart';
+import '../../data/cup.dart';
+import '../../configs/size_config.dart';
+import '../../screens/pokemon_search.dart';
 
 /*
 -------------------------------------------------------------------------------
-These 'nodes' are merely Pokemon containers, that will conditionally render
-information about a given Pokemon. Depending on the type of node, there will
-be different functionality, such as icon buttons, dropdown menus, colored
-themes and more.
 -------------------------------------------------------------------------------
 */
 
-class PokemonNode extends StatelessWidget {
-  const PokemonNode({
+class PokemonContainer extends StatefulWidget {
+  const PokemonContainer({
+    Key? key,
+    required this.onNodeChanged,
+    required this.nodeIndex,
+    required this.team,
+  }) : super(key: key);
+
+  final Function(int index, Pokemon?) onNodeChanged;
+  final int nodeIndex;
+  final PokemonTeam team;
+
+  @override
+  _PokemonContainerState createState() => _PokemonContainerState();
+}
+
+class _PokemonContainerState extends State<PokemonContainer> {
+  // Open a new app page that allows the user to search for a given Pokemon
+  // If a Pokemon is selected in that page, the Pokemon reference will be kept
+  // The node will then populate all data related to that Pokemon
+  _searchMode() async {
+    final newPokemon = await Navigator.push(
+      context,
+      MaterialPageRoute<Pokemon>(builder: (BuildContext context) {
+        return PokemonSearch(
+          team: widget.team,
+        );
+      }),
+    );
+
+    // If a pokemon was returned from the search page, update the node
+    // Should only be null when the user exits the search page using the app bar
+    if (newPokemon != null) {
+      widget.onNodeChanged(widget.nodeIndex, newPokemon);
+    }
+  }
+
+  // Revert a PokemonNode back to an EmptyNode
+  _clearNode() {
+    widget.onNodeChanged(widget.nodeIndex, null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: SizeConfig.screenHeight * .2,
+
+      // If the Pokemon ref is null, build an empty node
+      // Otherwise build a Pokemon node with cooresponding data
+      child: (widget.team.isNull(widget.nodeIndex)
+          ? EmptyNode(
+              onPressed: _searchMode,
+            )
+          : PokemonNerd(
+              nodeIndex: widget.nodeIndex,
+              pokemon: widget.team.getPokemon(widget.nodeIndex),
+              cup: widget.team.cup,
+              searchMode: _searchMode,
+              clear: _clearNode,
+            )),
+    );
+  }
+}
+
+class PokemonNerd extends StatelessWidget {
+  const PokemonNerd({
     Key? key,
     required this.nodeIndex,
     required this.pokemon,
     required this.cup,
     required this.searchMode,
     required this.clear,
-    required this.onNodeChanged,
   }) : super(key: key);
 
   final int nodeIndex;
@@ -42,13 +104,6 @@ class PokemonNode extends StatelessWidget {
 
   // Remove the Pokemon and restore to an EmptyNode
   final VoidCallback clear;
-
-  // Callback to rebuild page when a Pokemon move is changed
-  final Function(int, Pokemon) onNodeChanged;
-
-  void _onMoveNodeChanged() {
-    onNodeChanged(nodeIndex, pokemon);
-  }
 
   // Display the Pokemon's name perfect PVP ivs and typing icon(s)
   Row _buildNodeHeader(Pokemon pokemon, BuildContext context) {
@@ -136,12 +191,7 @@ class PokemonNode extends StatelessWidget {
 
           // The dropdowns for the Pokemon's moves
           // Defaults to the most meta relavent moves
-          MoveDropdowns(
-            pokemon: pokemon,
-            fastMoveNames: pokemon.getFastMoveIds(),
-            chargedMoveNames: pokemon.getChargedMoveIds(),
-            onNodeChanged: _onMoveNodeChanged,
-          ),
+          MoveDropdowns(pokemon: pokemon),
 
           // Icon buttons to remove, replace or toggle shadow of a Pokemon
           _buildNodeFooter(),
@@ -216,12 +266,7 @@ class CompactPokemonNode extends StatelessWidget {
 
           // The dropdowns for the Pokemon's moves
           // Defaults to the most meta relavent moves
-          MoveDropdowns(
-            pokemon: pokemon,
-            fastMoveNames: pokemon.getFastMoveIds(),
-            chargedMoveNames: pokemon.getChargedMoveIds(),
-            onNodeChanged: () {},
-          ),
+          MoveDropdowns(pokemon: pokemon),
         ],
       ),
     );
@@ -295,12 +340,7 @@ class FooterPokemonNode extends StatelessWidget {
 
           // The dropdowns for the Pokemon's moves
           // Defaults to the most meta relavent moves
-          MoveDropdowns(
-            pokemon: pokemon,
-            fastMoveNames: pokemon.getFastMoveIds(),
-            chargedMoveNames: pokemon.getChargedMoveIds(),
-            onNodeChanged: () {},
-          ),
+          MoveDropdowns(pokemon: pokemon),
 
           // Spacer
           SizedBox(

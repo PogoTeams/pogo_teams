@@ -5,14 +5,17 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
+// Package Imports
+import 'package:provider/provider.dart';
+
 // Local Imports
 import '../configs/size_config.dart';
 import '../data/pokemon/pokemon.dart';
-import '../data/cup.dart';
-import '../widgets/pokemon_search_list.dart';
+import '../widgets/pokemon_list.dart';
+import '../data/pokemon/pokemon_team.dart';
 import '../widgets/buttons/exit_button.dart';
 import '../widgets/pogo_text_field.dart';
-import '../widgets/teams_list.dart';
+import '../widgets/nodes/team_node.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -22,21 +25,24 @@ import '../widgets/teams_list.dart';
 class TeamBuilderSearch extends StatefulWidget {
   const TeamBuilderSearch({
     Key? key,
-    required this.cup,
-    this.team,
+    required this.team,
+    required this.teamIndex,
+    required this.focusIndex,
   }) : super(key: key);
 
-  final Cup cup;
-  final List<Pokemon?>? team;
+  final PokemonTeam team;
+  final int teamIndex;
+  final int focusIndex;
 
   @override
   _TeamBuilderSearchState createState() => _TeamBuilderSearchState();
 }
 
 class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
+  late final List<Pokemon?> _oldTeam;
+
   // The current index of the team the user is editing
   int _workingIndex = 0;
-  late List<Pokemon?> _team;
 
   // Search bar text input controller
   final TextEditingController _searchController = TextEditingController();
@@ -86,7 +92,12 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TeamBuilderList(team: _team),
+              TeamNode(
+                onClear: (_) {},
+                onEdit: (_) {},
+                teamIndex: widget.teamIndex,
+                onEmptyPressed: () {},
+              ),
 
               // Spacer
               SizedBox(
@@ -108,7 +119,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
                 pokemon: filteredPokemon,
                 onPokemonSelected: (pokemon) {
                   setState(() {
-                    _team[_workingIndex] = pokemon;
+                    widget.team.setPokemon(_workingIndex, pokemon);
                     _updateWorkingIndex(_workingIndex + 1);
                   });
                 },
@@ -117,32 +128,41 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
           ),
         ),
       ),
-      floatingActionButton: SizedBox(
-        width: SizeConfig.screenWidth * .87,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Cancel exit button
-            ExitButton(
-              key: UniqueKey(),
-              onPressed: () {
-                Navigator.pop(context, null);
-              },
-              backgroundColor: Colors.red[400]!,
-            ),
-
-            // Confirm exit button
-            ExitButton(
-              key: UniqueKey(),
-              onPressed: () {
-                Navigator.pop(context, _team);
-              },
-              icon: const Icon(Icons.check),
-            ),
-          ],
-        ),
-      ),
+      floatingActionButton: _buildFloatingActionButtons(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+
+  // Two floating action buttons at the footer of the scaffold
+  // One to discard the changes, and another to confirm
+  Widget _buildFloatingActionButtons() {
+    return SizedBox(
+      width: SizeConfig.screenWidth * .87,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Cancel exit button
+          ExitButton(
+            key: UniqueKey(),
+            onPressed: () {
+              // Restore old team
+              widget.team.setTeam(_oldTeam);
+              Navigator.pop(context);
+            },
+            backgroundColor: Colors.red[400]!,
+          ),
+
+          // Confirm exit button
+          ExitButton(
+            key: UniqueKey(),
+            onPressed: () {
+              Provider.of<PokemonTeams>(context, listen: false).notify();
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.check),
+          ),
+        ],
+      ),
     );
   }
 
@@ -150,7 +170,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   // when a user selects a Pokemon for the team, moving the working index
   // in a round-robin fashion.
   void _updateWorkingIndex(int index) {
-    _workingIndex = (index == 3 ? 0 : index);
+    _workingIndex = (index == widget.team.team.length ? 0 : index);
   }
 
   // Setup the input controller
@@ -158,14 +178,10 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   void initState() {
     super.initState();
 
-    if (widget.team == null) {
-      _team = List.generate(3, (index) => null);
-    } else {
-      _team = widget.team!;
-    }
+    _oldTeam = List.from(widget.team.team);
 
     // Get the selected cup and list of Pokemon based on the category
-    pokemon = widget.cup.getRankedPokemonList('overall');
+    pokemon = widget.team.cup.getRankedPokemonList('overall');
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);
@@ -186,29 +202,5 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     }
 
     return _buildScaffold(context);
-  }
-}
-
-class TeamBuilderList extends StatefulWidget {
-  const TeamBuilderList({
-    Key? key,
-    required this.team,
-  }) : super(key: key);
-
-  final List<Pokemon?> team;
-
-  @override
-  _TeamBuilderListState createState() => _TeamBuilderListState();
-}
-
-class _TeamBuilderListState extends State<TeamBuilderList> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: widget.team
-          .map((pokemon) => SquareTeamNode(pokemon: pokemon))
-          .toList(),
-    );
   }
 }

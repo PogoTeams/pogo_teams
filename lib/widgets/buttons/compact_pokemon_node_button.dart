@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 
 // Local Imports
 import '../../data/pokemon/pokemon.dart';
-import '../nodes/pokemon_nodes.dart';
+import '../nodes/pokemon_node.dart';
 import '../../configs/size_config.dart';
 
 /*

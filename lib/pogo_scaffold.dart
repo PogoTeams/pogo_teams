@@ -1,0 +1,109 @@
+// Dart Imports
+import 'dart:ui';
+
+// Flutter Imports
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:pogo_teams/widgets/pogo_drawer.dart';
+
+// Package Imports
+import 'package:provider/provider.dart';
+
+// Local Imports
+import 'configs/size_config.dart';
+import 'screens/team_builder/team_builder.dart';
+import 'screens/rankings.dart';
+import 'screens/battle_log.dart';
+import 'data/pokemon/pokemon_team.dart';
+
+/*
+-------------------------------------------------------------------------------
+The top level scaffold for the app. Navigation via the scaffold's drawer, will
+apply changes to the body, and app bar title.
+-------------------------------------------------------------------------------
+*/
+
+class PogoScaffold extends StatefulWidget {
+  const PogoScaffold({Key? key}) : super(key: key);
+
+  @override
+  _PogoScaffoldState createState() => _PogoScaffoldState();
+}
+
+class _PogoScaffoldState extends State<PogoScaffold> {
+  // All pages that are accessible at the top level of the app
+  final Map<String, Widget> _pages = {
+    'Team Builder': Consumer<PokemonTeams>(
+        builder: (context, value, child) => const TeamBuilder()),
+    'Battle Log': const BattleLog(),
+    'Rankings': const Rankings(),
+  };
+
+  // Icons cooresponding to the pages
+  final Map<String, IconData> _icons = {
+    'Team Builder': Icons.build_circle,
+    'Battle Log': Icons.query_stats,
+    'Rankings': Icons.bar_chart,
+  };
+
+  // Used to navigate between pages by key
+  String _navKey = 'Team Builder';
+
+  // Build the app bar with the current page title, and icon
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Page title
+          Text(
+            _navKey,
+            style: TextStyle(
+              fontSize: SizeConfig.h2,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+
+          // Spacer
+          SizedBox(
+            width: SizeConfig.blockSizeHorizontal * 3.0,
+          ),
+
+          // Page icon
+          Icon(
+            _icons[_navKey],
+            size: SizeConfig.blockSizeHorizontal * 6.0,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Callback for navigating to a new page in the app
+  void _onNavSelected(String navKey) {
+    setState(() {
+      _navKey = navKey;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Initialize media queries
+    SizeConfig().init(context);
+
+    return Scaffold(
+      appBar: _buildAppBar(),
+      drawer: PogoDrawer(
+        onNavSelected: _onNavSelected,
+      ),
+      body: Padding(
+        padding: EdgeInsets.only(
+          left: SizeConfig.blockSizeHorizontal * 2.0,
+          right: SizeConfig.blockSizeHorizontal * 2.0,
+        ),
+        child: _pages[_navKey],
+      ),
+    );
+  }
+}
