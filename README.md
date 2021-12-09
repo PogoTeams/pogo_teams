@@ -17,6 +17,6 @@ This app is built using Google's [Flutter](https://flutter.dev). A framework for
 
 ## Development Goals / Outline
 [Here](https://github.com/users/SeanSiders/projects/2) is where all project goals involving Pogo Teams are currently handled.
-Feel free with questions, post a new issue, or contribute to this community resource.
+Feel free to contact me with questions, post a new issue, or contribute to this community resource.
 
 ![launcher_icon](https://user-images.githubusercontent.com/41221800/143666343-e7ea4d08-e151-4334-92d2-53fabaafcb03.png)
