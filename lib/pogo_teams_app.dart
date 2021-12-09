@@ -8,9 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import 'screens/team_builder.dart';
-import 'screens/rankings.dart';
-import 'screens/battle_log.dart';
+import 'pogo_scaffold.dart';
 
 //// APPLICATION ROOT
 class PogoTeamsApp extends StatelessWidget {
@@ -22,13 +20,7 @@ class PogoTeamsApp extends StatelessWidget {
       title: 'POGO Teams',
       theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Futura'),
 
-      // There is a single page in this app
-      // All navigation is delegated to a bottom tap bar
-      home: const TeamBuilder(),
-      routes: <String, WidgetBuilder>{
-        '/rankings': (BuildContext context) => const Rankings(),
-        '/battle_log': (BuildContext context) => const BattleLog(),
-      },
+      home: const PogoScaffold(),
 
       //Removes the debug banner
       debugShowCheckedModeBanner: false,

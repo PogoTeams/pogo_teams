@@ -24,7 +24,8 @@ class PogoTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: SizeConfig.screenWidth * 0.9,
+      width: SizeConfig.screenWidth * 0.95,
+      height: SizeConfig.blockSizeVertical * 5.0,
       child: TextField(
         // Native toolbar options
         toolbarOptions: const ToolbarOptions(
@@ -36,14 +37,19 @@ class PogoTextField extends StatelessWidget {
 
         // Styling
         keyboardAppearance: Brightness.dark,
-        cursorColor: Colors.greenAccent,
-        decoration: const InputDecoration(
+        cursorColor: Colors.white,
+        decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.greenAccent)),
+            borderSide: const BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.circular(100),
+          ),
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.greenAccent)),
-          labelText: 'Search for a Pokemon',
-          labelStyle: TextStyle(color: Colors.greenAccent),
+            borderSide: const BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          //labelText: 'Search for a Pokemon',
+          label: const Icon(Icons.search),
+          //labelStyle: const TextStyle(color: Colors.greenAccent),
         ),
         textAlign: TextAlign.center,
         controller: controller,

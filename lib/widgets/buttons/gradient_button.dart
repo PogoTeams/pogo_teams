@@ -19,13 +19,13 @@ A gradient button that uses gradient coloring in theme with the app design.
 class GradientButton extends StatelessWidget {
   const GradientButton({
     Key? key,
-    required this.child,
     required this.onPressed,
+    required this.child,
     required this.width,
   }) : super(key: key);
 
-  final Widget child;
   final VoidCallback onPressed;
+  final Widget child;
   final double width;
 
   @override
@@ -38,11 +38,10 @@ class GradientButton extends StatelessWidget {
           colors: [Color(0xBF29F19C), Color(0xFF02A1F9)],
           tileMode: TileMode.clamp,
         ),
-        borderRadius:
-            BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
+        borderRadius: BorderRadius.circular(20),
       ),
       width: width,
-      height: SizeConfig.blockSizeVertical * 5.5,
+      height: SizeConfig.blockSizeVertical * 8.5,
       child: MaterialButton(
         child: child,
         onPressed: onPressed,

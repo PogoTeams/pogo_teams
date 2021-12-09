@@ -5,7 +5,8 @@ import 'package:flutter/widgets.dart';
 
 // Local Imports
 import '../data/pokemon/pokemon.dart';
-import '../widgets/buttons/compact_pokemon_node_button.dart';
+import 'nodes/pokemon_node.dart';
+import '../configs/size_config.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -20,10 +21,12 @@ class PokemonList extends StatelessWidget {
     Key? key,
     required this.pokemon,
     required this.onPokemonSelected,
+    this.dropdowns = true,
   }) : super(key: key);
 
   final List<Pokemon> pokemon;
   final Function(Pokemon) onPokemonSelected;
+  final bool dropdowns;
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +43,22 @@ class PokemonList extends StatelessWidget {
         child: ListView.builder(
           itemCount: pokemon.length,
           itemBuilder: (context, index) {
-            return CompactPokemonNodeButton(
-              pokemon: pokemon[index],
+            return MaterialButton(
+              padding: EdgeInsets.zero,
               onPressed: () {
                 onPokemonSelected(pokemon[index]);
               },
               onLongPress: () {},
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: SizeConfig.blockSizeVertical * .5,
+                  bottom: SizeConfig.blockSizeVertical * .5,
+                ),
+                child: PokemonNode.small(
+                  pokemon: pokemon[index],
+                  dropdowns: dropdowns,
+                ),
+              ),
             );
           },
           physics: const BouncingScrollPhysics(),

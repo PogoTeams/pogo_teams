@@ -58,7 +58,7 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
     return Container(
       alignment: Alignment.center,
       width: SizeConfig.screenWidth * .2,
-      height: SizeConfig.blockSizeVertical * 4.5,
+      height: SizeConfig.blockSizeVertical * 5.0,
       padding: EdgeInsets.only(
         right: SizeConfig.blockSizeHorizontal * 2.0,
       ),

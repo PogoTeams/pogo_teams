@@ -153,6 +153,8 @@ class Pokemon {
   // VARIABLES
   late Move selectedFastMove = fastMoves[0];
   late List<Move> selectedChargedMoves = [chargedMoves[0], chargedMoves[1]];
+
+  // The rating of this Pokemon given a cup
   num rating = 0;
 
   // Deep copy
@@ -174,7 +176,10 @@ class Pokemon {
       eliteMoves: other.eliteMoves,
     );
 
-    pokemonCopy.setMoveset(other.selectedFastMove, other.selectedChargedMoves);
+    pokemonCopy.setMoveset(
+      other.selectedFastMove.moveId,
+      other.selectedChargedMoves.map((move) => move.moveId).toList(),
+    );
     pokemonCopy.setRating(other.rating);
 
     return pokemonCopy;
@@ -210,6 +215,14 @@ class Pokemon {
           ];
   }
 
+  List<Color> getMoveColors() {
+    return [
+      selectedFastMove.type.typeColor,
+      selectedChargedMoves[0].type.typeColor,
+      selectedChargedMoves[1].type.typeColor,
+    ];
+  }
+
   // Get the type effectiveness of this Pokemon, factoring in current moveset
   List<double> getDefenseEffectiveness() {
     return typing.getDefenseEffectiveness();
@@ -236,9 +249,14 @@ class Pokemon {
   }
 
   // Set the moveset for this Pokemon (used in 'from' constructor)
-  void setMoveset(Move fastMove, List<Move> chargedMoves) {
-    selectedFastMove = fastMove;
-    selectedChargedMoves = chargedMoves;
+  void setMoveset(String fastMoveId, List<String> chargedMoveIds) {
+    selectedFastMove =
+        fastMoves.firstWhere((move) => move.moveId == fastMoveId);
+
+    selectedChargedMoves = [
+      chargedMoves.firstWhere((move) => move.moveId == chargedMoveIds[0]),
+      chargedMoves.firstWhere((move) => move.moveId == chargedMoveIds[1]),
+    ];
   }
 
   void setMovesetByIds(String fastMoveId, List<String> chargedMoveIds) {

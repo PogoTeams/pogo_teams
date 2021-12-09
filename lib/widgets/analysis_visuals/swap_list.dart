@@ -8,10 +8,10 @@ import '../../data/pokemon/typing.dart';
 import '../../data/pokemon/pokemon_team.dart';
 import '../../data/pokemon/pokemon.dart';
 import '../../data/cup.dart';
-import '../nodes/pokemon_nodes.dart';
+import '../nodes/pokemon_node.dart';
 import '../../configs/size_config.dart';
 import '../buttons/pokemon_action_button.dart';
-import '../../screens/team_swap.dart';
+import '../../pages/team_swap.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -106,20 +106,20 @@ class SwapList extends StatelessWidget {
     List<Pokemon> counters =
         team.cup.getFilteredRankedPokemonList(types, 'overall', limit: 20);
 
-    return Column(
-      children: counters
-          .map(
-            (pokemon) => Padding(
-              padding: EdgeInsets.only(
-                bottom: SizeConfig.blockSizeHorizontal * 2.0,
-              ),
-              child: FooterPokemonNode(
-                pokemon: pokemon,
-                footerChild: _buildFooter(context, pokemon),
-              ),
-            ),
-          )
-          .toList(),
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: counters.length,
+      itemBuilder: (context, index) => Padding(
+        padding: EdgeInsets.only(
+          top: SizeConfig.blockSizeVertical * .5,
+          bottom: SizeConfig.blockSizeVertical * .5,
+        ),
+        child: PokemonNode.large(
+          pokemon: counters[index],
+          footer: _buildFooter(context, counters[index]),
+        ),
+      ),
+      physics: const NeverScrollableScrollPhysics(),
     );
   }
 }
@@ -148,7 +148,7 @@ class LogSwapList extends StatelessWidget {
               padding: EdgeInsets.only(
                 bottom: SizeConfig.blockSizeHorizontal * 2.0,
               ),
-              child: CompactPokemonNode(
+              child: PokemonNode.small(
                 pokemon: pokemon,
               ),
             ),

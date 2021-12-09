@@ -5,8 +5,37 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
+import '../../data/pokemon/pokemon.dart';
 import '../../data/pokemon/move.dart';
 import '../../configs/size_config.dart';
+
+/*
+-------------------------------------------------------------------------------
+Any Pokemon move displays that are not a dropdown are managed by these
+MoveNodes.
+-------------------------------------------------------------------------------
+*/
+
+class MoveNodes extends StatelessWidget {
+  const MoveNodes({
+    Key? key,
+    required this.pokemon,
+  }) : super(key: key);
+
+  final Pokemon pokemon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        MoveNode(move: pokemon.selectedFastMove),
+        MoveNode(move: pokemon.selectedChargedMoves[0]),
+        MoveNode(move: pokemon.selectedChargedMoves[1]),
+      ],
+    );
+  }
+}
 
 class MoveNode extends StatelessWidget {
   const MoveNode({
@@ -40,6 +69,38 @@ class MoveNode extends StatelessWidget {
         borderRadius: BorderRadius.circular(100.0),
         color: move.type.typeColor,
       ),
+    );
+  }
+}
+
+class MoveDots extends StatelessWidget {
+  const MoveDots({
+    Key? key,
+    required this.moveColors,
+  }) : super(key: key);
+
+  final List<Color> moveColors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: moveColors
+          .map(
+            (color) => Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.white,
+                  width: SizeConfig.blockSizeHorizontal * 0.3,
+                ),
+                color: color,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              height: SizeConfig.blockSizeHorizontal * 4.0,
+              width: SizeConfig.blockSizeHorizontal * 6.0,
+            ),
+          )
+          .toList(),
     );
   }
 }

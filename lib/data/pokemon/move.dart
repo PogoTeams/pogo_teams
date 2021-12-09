@@ -55,6 +55,20 @@ class Move {
     );
   }
 
+  static Move from(Move other) {
+    return Move(
+      moveId: other.moveId,
+      name: other.name,
+      type: other.type,
+      power: other.power,
+      energy: other.energy,
+      energyGain: other.energyGain,
+      cooldown: other.cooldown,
+      abbreviation: other.abbreviation,
+      archetype: other.archetype,
+    );
+  }
+
   final String moveId;
   final String name;
   final Type type;

@@ -2,10 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:pogo_teams/widgets/analysis_visuals/coverage_graph.dart';
 
 // Local Imports
 import 'analysis_visuals/swap_list.dart';
+import 'analysis_visuals/type_coverage.dart';
+import '../widgets/nodes/pokemon_node.dart';
 import '../data/pokemon/pokemon.dart';
 import '../data/pokemon/pokemon_team.dart';
 import '../data/masters/type_master.dart';
@@ -25,11 +26,9 @@ class TeamAnalysis extends StatefulWidget {
   const TeamAnalysis({
     Key? key,
     required this.team,
-    required this.onTeamChanged,
   }) : super(key: key);
 
   final PokemonTeam team;
-  final Function(List<Pokemon>) onTeamChanged;
 
   @override
   _TeamAnalysisState createState() => _TeamAnalysisState();
@@ -38,6 +37,8 @@ class TeamAnalysis extends StatefulWidget {
 class _TeamAnalysisState extends State<TeamAnalysis> {
   // The list of expansion panels
   List<PanelStates> _expansionPanels = [];
+
+  final ScrollController _scrollController = ScrollController();
 
   // Setup the list of expansion panels given the PokemonTeam
   void _initializeExpansionPanels() {
@@ -82,7 +83,7 @@ class _TeamAnalysisState extends State<TeamAnalysis> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        expandedValue: CoverageGraph(
+        expandedValue: TypeCoverage(
           netEffectiveness: netEffectiveness,
           defenseThreats: defenseThreats,
           offenseCoverage: offenseCoverage,
@@ -104,7 +105,7 @@ class _TeamAnalysisState extends State<TeamAnalysis> {
         expandedValue: SwapList(
           team: widget.team,
           types: defenseThreatTypes,
-          onTeamChanged: widget.onTeamChanged,
+          onTeamChanged: _onTeamChanged,
         ),
         isExpanded: true,
       ),
@@ -122,25 +123,107 @@ class _TeamAnalysisState extends State<TeamAnalysis> {
         expandedValue: SwapList(
           team: widget.team,
           types: threatCounterTypes,
-          onTeamChanged: widget.onTeamChanged,
+          onTeamChanged: _onTeamChanged,
         ),
         isExpanded: true,
       ),
     ];
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeExpansionPanels();
+  void _onTeamChanged(List<Pokemon?> newPokemonTeam) {
+    setState(() {
+      widget.team.setTeam(newPokemonTeam);
+      _scrollController.animateTo(
+        0.0,
+        duration: const Duration(seconds: 1),
+        curve: Curves.decelerate,
+      );
+    });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // Only render analysis if there is at least 1 Pokemon
-    if (widget.team.isEmpty()) return Container();
+  // Build the scaffold for this page
+  Widget _buildScaffold(BuildContext context) {
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: SizeConfig.blockSizeHorizontal * 2.0,
+            right: SizeConfig.blockSizeHorizontal * 2.0,
+          ),
+          child: ListView(
+            controller: _scrollController,
+            children: [
+              // Spacer
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 1.0,
+              ),
+              _buildPokemonNodes(widget.team.getPokemonTeam()),
+              _buildPanelList(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-    // Build an expansion panel for each category of the analysis
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: IconButton(
+        onPressed: () => Navigator.pop(
+          context,
+          widget.team.team,
+        ),
+        icon: const Icon(Icons.arrow_back_ios),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Page title
+          Text(
+            'Team Analysis',
+            style: TextStyle(
+              fontSize: SizeConfig.h2,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+
+          // Spacer
+          SizedBox(
+            width: SizeConfig.blockSizeHorizontal * 3.0,
+          ),
+
+          // Page icon
+          Icon(
+            Icons.analytics,
+            size: SizeConfig.blockSizeHorizontal * 6.0,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Build the list of either 3 or 6 PokemonNodes that make up this team
+  Widget _buildPokemonNodes(List<Pokemon> pokemonTeam) {
+    return ListView(
+      shrinkWrap: true,
+      children: List.generate(
+        pokemonTeam.length,
+        (index) => Padding(
+          padding: EdgeInsets.only(
+            top: SizeConfig.blockSizeVertical * .5,
+            bottom: SizeConfig.blockSizeVertical * .5,
+          ),
+          child: PokemonNode.small(
+            pokemon: pokemonTeam[index],
+          ),
+        ),
+      ),
+      physics: const NeverScrollableScrollPhysics(),
+    );
+  }
+
+  Widget _buildPanelList() {
     return ExpansionPanelList(
       elevation: 0.0,
       expansionCallback: (int index, bool isExpanded) {
@@ -166,6 +249,27 @@ class _TeamAnalysisState extends State<TeamAnalysis> {
         },
       ).toList(),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeExpansionPanels();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Only render analysis if there is at least 1 Pokemon
+    if (widget.team.isEmpty()) return Container();
+
+    // Build an expansion panel for each category of the analysis
+    return _buildScaffold(context);
   }
 }
 

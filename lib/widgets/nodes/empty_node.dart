@@ -12,8 +12,10 @@ import '../../configs/size_config.dart';
 
 /*
 -------------------------------------------------------------------------------
-An icon button indicating that the user can add a Pokemon to the current node
-Once a Pokemon is added, the node will become a PokemonNode
+An empty node indicates an empty space in a Pokemon Team. Depending on the
+context, this empty node can be tapped to apply various callbacks. The empty
+node can also be completely emptyTransparent. All PokemonNodes use an empty node
+when their Pokemon ref is null.
 -------------------------------------------------------------------------------
 */
 
@@ -21,29 +23,32 @@ class EmptyNode extends StatelessWidget {
   const EmptyNode({
     Key? key,
     required this.onPressed,
+    required this.emptyTransparent,
   }) : super(key: key);
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final bool emptyTransparent;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.white,
-          width: SizeConfig.blockSizeHorizontal * 0.8,
+          color: emptyTransparent ? Colors.transparent : Colors.white54,
+          width: SizeConfig.blockSizeHorizontal * 0.5,
         ),
-        borderRadius:
-            BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: IconButton(
-        tooltip: 'Add a Pokemon to Your Team!',
-        icon: Icon(
-          Icons.add,
-          size: SizeConfig.blockSizeHorizontal * 8.5,
-          color: Colors.white,
-        ),
+      child: MaterialButton(
         onPressed: onPressed,
+        // Evaluate button transparency
+        child: emptyTransparent
+            ? Container()
+            : Icon(
+                Icons.add,
+                color: Colors.white54,
+                size: SizeConfig.blockSizeHorizontal * 15.0,
+              ),
       ),
     );
   }
