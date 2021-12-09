@@ -33,7 +33,7 @@ class AnalyzeButton extends StatelessWidget {
     // Analyze button
     return isEmpty
         ? SizedBox(
-            height: SizeConfig.blockSizeVertical * 5.5,
+            height: SizeConfig.blockSizeVertical * 8.5,
           )
         : GradientButton(
             child: Text(
@@ -44,7 +44,7 @@ class AnalyzeButton extends StatelessWidget {
               ),
             ),
             onPressed: onPressed,
-            width: SizeConfig.screenWidth * 0.95,
+            width: SizeConfig.screenWidth,
           );
   }
 }

@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 // Local Imports
-import 'square_pokemon_node.dart';
+import 'pokemon_node.dart';
 import '../../configs/size_config.dart';
 import '../../data/pokemon/pokemon.dart';
 import '../../data/pokemon/pokemon_team.dart';
@@ -26,72 +26,84 @@ which allows for any team changes, to be reflected at the provider level.
 class TeamNode extends StatelessWidget {
   const TeamNode({
     Key? key,
-    required this.onClear,
-    required this.onEdit,
-    required this.teamIndex,
+    required this.onPressed,
     required this.onEmptyPressed,
+    required this.teamIndex,
+    this.footer,
+    this.focusIndex,
+    this.emptyTransparent = false,
   }) : super(key: key);
 
-  final Function(int) onClear;
-  final Function(int) onEdit;
-  final VoidCallback onEmptyPressed;
+  final Function(int) onPressed;
+  final Function(int) onEmptyPressed;
   final int teamIndex;
+
+  final Widget? footer;
+  final int? focusIndex;
+  final bool emptyTransparent;
 
   // Build the grid view of the current Pokemon team
   Widget _buildPokemonNodes(List<Pokemon?> team) {
+    if (focusIndex != null) {
+      return _buildFocusNodes(team);
+    }
+
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisSpacing: SizeConfig.blockSizeHorizontal * 4.0,
-        mainAxisSpacing: SizeConfig.blockSizeHorizontal * 4.0,
+        crossAxisSpacing: SizeConfig.blockSizeHorizontal * 3.0,
+        mainAxisSpacing: SizeConfig.blockSizeHorizontal * 3.0,
         crossAxisCount: 3,
       ),
       shrinkWrap: true,
       itemCount: team.length,
       itemBuilder: (context, index) => PokemonNode.square(
-        onEmptyPressed: onEmptyPressed,
+        onEmptyPressed: () => onEmptyPressed(index),
         pokemon: team[index],
-        nodeIndex: index,
+        emptyTransparent: emptyTransparent,
       ),
       physics: const NeverScrollableScrollPhysics(),
     );
   }
 
-  // Build a row of icon buttons at the bottom of a Pokemon's Node
-  Widget _buildNodeFooter(BuildContext context) {
-    // Size of the footer icons
-    final double iconSize = SizeConfig.blockSizeHorizontal * 6.0;
-
-    return Padding(
-      padding: EdgeInsets.only(
-        left: SizeConfig.blockSizeHorizontal * 2.0,
-        right: SizeConfig.blockSizeHorizontal * 2.0,
-        bottom: SizeConfig.blockSizeVertical * 1.0,
+  Widget _buildFocusNodes(List<Pokemon?> team) {
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisSpacing: SizeConfig.blockSizeHorizontal * 1.0,
+        mainAxisSpacing: SizeConfig.blockSizeHorizontal * 1.0,
+        crossAxisCount: 3,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // Remove team
-          IconButton(
-            onPressed: () {
-              onClear(teamIndex);
-            },
-            icon: const Icon(Icons.clear),
-            tooltip: 'Remove Team',
-            iconSize: iconSize,
-            splashRadius: SizeConfig.blockSizeHorizontal * 6.0,
-          ),
+      shrinkWrap: true,
+      itemCount: team.length,
+      itemBuilder: (context, index) => _buildFocusNode(team[index], index),
+      physics: const NeverScrollableScrollPhysics(),
+    );
+  }
 
-          // Edit team
-          IconButton(
-            onPressed: () {
-              onEdit(teamIndex);
-            },
-            icon: const Icon(Icons.change_circle),
-            tooltip: 'Edit Team',
-            iconSize: iconSize,
-            splashRadius: SizeConfig.blockSizeHorizontal * 6.0,
-          ),
-        ],
+  // If the focus index is provided, draw a special border
+  // This indicates the current 'focus' node
+  Widget _buildFocusNode(Pokemon? pokemon, int index) {
+    Color _color;
+
+    if (index == focusIndex) {
+      _color = Colors.amber;
+    } else {
+      _color = Colors.transparent;
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: SizeConfig.blockSizeHorizontal * 1.0,
+          color: _color,
+        ),
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: PokemonNode.square(
+        onPressed: () => onPressed(index),
+        onEmptyPressed: () => onEmptyPressed(index),
+        pokemon: pokemon,
+        emptyTransparent: emptyTransparent,
+        padding: EdgeInsets.zero,
       ),
     );
   }
@@ -115,8 +127,7 @@ class TeamNode extends StatelessWidget {
             colors: [team.cup.cupColor, Colors.transparent],
             tileMode: TileMode.clamp,
           ),
-          borderRadius:
-              BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
+          borderRadius: BorderRadius.circular(20),
         ),
 
         // The contents of the team node (Square Nodes and icons)
@@ -125,9 +136,9 @@ class TeamNode extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(
-                top: SizeConfig.blockSizeVertical * 2.0,
-                left: SizeConfig.blockSizeHorizontal * 6.0,
-                right: SizeConfig.blockSizeHorizontal * 6.0,
+                top: SizeConfig.blockSizeVertical * 1.5,
+                left: SizeConfig.blockSizeHorizontal * 3.0,
+                right: SizeConfig.blockSizeHorizontal * 3.0,
                 bottom: SizeConfig.blockSizeVertical * 1.0,
               ),
               // A gridview of the Pokemon in this team
@@ -135,7 +146,7 @@ class TeamNode extends StatelessWidget {
             ),
 
             // Icon buttons for team operations
-            _buildNodeFooter(context),
+            footer ?? Container(),
           ],
         ),
       ),

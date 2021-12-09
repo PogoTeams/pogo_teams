@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 // Local Imports
-import 'coverage_grids.dart';
 import '../../tools/pair.dart';
 import '../../data/pokemon/typing.dart';
 import '../../configs/size_config.dart';
@@ -24,46 +23,67 @@ class CoverageGraph extends StatelessWidget {
   const CoverageGraph({
     Key? key,
     required this.netEffectiveness,
-    required this.defenseThreats,
-    required this.offenseCoverage,
     required this.teamSize,
   }) : super(key: key);
 
   final List<Pair<Type, double>> netEffectiveness;
-  final List<Pair<Type, double>> defenseThreats;
-  final List<Pair<Type, double>> offenseCoverage;
   final int teamSize;
 
   @override
   Widget build(BuildContext context) {
-    // Graph row mapping
     return Column(
       children: [
-        CoverageGrids(
-          defenseThreats: defenseThreats,
-          offenseCoverage: offenseCoverage,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: SizeConfig.blockSizeHorizontal * 7.0,
+            ),
+            Text(
+              'Poor',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: SizeConfig.h2,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            SizedBox(
+              width: SizeConfig.blockSizeHorizontal * 61.0,
+            ),
+            Text(
+              'Excellent',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: SizeConfig.h2,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
         ),
-
-        // Spacer
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: SizeConfig.blockSizeHorizontal * 7.0,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.red, Colors.green],
+                  tileMode: TileMode.clamp,
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              width: SizeConfig.blockSizeHorizontal * 84.0,
+              height: SizeConfig.blockSizeVertical * .6,
+            ),
+          ],
+        ),
         SizedBox(
-          height: SizeConfig.blockSizeVertical * 2.5,
+          height: SizeConfig.blockSizeVertical * 1.0,
         ),
-
-        // Header
-        Text(
-          'NET TYPE COVERAGE',
-          style: TextStyle(
-            letterSpacing: SizeConfig.blockSizeHorizontal * .8,
-            fontSize: SizeConfig.h2,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-
-        // Spacer
-        SizedBox(
-          height: SizeConfig.blockSizeVertical * 2.5,
-        ),
-
         ListView(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -106,8 +126,7 @@ class GraphRow extends StatelessWidget {
         ),
         Container(
           decoration: BoxDecoration(
-            borderRadius:
-                BorderRadius.circular(SizeConfig.blockSizeHorizontal * .9),
+            borderRadius: BorderRadius.circular(20),
             color: typeData.a.typeColor,
           ),
           width: SizeConfig.screenWidth * .52 * barLength,

@@ -12,9 +12,9 @@ import 'package:provider/provider.dart';
 
 // Local Imports
 import 'configs/size_config.dart';
-import 'screens/team_builder/team_builder.dart';
-import 'screens/rankings.dart';
-import 'screens/battle_log.dart';
+import 'pages/team_builder/team_builder.dart';
+import 'pages/rankings.dart';
+import 'pages/battle_log.dart';
 import 'data/pokemon/pokemon_team.dart';
 
 /*

@@ -9,16 +9,19 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 // Local Imports
-import '../configs/size_config.dart';
-import '../data/pokemon/pokemon.dart';
-import '../widgets/pokemon_list.dart';
-import '../data/pokemon/pokemon_team.dart';
-import '../widgets/buttons/exit_button.dart';
-import '../widgets/pogo_text_field.dart';
-import '../widgets/nodes/team_node.dart';
+import '../../configs/size_config.dart';
+import '../../data/pokemon/pokemon.dart';
+import '../../widgets/pokemon_list.dart';
+import '../../widgets/buttons/exit_button.dart';
+import '../../widgets/pogo_text_field.dart';
+import '../../widgets/nodes/team_node.dart';
+import '../../data/pokemon/pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------------------
+A search and build page, where the team being edited is rendered as a grid
+above a searchable / filterable list of Pokemon. The user can press on any
+node in the grid to put focus on that node for adding a Pokemon. 
 -------------------------------------------------------------------------------
 */
 
@@ -87,17 +90,13 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(
-            top: SizeConfig.blockSizeVertical * 1.0,
+            left: SizeConfig.blockSizeHorizontal * 2.0,
+            right: SizeConfig.blockSizeHorizontal * 2.0,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TeamNode(
-                onClear: (_) {},
-                onEdit: (_) {},
-                teamIndex: widget.teamIndex,
-                onEmptyPressed: () {},
-              ),
+              _buildTeamNode(),
 
               // Spacer
               SizedBox(
@@ -114,22 +113,37 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
                 endIndent: SizeConfig.blockSizeHorizontal * 5.0,
               ),
 
-              // The list of Pokemon based on categories and search input
-              PokemonList(
-                pokemon: filteredPokemon,
-                onPokemonSelected: (pokemon) {
-                  setState(() {
-                    widget.team.setPokemon(_workingIndex, pokemon);
-                    _updateWorkingIndex(_workingIndex + 1);
-                  });
-                },
-              ),
+              _buildPokemonList(),
             ],
           ),
         ),
       ),
       floatingActionButton: _buildFloatingActionButtons(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+
+  // The current team being edited, in a grid view
+  Widget _buildTeamNode() {
+    return TeamNode(
+      onPressed: _updateWorkingIndex,
+      onEmptyPressed: _updateWorkingIndex,
+      teamIndex: widget.teamIndex,
+      focusIndex: _workingIndex,
+      emptyTransparent: true,
+    );
+  }
+
+  // The list of Pokemon based on categories and search input
+  Widget _buildPokemonList() {
+    return PokemonList(
+      pokemon: filteredPokemon,
+      onPokemonSelected: (pokemon) {
+        setState(() {
+          widget.team.setPokemon(_workingIndex, pokemon);
+          _updateWorkingIndex(_workingIndex + 1);
+        });
+      },
     );
   }
 
@@ -170,7 +184,9 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   // when a user selects a Pokemon for the team, moving the working index
   // in a round-robin fashion.
   void _updateWorkingIndex(int index) {
-    _workingIndex = (index == widget.team.team.length ? 0 : index);
+    setState(() {
+      _workingIndex = (index == widget.team.team.length ? 0 : index);
+    });
   }
 
   // Setup the input controller
@@ -178,6 +194,8 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   void initState() {
     super.initState();
 
+    // Set the starting index of the team edit
+    _workingIndex = widget.focusIndex;
     _oldTeam = List.from(widget.team.team);
 
     // Get the selected cup and list of Pokemon based on the category

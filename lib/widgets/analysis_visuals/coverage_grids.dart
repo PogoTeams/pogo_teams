@@ -36,12 +36,10 @@ class CoverageGrids extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          width: SizeConfig.screenWidth * .95,
           child: Container(
             padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
             decoration: BoxDecoration(
-              borderRadius:
-                  BorderRadius.circular(SizeConfig.blockSizeHorizontal * 0.9),
+              borderRadius: BorderRadius.circular(5),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -110,12 +108,10 @@ class CoverageGrids extends StatelessWidget {
 
         // List of coverage
         SizedBox(
-          width: SizeConfig.screenWidth * .95,
           child: Container(
             padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
             decoration: BoxDecoration(
-              borderRadius:
-                  BorderRadius.circular(SizeConfig.blockSizeHorizontal * 0.9),
+              borderRadius: BorderRadius.circular(5),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,

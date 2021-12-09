@@ -176,7 +176,10 @@ class Pokemon {
       eliteMoves: other.eliteMoves,
     );
 
-    pokemonCopy.setMoveset(other.selectedFastMove, other.selectedChargedMoves);
+    pokemonCopy.setMoveset(
+      other.selectedFastMove.moveId,
+      other.selectedChargedMoves.map((move) => move.moveId).toList(),
+    );
     pokemonCopy.setRating(other.rating);
 
     return pokemonCopy;
@@ -246,9 +249,14 @@ class Pokemon {
   }
 
   // Set the moveset for this Pokemon (used in 'from' constructor)
-  void setMoveset(Move fastMove, List<Move> chargedMoves) {
-    selectedFastMove = fastMove;
-    selectedChargedMoves = chargedMoves;
+  void setMoveset(String fastMoveId, List<String> chargedMoveIds) {
+    selectedFastMove =
+        fastMoves.firstWhere((move) => move.moveId == fastMoveId);
+
+    selectedChargedMoves = [
+      chargedMoves.firstWhere((move) => move.moveId == chargedMoveIds[0]),
+      chargedMoves.firstWhere((move) => move.moveId == chargedMoveIds[1]),
+    ];
   }
 
   void setMovesetByIds(String fastMoveId, List<String> chargedMoveIds) {

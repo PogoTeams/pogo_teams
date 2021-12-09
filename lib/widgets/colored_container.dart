@@ -1,6 +1,5 @@
 // Flutter Imports
 import 'package:flutter/material.dart';
-import 'package:pogo_teams/configs/size_config.dart';
 
 // Local Imports
 import '../data/pokemon/pokemon.dart';
@@ -33,8 +32,7 @@ class ColoredContainer extends StatelessWidget {
     if (pokemon.typing.isMonoType()) {
       return BoxDecoration(
         color: pokemon.getTypeColors()[0],
-        borderRadius:
-            BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
+        borderRadius: BorderRadius.circular(20),
       );
     }
 
@@ -45,7 +43,7 @@ class ColoredContainer extends StatelessWidget {
         colors: pokemon.getTypeColors(),
         tileMode: TileMode.clamp,
       ),
-      borderRadius: BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
+      borderRadius: BorderRadius.circular(20),
     );
   }
 

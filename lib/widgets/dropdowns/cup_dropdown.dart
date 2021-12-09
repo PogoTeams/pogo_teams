@@ -70,7 +70,7 @@ class _CupDropdownState extends State<CupDropdown>
     return Container(
       alignment: Alignment.center,
       width: widget.width,
-      height: SizeConfig.blockSizeVertical * 4.5,
+      height: SizeConfig.blockSizeVertical * 5.0,
       padding: EdgeInsets.only(
         right: SizeConfig.blockSizeHorizontal * 2.0,
       ),

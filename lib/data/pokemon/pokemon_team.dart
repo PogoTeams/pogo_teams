@@ -42,7 +42,11 @@ class PokemonTeam {
 
   // Set the specified Pokemon in the team by the specified index
   void setPokemon(int index, Pokemon? pokemon) {
-    team[index] = pokemon;
+    if (pokemon == null) {
+      team[index] = null;
+    } else {
+      team[index] = Pokemon.from(pokemon);
+    }
     _updateEffectiveness();
   }
 

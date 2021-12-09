@@ -38,11 +38,10 @@ class GradientButton extends StatelessWidget {
           colors: [Color(0xBF29F19C), Color(0xFF02A1F9)],
           tileMode: TileMode.clamp,
         ),
-        borderRadius:
-            BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
+        borderRadius: BorderRadius.circular(20),
       ),
       width: width,
-      height: SizeConfig.blockSizeVertical * 5.5,
+      height: SizeConfig.blockSizeVertical * 8.5,
       child: MaterialButton(
         child: child,
         onPressed: onPressed,

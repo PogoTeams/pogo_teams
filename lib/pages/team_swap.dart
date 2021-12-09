@@ -38,14 +38,35 @@ class TeamSwap extends StatefulWidget {
 }
 
 class _TeamSwapState extends State<TeamSwap> {
-  late List<Pokemon> _teamList;
+  late List<Pokemon> _pokemonTeam;
   late Pokemon _swap;
   bool _changed = false;
+
+  Widget _buildFooter(BuildContext context, int index) {
+    void _onSwap(Pokemon swapPokemon) {
+      setState(() {
+        _changed = true;
+        _pokemonTeam[index] = _swap;
+        _swap = swapPokemon;
+      });
+    }
+
+    return PokemonActionButton(
+      pokemon: _pokemonTeam[index],
+      label: 'Swap Out',
+      icon: Icon(
+        Icons.swap_horiz_rounded,
+        size: SizeConfig.blockSizeHorizontal * 5.0,
+        color: Colors.white,
+      ),
+      onPressed: _onSwap,
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    _teamList = widget.team.getPokemonTeam();
+    _pokemonTeam = widget.team.getPokemonTeam();
     _swap = widget.swap;
   }
 
@@ -62,7 +83,7 @@ class _TeamSwapState extends State<TeamSwap> {
           child: ListView(
             children: [
               // The Pokemon to swap out
-              CompactPokemonNode(pokemon: _swap),
+              PokemonNode.small(pokemon: _swap),
 
               SizedBox(
                 height: SizeConfig.blockSizeVertical * 2.0,
@@ -90,33 +111,16 @@ class _TeamSwapState extends State<TeamSwap> {
               // List of the current selected team
               ListView.builder(
                 shrinkWrap: true,
-                itemCount: _teamList.length,
+                itemCount: _pokemonTeam.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: EdgeInsets.only(
                       top: SizeConfig.blockSizeVertical * .5,
                       bottom: SizeConfig.blockSizeVertical * .5,
                     ),
-                    child: FooterPokemonNode(
-                      key: UniqueKey(),
-                      pokemon: _teamList[index],
-                      // Swap Pokemon
-                      footerChild: PokemonActionButton(
-                        pokemon: _teamList[index],
-                        label: 'Swap Out',
-                        icon: Icon(
-                          Icons.swap_horiz_rounded,
-                          size: SizeConfig.blockSizeHorizontal * 5.0,
-                          color: Colors.white,
-                        ),
-                        onPressed: (newSwapPokemon) {
-                          setState(() {
-                            _changed = true;
-                            _teamList[index] = _swap;
-                            _swap = newSwapPokemon;
-                          });
-                        },
-                      ),
+                    child: PokemonNode.large(
+                      pokemon: _pokemonTeam[index],
+                      footer: _buildFooter(context, index),
                     ),
                   );
                 },
@@ -152,7 +156,7 @@ class _TeamSwapState extends State<TeamSwap> {
                 if (_changed) {
                   Navigator.pop(
                     context,
-                    _teamList,
+                    _pokemonTeam,
                   );
                 } else {
                   Navigator.pop(context);

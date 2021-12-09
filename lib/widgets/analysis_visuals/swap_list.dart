@@ -9,10 +9,9 @@ import '../../data/pokemon/pokemon_team.dart';
 import '../../data/pokemon/pokemon.dart';
 import '../../data/cup.dart';
 import '../nodes/pokemon_node.dart';
-import '../nodes/square_pokemon_node.dart';
 import '../../configs/size_config.dart';
 import '../buttons/pokemon_action_button.dart';
-import '../../screens/team_swap.dart';
+import '../../pages/team_swap.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -117,15 +116,7 @@ class SwapList extends StatelessWidget {
         ),
         child: PokemonNode.large(
           pokemon: counters[index],
-          nodeIndex: index,
-          onEmptyPressed: () {},
-          footer: Padding(
-            padding: EdgeInsets.only(
-              top: SizeConfig.blockSizeVertical * 1.0,
-              bottom: SizeConfig.blockSizeVertical * .5,
-            ),
-            child: _buildFooter(context, counters[index]),
-          ),
+          footer: _buildFooter(context, counters[index]),
         ),
       ),
       physics: const NeverScrollableScrollPhysics(),

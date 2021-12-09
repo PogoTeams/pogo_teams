@@ -1,6 +1,3 @@
-// Dart Imports
-import 'dart:ui';
-
 // Flutter Imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +9,9 @@ import 'package:flutter/widgets.dart';
 import '../configs/size_config.dart';
 import '../data/pokemon/pokemon.dart';
 import '../data/cup.dart';
+import '../widgets/pokemon_list.dart';
 import '../widgets/pogo_text_field.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
-import '../widgets/buttons/compact_pokemon_node_button.dart';
 import '../widgets/buttons/filter_button.dart';
 import '../data/globals.dart' as globals;
 
@@ -114,41 +111,6 @@ class _RankingsState extends State<Rankings>
     });
   }
 
-  // Build the scaffold for this page
-  Widget _buildScaffold(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: _buildScaffoldTitle(),
-      ),
-      body: _buildScaffoldBody(),
-    );
-  }
-
-  Widget _buildScaffoldTitle() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Text(
-          'Rankings',
-          style: TextStyle(
-            fontSize: SizeConfig.h2,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-
-        // Spacer
-        SizedBox(
-          width: SizeConfig.blockSizeHorizontal * 3.0,
-        ),
-
-        Icon(
-          Icons.bar_chart,
-          size: SizeConfig.blockSizeHorizontal * 6.0,
-        ),
-      ],
-    );
-  }
-
   Widget _buildScaffoldBody() {
     // Begin fade in animation
     _animController.forward();
@@ -171,7 +133,12 @@ class _RankingsState extends State<Rankings>
               SizedBox(
                 height: SizeConfig.blockSizeVertical * 2.0,
               ),
-              _buildPokemonList(),
+              // Build list
+              PokemonList(
+                pokemon: filteredPokemon,
+                onPokemonSelected: (_) {},
+                dropdowns: false,
+              ),
             ],
           ),
         ),
@@ -180,48 +147,27 @@ class _RankingsState extends State<Rankings>
   }
 
   Widget _buildDropdowns() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        // Dropdown for pvp cup selection
-        CupDropdown(
-          cup: cup,
-          onCupChanged: _onCupChanged,
-          width: SizeConfig.screenWidth * .7,
-        ),
+    return Padding(
+      padding: EdgeInsets.only(
+        left: SizeConfig.blockSizeHorizontal * 1.0,
+        right: SizeConfig.blockSizeHorizontal * 1.0,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Dropdown for pvp cup selection
+          CupDropdown(
+            cup: cup,
+            onCupChanged: _onCupChanged,
+            width: SizeConfig.screenWidth * .7,
+          ),
 
-        FilterButton(
-          onSelected: _filterCategory,
-          selectedCategory: _selectedCategory,
-          size: SizeConfig.blockSizeHorizontal * 11.0,
-        ),
-      ],
-    );
-  }
-
-  // The list of Pokemon based on categories and search input
-  Widget _buildPokemonList() {
-    return Expanded(
-      // Remove the upper silver padding that ListView contains by
-      // default in a Scaffold.
-      child: MediaQuery.removePadding(
-        context: context,
-        removeTop: true,
-        removeLeft: true,
-        removeRight: true,
-
-        // Build list
-        child: ListView.builder(
-          itemCount: filteredPokemon.length,
-          itemBuilder: (context, index) {
-            return CompactPokemonNodeButton(
-              pokemon: filteredPokemon[index],
-              onPressed: () {},
-              onLongPress: () {},
-            );
-          },
-          physics: const BouncingScrollPhysics(),
-        ),
+          FilterButton(
+            onSelected: _filterCategory,
+            selectedCategory: _selectedCategory,
+            size: SizeConfig.blockSizeHorizontal * 11.0,
+          ),
+        ],
       ),
     );
   }
@@ -252,6 +198,6 @@ class _RankingsState extends State<Rankings>
       filteredPokemon = pokemon;
     }
 
-    return _buildScaffold(context);
+    return _buildScaffoldBody();
   }
 }

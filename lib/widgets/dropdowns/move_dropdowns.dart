@@ -12,12 +12,12 @@ import '../../configs/size_config.dart';
 /*
 -------------------------------------------------------------------------------
 This class manages the 3 dropdown menu buttons cooresponding to a Pokemon's :
-Fast Move
-Charge Move 1
-Charge Move 2
+- Fast Move
+- Charge Move 1
+- Charge Move 2
 
-For each move is it's own dropdown, which dynamically renders the option given
-the Pokemon.
+For each move is it's own dropdown, which renders the options given the
+Pokemon's possible movesets.
 -------------------------------------------------------------------------------
 */
 
@@ -25,9 +25,11 @@ class MoveDropdowns extends StatefulWidget {
   MoveDropdowns({
     Key? key,
     required this.pokemon,
+    this.onChanged,
   }) : super(key: key);
 
   final Pokemon pokemon;
+  final VoidCallback? onChanged;
 
   // Lists of the moves a Pokemon can learn
   late final List<String> fastMoveNames = pokemon.getFastMoveIds();
@@ -95,7 +97,6 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
     }).toList();
   }
 
-  // Called on first build
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -103,7 +104,6 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
     _initializeMoveData();
   }
 
-  // Called on any consecutive build
   @override
   void didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -123,6 +123,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
           onChanged: (Move? newFastMove) {
             setState(() {
               widget.pokemon.updateSelectedFastMove(newFastMove);
+              if (widget.onChanged != null) widget.onChanged!();
             });
           },
         ),
@@ -134,6 +135,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
             setState(() {
               widget.pokemon.updateSelectedChargedMove(0, newChargedMove);
               _updateChargedMoveOptions();
+              if (widget.onChanged != null) widget.onChanged!();
             });
           },
         ),
@@ -145,6 +147,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
             setState(() {
               widget.pokemon.updateSelectedChargedMove(1, newChargedMove);
               _updateChargedMoveOptions();
+              if (widget.onChanged != null) widget.onChanged!();
             });
           },
         ),
@@ -213,7 +216,7 @@ class MoveDropdown extends StatelessWidget {
               color: Colors.white,
               width: 1.5,
             ),
-            borderRadius: BorderRadius.circular(100.0),
+            borderRadius: BorderRadius.circular(100),
             color: move.type.typeColor,
           ),
         ),

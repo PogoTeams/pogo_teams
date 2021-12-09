@@ -2,130 +2,193 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
 import 'empty_node.dart';
-import '../pvp_stats.dart';
-import '../colored_container.dart';
-import '../traits_icons.dart';
-import '../dropdowns/move_dropdowns.dart';
-import '../../data/pokemon/pokemon.dart';
-import '../../data/pokemon/pokemon_team.dart';
-import '../../data/cup.dart';
+import 'move_node.dart';
 import '../../configs/size_config.dart';
-import '../../screens/pokemon_search.dart';
+import '../../data/pokemon/pokemon.dart';
+import '../../data/cup.dart';
+import '../pvp_stats.dart';
+import '../dropdowns/move_dropdowns.dart';
+import '../traits_icons.dart';
+import '../colored_container.dart';
 
 /*
 -------------------------------------------------------------------------------
+Any Pokemon information being displayed in the app is done so through a
+PokemonNode. The node can take many different forms depending on the context.
 -------------------------------------------------------------------------------
 */
 
-class PokemonContainer extends StatefulWidget {
-  const PokemonContainer({
+class PokemonNode extends StatelessWidget {
+  PokemonNode.square({
     Key? key,
-    required this.onNodeChanged,
-    required this.nodeIndex,
-    required this.team,
-  }) : super(key: key);
+    required this.pokemon,
+    this.onPressed,
+    this.onEmptyPressed,
+    this.emptyTransparent = false,
+    this.padding,
+  }) : super(key: key) {
+    cup = null;
+    dropdowns = false;
 
-  final Function(int index, Pokemon?) onNodeChanged;
-  final int nodeIndex;
-  final PokemonTeam team;
+    width = SizeConfig.blockSizeHorizontal * 25.0;
+    height = SizeConfig.blockSizeHorizontal * 25.0;
 
-  @override
-  _PokemonContainerState createState() => _PokemonContainerState();
-}
+    if (pokemon == null) return;
 
-class _PokemonContainerState extends State<PokemonContainer> {
-  // Open a new app page that allows the user to search for a given Pokemon
-  // If a Pokemon is selected in that page, the Pokemon reference will be kept
-  // The node will then populate all data related to that Pokemon
-  _searchMode() async {
-    final newPokemon = await Navigator.push(
-      context,
-      MaterialPageRoute<Pokemon>(builder: (BuildContext context) {
-        return PokemonSearch(
-          team: widget.team,
-        );
-      }),
+    body = _SquareNodeBody(pokemon: pokemon!);
+  }
+
+  PokemonNode.small({
+    Key? key,
+    required this.pokemon,
+    this.onPressed,
+    this.onEmptyPressed,
+    this.emptyTransparent = false,
+    this.padding,
+    this.dropdowns = true,
+  }) : super(key: key) {
+    width = SizeConfig.screenWidth * .95;
+    height = SizeConfig.blockSizeVertical * 14.0;
+
+    body = _SmallNodeBody(
+      pokemon: pokemon!,
+      dropdowns: dropdowns,
     );
-
-    // If a pokemon was returned from the search page, update the node
-    // Should only be null when the user exits the search page using the app bar
-    if (newPokemon != null) {
-      widget.onNodeChanged(widget.nodeIndex, newPokemon);
-    }
   }
 
-  // Revert a PokemonNode back to an EmptyNode
-  _clearNode() {
-    widget.onNodeChanged(widget.nodeIndex, null);
+  PokemonNode.large({
+    Key? key,
+    required this.pokemon,
+    this.onPressed,
+    this.onEmptyPressed,
+    this.onMoveChanged,
+    this.cup,
+    this.footer,
+    this.emptyTransparent = false,
+    this.padding,
+  }) : super(key: key) {
+    width = SizeConfig.screenWidth * .95;
+    height = SizeConfig.screenHeight * .2;
+    dropdowns = false;
+
+    if (pokemon == null) return;
+
+    body = _LargeNodeBody(
+      pokemon: pokemon!,
+      cup: cup,
+      footer: footer,
+      onMoveChanged: onMoveChanged,
+    );
   }
+
+  final Pokemon? pokemon;
+  late final VoidCallback? onPressed;
+  late final VoidCallback? onEmptyPressed;
+  late final VoidCallback? onMoveChanged;
+
+  late final double width;
+  late final double height;
+
+  late final Cup? cup;
+
+  late final Widget body;
+  late final Widget? footer;
+  final bool emptyTransparent;
+  final EdgeInsets? padding;
+  late final bool dropdowns;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: SizeConfig.screenHeight * .2,
-
-      // If the Pokemon ref is null, build an empty node
-      // Otherwise build a Pokemon node with cooresponding data
-      child: (widget.team.isNull(widget.nodeIndex)
+      width: width,
+      height: height,
+      child: pokemon == null
           ? EmptyNode(
-              onPressed: _searchMode,
+              onPressed: onEmptyPressed,
+              emptyTransparent: emptyTransparent,
             )
-          : PokemonNerd(
-              nodeIndex: widget.nodeIndex,
-              pokemon: widget.team.getPokemon(widget.nodeIndex),
-              cup: widget.team.cup,
-              searchMode: _searchMode,
-              clear: _clearNode,
-            )),
+          : ColoredContainer(
+              padding: padding ??
+                  EdgeInsets.only(
+                    top: SizeConfig.blockSizeHorizontal * .5,
+                    left: SizeConfig.blockSizeHorizontal * 2.0,
+                    right: SizeConfig.blockSizeHorizontal * 2.0,
+                    bottom: SizeConfig.blockSizeHorizontal * .5,
+                  ),
+              pokemon: pokemon!,
+              child: onPressed == null
+                  ? body
+                  : MaterialButton(
+                      onPressed: onPressed,
+                      child: body,
+                    ),
+            ),
     );
   }
 }
 
-class PokemonNerd extends StatelessWidget {
-  const PokemonNerd({
+class _SquareNodeBody extends StatelessWidget {
+  const _SquareNodeBody({
     Key? key,
-    required this.nodeIndex,
     required this.pokemon,
-    required this.cup,
-    required this.searchMode,
-    required this.clear,
   }) : super(key: key);
 
-  final int nodeIndex;
   final Pokemon pokemon;
-  final Cup cup;
 
-  // Search for a new Pokemon
-  final VoidCallback searchMode;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        // Pokemon name
+        Text(
+          pokemon.speciesName,
+          textAlign: TextAlign.center,
+        ),
 
-  // Remove the Pokemon and restore to an EmptyNode
-  final VoidCallback clear;
+        // A line divider
+        Divider(
+          color: Colors.white,
+          thickness: SizeConfig.blockSizeHorizontal * 0.2,
+        ),
+
+        MoveDots(moveColors: pokemon.getMoveColors()),
+      ],
+    );
+  }
+}
+
+class _SmallNodeBody extends StatelessWidget {
+  const _SmallNodeBody({
+    Key? key,
+    required this.pokemon,
+    required this.dropdowns,
+  }) : super(key: key);
+
+  final Pokemon pokemon;
+  final bool dropdowns;
 
   // Display the Pokemon's name perfect PVP ivs and typing icon(s)
-  Row _buildNodeHeader(Pokemon pokemon, BuildContext context) {
+  Row _buildNodeHeader(Pokemon pokemon) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Pokemon name
-        Container(
-          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
-          child: Text(
-            pokemon.speciesName,
-            style: TextStyle(
-              fontSize: SizeConfig.h1,
-              fontWeight: FontWeight.bold,
-            ),
+        Text(
+          pokemon.speciesName,
+          style: TextStyle(
+            fontSize: SizeConfig.h1,
+            fontWeight: FontWeight.bold,
           ),
         ),
 
-        // The perfect IVs for this Pokemon given the selected cup
-        PvpStats(
-          perfectStats: pokemon.getPerfectPvpStats(cup.cp),
-        ),
+        // Traits Icons
+        TraitsIcons(pokemon: pokemon),
 
         // Typing icon(s)
         Container(
@@ -139,29 +202,82 @@ class PokemonNerd extends StatelessWidget {
     );
   }
 
-  // Build a row of icon buttons at the bottom of a Pokemon's Node
-  Row _buildNodeFooter() {
-    // Size of the footer icons
-    final double iconSize = SizeConfig.blockSizeHorizontal * 6.2;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        top: SizeConfig.blockSizeVertical * .5,
+        left: SizeConfig.blockSizeHorizontal * 2.0,
+        right: SizeConfig.blockSizeHorizontal * 2.0,
+        bottom: SizeConfig.blockSizeVertical * 1.5,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildNodeHeader(pokemon),
 
+          // A line divider
+          Divider(
+            color: Colors.white,
+            thickness: SizeConfig.blockSizeHorizontal * 0.2,
+          ),
+
+          // The dropdowns for the Pokemon's moves
+          // Defaults to the most meta relavent moves
+          dropdowns
+              ? MoveDropdowns(pokemon: pokemon)
+              : MoveNodes(pokemon: pokemon),
+        ],
+      ),
+    );
+  }
+}
+
+class _LargeNodeBody extends StatelessWidget {
+  const _LargeNodeBody({
+    Key? key,
+    required this.pokemon,
+    required this.cup,
+    required this.footer,
+    this.onMoveChanged,
+  }) : super(key: key);
+
+  final Pokemon pokemon;
+  final Cup? cup;
+  final Widget? footer;
+  final VoidCallback? onMoveChanged;
+
+  // Display the Pokemon's name perfect PVP ivs and typing icon(s)
+  Row _buildNodeHeader(Pokemon pokemon, Cup? cup) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
-          onPressed: clear,
-          icon: const Icon(Icons.clear),
-          tooltip: 'remove this pokemon from your team',
-          iconSize: iconSize,
+        // Pokemon name
+        Text(
+          pokemon.speciesName,
+          style: TextStyle(
+            fontSize: SizeConfig.h1,
+            fontWeight: FontWeight.bold,
+          ),
         ),
 
         // Traits Icons
         TraitsIcons(pokemon: pokemon),
 
-        IconButton(
-          onPressed: searchMode,
-          icon: const Icon(Icons.swap_horiz),
-          tooltip: 'search for a different pokemon',
-          iconSize: iconSize,
+        // The perfect IVs for this Pokemon given the selected cup
+        cup == null
+            ? Container()
+            : PvpStats(
+                perfectStats: pokemon.getPerfectPvpStats(cup.cp),
+              ),
+
+        // Typing icon(s)
+        Container(
+          alignment: Alignment.topRight,
+          height: SizeConfig.blockSizeHorizontal * 8.0,
+          child: Row(
+            children: pokemon.getTypeIcons(),
+          ),
         ),
       ],
     );
@@ -169,19 +285,18 @@ class PokemonNerd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredContainer(
+    return Padding(
       padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeHorizontal * 1.0,
-        right: SizeConfig.blockSizeHorizontal * 2.2,
-        bottom: SizeConfig.blockSizeHorizontal * .5,
-        left: SizeConfig.blockSizeHorizontal * 2.2,
+        top: SizeConfig.blockSizeVertical * 1.0,
+        left: SizeConfig.blockSizeHorizontal * 2.0,
+        right: SizeConfig.blockSizeHorizontal * 2.0,
+        bottom: SizeConfig.blockSizeVertical * .2,
       ),
-      pokemon: pokemon,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Pokemon name, perfect IVs, and typing icons
-          _buildNodeHeader(pokemon, context),
+          _buildNodeHeader(pokemon, cup),
 
           // A line divider
           Divider(
@@ -191,163 +306,12 @@ class PokemonNerd extends StatelessWidget {
 
           // The dropdowns for the Pokemon's moves
           // Defaults to the most meta relavent moves
-          MoveDropdowns(pokemon: pokemon),
-
-          // Icon buttons to remove, replace or toggle shadow of a Pokemon
-          _buildNodeFooter(),
-        ],
-      ),
-    );
-  }
-}
-
-class CompactPokemonNode extends StatelessWidget {
-  const CompactPokemonNode({
-    Key? key,
-    required this.pokemon,
-  }) : super(key: key);
-
-  final Pokemon pokemon;
-
-  // The Pokemon name and type icon(s)
-  Row _buildNodeHeader(Pokemon pokemon) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Pokemon name
-        Container(
-          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
-          alignment: Alignment.topLeft,
-          child: Text(
-            pokemon.speciesName,
-            style: TextStyle(
-              fontSize: SizeConfig.h1,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-
-        // Traits Icons
-        TraitsIcons(pokemon: pokemon),
-
-        // Typing icon(s)
-        Container(
-          alignment: Alignment.topRight,
-          height: SizeConfig.blockSizeHorizontal * 8.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: pokemon.getTypeIcons(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ColoredContainer(
-      padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeHorizontal * 1.3,
-        right: SizeConfig.blockSizeHorizontal * 2.2,
-        bottom: SizeConfig.blockSizeHorizontal * 5.0,
-        left: SizeConfig.blockSizeHorizontal * 2.2,
-      ),
-      pokemon: pokemon,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildNodeHeader(pokemon),
-
-          // A line divider
-          Divider(
-            color: Colors.white,
-            thickness: SizeConfig.blockSizeHorizontal * 0.2,
+          MoveDropdowns(
+            pokemon: pokemon,
+            onChanged: onMoveChanged,
           ),
 
-          // The dropdowns for the Pokemon's moves
-          // Defaults to the most meta relavent moves
-          MoveDropdowns(pokemon: pokemon),
-        ],
-      ),
-    );
-  }
-}
-
-class FooterPokemonNode extends StatelessWidget {
-  const FooterPokemonNode({
-    Key? key,
-    required this.pokemon,
-    required this.footerChild,
-  }) : super(key: key);
-
-  final Pokemon pokemon;
-  final Widget footerChild;
-
-  // The Pokemon name and type icon(s)
-  Row _buildNodeHeader(Pokemon pokemon) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Pokemon name
-        Container(
-          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
-          alignment: Alignment.topLeft,
-          child: Text(
-            pokemon.speciesName,
-            style: TextStyle(
-              fontSize: SizeConfig.h1,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-
-        // Traits Icons
-        TraitsIcons(pokemon: pokemon),
-
-        // Typing icon(s)
-        Container(
-          alignment: Alignment.topRight,
-          height: SizeConfig.blockSizeHorizontal * 8.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: pokemon.getTypeIcons(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ColoredContainer(
-      padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeHorizontal * 1.3,
-        right: SizeConfig.blockSizeHorizontal * 2.2,
-        bottom: SizeConfig.blockSizeHorizontal * 5.0,
-        left: SizeConfig.blockSizeHorizontal * 2.2,
-      ),
-      pokemon: pokemon,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildNodeHeader(pokemon),
-
-          // A line divider
-          Divider(
-            color: Colors.white,
-            thickness: SizeConfig.blockSizeHorizontal * 0.2,
-          ),
-
-          // The dropdowns for the Pokemon's moves
-          // Defaults to the most meta relavent moves
-          MoveDropdowns(pokemon: pokemon),
-
-          // Spacer
-          SizedBox(
-            height: SizeConfig.blockSizeVertical * 2.0,
-          ),
-
-          footerChild,
+          footer ?? Container(),
         ],
       ),
     );

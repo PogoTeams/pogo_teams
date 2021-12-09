@@ -2,22 +2,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pogo_teams/screens/battle_log.dart';
-import 'package:pogo_teams/screens/team_builder_search.dart';
-
 // Package Import
 import 'package:provider/provider.dart';
 
 // Local Imports
+import 'team_builder_search.dart';
 import '../../widgets/nodes/pokemon_node.dart';
-import '../../widgets/traits_icons.dart';
-import '../../widgets/nodes/square_pokemon_node.dart';
 import '../../widgets/dropdowns/cup_dropdown.dart';
 import '../../widgets/dropdowns/team_size_dropdown.dart';
 import '../../widgets/team_analysis.dart';
 import '../../widgets/buttons/analyze_button.dart';
 import '../../data/pokemon/pokemon_team.dart';
 import '../../data/pokemon/pokemon.dart';
+import '../../data/cup.dart';
 import '../../configs/size_config.dart';
 
 /*
@@ -52,7 +49,66 @@ class _TeamEditState extends State<TeamEdit>
   // The team at to edit
   late PokemonTeam _team;
 
-  final _scrollController = ScrollController();
+  // SETTER CALLBACKS
+  void _onCupChanged(String? newCup) {
+    if (newCup == null) return;
+
+    setState(() {
+      _team.setCup(newCup);
+      _provider.notify();
+    });
+  }
+
+  void _onTeamSizeChanged(int? newSize) {
+    if (newSize == null) return;
+
+    setState(() {
+      _team.setTeamSize(newSize);
+      _provider.notify();
+    });
+  }
+
+  void _onPokemonChanged(int index, Pokemon? newPokemon) {
+    setState(() {
+      _team.setPokemon(index, newPokemon);
+      _provider.notify();
+    });
+  }
+
+  void _onTeamChanged(List<Pokemon?> newPokemonTeam) {
+    setState(() {
+      _team.setTeam(newPokemonTeam);
+      _provider.notify();
+    });
+  }
+
+  void _searchMode(int nodeIndex) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) {
+        return TeamBuilderSearch(
+          team: _team,
+          teamIndex: widget.teamIndex,
+          focusIndex: nodeIndex,
+        );
+      }),
+    );
+  }
+
+  // Scroll to the analysis portion of the screen
+  void _onAnalyzePressed() async {
+    // If the team is empty, no action will be taken
+    if (_team.isEmpty()) return;
+
+    final newTeam = await Navigator.push(
+      context,
+      MaterialPageRoute<List<Pokemon?>>(builder: (BuildContext context) {
+        return TeamAnalysis(team: _team);
+      }),
+    );
+
+    if (newTeam != null) _onTeamChanged(newTeam);
+  }
 
   AppBar _buildAppBar() {
     return AppBar(
@@ -83,81 +139,6 @@ class _TeamEditState extends State<TeamEdit>
     );
   }
 
-  // SETTER CALLBACKS
-  void _onCupChanged(String? newCup) {
-    if (newCup == null) return;
-
-    setState(() {
-      _team.setCup(newCup);
-      _provider.notify();
-    });
-  }
-
-  void _onTeamSizeChanged(int? newSize) {
-    if (newSize == null) return;
-
-    setState(() {
-      _team.setTeamSize(newSize);
-      _provider.notify();
-    });
-  }
-
-  void _onPokemonChanged(int index, Pokemon? newPokemon) {
-    setState(() {
-      _team.setPokemon(index, newPokemon);
-      _provider.notify();
-    });
-  }
-
-  void _onTeamChanged(List<Pokemon> newPokemonTeam) {
-    setState(() {
-      _team.setTeam(newPokemonTeam);
-
-      // Scroll to the top of the page
-      _scrollController.animateTo(
-        0.0,
-        duration: const Duration(seconds: 2),
-        curve: Curves.easeInOut,
-      );
-
-      _provider.notify();
-    });
-  }
-
-  _searchMode(int nodeIndex) async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) {
-        return TeamBuilderSearch(
-          team: _team,
-          teamIndex: widget.teamIndex,
-          focusIndex: nodeIndex,
-        );
-      }),
-    );
-  }
-
-  // Scroll to the analysis portion of the screen
-  void _onAnalyzePressed() async {
-    // If the team is empty, no action will be taken
-    if (_team.isEmpty()) return;
-
-    setState(() {
-      _scrollController.animateTo(
-        SizeConfig.screenHeight * (_team.team.length == 3 ? .78 : 1.42),
-        duration: const Duration(seconds: 2),
-        curve: Curves.easeInOut,
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-
-    super.dispose();
-  }
-
   // Build a row of icon buttons at the bottom of a Pokemon's Node
   // If the Pokemon in question is null, this footer is also null
   Widget? _buildNodeFooter(Pokemon? pokemon, int nodeIndex) {
@@ -185,6 +166,51 @@ class _TeamEditState extends State<TeamEdit>
     );
   }
 
+  // Build a cup dropdown and team size dropdown
+  Widget _buildHeaderDropdowns(Cup cup, int teamLength) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Dropdown for pvp cup selection
+        CupDropdown(
+          cup: cup,
+          onCupChanged: _onCupChanged,
+          width: SizeConfig.screenWidth * .7,
+        ),
+
+        // Dropdown to select team size
+        TeamSizeDropdown(
+          size: teamLength,
+          onTeamSizeChanged: _onTeamSizeChanged,
+        ),
+      ],
+    );
+  }
+
+  // Build the list of either 3 or 6 PokemonNodes that make up this team
+  Widget _buildTeamNodes(List<Pokemon?> pokemonTeam) {
+    return ListView(
+      shrinkWrap: true,
+      children: List.generate(
+        pokemonTeam.length,
+        (index) => Padding(
+          padding: EdgeInsets.only(
+            top: SizeConfig.blockSizeVertical * 1.1,
+            bottom: SizeConfig.blockSizeVertical * 1.1,
+          ),
+          child: PokemonNode.large(
+            pokemon: pokemonTeam[index],
+            onEmptyPressed: () => _searchMode(index),
+            onMoveChanged: () => _provider.notify(),
+            cup: _team.cup,
+            footer: _buildNodeFooter(pokemonTeam[index], index),
+          ),
+        ),
+      ),
+      physics: const NeverScrollableScrollPhysics(),
+    );
+  }
+
   // Keeps page state upon swiping away in PageView
   @override
   bool get wantKeepAlive => true;
@@ -198,25 +224,6 @@ class _TeamEditState extends State<TeamEdit>
     _team = _provider.pokemonTeams[widget.teamIndex];
 
     final pokemonTeam = _team.team;
-    final cup = _team.cup;
-
-    // The list of either 3 or 6 PokemonNodes that make up this team
-    List<Widget> teamNodes = List.generate(
-      pokemonTeam.length,
-      (index) => Padding(
-        padding: EdgeInsets.only(
-          top: SizeConfig.blockSizeVertical * 1.1,
-          bottom: SizeConfig.blockSizeVertical * 1.1,
-        ),
-        child: PokemonNode.large(
-          pokemon: pokemonTeam[index],
-          cup: _team.cup,
-          nodeIndex: index,
-          onEmptyPressed: () => _searchMode(index),
-          footer: _buildNodeFooter(pokemonTeam[index], index),
-        ),
-      ),
-    );
 
     return Scaffold(
       appBar: _buildAppBar(),
@@ -227,25 +234,9 @@ class _TeamEditState extends State<TeamEdit>
           right: SizeConfig.blockSizeHorizontal * 2.0,
         ),
         child: ListView(
-          controller: _scrollController,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Dropdown for pvp cup selection
-                CupDropdown(
-                  cup: cup,
-                  onCupChanged: _onCupChanged,
-                  width: SizeConfig.screenWidth * .7,
-                ),
-
-                // Dropdown to select team size
-                TeamSizeDropdown(
-                  size: pokemonTeam.length,
-                  onTeamSizeChanged: _onTeamSizeChanged,
-                ),
-              ],
-            ),
+            // Cup and team size dropdown menus at the top of the page
+            _buildHeaderDropdowns(_team.cup, pokemonTeam.length),
 
             // Spacer
             SizedBox(
@@ -253,28 +244,16 @@ class _TeamEditState extends State<TeamEdit>
             ),
 
             // The list of team nodes
-            ListView(
-              shrinkWrap: true,
-              children: teamNodes,
-              physics: const NeverScrollableScrollPhysics(),
-            ),
+            _buildTeamNodes(pokemonTeam),
 
             // Spacer
             SizedBox(
-              height: SizeConfig.blockSizeVertical * 1.5,
+              height: SizeConfig.blockSizeVertical * 2.0,
             ),
 
             AnalyzeButton(
-              key: UniqueKey(),
               isEmpty: _team.isEmpty(),
               onPressed: _onAnalyzePressed,
-            ),
-
-            // The team analysis content
-            TeamAnalysis(
-              key: UniqueKey(),
-              team: _team,
-              onTeamChanged: _onTeamChanged,
             ),
           ],
         ),
