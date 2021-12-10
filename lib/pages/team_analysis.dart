@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 // Local Imports
-import 'analysis_visuals/swap_list.dart';
-import 'analysis_visuals/type_coverage.dart';
+import '../widgets/analysis/swap_list.dart';
+import '../widgets/analysis/type_coverage.dart';
 import '../widgets/nodes/pokemon_node.dart';
 import '../data/pokemon/pokemon.dart';
 import '../data/pokemon/pokemon_team.dart';
@@ -145,23 +145,21 @@ class _TeamAnalysisState extends State<TeamAnalysis> {
   Widget _buildScaffold(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: SizeConfig.blockSizeHorizontal * 2.0,
-            right: SizeConfig.blockSizeHorizontal * 2.0,
-          ),
-          child: ListView(
-            controller: _scrollController,
-            children: [
-              // Spacer
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 1.0,
-              ),
-              _buildPokemonNodes(widget.team.getPokemonTeam()),
-              _buildPanelList(),
-            ],
-          ),
+      body: Padding(
+        padding: EdgeInsets.only(
+          left: SizeConfig.blockSizeHorizontal * 2.0,
+          right: SizeConfig.blockSizeHorizontal * 2.0,
+        ),
+        child: ListView(
+          controller: _scrollController,
+          children: [
+            // Spacer
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 1.0,
+            ),
+            _buildPokemonNodes(widget.team.getPokemonTeam()),
+            _buildPanelList(),
+          ],
         ),
       ),
     );
@@ -172,7 +170,7 @@ class _TeamAnalysisState extends State<TeamAnalysis> {
       leading: IconButton(
         onPressed: () => Navigator.pop(
           context,
-          widget.team.team,
+          widget.team.pokemonTeam,
         ),
         icon: const Icon(Icons.arrow_back_ios),
       ),
@@ -216,6 +214,9 @@ class _TeamAnalysisState extends State<TeamAnalysis> {
           ),
           child: PokemonNode.small(
             pokemon: pokemonTeam[index],
+            onMoveChanged: () => setState(() {
+              _initializeExpansionPanels();
+            }),
           ),
         ),
       ),
@@ -265,9 +266,6 @@ class _TeamAnalysisState extends State<TeamAnalysis> {
 
   @override
   Widget build(BuildContext context) {
-    // Only render analysis if there is at least 1 Pokemon
-    if (widget.team.isEmpty()) return Container();
-
     // Build an expansion panel for each category of the analysis
     return _buildScaffold(context);
   }
@@ -284,4 +282,134 @@ class PanelStates {
   Widget expandedValue;
   Widget headerValue;
   bool isExpanded;
+}
+
+class OpponentTeamAnalysis extends StatelessWidget {
+  const OpponentTeamAnalysis({
+    Key? key,
+    required this.team,
+  }) : super(key: key);
+
+  final PokemonTeam team;
+
+  // Setup the list of expansion panels given the PokemonTeam
+  Widget _buildTypeCoverage() {
+    final List<Pokemon> pokemonTeam = team.getPokemonTeam();
+
+    final List<double> teamEffectiveness = team.effectiveness;
+
+    // Get coverage lists
+    final defense = TypeMaster.getDefenseCoverage(teamEffectiveness);
+    final offense = TypeMaster.getOffenseCoverage(pokemonTeam);
+
+    // Filter to the key values
+    List<Pair<Type, double>> defenseThreats =
+        defense.where((typeData) => typeData.b > pokemonTeam.length).toList();
+
+    List<Pair<Type, double>> offenseCoverage =
+        offense.where((pair) => pair.b > pokemonTeam.length).toList();
+
+    // Get an overall effectiveness for the bar graph display
+    List<Pair<Type, double>> netEffectiveness =
+        TypeMaster.getMovesWeightedEffectiveness(
+            defense, offense, pokemonTeam.length);
+
+    offenseCoverage.sort((prev, curr) => ((curr.b - prev.b) * 1000).toInt());
+
+    defenseThreats.sort((prev, curr) => ((curr.b - prev.b) * 1000).toInt());
+
+    return TypeCoverage(
+      netEffectiveness: netEffectiveness,
+      defenseThreats: defenseThreats,
+      offenseCoverage: offenseCoverage,
+      teamSize: pokemonTeam.length,
+    );
+  }
+
+  // Build the scaffold for this page
+  Widget _buildScaffold(BuildContext context) {
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: Padding(
+        padding: EdgeInsets.only(
+          left: SizeConfig.blockSizeHorizontal * 2.0,
+          right: SizeConfig.blockSizeHorizontal * 2.0,
+        ),
+        child: ListView(
+          children: [
+            // Spacer
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 1.0,
+            ),
+
+            // Opponent team
+            _buildPokemonNodes(team.getPokemonTeam()),
+
+            // Spacer
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2.0,
+            ),
+
+            // Type coverage widgets
+            _buildTypeCoverage(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Page title
+          Text(
+            'Opponent Team Analysis',
+            style: TextStyle(
+              fontSize: SizeConfig.h2,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+
+          // Spacer
+          SizedBox(
+            width: SizeConfig.blockSizeHorizontal * 3.0,
+          ),
+
+          // Page icon
+          Icon(
+            Icons.analytics,
+            size: SizeConfig.blockSizeHorizontal * 6.0,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Build the list of either 3 or 6 PokemonNodes that make up this team
+  Widget _buildPokemonNodes(List<Pokemon> pokemonTeam) {
+    return ListView(
+      shrinkWrap: true,
+      children: List.generate(
+        pokemonTeam.length,
+        (index) => Padding(
+          padding: EdgeInsets.only(
+            top: SizeConfig.blockSizeVertical * .5,
+            bottom: SizeConfig.blockSizeVertical * .5,
+          ),
+          child: PokemonNode.small(
+            pokemon: pokemonTeam[index],
+            dropdowns: false,
+          ),
+        ),
+      ),
+      physics: const NeverScrollableScrollPhysics(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildScaffold(context);
+  }
 }

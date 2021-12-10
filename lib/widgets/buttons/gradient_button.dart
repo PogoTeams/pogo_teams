@@ -22,11 +22,13 @@ class GradientButton extends StatelessWidget {
     required this.onPressed,
     required this.child,
     required this.width,
+    required this.height,
   }) : super(key: key);
 
   final VoidCallback onPressed;
   final Widget child;
   final double width;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class GradientButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       width: width,
-      height: SizeConfig.blockSizeVertical * 8.5,
+      height: height,
       child: MaterialButton(
         child: child,
         onPressed: onPressed,

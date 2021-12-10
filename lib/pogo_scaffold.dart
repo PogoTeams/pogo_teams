@@ -14,8 +14,7 @@ import 'package:provider/provider.dart';
 import 'configs/size_config.dart';
 import 'pages/team_builder/team_builder.dart';
 import 'pages/rankings.dart';
-import 'pages/battle_log.dart';
-import 'data/pokemon/pokemon_team.dart';
+import 'data/teams_provider.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -31,24 +30,34 @@ class PogoScaffold extends StatefulWidget {
   _PogoScaffoldState createState() => _PogoScaffoldState();
 }
 
-class _PogoScaffoldState extends State<PogoScaffold> {
+class _PogoScaffoldState extends State<PogoScaffold>
+    with SingleTickerProviderStateMixin {
   // All pages that are accessible at the top level of the app
   final Map<String, Widget> _pages = {
-    'Team Builder': Consumer<PokemonTeams>(
+    'Team Builder': Consumer<TeamsProvider>(
         builder: (context, value, child) => const TeamBuilder()),
-    'Battle Log': const BattleLog(),
     'Rankings': const Rankings(),
   };
 
   // Icons cooresponding to the pages
   final Map<String, IconData> _icons = {
     'Team Builder': Icons.build_circle,
-    'Battle Log': Icons.query_stats,
     'Rankings': Icons.bar_chart,
   };
 
   // Used to navigate between pages by key
   String _navKey = 'Team Builder';
+
+  // Fade in animation on page startup
+  late final AnimationController _animController = AnimationController(
+    duration: const Duration(seconds: 1),
+    vsync: this,
+  );
+
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _animController,
+    curve: Curves.easeIn,
+  );
 
   // Build the app bar with the current page title, and icon
   AppBar _buildAppBar() {
@@ -82,9 +91,27 @@ class _PogoScaffoldState extends State<PogoScaffold> {
 
   // Callback for navigating to a new page in the app
   void _onNavSelected(String navKey) {
+    // Reset and replay the fade in animation
+    _animController.reset();
+    _animController.forward();
+
     setState(() {
       _navKey = navKey;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Begin fade in animation
+    _animController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
   }
 
   @override
@@ -97,12 +124,15 @@ class _PogoScaffoldState extends State<PogoScaffold> {
       drawer: PogoDrawer(
         onNavSelected: _onNavSelected,
       ),
-      body: Padding(
-        padding: EdgeInsets.only(
-          left: SizeConfig.blockSizeHorizontal * 2.0,
-          right: SizeConfig.blockSizeHorizontal * 2.0,
+      body: FadeTransition(
+        opacity: _animation,
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: SizeConfig.blockSizeHorizontal * 2.0,
+            right: SizeConfig.blockSizeHorizontal * 2.0,
+          ),
+          child: _pages[_navKey],
         ),
-        child: _pages[_navKey],
       ),
     );
   }

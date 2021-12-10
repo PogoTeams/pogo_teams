@@ -97,36 +97,34 @@ class _PokemonSearchState extends State<PokemonSearch> {
   // Build the scaffold for this page
   Widget _buildScaffold(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: SizeConfig.blockSizeVertical * 1.0,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              PogoTextField(controller: _searchController),
+      body: Padding(
+        padding: EdgeInsets.only(
+          top: SizeConfig.blockSizeVertical * 1.0,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            PogoTextField(controller: _searchController),
 
-              // Horizontal divider
-              Divider(
-                height: SizeConfig.blockSizeVertical * 5.0,
-                thickness: SizeConfig.blockSizeHorizontal * 1.0,
-                indent: SizeConfig.blockSizeHorizontal * 5.0,
-                endIndent: SizeConfig.blockSizeHorizontal * 5.0,
-              ),
+            // Horizontal divider
+            Divider(
+              height: SizeConfig.blockSizeVertical * 5.0,
+              thickness: SizeConfig.blockSizeHorizontal * 1.0,
+              indent: SizeConfig.blockSizeHorizontal * 5.0,
+              endIndent: SizeConfig.blockSizeHorizontal * 5.0,
+            ),
 
-              // The list of Pokemon based on categories and search input
-              PokemonList(
-                pokemon: filteredPokemon,
-                onPokemonSelected: (pokemon) {
-                  Navigator.pop(
-                    context,
-                    Pokemon.from(pokemon),
-                  );
-                },
-              ),
-            ],
-          ),
+            // The list of Pokemon based on categories and search input
+            PokemonList(
+              pokemon: filteredPokemon,
+              onPokemonSelected: (pokemon) {
+                Navigator.pop(
+                  context,
+                  Pokemon.from(pokemon),
+                );
+              },
+            ),
+          ],
         ),
       ),
 

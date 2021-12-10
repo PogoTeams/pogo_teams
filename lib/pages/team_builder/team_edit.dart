@@ -7,15 +7,16 @@ import 'package:provider/provider.dart';
 
 // Local Imports
 import 'team_builder_search.dart';
+import '../team_analysis.dart';
+import '../../configs/size_config.dart';
 import '../../widgets/nodes/pokemon_node.dart';
 import '../../widgets/dropdowns/cup_dropdown.dart';
 import '../../widgets/dropdowns/team_size_dropdown.dart';
-import '../../widgets/team_analysis.dart';
-import '../../widgets/buttons/analyze_button.dart';
+import '../../widgets/buttons/gradient_button.dart';
 import '../../data/pokemon/pokemon_team.dart';
 import '../../data/pokemon/pokemon.dart';
+import '../../data/teams_provider.dart';
 import '../../data/cup.dart';
-import '../../configs/size_config.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -44,7 +45,7 @@ class TeamEdit extends StatefulWidget {
 class _TeamEditState extends State<TeamEdit>
     with AutomaticKeepAliveClientMixin {
   // Used to manually notify parent listeners that use this team
-  late PokemonTeams _provider;
+  late TeamsProvider _provider;
 
   // The team at to edit
   late PokemonTeam _team;
@@ -82,17 +83,23 @@ class _TeamEditState extends State<TeamEdit>
     });
   }
 
-  void _searchMode(int nodeIndex) {
-    Navigator.push(
+  void _searchMode(int nodeIndex) async {
+    final _newTeam = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (BuildContext context) {
+      MaterialPageRoute<PokemonTeam>(builder: (BuildContext context) {
         return TeamBuilderSearch(
           team: _team,
-          teamIndex: widget.teamIndex,
           focusIndex: nodeIndex,
         );
       }),
     );
+
+    if (_newTeam != null) {
+      setState(() {
+        Provider.of<TeamsProvider>(context, listen: false)
+            .setTeamAt(widget.teamIndex, _newTeam);
+      });
+    }
   }
 
   // Scroll to the analysis portion of the screen
@@ -220,10 +227,10 @@ class _TeamEditState extends State<TeamEdit>
     super.build(context);
 
     // Provider retrieval
-    _provider = Provider.of<PokemonTeams>(context);
-    _team = _provider.pokemonTeams[widget.teamIndex];
+    _provider = Provider.of<TeamsProvider>(context);
+    _team = _provider.builderTeams[widget.teamIndex];
 
-    final pokemonTeam = _team.team;
+    final pokemonTeam = _team.pokemonTeam;
 
     return Scaffold(
       appBar: _buildAppBar(),
@@ -250,14 +257,35 @@ class _TeamEditState extends State<TeamEdit>
             SizedBox(
               height: SizeConfig.blockSizeVertical * 2.0,
             ),
-
-            AnalyzeButton(
-              isEmpty: _team.isEmpty(),
-              onPressed: _onAnalyzePressed,
-            ),
           ],
         ),
       ),
+      floatingActionButton: _team.isEmpty()
+          ? Container()
+          : GradientButton(
+              onPressed: _onAnalyzePressed,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Analyze Team',
+                    style: TextStyle(
+                      fontSize: SizeConfig.h2,
+                    ),
+                  ),
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 5.0,
+                  ),
+                  Icon(
+                    Icons.analytics,
+                    size: SizeConfig.blockSizeHorizontal * 7.0,
+                  ),
+                ],
+              ),
+              width: SizeConfig.screenWidth * .85,
+              height: SizeConfig.blockSizeVertical * 8.5,
+            ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

@@ -1,5 +1,5 @@
-// Flutter Imports
-import 'package:flutter/foundation.dart';
+// Dart Imports
+import 'dart:math';
 
 // Local Imports
 import 'pokemon.dart';
@@ -20,7 +20,20 @@ the app.
 // Every team page manages one instance of this class
 class PokemonTeam {
   // The list of 3 pokemon references that make up the team
-  List<Pokemon?> team = List.filled(3, null);
+  List<Pokemon?> pokemonTeam = List.filled(3, null);
+
+  // A list of logged opponent teams on this team
+  // The user can report wins, ties, and losses given this list
+  List<PokemonTeam> logs = List.empty(growable: true);
+
+  // For logging opponent teams, this value can either be :
+  // Win
+  // Tie
+  // Loss
+  String winLossKey = 'Win';
+
+  // If true, the team cannot be removed or changed
+  bool locked = false;
 
   // A list of this pokemon team's net effectiveness
   List<double> effectiveness = List.generate(
@@ -34,8 +47,8 @@ class PokemonTeam {
 
   // Make a copy of the newTeam, keeping the size of the original team
   void setTeam(List<Pokemon?> newTeam) {
-    team = List.generate(
-        team.length, (index) => index < newTeam.length ? newTeam[index] : null);
+    pokemonTeam = List.generate(pokemonTeam.length,
+        (index) => index < newTeam.length ? newTeam[index] : null);
 
     _updateEffectiveness();
   }
@@ -43,30 +56,30 @@ class PokemonTeam {
   // Set the specified Pokemon in the team by the specified index
   void setPokemon(int index, Pokemon? pokemon) {
     if (pokemon == null) {
-      team[index] = null;
+      pokemonTeam[index] = null;
     } else {
-      team[index] = Pokemon.from(pokemon);
+      pokemonTeam[index] = Pokemon.from(pokemon);
     }
     _updateEffectiveness();
   }
 
   // Get the list of non-null Pokemon
   List<Pokemon> getPokemonTeam() {
-    return team.whereType<Pokemon>().toList();
+    return pokemonTeam.whereType<Pokemon>().toList();
   }
 
   // Get the Pokemon ref at the given index
   Pokemon getPokemon(int index) {
-    return team[index] as Pokemon;
+    return pokemonTeam[index] as Pokemon;
   }
 
   // Add newPokemon if there is free space in the team
   void addPokemon(Pokemon newPokemon) {
     bool added = false;
 
-    for (int i = 0; i < team.length && !added; ++i) {
-      if (team[i] == null) {
-        team[i] = newPokemon;
+    for (int i = 0; i < pokemonTeam.length && !added; ++i) {
+      if (pokemonTeam[i] == null) {
+        pokemonTeam[i] = newPokemon;
         added = true;
       }
     }
@@ -77,14 +90,14 @@ class PokemonTeam {
 
   // True if the Pokemon ref is null at the given index
   bool isNull(int index) {
-    return team[index] == null;
+    return pokemonTeam[index] == null;
   }
 
   // True if there are no Pokemon on the team
   bool isEmpty() {
     bool empty = true;
-    for (int i = 0; i < team.length && empty; ++i) {
-      empty = team[i] == null;
+    for (int i = 0; i < pokemonTeam.length && empty; ++i) {
+      empty = pokemonTeam[i] == null;
     }
 
     return empty;
@@ -93,8 +106,8 @@ class PokemonTeam {
   // True if one of the team refs is null
   bool hasSpace() {
     bool space = false;
-    for (int i = 0; i < team.length && !space; ++i) {
-      space = team[i] == null;
+    for (int i = 0; i < pokemonTeam.length && !space; ++i) {
+      space = pokemonTeam[i] == null;
     }
 
     return space;
@@ -108,15 +121,23 @@ class PokemonTeam {
   // Switch to a different cup with the specified cupTitle
   void setCup(String cupTitle) {
     cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == cupTitle);
+
+    _setLogCup(log) => log.cup = cup;
+    logs.forEach(_setLogCup);
   }
 
-  // Change the size of the team
+  // Change the size of the pokemonTeam
   // This is useful for custom cups such as any Silph Cup that uses 6 Pokemon
   void setTeamSize(int newSize) {
-    team = List<Pokemon?>.generate(
+    if (pokemonTeam.length == newSize) return;
+
+    pokemonTeam = List<Pokemon?>.generate(
       newSize,
-      (index) => index < team.length ? team[index] : null,
+      (index) => index < pokemonTeam.length ? pokemonTeam[index] : null,
     );
+
+    _setLogTeamSize(log) => log.setTeamSize(newSize);
+    logs.forEach(_setLogTeamSize);
   }
 
   // Update the type effectiveness of this Pokemon team
@@ -129,26 +150,38 @@ class PokemonTeam {
   void clear() {
     void _clearPokemon(pokemon) => pokemon = null;
 
-    team.forEach(_clearPokemon);
+    pokemonTeam.forEach(_clearPokemon);
     cup = globals.gamemaster.cups[0];
   }
-}
 
-class PokemonTeams with ChangeNotifier {
-  List<PokemonTeam> pokemonTeams = List.empty(growable: true);
-
-  // Manual notify
-  void notify() => notifyListeners();
-
-  // Add a new empty team
-  void addTeam() {
-    pokemonTeams.add(PokemonTeam());
-    notifyListeners();
+  void addLog() {
+    logs.add(PokemonTeam());
+    logs.last.cup = cup;
+    logs.last.locked = true;
+    logs.last.setTeamSize(pokemonTeam.length);
   }
 
-  // Remove a team at the specified index
-  void removeTeamAt(int index) {
-    pokemonTeams.removeAt(index);
-    notifyListeners();
+  void removeLogAt(int index) {
+    logs.removeAt(index);
   }
+
+  // Calculate the average win rate for this Pokemon Team
+  // Return a string representation for display
+  String getWinRate() {
+    if (logs.isEmpty) return '0.0';
+
+    double winRate = 0.0;
+
+    for (int i = 0; i < logs.length; ++i) {
+      if (logs[i].winLossKey == 'Win') ++winRate;
+    }
+
+    winRate /= logs.length;
+
+    return (winRate * 100.0).toStringAsFixed(2);
+  }
+
+  // Toggle a lock on this team
+  // When a team is locked, the team cannot be changed or removed
+  void toggleLock() => locked = !locked;
 }

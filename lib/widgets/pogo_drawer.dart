@@ -89,28 +89,6 @@ class PogoDrawer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          'Battle Log',
-                          style: TextStyle(fontSize: SizeConfig.h1),
-                        ),
-                        SizedBox(
-                          width: SizeConfig.blockSizeHorizontal * 3.0,
-                        ),
-                        Icon(
-                          Icons.query_stats,
-                          size: SizeConfig.blockSizeHorizontal * 5.0,
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      onNavSelected('Battle Log');
-                    },
-                  ),
-                  ListTile(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
                           'Rankings',
                           style: TextStyle(fontSize: SizeConfig.h1),
                         ),

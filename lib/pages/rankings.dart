@@ -32,8 +32,7 @@ class Rankings extends StatefulWidget {
   _RankingsState createState() => _RankingsState();
 }
 
-class _RankingsState extends State<Rankings>
-    with SingleTickerProviderStateMixin {
+class _RankingsState extends State<Rankings> {
   late Cup cup;
 
   // Search bar text input controller
@@ -46,17 +45,6 @@ class _RankingsState extends State<Rankings>
   List<Pokemon> filteredPokemon = [];
 
   String _selectedCategory = 'overall';
-
-  // Fade in animation on page startup
-  late final AnimationController _animController = AnimationController(
-    duration: const Duration(seconds: 2),
-    vsync: this,
-  );
-
-  late final Animation<double> _animation = CurvedAnimation(
-    parent: _animController,
-    curve: Curves.easeIn,
-  );
 
   void _onCupChanged(String? newCup) {
     if (newCup == null) return;
@@ -112,36 +100,28 @@ class _RankingsState extends State<Rankings>
   }
 
   Widget _buildScaffoldBody() {
-    // Begin fade in animation
-    _animController.forward();
-
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: SizeConfig.blockSizeVertical * 2.0,
-        ),
-        child: FadeTransition(
-          opacity: _animation,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildDropdowns(),
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 2.0,
-              ),
-              PogoTextField(controller: _searchController),
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 2.0,
-              ),
-              // Build list
-              PokemonList(
-                pokemon: filteredPokemon,
-                onPokemonSelected: (_) {},
-                dropdowns: false,
-              ),
-            ],
+    return Padding(
+      padding: EdgeInsets.only(
+        top: SizeConfig.blockSizeVertical * 2.0,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildDropdowns(),
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 2.0,
           ),
-        ),
+          PogoTextField(controller: _searchController),
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 2.0,
+          ),
+          // Build list
+          PokemonList(
+            pokemon: filteredPokemon,
+            onPokemonSelected: (_) {},
+            dropdowns: false,
+          ),
+        ],
       ),
     );
   }

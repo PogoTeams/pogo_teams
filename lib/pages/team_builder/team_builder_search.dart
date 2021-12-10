@@ -14,8 +14,10 @@ import '../../data/pokemon/pokemon.dart';
 import '../../widgets/pokemon_list.dart';
 import '../../widgets/buttons/exit_button.dart';
 import '../../widgets/pogo_text_field.dart';
+import '../../widgets/dropdowns/win_loss_dropdown.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../data/pokemon/pokemon_team.dart';
+import '../../data/teams_provider.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -29,13 +31,13 @@ class TeamBuilderSearch extends StatefulWidget {
   const TeamBuilderSearch({
     Key? key,
     required this.team,
-    required this.teamIndex,
     required this.focusIndex,
+    this.log = false,
   }) : super(key: key);
 
   final PokemonTeam team;
-  final int teamIndex;
   final int focusIndex;
+  final bool log;
 
   @override
   _TeamBuilderSearchState createState() => _TeamBuilderSearchState();
@@ -88,29 +90,22 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   Widget _buildScaffold(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Padding(
           padding: EdgeInsets.only(
             left: SizeConfig.blockSizeHorizontal * 2.0,
             right: SizeConfig.blockSizeHorizontal * 2.0,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildTeamNode(),
 
-              // Spacer
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 2.0,
-              ),
-
               PogoTextField(controller: _searchController),
 
-              // Horizontal divider
-              Divider(
-                height: SizeConfig.blockSizeVertical * 5.0,
-                thickness: SizeConfig.blockSizeHorizontal * 1.0,
-                indent: SizeConfig.blockSizeHorizontal * 5.0,
-                endIndent: SizeConfig.blockSizeHorizontal * 5.0,
+              // Spacer
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 1.0,
               ),
 
               _buildPokemonList(),
@@ -128,9 +123,22 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     return TeamNode(
       onPressed: _updateWorkingIndex,
       onEmptyPressed: _updateWorkingIndex,
-      teamIndex: widget.teamIndex,
+      team: widget.team,
       focusIndex: _workingIndex,
       emptyTransparent: true,
+      footer: widget.log
+          ? WinLossDropdown(
+              selectedOption: widget.team.winLossKey,
+              onChanged: (winLossKey) {
+                if (winLossKey == null) return;
+
+                setState(() {
+                  widget.team.winLossKey = winLossKey;
+                });
+              },
+              width: SizeConfig.screenWidth,
+            )
+          : Container(),
     );
   }
 
@@ -170,8 +178,8 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
           ExitButton(
             key: UniqueKey(),
             onPressed: () {
-              Provider.of<PokemonTeams>(context, listen: false).notify();
-              Navigator.pop(context);
+              Provider.of<TeamsProvider>(context, listen: false).notify();
+              Navigator.pop(context, widget.team);
             },
             icon: const Icon(Icons.check),
           ),
@@ -185,7 +193,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   // in a round-robin fashion.
   void _updateWorkingIndex(int index) {
     setState(() {
-      _workingIndex = (index == widget.team.team.length ? 0 : index);
+      _workingIndex = (index == widget.team.pokemonTeam.length ? 0 : index);
     });
   }
 
@@ -196,7 +204,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
 
     // Set the starting index of the team edit
     _workingIndex = widget.focusIndex;
-    _oldTeam = List.from(widget.team.team);
+    _oldTeam = List.from(widget.team.pokemonTeam);
 
     // Get the selected cup and list of Pokemon based on the category
     pokemon = widget.team.cup.getRankedPokemonList('overall');

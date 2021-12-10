@@ -48,6 +48,7 @@ class PokemonNode extends StatelessWidget {
     required this.pokemon,
     this.onPressed,
     this.onEmptyPressed,
+    this.onMoveChanged,
     this.emptyTransparent = false,
     this.padding,
     this.dropdowns = true,
@@ -58,6 +59,7 @@ class PokemonNode extends StatelessWidget {
     body = _SmallNodeBody(
       pokemon: pokemon!,
       dropdowns: dropdowns,
+      onMoveChanged: onMoveChanged,
     );
   }
 
@@ -149,6 +151,10 @@ class _SquareNodeBody extends StatelessWidget {
         Text(
           pokemon.speciesName,
           textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: SizeConfig.blockSizeHorizontal * 3.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
 
         // A line divider
@@ -168,10 +174,12 @@ class _SmallNodeBody extends StatelessWidget {
     Key? key,
     required this.pokemon,
     required this.dropdowns,
+    required this.onMoveChanged,
   }) : super(key: key);
 
   final Pokemon pokemon;
   final bool dropdowns;
+  final VoidCallback? onMoveChanged;
 
   // Display the Pokemon's name perfect PVP ivs and typing icon(s)
   Row _buildNodeHeader(Pokemon pokemon) {
@@ -225,7 +233,10 @@ class _SmallNodeBody extends StatelessWidget {
           // The dropdowns for the Pokemon's moves
           // Defaults to the most meta relavent moves
           dropdowns
-              ? MoveDropdowns(pokemon: pokemon)
+              ? MoveDropdowns(
+                  pokemon: pokemon,
+                  onChanged: onMoveChanged,
+                )
               : MoveNodes(pokemon: pokemon),
         ],
       ),

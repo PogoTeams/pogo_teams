@@ -73,67 +73,66 @@ class _TeamSwapState extends State<TeamSwap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: SizeConfig.blockSizeVertical * 1.0,
-            left: SizeConfig.blockSizeHorizontal * 2.0,
-            right: SizeConfig.blockSizeHorizontal * 2.0,
-          ),
-          child: ListView(
-            children: [
-              // The Pokemon to swap out
-              PokemonNode.small(pokemon: _swap),
+      body: Padding(
+        padding: EdgeInsets.only(
+          top: SizeConfig.blockSizeVertical * 1.0,
+          left: SizeConfig.blockSizeHorizontal * 2.0,
+          right: SizeConfig.blockSizeHorizontal * 2.0,
+        ),
+        child: ListView(
+          children: [
+            // The Pokemon to swap out
+            PokemonNode.small(pokemon: _swap),
 
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 2.0,
-              ),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 2.0,
+            ),
 
-              Center(
-                child: Text(
-                  'Team Swap',
-                  style: TextStyle(
-                    fontSize: SizeConfig.h2,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: SizeConfig.blockSizeHorizontal * .5,
-                  ),
+            Center(
+              child: Text(
+                'Team Swap',
+                style: TextStyle(
+                  fontSize: SizeConfig.h2,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: SizeConfig.blockSizeHorizontal * .5,
                 ),
               ),
+            ),
 
-              // Horizontal divider
-              Divider(
-                height: SizeConfig.blockSizeVertical * 5.0,
-                thickness: SizeConfig.blockSizeHorizontal * 1.0,
-                indent: SizeConfig.blockSizeHorizontal * 5.0,
-                endIndent: SizeConfig.blockSizeHorizontal * 5.0,
-              ),
+            // Horizontal divider
+            Divider(
+              height: SizeConfig.blockSizeVertical * 5.0,
+              thickness: SizeConfig.blockSizeHorizontal * 1.0,
+              indent: SizeConfig.blockSizeHorizontal * 5.0,
+              endIndent: SizeConfig.blockSizeHorizontal * 5.0,
+            ),
 
-              // List of the current selected team
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: _pokemonTeam.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      top: SizeConfig.blockSizeVertical * .5,
-                      bottom: SizeConfig.blockSizeVertical * .5,
-                    ),
-                    child: PokemonNode.large(
-                      pokemon: _pokemonTeam[index],
-                      footer: _buildFooter(context, index),
-                    ),
-                  );
-                },
-                physics: const NeverScrollableScrollPhysics(),
-              ),
+            // List of the current selected team
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: _pokemonTeam.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.blockSizeVertical * .5,
+                    bottom: SizeConfig.blockSizeVertical * .5,
+                  ),
+                  child: PokemonNode.large(
+                    pokemon: _pokemonTeam[index],
+                    footer: _buildFooter(context, index),
+                  ),
+                );
+              },
+              physics: const NeverScrollableScrollPhysics(),
+            ),
 
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 5.0,
-              ),
-            ],
-          ),
+            SizedBox(
+              height: SizeConfig.blockSizeVertical * 5.0,
+            ),
+          ],
         ),
       ),
+
       // Exit to Team Builder button
       floatingActionButton: SizedBox(
         width: SizeConfig.screenWidth * .87,

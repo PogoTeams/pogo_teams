@@ -44,7 +44,8 @@ class AnalyzeButton extends StatelessWidget {
               ),
             ),
             onPressed: onPressed,
-            width: SizeConfig.screenWidth,
+            width: SizeConfig.screenWidth * .85,
+            height: SizeConfig.blockSizeVertical * 8.5,
           );
   }
 }

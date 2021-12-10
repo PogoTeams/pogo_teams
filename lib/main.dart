@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 // Local Imports
 import 'pogo_teams_app.dart';
-import 'data/pokemon/pokemon_team.dart';
+import 'data/teams_provider.dart';
 import 'data/masters/gamemaster.dart';
 import 'data/globals.dart' as globals;
 
@@ -24,7 +24,7 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (_) => PokemonTeams(),
+      create: (_) => TeamsProvider(),
       child: const PogoTeamsApp(),
       lazy: false,
     ),
