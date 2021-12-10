@@ -41,28 +41,27 @@ class PokemonList extends StatelessWidget {
 
         // List building
         child: ListView.builder(
-          itemCount: pokemon.length,
-          itemBuilder: (context, index) {
-            return MaterialButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                onPokemonSelected(pokemon[index]);
-              },
-              onLongPress: () {},
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: SizeConfig.blockSizeVertical * .5,
-                  bottom: SizeConfig.blockSizeVertical * .5,
+            itemCount: pokemon.length,
+            itemBuilder: (context, index) {
+              return MaterialButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  onPokemonSelected(pokemon[index]);
+                },
+                onLongPress: () {},
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.blockSizeVertical * .5,
+                    bottom: SizeConfig.blockSizeVertical * .5,
+                  ),
+                  child: PokemonNode.small(
+                    pokemon: pokemon[index],
+                    dropdowns: dropdowns,
+                  ),
                 ),
-                child: PokemonNode.small(
-                  pokemon: pokemon[index],
-                  dropdowns: dropdowns,
-                ),
-              ),
-            );
-          },
-          physics: const BouncingScrollPhysics(),
-        ),
+              );
+            },
+            physics: const BouncingScrollPhysics()),
       ),
     );
   }

@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:pogo_teams/widgets/pokemon_list.dart';
 
 // Local Imports
 import '../widgets/analysis/swap_list.dart';
@@ -11,8 +12,10 @@ import '../data/pokemon/pokemon.dart';
 import '../data/pokemon/pokemon_team.dart';
 import '../data/masters/type_master.dart';
 import '../data/pokemon/typing.dart';
+import '../data/cup.dart';
 import '../configs/size_config.dart';
 import '../tools/pair.dart';
+import '../data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
@@ -315,7 +318,6 @@ class OpponentTeamAnalysis extends StatelessWidget {
             defense, offense, pokemonTeam.length);
 
     offenseCoverage.sort((prev, curr) => ((curr.b - prev.b) * 1000).toInt());
-
     defenseThreats.sort((prev, curr) => ((curr.b - prev.b) * 1000).toInt());
 
     return TypeCoverage(
@@ -411,5 +413,159 @@ class OpponentTeamAnalysis extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _buildScaffold(context);
+  }
+}
+
+class LogsAnalysis extends StatelessWidget {
+  const LogsAnalysis({
+    Key? key,
+    required this.logs,
+    required this.cup,
+  }) : super(key: key);
+
+  final List<PokemonTeam> logs;
+  final Cup cup;
+
+  // Setup the list of expansion panels given the PokemonTeam
+  Widget _buildTypeCoverage() {
+    // The count of individually logged Pokemon in all the logs
+    int loggedPokemonCount = 0;
+
+    List<Pair<Type, double>> defenseThreats =
+        TypeMaster.generateTypeValuePairedList();
+
+    List<Pair<Type, double>> offenseCoverage =
+        TypeMaster.generateTypeValuePairedList();
+
+    List<Pair<Type, double>> netEffectiveness =
+        TypeMaster.generateTypeValuePairedList();
+
+    void _accumulateLog(log) {
+      final List<Pokemon> pokemonTeam = log.getPokemonTeam();
+      loggedPokemonCount += pokemonTeam.length;
+
+      // Get coverage lists
+      final defense = TypeMaster.getDefenseCoverage(log.effectiveness);
+      final offense = TypeMaster.getOffenseCoverage(pokemonTeam);
+
+      List<Pair<Type, double>> logEffectiveness =
+          TypeMaster.getMovesWeightedEffectiveness(
+              defense, offense, pokemonTeam.length);
+
+      for (int i = 0; i < globals.typeCount; ++i) {
+        defenseThreats[i].b += defense[i].b;
+        offenseCoverage[i].b += offense[i].b;
+        netEffectiveness[i].b += logEffectiveness[i].b;
+      }
+    }
+
+    logs.forEach(_accumulateLog);
+
+    // Filter to the key values
+    defenseThreats = defenseThreats
+        .where((typeData) => typeData.b > loggedPokemonCount)
+        .toList();
+
+    offenseCoverage =
+        offenseCoverage.where((pair) => pair.b > loggedPokemonCount).toList();
+
+    offenseCoverage.sort((prev, curr) => ((curr.b - prev.b) * 1000).toInt());
+    defenseThreats.sort((prev, curr) => ((curr.b - prev.b) * 1000).toInt());
+
+    // TODO : This works in generating a reasonable graph, but man it is not
+    // intuitive
+    void _scaleEffectiveness(typeData) =>
+        typeData.b /= (loggedPokemonCount / 3);
+    netEffectiveness.forEach(_scaleEffectiveness);
+
+    return ListView(
+      children: [
+        // Type coverage widgets
+        TypeCoverage(
+          netEffectiveness: netEffectiveness,
+          defenseThreats: defenseThreats,
+          offenseCoverage: offenseCoverage,
+          teamSize: loggedPokemonCount,
+        ),
+
+        // Spacer
+        SizedBox(
+          height: SizeConfig.blockSizeVertical * 3.0,
+        ),
+
+        Text('Top Counters',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: SizeConfig.h1,
+              fontWeight: FontWeight.bold,
+              letterSpacing: SizeConfig.blockSizeHorizontal * .7,
+            )),
+
+        Divider(
+          height: SizeConfig.blockSizeVertical * 5.0,
+          thickness: SizeConfig.blockSizeVertical * .5,
+          indent: SizeConfig.blockSizeHorizontal * 2.0,
+          endIndent: SizeConfig.blockSizeHorizontal * 2.0,
+          color: Colors.white,
+        ),
+
+        // A list of top counters to the logged opponent teams
+        _buildCountersList(defenseThreats),
+      ],
+    );
+  }
+
+  Widget _buildCountersList(List<Pair<Type, double>> defenseThreats) {
+    final threatTypes = defenseThreats.map((typeData) => typeData.a).toList();
+
+    return LogSwapList(
+      cup: cup,
+      types: threatTypes,
+      onTeamChanged: (_) {},
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Page title
+          Text(
+            'Logged Opponents Net Analysis',
+            style: TextStyle(
+              fontSize: SizeConfig.h2,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+
+          // Spacer
+          SizedBox(
+            width: SizeConfig.blockSizeHorizontal * 3.0,
+          ),
+
+          // Page icon
+          Icon(
+            Icons.analytics,
+            size: SizeConfig.blockSizeHorizontal * 6.0,
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: Padding(
+        padding: EdgeInsets.only(
+          top: SizeConfig.blockSizeVertical * 2.0,
+          left: SizeConfig.blockSizeHorizontal * 2.0,
+          right: SizeConfig.blockSizeHorizontal * 2.0,
+        ),
+        child: _buildTypeCoverage(),
+      ),
+    );
   }
 }

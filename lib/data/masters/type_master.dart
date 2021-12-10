@@ -75,6 +75,12 @@ class TypeMaster {
     return effectivenessMaster[typeKey] as Map<String, List<double>>;
   }
 
+  // Generate a list that pairs a value to each type
+  static List<Pair<Type, double>> generateTypeValuePairedList() {
+    return List.generate(
+        globals.typeCount, (index) => Pair(a: typeList[index], b: 0.0));
+  }
+
   // Get a list of the provided pokemon team's net effectiveness
   // [0] : offensive
   // [1] : defensive

@@ -139,7 +139,7 @@ class LogSwapList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Pokemon> counters =
-        cup.getFilteredRankedPokemonList(types, 'overall', limit: 20);
+        cup.getFilteredRankedPokemonList(types, 'overall', limit: 50);
 
     return Column(
       children: counters

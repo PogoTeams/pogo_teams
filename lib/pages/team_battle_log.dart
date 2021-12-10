@@ -249,6 +249,92 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
     ];
   }
 
+  // Build a log buttton, and if there are existing logs, also an analyze
+  // button which will apply to all logged opponent teams.
+  Widget _buildFloatingActionButtons() {
+    // If logs are empty, then only give the option to add
+    if (_team.logs.isEmpty) {
+      return GradientButton(
+        onPressed: _onAddTeam,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Log Opponent Team',
+              style: TextStyle(
+                fontSize: SizeConfig.h2,
+              ),
+            ),
+            SizedBox(
+              width: SizeConfig.blockSizeHorizontal * 5.0,
+            ),
+            Icon(
+              Icons.add,
+              size: SizeConfig.blockSizeHorizontal * 7.0,
+            ),
+          ],
+        ),
+        width: SizeConfig.screenWidth * .85,
+        height: SizeConfig.blockSizeVertical * 8.5,
+      );
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        // Analyze button
+        GradientButton(
+          onPressed: _onAnalyzeLogs,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Analyze',
+                style: TextStyle(
+                  fontSize: SizeConfig.h2,
+                ),
+              ),
+              SizedBox(
+                width: SizeConfig.blockSizeHorizontal * 4.0,
+              ),
+              Icon(
+                Icons.analytics,
+                size: SizeConfig.blockSizeHorizontal * 7.0,
+              ),
+            ],
+          ),
+          width: SizeConfig.screenWidth * .42,
+          height: SizeConfig.blockSizeVertical * 8.5,
+        ),
+
+        // Log button
+        GradientButton(
+          onPressed: _onAddTeam,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Log',
+                style: TextStyle(
+                  fontSize: SizeConfig.h2,
+                ),
+              ),
+              SizedBox(
+                width: SizeConfig.blockSizeHorizontal * 4.0,
+              ),
+              Icon(
+                Icons.add,
+                size: SizeConfig.blockSizeHorizontal * 7.0,
+              ),
+            ],
+          ),
+          width: SizeConfig.screenWidth * .42,
+          height: SizeConfig.blockSizeVertical * 8.5,
+        ),
+      ],
+    );
+  }
+
   // Remove the team at specified index
   void _onClearTeam(int teamIndex) {
     setState(() {
@@ -257,7 +343,7 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
   }
 
   // Scroll to the analysis portion of the screen
-  void _onAnalyzeTeam(int teamIndex) async {
+  void _onAnalyzeTeam(int teamIndex) {
     final _log = _team.logs[teamIndex];
 
     // If the team is empty, no action will be taken
@@ -345,6 +431,19 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
     });
   }
 
+  // Navigate to an analysis of all logged opponent teams
+  void _onAnalyzeLogs() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) {
+        return LogsAnalysis(
+          logs: _team.logs,
+          cup: _team.cup,
+        );
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -352,29 +451,7 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
       body: _buildScaffoldBody(),
 
       // Log opponent team FAB
-      floatingActionButton: GradientButton(
-        onPressed: _onAddTeam,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Log Opponent Team',
-              style: TextStyle(
-                fontSize: SizeConfig.h2,
-              ),
-            ),
-            SizedBox(
-              width: SizeConfig.blockSizeHorizontal * 5.0,
-            ),
-            Icon(
-              Icons.add,
-              size: SizeConfig.blockSizeHorizontal * 7.0,
-            ),
-          ],
-        ),
-        width: SizeConfig.screenWidth * .85,
-        height: SizeConfig.blockSizeVertical * 8.5,
-      ),
+      floatingActionButton: _buildFloatingActionButtons(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
