@@ -5,16 +5,16 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pogo_teams/widgets/pogo_drawer.dart';
 
 // Package Imports
 import 'package:provider/provider.dart';
 
 // Local Imports
-import 'configs/size_config.dart';
-import 'pages/team_builder/team_builder.dart';
+import 'pages/teams/teams_builder.dart';
 import 'pages/rankings.dart';
+import 'configs/size_config.dart';
 import 'data/teams_provider.dart';
+import 'widgets/pogo_drawer.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -34,19 +34,25 @@ class _PogoScaffoldState extends State<PogoScaffold>
     with SingleTickerProviderStateMixin {
   // All pages that are accessible at the top level of the app
   final Map<String, Widget> _pages = {
-    'Team Builder': Consumer<TeamsProvider>(
-        builder: (context, value, child) => const TeamBuilder()),
+    'Teams': Consumer<TeamsProvider>(
+        builder: (context, value, child) => const TeamsBuilder()),
     'Rankings': const Rankings(),
   };
 
   // Icons cooresponding to the pages
-  final Map<String, IconData> _icons = {
-    'Team Builder': Icons.build_circle,
-    'Rankings': Icons.bar_chart,
+  late final Map<String, Widget> _icons = {
+    'Teams': Image.asset(
+      'assets/pokeball_icon.png',
+      width: SizeConfig.blockSizeHorizontal * 5.0,
+    ),
+    'Rankings': Icon(
+      Icons.bar_chart,
+      size: SizeConfig.blockSizeHorizontal * 6.0,
+    ),
   };
 
   // Used to navigate between pages by key
-  String _navKey = 'Team Builder';
+  String _navKey = 'Teams';
 
   // Fade in animation on page startup
   late final AnimationController _animController = AnimationController(
@@ -80,10 +86,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
           ),
 
           // Page icon
-          Icon(
-            _icons[_navKey],
-            size: SizeConfig.blockSizeHorizontal * 6.0,
-          ),
+          _icons[_navKey]!,
         ],
       ),
     );

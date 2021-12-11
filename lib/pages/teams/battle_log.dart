@@ -2,27 +2,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pogo_teams/pages/team_analysis.dart';
+import 'package:pogo_teams/pages/analysis/analysis.dart';
 
 // Package Imports
 import 'package:provider/provider.dart';
 
 // Local Imports
-import 'team_builder/team_builder_search.dart';
-import '../../widgets/nodes/team_node.dart';
-import '../../widgets/buttons/gradient_button.dart';
-import '../../widgets/nodes/win_loss_node.dart';
-import '../../configs/size_config.dart';
-import '../../data/teams_provider.dart';
-import '../../data/pokemon/pokemon_team.dart';
+import 'team_builder_search.dart';
+import '../../../widgets/nodes/team_node.dart';
+import '../../../widgets/buttons/gradient_button.dart';
+import '../../../widgets/nodes/win_loss_node.dart';
+import '../../../configs/size_config.dart';
+import '../../../data/teams_provider.dart';
+import '../../../data/pokemon/pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 */
 
-class TeamBattleLog extends StatefulWidget {
-  const TeamBattleLog({
+class BattleLog extends StatefulWidget {
+  const BattleLog({
     Key? key,
     required this.teamIndex,
   }) : super(key: key);
@@ -30,11 +30,11 @@ class TeamBattleLog extends StatefulWidget {
   final int teamIndex;
 
   @override
-  _TeamBattleLogState createState() => _TeamBattleLogState();
+  _BattleLogState createState() => _BattleLogState();
 }
 
-class _TeamBattleLogState extends State<TeamBattleLog> {
-  late final PokemonTeam _team =
+class _BattleLogState extends State<BattleLog> {
+  late final UserPokemonTeam _team =
       Provider.of<TeamsProvider>(context, listen: false)
           .builderTeams[widget.teamIndex];
 
@@ -104,6 +104,7 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
       onPressed: (_) {},
       onEmptyPressed: (_) {},
       team: _team,
+      cup: _team.cup,
       buildHeader: true,
       emptyTransparent: true,
       collapsible: true,
@@ -118,7 +119,7 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
   // Build the list of TeamNodes, with the necessary callbacks
   Widget _buildLogsList() {
     // Provider retrieve
-    final _logs = _team.logs;
+    final List<LogPokemonTeam> _logs = _team.logs;
 
     return Expanded(
       child: ListView.builder(
@@ -133,6 +134,7 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
                       _onEmptyPressed(index, nodeIndex),
                   onPressed: (_) {},
                   team: _logs[index],
+                  cup: _team.cup,
                   footer: _buildTeamNodeFooter(index),
                 ),
                 SizedBox(
@@ -146,6 +148,7 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
             onEmptyPressed: (nodeIndex) => _onEmptyPressed(index, nodeIndex),
             onPressed: (_) {},
             team: _logs[index],
+            cup: _team.cup,
             footer: _buildTeamNodeFooter(index),
           );
         },
@@ -162,23 +165,33 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
         right: SizeConfig.blockSizeHorizontal * 2.0,
         bottom: SizeConfig.blockSizeVertical * 1.0,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: _buildFooterButtons(teamIndex),
-      ),
+      child: _buildFooterButtons(teamIndex),
     );
   }
 
   // The icon buttons at the footer of each TeamNode
-  List<Widget> _buildFooterButtons(int teamIndex) {
+  Widget _buildFooterButtons(int teamIndex) {
     // Size of the footer icons
     final double iconSize = SizeConfig.blockSizeHorizontal * 6.0;
 
     // Provider retrieve
     final _log = _team.logs[teamIndex];
+    final IconData lockIcon = _log.locked ? Icons.lock : Icons.lock_open;
 
-    if (_log.locked) {
-      return [
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Remove team option if the team is unlocked
+        _log.locked
+            ? Container()
+            : IconButton(
+                onPressed: () => _onClearTeam(teamIndex),
+                icon: const Icon(Icons.clear),
+                tooltip: 'Remove Team',
+                iconSize: iconSize,
+                splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
+              ),
+
         // Analyze team
         IconButton(
           onPressed: () => _onAnalyzeTeam(teamIndex),
@@ -191,62 +204,25 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
         // Edit team
         IconButton(
           onPressed: () => _onEditTeam(teamIndex),
-          icon: const Icon(Icons.change_circle),
+          icon: const Icon(Icons.build_circle),
           tooltip: 'Edit Team',
           iconSize: iconSize,
           splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
         ),
 
+        // Lock team
         IconButton(
           onPressed: () => _onLockPressed(teamIndex),
-          icon: const Icon(Icons.lock),
+          icon: Icon(lockIcon),
           tooltip: 'Unlock Team',
           iconSize: iconSize,
           splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
         ),
 
+        // Win, tie, loss indicator
         WinLossNode(winLossKey: _log.winLossKey),
-      ];
-    }
-
-    return [
-      // Remove team
-      IconButton(
-        onPressed: () => _onClearTeam(teamIndex),
-        icon: const Icon(Icons.clear),
-        tooltip: 'Remove Team',
-        iconSize: iconSize,
-        splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
-      ),
-
-      // Analyze team
-      IconButton(
-        onPressed: () => _onAnalyzeTeam(teamIndex),
-        icon: const Icon(Icons.analytics),
-        tooltip: 'Analyze Team',
-        iconSize: iconSize,
-        splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
-      ),
-
-      // Edit team
-      IconButton(
-        onPressed: () => _onEditTeam(teamIndex),
-        icon: const Icon(Icons.change_circle),
-        tooltip: 'Edit Team',
-        iconSize: iconSize,
-        splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
-      ),
-
-      IconButton(
-        onPressed: () => _onLockPressed(teamIndex),
-        icon: const Icon(Icons.lock_open),
-        tooltip: 'Lock Team',
-        iconSize: iconSize,
-        splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
-      ),
-
-      WinLossNode(winLossKey: _log.winLossKey),
-    ];
+      ],
+    );
   }
 
   // Build a log buttton, and if there are existing logs, also an analyze
@@ -352,7 +328,10 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (BuildContext context) {
-        return OpponentTeamAnalysis(team: _log);
+        return Analysis(
+          team: _team,
+          opponentTeam: _log,
+        );
       }),
     );
   }
@@ -366,7 +345,7 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
       MaterialPageRoute<PokemonTeam>(builder: (BuildContext context) {
         return TeamBuilderSearch(
           team: _log,
-          log: true,
+          cup: _team.cup,
           focusIndex: 0,
         );
       }),
@@ -385,10 +364,10 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
 
     final _newLog = await Navigator.push(
       context,
-      MaterialPageRoute<PokemonTeam>(builder: (BuildContext context) {
+      MaterialPageRoute<LogPokemonTeam>(builder: (BuildContext context) {
         return TeamBuilderSearch(
           team: _team.logs.last,
-          log: true,
+          cup: _team.cup,
           focusIndex: 0,
         );
       }),
@@ -412,7 +391,7 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
       MaterialPageRoute<PokemonTeam>(builder: (BuildContext context) {
         return TeamBuilderSearch(
           team: _log,
-          log: true,
+          cup: _team.cup,
           focusIndex: nodeIndex,
         );
       }),
@@ -436,9 +415,9 @@ class _TeamBattleLogState extends State<TeamBattleLog> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (BuildContext context) {
-        return LogsAnalysis(
-          logs: _team.logs,
-          cup: _team.cup,
+        return Analysis(
+          team: _team,
+          opponentTeams: _team.logs,
         );
       }),
     );

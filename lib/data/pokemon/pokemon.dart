@@ -37,6 +37,35 @@ class Pokemon {
     this.eliteMoves,
   });
 
+  // Deep copy
+  static Pokemon from(Pokemon other) {
+    final copy = Pokemon(
+      dex: other.dex,
+      speciesName: other.speciesName,
+      speciesId: other.speciesId,
+      baseStats: other.baseStats,
+      typing: other.typing,
+      fastMoves: other.fastMoves,
+      chargedMoves: other.chargedMoves,
+      defaultIVs: other.defaultIVs,
+      shadowEligible: other.shadowEligible,
+      isXs: other.isXs,
+      isShadow: other.isShadow,
+      released: other.released,
+      tags: other.tags,
+      eliteMoves: other.eliteMoves,
+    );
+
+    copy.setMoveset(
+      other.selectedFastMove.moveId,
+      other.selectedChargedMoves.map((move) => move.moveId).toList(),
+    );
+
+    copy.setRating(other.rating);
+
+    return copy;
+  }
+
   // JSON -> OBJ conversion
   factory Pokemon.fromJson(Map<String, dynamic> json, List<Move> moves) {
     final dex = json['dex'] as int;
@@ -108,30 +137,6 @@ class Pokemon {
     );
   }
 
-  // For writing out to local storage
-  Map<String, dynamic> toJson() {
-    return {
-      'speciesId': speciesId,
-      'selectedFastMove': selectedFastMove.moveId,
-      'selectedChargedMoves': [
-        selectedChargedMoves[0].moveId,
-        selectedChargedMoves[1].moveId,
-      ],
-    };
-  }
-
-  // This json will contain moveset info and an id
-  // This id is used to retrieve an actual Pokemon ref from the idMap
-  static Pokemon readFromStorage(
-      Map<String, dynamic> json, Map<String, Pokemon> idMap) {
-    Pokemon fromStorage = Pokemon.from(idMap[json['speciesId']]!);
-
-    fromStorage.setMovesetByIds(json['selectedFastMove'] as String,
-        List<String>.from(json['selectedChargedMoves']));
-
-    return fromStorage;
-  }
-
   // REQUIRED
   final int dex;
   final String speciesName;
@@ -149,45 +154,6 @@ class Pokemon {
   final bool? released;
   final List<String>? tags;
   final List<String>? eliteMoves;
-
-  // VARIABLES
-  late Move selectedFastMove = fastMoves[0];
-  late List<Move> selectedChargedMoves = [chargedMoves[0], chargedMoves[1]];
-
-  // The rating of this Pokemon given a cup
-  num rating = 0;
-
-  // Deep copy
-  static Pokemon from(Pokemon other) {
-    final Pokemon pokemonCopy = Pokemon(
-      dex: other.dex,
-      speciesName: other.speciesName,
-      speciesId: other.speciesId,
-      baseStats: other.baseStats,
-      typing: other.typing,
-      fastMoves: other.fastMoves,
-      chargedMoves: other.chargedMoves,
-      defaultIVs: other.defaultIVs,
-      shadowEligible: other.shadowEligible,
-      isXs: other.isXs,
-      isShadow: other.isShadow,
-      released: other.released,
-      tags: other.tags,
-      eliteMoves: other.eliteMoves,
-    );
-
-    pokemonCopy.setMoveset(
-      other.selectedFastMove.moveId,
-      other.selectedChargedMoves.map((move) => move.moveId).toList(),
-    );
-    pokemonCopy.setRating(other.rating);
-
-    return pokemonCopy;
-  }
-
-  void setRating(num r) {
-    rating = r;
-  }
 
   // Form a string that describes this Pokemon's typing
   String getTypeString() {
@@ -213,6 +179,80 @@ class Pokemon {
             typing.typeA.getIcon(),
             typing.typeB.getIcon(),
           ];
+  }
+
+  // Given a cpCap cooresponding to a PVP cup :
+  // Get a list of the perfect cp stats
+  // [0] : level
+  // [1] : atk iv
+  // [2] : def iv
+  // [3] : hp iv
+  // [4] : cp
+  List<num> getPerfectPvpStats(int cpCap) {
+    // Get the perfect PVP ivs
+    List<num> pvpStats = defaultIVs.getIvs(cpCap);
+
+    // Get the maxCp
+    pvpStats.add(CpMaster.getMaxCP(
+      getStatTotals(pvpStats),
+      getMaxLevelIndex(pvpStats[0]),
+    ));
+
+    return pvpStats;
+  }
+
+  // Get the total attack, defense and hp stats
+  // stat total = base stat + iv stat
+  List<num> getStatTotals(List<num> ivs) {
+    return [
+      baseStats.atk + ivs[1],
+      baseStats.def + ivs[2],
+      baseStats.hp + ivs[3],
+    ];
+  }
+
+  // Get the max level index of a Pokemon given the cpCap
+  int getMaxLevelIndex(num level) {
+    return ((level * 2) - 2).toInt();
+  }
+
+  /* --- POKEMON STATE
+   * All Pokemon state is managed below
+  */
+
+  // The current selected moves for this Pokemon
+  late Move selectedFastMove = fastMoves[0];
+  late List<Move> selectedChargedMoves = [chargedMoves[0], chargedMoves[1]];
+
+  // The rating of this Pokemon given a cup
+  num rating = 0;
+
+  void setRating(num r) {
+    rating = r;
+  }
+
+  // This json will contain moveset info and an id
+  // This id is used to retrieve an actual Pokemon ref from the idMap
+  static Pokemon fromStateJson(
+      Map<String, dynamic> json, Map<String, Pokemon> idMap) {
+    Pokemon fromStorage = Pokemon.from(idMap[json['speciesId']]!);
+
+    fromStorage.setMoveset(json['selectedFastMove'] as String,
+        List<String>.from(json['selectedChargedMoves']));
+
+    return fromStorage;
+  }
+
+  // For writing out to local storage
+  Map<String, dynamic> toStateJson() {
+    return {
+      'speciesId': speciesId,
+      'selectedFastMove': selectedFastMove.moveId,
+      'selectedChargedMoves': [
+        selectedChargedMoves[0].moveId,
+        selectedChargedMoves[1].moveId,
+      ],
+    };
   }
 
   List<Color> getMoveColors() {
@@ -257,16 +297,6 @@ class Pokemon {
       chargedMoves.firstWhere((move) => move.moveId == chargedMoveIds[0]),
       chargedMoves.firstWhere((move) => move.moveId == chargedMoveIds[1]),
     ];
-  }
-
-  void setMovesetByIds(String fastMoveId, List<String> chargedMoveIds) {
-    selectedFastMove =
-        fastMoves.firstWhere((move) => move.moveId == fastMoveId);
-
-    for (int i = 0; i < 2; ++i) {
-      selectedChargedMoves[i] =
-          chargedMoves.firstWhere((move) => move.moveId == chargedMoveIds[i]);
-    }
   }
 
   // Set the selected moves to the relatively most powerful moves
@@ -323,40 +353,5 @@ class Pokemon {
     return chargedMoves.map<String>((Move move) {
       return move.moveId;
     }).toList();
-  }
-
-  // Given a cpCap cooresponding to a PVP cup :
-  // Get a list of the perfect cp stats
-  // [0] : level
-  // [1] : atk iv
-  // [2] : def iv
-  // [3] : hp iv
-  // [4] : cp
-  List<num> getPerfectPvpStats(int cpCap) {
-    // Get the perfect PVP ivs
-    List<num> pvpStats = defaultIVs.getIvs(cpCap);
-
-    // Get the maxCp
-    pvpStats.add(CpMaster.getMaxCP(
-      getStatTotals(pvpStats),
-      getMaxLevelIndex(pvpStats[0]),
-    ));
-
-    return pvpStats;
-  }
-
-  // Get the total attack, defense and hp stats
-  // stat total = base stat + iv stat
-  List<num> getStatTotals(List<num> ivs) {
-    return [
-      baseStats.atk + ivs[1],
-      baseStats.def + ivs[2],
-      baseStats.hp + ivs[3],
-    ];
-  }
-
-  // Get the max level index of a Pokemon given the cpCap
-  int getMaxLevelIndex(num level) {
-    return ((level * 2) - 2).toInt();
   }
 }

@@ -66,3 +66,35 @@ class PokemonList extends StatelessWidget {
     );
   }
 }
+
+class PokemonColumn extends StatelessWidget {
+  const PokemonColumn({
+    Key? key,
+    required this.pokemon,
+    required this.onPokemonSelected,
+    this.dropdowns = true,
+  }) : super(key: key);
+
+  final List<Pokemon> pokemon;
+  final Function(Pokemon) onPokemonSelected;
+  final bool dropdowns;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: pokemon
+          .map(
+            (pokemon) => Padding(
+              padding: EdgeInsets.only(
+                bottom: SizeConfig.blockSizeHorizontal * 2.0,
+              ),
+              child: PokemonNode.small(
+                pokemon: pokemon,
+                dropdowns: dropdowns,
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+}

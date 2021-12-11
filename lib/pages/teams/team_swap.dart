@@ -9,12 +9,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import '../configs/size_config.dart';
-import '../data/pokemon/pokemon.dart';
-import '../widgets/buttons/exit_button.dart';
-import '../widgets/buttons/pokemon_action_button.dart';
-import '../widgets/nodes/pokemon_node.dart';
-import '../data/pokemon/pokemon_team.dart';
+import '../../configs/size_config.dart';
+import '../../data/pokemon/pokemon.dart';
+import '../../widgets/buttons/exit_button.dart';
+import '../../widgets/buttons/pokemon_action_button.dart';
+import '../../widgets/nodes/pokemon_node.dart';
+import '../../data/pokemon/pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------------------

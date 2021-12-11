@@ -7,9 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
-// Local Imports
-import '../../configs/size_config.dart';
-
 /*
 -------------------------------------------------------------------------------
 A gradient button that uses gradient coloring in theme with the app design.

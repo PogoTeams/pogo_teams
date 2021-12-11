@@ -23,11 +23,9 @@ class CoverageGraph extends StatelessWidget {
   const CoverageGraph({
     Key? key,
     required this.netEffectiveness,
-    required this.teamSize,
   }) : super(key: key);
 
   final List<Pair<Type, double>> netEffectiveness;
-  final int teamSize;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +88,6 @@ class CoverageGraph extends StatelessWidget {
           children: netEffectiveness
               .map((pair) => GraphRow(
                     typeData: pair,
-                    teamSize: teamSize,
                   ))
               .toList(),
         ),
@@ -103,11 +100,9 @@ class GraphRow extends StatelessWidget {
   const GraphRow({
     Key? key,
     required this.typeData,
-    required this.teamSize,
   }) : super(key: key);
 
   final Pair<Type, double> typeData;
-  final int teamSize;
 
   @override
   Widget build(BuildContext context) {

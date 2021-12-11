@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 // Local Imports
 import 'team_builder_search.dart';
-import '../team_analysis.dart';
+import '../analysis/analysis.dart';
 import '../../configs/size_config.dart';
 import '../../widgets/nodes/pokemon_node.dart';
 import '../../widgets/dropdowns/cup_dropdown.dart';
@@ -48,7 +48,7 @@ class _TeamEditState extends State<TeamEdit>
   late TeamsProvider _provider;
 
   // The team at to edit
-  late PokemonTeam _team;
+  late UserPokemonTeam _team;
 
   // SETTER CALLBACKS
   void _onCupChanged(String? newCup) {
@@ -86,9 +86,10 @@ class _TeamEditState extends State<TeamEdit>
   void _searchMode(int nodeIndex) async {
     final _newTeam = await Navigator.push(
       context,
-      MaterialPageRoute<PokemonTeam>(builder: (BuildContext context) {
+      MaterialPageRoute<UserPokemonTeam>(builder: (BuildContext context) {
         return TeamBuilderSearch(
           team: _team,
+          cup: _team.cup,
           focusIndex: nodeIndex,
         );
       }),
@@ -110,7 +111,7 @@ class _TeamEditState extends State<TeamEdit>
     final newTeam = await Navigator.push(
       context,
       MaterialPageRoute<List<Pokemon?>>(builder: (BuildContext context) {
-        return TeamAnalysis(team: _team);
+        return Analysis(team: _team);
       }),
     );
 
@@ -138,7 +139,7 @@ class _TeamEditState extends State<TeamEdit>
 
           // Page icon
           Icon(
-            Icons.change_circle,
+            Icons.build_circle,
             size: SizeConfig.blockSizeHorizontal * 6.0,
           ),
         ],
@@ -205,13 +206,30 @@ class _TeamEditState extends State<TeamEdit>
             top: SizeConfig.blockSizeVertical * 1.1,
             bottom: SizeConfig.blockSizeVertical * 1.1,
           ),
-          child: PokemonNode.large(
-            pokemon: pokemonTeam[index],
-            onEmptyPressed: () => _searchMode(index),
-            onMoveChanged: () => _provider.notify(),
-            cup: _team.cup,
-            footer: _buildNodeFooter(pokemonTeam[index], index),
-          ),
+          child: (index == pokemonTeam.length - 1)
+              ? Column(
+                  children: [
+                    PokemonNode.large(
+                      pokemon: pokemonTeam[index],
+                      onEmptyPressed: () => _searchMode(index),
+                      onMoveChanged: () => _provider.notify(),
+                      cup: _team.cup,
+                      footer: _buildNodeFooter(pokemonTeam[index], index),
+                    ),
+
+                    // Spacer to give last node in the list more scroll room
+                    SizedBox(
+                      height: SizeConfig.blockSizeVertical * 10.0,
+                    ),
+                  ],
+                )
+              : PokemonNode.large(
+                  pokemon: pokemonTeam[index],
+                  onEmptyPressed: () => _searchMode(index),
+                  onMoveChanged: () => _provider.notify(),
+                  cup: _team.cup,
+                  footer: _buildNodeFooter(pokemonTeam[index], index),
+                ),
         ),
       ),
       physics: const NeverScrollableScrollPhysics(),

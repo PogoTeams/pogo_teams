@@ -1,6 +1,3 @@
-// Dart Imports
-import 'dart:math';
-
 // Local Imports
 import 'pokemon.dart';
 import '../cup.dart';
@@ -22,16 +19,6 @@ class PokemonTeam {
   // The list of 3 pokemon references that make up the team
   List<Pokemon?> pokemonTeam = List.filled(3, null);
 
-  // A list of logged opponent teams on this team
-  // The user can report wins, ties, and losses given this list
-  List<PokemonTeam> logs = List.empty(growable: true);
-
-  // For logging opponent teams, this value can either be :
-  // Win
-  // Tie
-  // Loss
-  String winLossKey = 'Win';
-
   // If true, the team cannot be removed or changed
   bool locked = false;
 
@@ -40,10 +27,6 @@ class PokemonTeam {
     globals.typeCount,
     (index) => 0.0,
   );
-
-  // The selected PVP cup for this team
-  // Defaults to Great League
-  Cup cup = globals.gamemaster.cups[0];
 
   // Make a copy of the newTeam, keeping the size of the original team
   void setTeam(List<Pokemon?> newTeam) {
@@ -118,14 +101,6 @@ class PokemonTeam {
     return getPokemonTeam().length;
   }
 
-  // Switch to a different cup with the specified cupTitle
-  void setCup(String cupTitle) {
-    cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == cupTitle);
-
-    _setLogCup(log) => log.cup = cup;
-    logs.forEach(_setLogCup);
-  }
-
   // Change the size of the pokemonTeam
   // This is useful for custom cups such as any Silph Cup that uses 6 Pokemon
   void setTeamSize(int newSize) {
@@ -135,9 +110,6 @@ class PokemonTeam {
       newSize,
       (index) => index < pokemonTeam.length ? pokemonTeam[index] : null,
     );
-
-    _setLogTeamSize(log) => log.setTeamSize(newSize);
-    logs.forEach(_setLogTeamSize);
   }
 
   // Update the type effectiveness of this Pokemon team
@@ -151,12 +123,37 @@ class PokemonTeam {
     void _clearPokemon(pokemon) => pokemon = null;
 
     pokemonTeam.forEach(_clearPokemon);
+  }
+
+  // Toggle a lock on this team
+  // When a team is locked, the team cannot be changed or removed
+  void toggleLock() => locked = !locked;
+}
+
+// A user's team
+class UserPokemonTeam extends PokemonTeam {
+  // The selected PVP cup for this team
+  // Defaults to Great League
+  Cup cup = globals.gamemaster.cups[0];
+
+  // A list of logged opponent teams on this team
+  // The user can report wins, ties, and losses given this list
+  List<LogPokemonTeam> logs = List.empty(growable: true);
+
+  // Switch to a different cup with the specified cupTitle
+  void setCup(String cupTitle) {
+    cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == cupTitle);
+  }
+
+  // Clear and reset all team data
+  @override
+  void clear() {
+    super.clear();
     cup = globals.gamemaster.cups[0];
   }
 
   void addLog() {
-    logs.add(PokemonTeam());
-    logs.last.cup = cup;
+    logs.add(LogPokemonTeam());
     logs.last.locked = true;
     logs.last.setTeamSize(pokemonTeam.length);
   }
@@ -173,15 +170,24 @@ class PokemonTeam {
     double winRate = 0.0;
 
     for (int i = 0; i < logs.length; ++i) {
-      if (logs[i].winLossKey == 'Win') ++winRate;
+      if (logs[i].isWin()) ++winRate;
     }
 
     winRate /= logs.length;
 
     return (winRate * 100.0).toStringAsFixed(2);
   }
+}
 
-  // Toggle a lock on this team
-  // When a team is locked, the team cannot be changed or removed
-  void toggleLock() => locked = !locked;
+// A logged opponent team
+class LogPokemonTeam extends PokemonTeam {
+  // For logging opponent teams, this value can either be :
+  // Win
+  // Tie
+  // Loss
+  String winLossKey = 'Win';
+
+  bool isWin() {
+    return winLossKey == 'Win';
+  }
 }

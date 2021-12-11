@@ -10,18 +10,18 @@ import 'pokemon/pokemon_team.dart';
 */
 
 class TeamsProvider with ChangeNotifier {
-  List<PokemonTeam> builderTeams = List.empty(growable: true);
+  List<UserPokemonTeam> builderTeams = List.empty(growable: true);
 
   // Manual notify
   void notify() => notifyListeners();
 
   // Add a new empty team
   void addTeam() {
-    builderTeams.add(PokemonTeam());
+    builderTeams.add(UserPokemonTeam());
     notifyListeners();
   }
 
-  void setTeamAt(int index, PokemonTeam team) {
+  void setTeamAt(int index, UserPokemonTeam team) {
     builderTeams[index] = team;
     notifyListeners();
   }

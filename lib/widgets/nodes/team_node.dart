@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'pokemon_node.dart';
 import '../../configs/size_config.dart';
 import '../../data/pokemon/pokemon.dart';
+import '../../data/cup.dart';
 import '../../data/pokemon/pokemon_team.dart';
 
 /*
@@ -26,6 +27,7 @@ class TeamNode extends StatelessWidget {
     required this.onPressed,
     required this.onEmptyPressed,
     required this.team,
+    required this.cup,
     this.buildHeader = false,
     this.footer,
     this.focusIndex,
@@ -37,6 +39,7 @@ class TeamNode extends StatelessWidget {
   final Function(int) onPressed;
   final Function(int) onEmptyPressed;
   final PokemonTeam team;
+  final Cup cup;
 
   final bool buildHeader;
   final Widget? footer;
@@ -46,6 +49,9 @@ class TeamNode extends StatelessWidget {
   final EdgeInsets? padding;
 
   Widget _buildHeader() {
+    // Only applicable to user Pokemon teams
+    if (team.runtimeType != UserPokemonTeam) return Container();
+
     return Padding(
       padding: EdgeInsets.only(
         left: SizeConfig.blockSizeHorizontal * 2.0,
@@ -57,14 +63,14 @@ class TeamNode extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            team.cup.title,
+            cup.title,
             style: TextStyle(
               fontSize: SizeConfig.h2,
               fontStyle: FontStyle.italic,
             ),
           ),
           Text(
-            'Win Rate : ${team.getWinRate()} %',
+            'Win Rate : ${(team as UserPokemonTeam).getWinRate()} %',
             style: TextStyle(
               fontSize: SizeConfig.h3,
               fontStyle: FontStyle.italic,
@@ -155,11 +161,11 @@ class TeamNode extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: team.cup.cupColor,
+          color: cup.cupColor,
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [team.cup.cupColor, Colors.transparent],
+            colors: [cup.cupColor, Colors.transparent],
             tileMode: TileMode.clamp,
           ),
           borderRadius: BorderRadius.circular(20),

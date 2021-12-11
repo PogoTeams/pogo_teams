@@ -67,21 +67,21 @@ class PogoDrawer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          'Team Builder',
+                          'Teams',
                           style: TextStyle(fontSize: SizeConfig.h1),
                         ),
                         SizedBox(
                           width: SizeConfig.blockSizeHorizontal * 3.0,
                         ),
-                        Icon(
-                          Icons.build_circle,
-                          size: SizeConfig.blockSizeHorizontal * 5.0,
+                        Image.asset(
+                          'assets/pokeball_icon.png',
+                          width: SizeConfig.blockSizeHorizontal * 5.0,
                         ),
                       ],
                     ),
                     onTap: () {
                       Navigator.pop(context);
-                      onNavSelected('Team Builder');
+                      onNavSelected('Teams');
                     },
                   ),
                   ListTile(
@@ -97,7 +97,7 @@ class PogoDrawer extends StatelessWidget {
                         ),
                         Icon(
                           Icons.bar_chart,
-                          size: SizeConfig.blockSizeHorizontal * 5.0,
+                          size: SizeConfig.blockSizeHorizontal * 6.0,
                         ),
                       ],
                     ),

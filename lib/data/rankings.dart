@@ -147,6 +147,7 @@ class Rankings {
 
     return rankingsList.map<Pokemon>((RankedPokemon rankedPokemon) {
       final Pokemon pokemon = Pokemon.from(idMap[rankedPokemon.speciesId]!);
+
       pokemon.initializeMetaMoves(rankedPokemon.moveset);
       pokemon.setRating(rankedPokemon.rating);
       return pokemon;

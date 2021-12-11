@@ -11,9 +11,12 @@ import 'package:provider/provider.dart';
 // Local Imports
 import '../../configs/size_config.dart';
 import '../../data/pokemon/pokemon.dart';
+import '../../data/cup.dart';
 import '../../widgets/pokemon_list.dart';
 import '../../widgets/buttons/exit_button.dart';
 import '../../widgets/pogo_text_field.dart';
+import '../../widgets/dropdowns/cup_dropdown.dart';
+import '../../widgets/dropdowns/team_size_dropdown.dart';
 import '../../widgets/dropdowns/win_loss_dropdown.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../data/pokemon/pokemon_team.dart';
@@ -31,19 +34,23 @@ class TeamBuilderSearch extends StatefulWidget {
   const TeamBuilderSearch({
     Key? key,
     required this.team,
+    required this.cup,
     required this.focusIndex,
-    this.log = false,
   }) : super(key: key);
 
   final PokemonTeam team;
+  final Cup cup;
   final int focusIndex;
-  final bool log;
 
   @override
   _TeamBuilderSearchState createState() => _TeamBuilderSearchState();
 }
 
 class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
+  late Cup _cup = widget.cup;
+
+  // If the user decides not to keep the changes, this ref is used
+  // to restore team state
   late final List<Pokemon?> _oldTeam;
 
   // The current index of the team the user is editing
@@ -86,59 +93,50 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     });
   }
 
-  // Build the scaffold for this page
-  Widget _buildScaffold(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: SizeConfig.blockSizeHorizontal * 2.0,
-            right: SizeConfig.blockSizeHorizontal * 2.0,
-          ),
-          child: Column(
-            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildTeamNode(),
-
-              PogoTextField(controller: _searchController),
-
-              // Spacer
-              SizedBox(
-                height: SizeConfig.blockSizeVertical * 1.0,
-              ),
-
-              _buildPokemonList(),
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: _buildFloatingActionButtons(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
-  }
-
   // The current team being edited, in a grid view
   Widget _buildTeamNode() {
     return TeamNode(
       onPressed: _updateWorkingIndex,
       onEmptyPressed: _updateWorkingIndex,
       team: widget.team,
+      cup: _cup,
       focusIndex: _workingIndex,
       emptyTransparent: true,
-      footer: widget.log
-          ? WinLossDropdown(
-              selectedOption: widget.team.winLossKey,
-              onChanged: (winLossKey) {
-                if (winLossKey == null) return;
+      footer: _buildTeamNodeFooter(),
+    );
+  }
 
-                setState(() {
-                  widget.team.winLossKey = winLossKey;
-                });
-              },
-              width: SizeConfig.screenWidth,
-            )
-          : Container(),
+  Widget _buildTeamNodeFooter() {
+    if (widget.team.runtimeType == LogPokemonTeam) {
+      return WinLossDropdown(
+        selectedOption: (widget.team as LogPokemonTeam).winLossKey,
+        onChanged: (winLossKey) {
+          if (winLossKey == null) return;
+
+          setState(() {
+            (widget.team as LogPokemonTeam).winLossKey = winLossKey;
+          });
+        },
+        width: SizeConfig.screenWidth,
+      );
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Dropdown for pvp cup selection
+        CupDropdown(
+          cup: (widget.team as UserPokemonTeam).cup,
+          onCupChanged: _onCupChanged,
+          width: SizeConfig.screenWidth * .65,
+        ),
+
+        // Dropdown to select team size
+        TeamSizeDropdown(
+          size: widget.team.pokemonTeam.length,
+          onTeamSizeChanged: _onTeamSizeChanged,
+        ),
+      ],
     );
   }
 
@@ -169,6 +167,10 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
             onPressed: () {
               // Restore old team
               widget.team.setTeam(_oldTeam);
+              if (widget.team.runtimeType == UserPokemonTeam) {
+                (widget.team as UserPokemonTeam).cup = widget.cup;
+              }
+
               Navigator.pop(context);
             },
             backgroundColor: Colors.red[400]!,
@@ -197,6 +199,23 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     });
   }
 
+  void _onCupChanged(String? newCup) {
+    if (newCup == null) return;
+
+    setState(() {
+      (widget.team as UserPokemonTeam).setCup(newCup);
+      _cup = (widget.team as UserPokemonTeam).cup;
+    });
+  }
+
+  void _onTeamSizeChanged(int? newSize) {
+    if (newSize == null) return;
+
+    setState(() {
+      (widget.team as UserPokemonTeam).setTeamSize(newSize);
+    });
+  }
+
   // Setup the input controller
   @override
   void initState() {
@@ -207,7 +226,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     _oldTeam = List.from(widget.team.pokemonTeam);
 
     // Get the selected cup and list of Pokemon based on the category
-    pokemon = widget.team.cup.getRankedPokemonList('overall');
+    pokemon = widget.cup.getRankedPokemonList('overall');
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);
@@ -227,6 +246,33 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
       filteredPokemon = pokemon;
     }
 
-    return _buildScaffold(context);
+    return Scaffold(
+      body: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: SizeConfig.blockSizeHorizontal * 2.0,
+            right: SizeConfig.blockSizeHorizontal * 2.0,
+          ),
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildTeamNode(),
+
+              PogoTextField(controller: _searchController),
+
+              // Spacer
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 1.0,
+              ),
+
+              _buildPokemonList(),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: _buildFloatingActionButtons(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
   }
 }

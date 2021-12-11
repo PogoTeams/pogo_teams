@@ -31,10 +31,6 @@ class PokemonActionButton extends StatelessWidget {
   final Icon icon;
   final Function(Pokemon) onPressed;
 
-  void _onPressed() {
-    onPressed(pokemon);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -43,7 +39,7 @@ class PokemonActionButton extends StatelessWidget {
         bottom: SizeConfig.blockSizeVertical * .5,
       ),
       child: MaterialButton(
-        onPressed: _onPressed,
+        onPressed: () => onPressed(pokemon),
         child: Container(
           height: SizeConfig.blockSizeVertical * 4.0,
           width: width,

@@ -7,11 +7,9 @@ import 'package:flutter/rendering.dart';
 import '../../data/pokemon/typing.dart';
 import '../../data/pokemon/pokemon_team.dart';
 import '../../data/pokemon/pokemon.dart';
-import '../../data/cup.dart';
 import '../nodes/pokemon_node.dart';
 import '../../configs/size_config.dart';
 import '../buttons/pokemon_action_button.dart';
-import '../../pages/team_swap.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -24,38 +22,21 @@ the user to swap this Pokemon with another in their team.
 class SwapList extends StatelessWidget {
   const SwapList({
     Key? key,
+    required this.onSwap,
+    required this.onAdd,
     required this.team,
     required this.types,
-    required this.onTeamChanged,
   }) : super(key: key);
 
-  final PokemonTeam team;
+  final Function(Pokemon) onSwap;
+  final Function(Pokemon) onAdd;
+  final UserPokemonTeam team;
   final List<Type> types;
-  final Function(List<Pokemon>) onTeamChanged;
 
   // Either 1 or 2 footer buttons will display for a Pokemon's node.
   // If there is free space in the Pokemon team, render add and swap buttons.
   // Otherwise only render the swap button.
   Widget _buildFooter(BuildContext context, Pokemon pokemon) {
-    // Callback for action buttons
-    void _onTeamChanged(Pokemon pokemon) async {
-      List<Pokemon>? newTeam = await Navigator.push(
-        context,
-        MaterialPageRoute<List<Pokemon>>(
-          builder: (BuildContext context) {
-            return TeamSwap(
-              team: team,
-              swap: pokemon,
-            );
-          },
-        ),
-      );
-
-      if (newTeam != null) {
-        onTeamChanged(newTeam);
-      }
-    }
-
     if (team.hasSpace()) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -69,10 +50,7 @@ class SwapList extends StatelessWidget {
               size: SizeConfig.blockSizeHorizontal * 5.0,
               color: Colors.white,
             ),
-            onPressed: (pokemon) {
-              team.addPokemon(pokemon);
-              onTeamChanged(team.getPokemonTeam());
-            },
+            onPressed: onAdd,
           ),
           PokemonActionButton(
             width: SizeConfig.screenWidth * .35,
@@ -83,7 +61,7 @@ class SwapList extends StatelessWidget {
               size: SizeConfig.blockSizeHorizontal * 5.0,
               color: Colors.white,
             ),
-            onPressed: _onTeamChanged,
+            onPressed: onSwap,
           ),
         ],
       );
@@ -97,7 +75,7 @@ class SwapList extends StatelessWidget {
         size: SizeConfig.blockSizeHorizontal * 5.0,
         color: Colors.white,
       ),
-      onPressed: _onTeamChanged,
+      onPressed: onSwap,
     );
   }
 
@@ -120,40 +98,6 @@ class SwapList extends StatelessWidget {
         ),
       ),
       physics: const NeverScrollableScrollPhysics(),
-    );
-  }
-}
-
-class LogSwapList extends StatelessWidget {
-  const LogSwapList({
-    Key? key,
-    required this.cup,
-    required this.types,
-    required this.onTeamChanged,
-  }) : super(key: key);
-
-  final Cup cup;
-  final List<Type> types;
-  final Function(List<Pokemon>) onTeamChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    List<Pokemon> counters =
-        cup.getFilteredRankedPokemonList(types, 'overall', limit: 50);
-
-    return Column(
-      children: counters
-          .map(
-            (pokemon) => Padding(
-              padding: EdgeInsets.only(
-                bottom: SizeConfig.blockSizeHorizontal * 2.0,
-              ),
-              child: PokemonNode.small(
-                pokemon: pokemon,
-              ),
-            ),
-          )
-          .toList(),
     );
   }
 }

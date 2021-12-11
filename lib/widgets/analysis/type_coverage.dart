@@ -21,13 +21,11 @@ class TypeCoverage extends StatelessWidget {
     required this.netEffectiveness,
     required this.defenseThreats,
     required this.offenseCoverage,
-    required this.teamSize,
   }) : super(key: key);
 
   final List<Pair<Type, double>> netEffectiveness;
   final List<Pair<Type, double>> defenseThreats;
   final List<Pair<Type, double>> offenseCoverage;
-  final int teamSize;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,6 @@ class TypeCoverage extends StatelessWidget {
 
         CoverageGraph(
           netEffectiveness: netEffectiveness,
-          teamSize: teamSize,
         ),
       ],
     );

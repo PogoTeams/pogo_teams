@@ -9,8 +9,8 @@ import 'package:provider/provider.dart';
 // Local Imports
 import 'team_edit.dart';
 import 'team_builder_search.dart';
-import '../team_analysis.dart';
-import '../team_battle_log.dart';
+import '../analysis/analysis.dart';
+import 'battle_log.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../configs/size_config.dart';
@@ -30,14 +30,14 @@ containing the following functionality :
 -------------------------------------------------------------------------------
 */
 
-class TeamBuilder extends StatefulWidget {
-  const TeamBuilder({Key? key}) : super(key: key);
+class TeamsBuilder extends StatefulWidget {
+  const TeamsBuilder({Key? key}) : super(key: key);
 
   @override
-  _TeamBuilderState createState() => _TeamBuilderState();
+  _TeamsBuilderState createState() => _TeamsBuilderState();
 }
 
-class _TeamBuilderState extends State<TeamBuilder> {
+class _TeamsBuilderState extends State<TeamsBuilder> {
   // Build the list of TeamNodes, with the necessary callbacks
   Widget _buildTeamsList(BuildContext context) {
     // Provider retrieve
@@ -56,9 +56,12 @@ class _TeamBuilderState extends State<TeamBuilder> {
                     _onEmptyPressed(index, nodeIndex),
                 onPressed: (_) {},
                 team: _teams[index],
+                cup: _teams[index].cup,
                 buildHeader: true,
                 footer: _buildTeamNodeFooter(index),
               ),
+
+              // Spacer to give last node in the list more scroll room
               SizedBox(
                 height: SizeConfig.blockSizeVertical * 10.0,
               ),
@@ -70,6 +73,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
           onEmptyPressed: (nodeIndex) => _onEmptyPressed(index, nodeIndex),
           onPressed: (_) {},
           team: _teams[index],
+          cup: _teams[index].cup,
           buildHeader: true,
           footer: _buildTeamNodeFooter(index),
         );
@@ -86,24 +90,34 @@ class _TeamBuilderState extends State<TeamBuilder> {
         right: SizeConfig.blockSizeHorizontal * 2.0,
         bottom: SizeConfig.blockSizeVertical * 1.0,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: _buildFooterButtons(teamIndex),
-      ),
+      child: _buildFooterButtons(teamIndex),
     );
   }
 
   // The icon buttons at the footer of each TeamNode
-  List<Widget> _buildFooterButtons(int teamIndex) {
+  Widget _buildFooterButtons(int teamIndex) {
     // Size of the footer icons
     final double iconSize = SizeConfig.blockSizeHorizontal * 6.0;
 
     // Provider retrieve
     final _team = Provider.of<TeamsProvider>(context, listen: true)
         .builderTeams[teamIndex];
+    final IconData lockIcon = _team.locked ? Icons.lock : Icons.lock_open;
 
-    if (_team.locked) {
-      return [
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Remove team option if the team is unlocked
+        _team.locked
+            ? Container()
+            : IconButton(
+                onPressed: () => _onClearTeam(teamIndex),
+                icon: const Icon(Icons.clear),
+                tooltip: 'Remove Team',
+                iconSize: iconSize,
+                splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
+              ),
+
         // Analyze team
         IconButton(
           onPressed: () => _onAnalyzeTeam(teamIndex),
@@ -125,7 +139,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
         // Edit team
         IconButton(
           onPressed: () => _onEditTeam(teamIndex),
-          icon: const Icon(Icons.change_circle),
+          icon: const Icon(Icons.build_circle),
           tooltip: 'Edit Team',
           iconSize: iconSize,
           splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
@@ -133,59 +147,13 @@ class _TeamBuilderState extends State<TeamBuilder> {
 
         IconButton(
           onPressed: () => _onLockPressed(teamIndex),
-          icon: const Icon(Icons.lock),
+          icon: Icon(lockIcon),
           tooltip: 'Unlock Team',
           iconSize: iconSize,
           splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
-        ),
-      ];
-    }
-
-    return [
-      // Remove team
-      IconButton(
-        onPressed: () => _onClearTeam(teamIndex),
-        icon: const Icon(Icons.clear),
-        tooltip: 'Remove Team',
-        iconSize: iconSize,
-        splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
-      ),
-
-      // Analyze team
-      IconButton(
-        onPressed: () => _onAnalyzeTeam(teamIndex),
-        icon: const Icon(Icons.analytics),
-        tooltip: 'Analyze Team',
-        iconSize: iconSize,
-        splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
-      ),
-
-      // Log team
-      IconButton(
-        onPressed: () => _onLogTeam(teamIndex),
-        icon: const Icon(Icons.query_stats),
-        tooltip: 'Log Team',
-        iconSize: iconSize,
-        splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
-      ),
-
-      // Edit team
-      IconButton(
-        onPressed: () => _onEditTeam(teamIndex),
-        icon: const Icon(Icons.change_circle),
-        tooltip: 'Edit Team',
-        iconSize: iconSize,
-        splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
-      ),
-
-      IconButton(
-        onPressed: () => _onLockPressed(teamIndex),
-        icon: const Icon(Icons.lock_open),
-        tooltip: 'Lock Team',
-        iconSize: iconSize,
-        splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
-      ),
-    ];
+        )
+      ],
+    );
   }
 
   // Remove the team at specified index
@@ -207,7 +175,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
     final newTeam = await Navigator.push(
       context,
       MaterialPageRoute<List<Pokemon?>>(builder: (BuildContext context) {
-        return TeamAnalysis(team: _team);
+        return Analysis(team: _team);
       }),
     );
 
@@ -222,7 +190,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
     Navigator.push(
       context,
       MaterialPageRoute<Pokemon>(
-        builder: (BuildContext context) => TeamBattleLog(
+        builder: (BuildContext context) => BattleLog(
           teamIndex: teamIndex,
         ),
       ),
@@ -257,14 +225,15 @@ class _TeamBuilderState extends State<TeamBuilder> {
   // Navigate to the team build search page, with focus on the specified
   // nodeIndex
   void _onEmptyPressed(int teamIndex, int nodeIndex) async {
-    PokemonTeam _team = Provider.of<TeamsProvider>(context, listen: false)
+    UserPokemonTeam _team = Provider.of<TeamsProvider>(context, listen: false)
         .builderTeams[teamIndex];
 
     final _newTeam = await Navigator.push(
       context,
-      MaterialPageRoute<PokemonTeam>(builder: (BuildContext context) {
+      MaterialPageRoute<UserPokemonTeam>(builder: (BuildContext context) {
         return TeamBuilderSearch(
           team: _team,
+          cup: _team.cup,
           focusIndex: nodeIndex,
         );
       }),
