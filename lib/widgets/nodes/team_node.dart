@@ -164,8 +164,11 @@ class TeamNode extends StatelessWidget {
           color: cup.cupColor,
           gradient: LinearGradient(
             begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [cup.cupColor, Colors.transparent],
+            end: Alignment.bottomRight,
+            colors: [
+              cup.cupColor,
+              const Color(0xBF29F19C),
+            ],
             tileMode: TileMode.clamp,
           ),
           borderRadius: BorderRadius.circular(20),

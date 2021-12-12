@@ -82,20 +82,8 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
     );
   }
 
-  // Build a row of icon buttons at the bottom of the TeamNode
-  Widget _buildTeamNodeFooter(int teamIndex) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: SizeConfig.blockSizeHorizontal * 2.0,
-        right: SizeConfig.blockSizeHorizontal * 2.0,
-        bottom: SizeConfig.blockSizeVertical * 1.0,
-      ),
-      child: _buildFooterButtons(teamIndex),
-    );
-  }
-
   // The icon buttons at the footer of each TeamNode
-  Widget _buildFooterButtons(int teamIndex) {
+  Widget _buildTeamNodeFooter(int teamIndex) {
     // Size of the footer icons
     final double iconSize = SizeConfig.blockSizeHorizontal * 6.0;
 

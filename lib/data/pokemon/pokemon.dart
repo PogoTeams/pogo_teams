@@ -233,14 +233,15 @@ class Pokemon {
 
   // This json will contain moveset info and an id
   // This id is used to retrieve an actual Pokemon ref from the idMap
-  static Pokemon fromStateJson(
-      Map<String, dynamic> json, Map<String, Pokemon> idMap) {
-    Pokemon fromStorage = Pokemon.from(idMap[json['speciesId']]!);
+  static Pokemon? fromStateJson(dynamic json, Map<String, Pokemon> idMap) {
+    if (json == null) return null;
 
-    fromStorage.setMoveset(json['selectedFastMove'] as String,
+    Pokemon stateJson = Pokemon.from(idMap[json['speciesId']]!);
+
+    stateJson.setMoveset(json['selectedFastMove'] as String,
         List<String>.from(json['selectedChargedMoves']));
 
-    return fromStorage;
+    return stateJson;
   }
 
   // For writing out to local storage

@@ -20,12 +20,14 @@ class GradientButton extends StatelessWidget {
     required this.child,
     required this.width,
     required this.height,
+    this.borderRadius,
   }) : super(key: key);
 
   final VoidCallback onPressed;
   final Widget child;
   final double width;
   final double height;
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class GradientButton extends StatelessWidget {
           colors: [Color(0xBF29F19C), Color(0xFF02A1F9)],
           tileMode: TileMode.clamp,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: borderRadius ?? BorderRadius.circular(20),
       ),
       width: width,
       height: height,

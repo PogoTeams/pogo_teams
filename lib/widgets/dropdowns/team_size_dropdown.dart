@@ -63,12 +63,20 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
         right: SizeConfig.blockSizeHorizontal * 2.0,
       ),
       decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomRight,
+          colors: [
+            Theme.of(context).scaffoldBackgroundColor,
+            Colors.transparent,
+          ],
+          tileMode: TileMode.clamp,
+        ),
         border: Border.all(
           color: Colors.white,
           width: SizeConfig.blockSizeHorizontal * .4,
         ),
         borderRadius: BorderRadius.circular(100.0),
-        color: Theme.of(context).scaffoldBackgroundColor,
       ),
 
       // Cup dropdown button

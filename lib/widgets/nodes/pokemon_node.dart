@@ -59,7 +59,8 @@ class PokemonNode extends StatelessWidget {
     body = _SmallNodeBody(
       pokemon: pokemon!,
       dropdowns: dropdowns,
-      onMoveChanged: onMoveChanged,
+      onMoveChanged: () =>
+          onMoveChanged == null ? (_) {} : onMoveChanged!(pokemon!),
     );
   }
 
@@ -84,14 +85,15 @@ class PokemonNode extends StatelessWidget {
       pokemon: pokemon!,
       cup: cup,
       footer: footer,
-      onMoveChanged: onMoveChanged,
+      onMoveChanged: () =>
+          onMoveChanged == null ? (_) {} : onMoveChanged!(pokemon!),
     );
   }
 
   final Pokemon? pokemon;
   late final VoidCallback? onPressed;
   late final VoidCallback? onEmptyPressed;
-  late final VoidCallback? onMoveChanged;
+  late final Function(Pokemon)? onMoveChanged;
 
   late final double width;
   late final double height;

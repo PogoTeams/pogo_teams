@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 
 // Package Imports
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 // Local Imports
 import 'pages/teams/teams_builder.dart';
@@ -122,21 +123,26 @@ class _PogoScaffoldState extends State<PogoScaffold>
     // Initialize media queries
     SizeConfig().init(context);
 
-    return Scaffold(
-      appBar: _buildAppBar(),
-      drawer: PogoDrawer(
-        onNavSelected: _onNavSelected,
-      ),
-      body: FadeTransition(
-        opacity: _animation,
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: SizeConfig.blockSizeHorizontal * 2.0,
-            right: SizeConfig.blockSizeHorizontal * 2.0,
+    return ValueListenableBuilder<Box>(
+      valueListenable: Hive.box('teams').listenable(),
+      builder: (context, box, widget) {
+        return Scaffold(
+          appBar: _buildAppBar(),
+          drawer: PogoDrawer(
+            onNavSelected: _onNavSelected,
           ),
-          child: _pages[_navKey],
-        ),
-      ),
+          body: FadeTransition(
+            opacity: _animation,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: SizeConfig.blockSizeHorizontal * 2.0,
+                right: SizeConfig.blockSizeHorizontal * 2.0,
+              ),
+              child: _pages[_navKey],
+            ),
+          ),
+        );
+      },
     );
   }
 }

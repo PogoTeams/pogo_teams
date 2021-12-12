@@ -157,20 +157,8 @@ class _BattleLogState extends State<BattleLog> {
     );
   }
 
-  // Build a row of icon buttons at the bottom of the TeamNode
-  Widget _buildTeamNodeFooter(int teamIndex) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: SizeConfig.blockSizeHorizontal * 2.0,
-        right: SizeConfig.blockSizeHorizontal * 2.0,
-        bottom: SizeConfig.blockSizeVertical * 1.0,
-      ),
-      child: _buildFooterButtons(teamIndex),
-    );
-  }
-
   // The icon buttons at the footer of each TeamNode
-  Widget _buildFooterButtons(int teamIndex) {
+  Widget _buildTeamNodeFooter(int teamIndex) {
     // Size of the footer icons
     final double iconSize = SizeConfig.blockSizeHorizontal * 6.0;
 
@@ -279,8 +267,14 @@ class _BattleLogState extends State<BattleLog> {
               ),
             ],
           ),
-          width: SizeConfig.screenWidth * .42,
+          width: SizeConfig.screenWidth * .44,
           height: SizeConfig.blockSizeVertical * 8.5,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(50),
+            topRight: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+            bottomLeft: Radius.circular(50),
+          ),
         ),
 
         // Log button
@@ -304,8 +298,14 @@ class _BattleLogState extends State<BattleLog> {
               ),
             ],
           ),
-          width: SizeConfig.screenWidth * .42,
+          width: SizeConfig.screenWidth * .44,
           height: SizeConfig.blockSizeVertical * 8.5,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(50),
+            bottomRight: Radius.circular(50),
+            bottomLeft: Radius.circular(20),
+          ),
         ),
       ],
     );
@@ -353,7 +353,7 @@ class _BattleLogState extends State<BattleLog> {
 
     if (_newLog != null) {
       setState(() {
-        _log = _newLog;
+        _team.setLogAt(teamIndex, _newLog as LogPokemonTeam);
       });
     }
   }
@@ -375,9 +375,9 @@ class _BattleLogState extends State<BattleLog> {
 
     setState(() {
       if (_newLog != null) {
-        _team.logs.last = _newLog;
+        _team.setLogAt(_team.logs.length - 1, _newLog);
       } else {
-        _team.logs.removeLast();
+        _team.removeLogAt(_team.logs.length - 1);
       }
     });
   }
@@ -399,7 +399,7 @@ class _BattleLogState extends State<BattleLog> {
 
     if (_newLog != null) {
       setState(() {
-        _log = _newLog;
+        _team.setLogAt(teamIndex, _newLog as LogPokemonTeam);
       });
     }
   }

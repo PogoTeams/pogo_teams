@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package Imports
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 // Local Imports
@@ -17,6 +18,10 @@ void main() async {
   // Global gamemaster reference setup
   // All Pokemon GO related data is in the gamemaster
   globals.gamemaster = await GameMaster.generateGameMaster();
+
+  // Initialize the database for user data persistance
+  await Hive.initFlutter();
+  await Hive.openBox('teams');
 
   // Restrict view orientation to portrait only
   SystemChrome.setPreferredOrientations(

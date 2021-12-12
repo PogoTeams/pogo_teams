@@ -102,7 +102,12 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
       cup: _cup,
       focusIndex: _workingIndex,
       emptyTransparent: true,
-      footer: _buildTeamNodeFooter(),
+      footer: Padding(
+        padding: EdgeInsets.only(
+          bottom: SizeConfig.blockSizeVertical * 2.0,
+        ),
+        child: _buildTeamNodeFooter(),
+      ),
     );
   }
 
@@ -114,7 +119,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
           if (winLossKey == null) return;
 
           setState(() {
-            (widget.team as LogPokemonTeam).winLossKey = winLossKey;
+            (widget.team as LogPokemonTeam).setWinLossKey(winLossKey);
           });
         },
         width: SizeConfig.screenWidth,
@@ -255,9 +260,13 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
             right: SizeConfig.blockSizeHorizontal * 2.0,
           ),
           child: Column(
-            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildTeamNode(),
+
+              // Spacer
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 1.0,
+              ),
 
               PogoTextField(controller: _searchController),
 

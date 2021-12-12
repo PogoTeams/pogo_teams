@@ -182,9 +182,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
           ),
           child: PokemonNode.small(
             pokemon: pokemonTeam[index],
-            onMoveChanged: () => setState(() {
-              _initializeExpansionPanels(pokemonTeam);
-            }),
+            dropdowns: false,
           ),
         ),
       ),

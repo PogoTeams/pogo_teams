@@ -1,3 +1,6 @@
+// Flutter Imports
+import 'package:flutter/material.dart';
+
 // Local Imports
 import 'pokemon.dart';
 import '../cup.dart';
@@ -16,11 +19,16 @@ the app.
 // The data model for a Pokemon PVP Team
 // Every team page manages one instance of this class
 class PokemonTeam {
+  PokemonTeam({required this.save});
+
+  final VoidCallback save;
+
   // The list of 3 pokemon references that make up the team
   List<Pokemon?> pokemonTeam = List.filled(3, null);
 
   // If true, the team cannot be removed or changed
-  bool locked = false;
+  bool _locked = false;
+  bool get locked => _locked;
 
   // A list of this pokemon team's net effectiveness
   List<double> effectiveness = List.generate(
@@ -34,6 +42,8 @@ class PokemonTeam {
         (index) => index < newTeam.length ? newTeam[index] : null);
 
     _updateEffectiveness();
+
+    save();
   }
 
   // Set the specified Pokemon in the team by the specified index
@@ -44,6 +54,8 @@ class PokemonTeam {
       pokemonTeam[index] = Pokemon.from(pokemon);
     }
     _updateEffectiveness();
+
+    save();
   }
 
   // Get the list of non-null Pokemon
@@ -69,6 +81,8 @@ class PokemonTeam {
     if (added) {
       _updateEffectiveness();
     }
+
+    save();
   }
 
   // True if the Pokemon ref is null at the given index
@@ -110,6 +124,8 @@ class PokemonTeam {
       newSize,
       (index) => index < pokemonTeam.length ? pokemonTeam[index] : null,
     );
+
+    save();
   }
 
   // Update the type effectiveness of this Pokemon team
@@ -118,20 +134,47 @@ class PokemonTeam {
     effectiveness = TypeMaster.getNetEffectiveness(getPokemonTeam());
   }
 
-  // Clear and reset all team data
-  void clear() {
-    void _clearPokemon(pokemon) => pokemon = null;
+  // Toggle a lock on this team
+  // When a team is _locked, the team cannot be changed or removed
+  void toggleLock() {
+    _locked = !_locked;
 
-    pokemonTeam.forEach(_clearPokemon);
+    save();
   }
 
-  // Toggle a lock on this team
-  // When a team is locked, the team cannot be changed or removed
-  void toggleLock() => locked = !locked;
+  void _pokemonTeamFromJson(List<dynamic> teamJson) {
+    setTeamSize(teamJson.length);
+
+    for (int i = 0; i < teamJson.length; ++i) {
+      pokemonTeam[i] = Pokemon.fromStateJson(
+        teamJson[i]['pokemon_$i'],
+        globals.gamemaster.pokemonIdMap,
+      );
+    }
+
+    _updateEffectiveness();
+  }
+
+  // Build and return a json serializable list of the Pokemon Team
+  List<Map<String, dynamic>> _pokemonTeamToJson() {
+    List<Map<String, dynamic>> teamJson = List.empty(growable: true);
+
+    for (int i = 0; i < pokemonTeam.length; ++i) {
+      if (pokemonTeam[i] == null) {
+        teamJson.add({'pokemon_$i': null});
+      } else {
+        teamJson.add({'pokemon_$i': pokemonTeam[i]!.toStateJson()});
+      }
+    }
+
+    return teamJson;
+  }
 }
 
 // A user's team
 class UserPokemonTeam extends PokemonTeam {
+  UserPokemonTeam({required save}) : super(save: save);
+
   // The selected PVP cup for this team
   // Defaults to Great League
   Cup cup = globals.gamemaster.cups[0];
@@ -140,26 +183,37 @@ class UserPokemonTeam extends PokemonTeam {
   // The user can report wins, ties, and losses given this list
   List<LogPokemonTeam> logs = List.empty(growable: true);
 
+  void setLogs(List<LogPokemonTeam> newLogs) {
+    logs = newLogs;
+
+    save();
+  }
+
   // Switch to a different cup with the specified cupTitle
   void setCup(String cupTitle) {
     cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == cupTitle);
-  }
 
-  // Clear and reset all team data
-  @override
-  void clear() {
-    super.clear();
-    cup = globals.gamemaster.cups[0];
+    save();
   }
 
   void addLog() {
-    logs.add(LogPokemonTeam());
-    logs.last.locked = true;
+    logs.add(LogPokemonTeam(save: save));
+    logs.last._locked = true;
     logs.last.setTeamSize(pokemonTeam.length);
+
+    save();
+  }
+
+  void setLogAt(int index, LogPokemonTeam newLog) {
+    logs[index] = newLog;
+
+    save();
   }
 
   void removeLogAt(int index) {
     logs.removeAt(index);
+
+    save();
   }
 
   // Calculate the average win rate for this Pokemon Team
@@ -177,17 +231,77 @@ class UserPokemonTeam extends PokemonTeam {
 
     return (winRate * 100.0).toStringAsFixed(2);
   }
+
+  void fromJson(json) {
+    _pokemonTeamFromJson(json['pokemonTeam']);
+    _locked = json['_locked'];
+
+    final cupTitle = json['cup'] ?? 'Great League';
+    setCup(cupTitle);
+
+    _logsFromJson(json['logs']);
+  }
+
+  void _logsFromJson(logsJson) {
+    for (int i = 0; i < logsJson.length; ++i) {
+      logs.add(LogPokemonTeam(save: save));
+      logs.last.fromJson(logsJson[i]);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'pokemonTeam': _pokemonTeamToJson(),
+      '_locked': _locked,
+      'cup': cup.title,
+      'logs': _logsToJson()
+    };
+  }
+
+  // Build and return a json serializable list of the logged opponent teams
+  List<Map<String, dynamic>> _logsToJson() {
+    List<Map<String, dynamic>> logsJson = List.empty(growable: true);
+
+    for (int i = 0; i < logs.length; ++i) {
+      logsJson.add(logs[i].toJson());
+    }
+
+    return logsJson;
+  }
 }
 
 // A logged opponent team
 class LogPokemonTeam extends PokemonTeam {
+  LogPokemonTeam({required save}) : super(save: save);
+
   // For logging opponent teams, this value can either be :
   // Win
   // Tie
   // Loss
-  String winLossKey = 'Win';
+  String _winLossKey = 'Win';
+  String get winLossKey => _winLossKey;
+
+  void setWinLossKey(String key) {
+    _winLossKey = key;
+
+    save();
+  }
 
   bool isWin() {
-    return winLossKey == 'Win';
+    return _winLossKey == 'Win';
+  }
+
+  void fromJson(json) {
+    _winLossKey = json['_winLossKey'] ?? 'Win';
+    _pokemonTeamFromJson(json['pokemonTeam']);
+    _locked = json['_locked'] ?? true;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_winLossKey': _winLossKey,
+      'pokemonTeam': _pokemonTeamToJson(),
+      '_locked': _locked
+    };
   }
 }
