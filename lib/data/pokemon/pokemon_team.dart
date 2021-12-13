@@ -27,8 +27,7 @@ class PokemonTeam {
   List<Pokemon?> pokemonTeam = List.filled(3, null);
 
   // If true, the team cannot be removed or changed
-  bool _locked = false;
-  bool get locked => _locked;
+  bool locked = false;
 
   // A list of this pokemon team's net effectiveness
   List<double> effectiveness = List.generate(
@@ -135,9 +134,9 @@ class PokemonTeam {
   }
 
   // Toggle a lock on this team
-  // When a team is _locked, the team cannot be changed or removed
+  // When a team is locked, the team cannot be changed or removed
   void toggleLock() {
-    _locked = !_locked;
+    locked = !locked;
 
     save();
   }
@@ -198,7 +197,7 @@ class UserPokemonTeam extends PokemonTeam {
 
   void addLog() {
     logs.add(LogPokemonTeam(save: save));
-    logs.last._locked = true;
+    logs.last.locked = true;
     logs.last.setTeamSize(pokemonTeam.length);
 
     save();
@@ -234,7 +233,7 @@ class UserPokemonTeam extends PokemonTeam {
 
   void fromJson(json) {
     _pokemonTeamFromJson(json['pokemonTeam']);
-    _locked = json['_locked'];
+    locked = json['locked'];
 
     final cupTitle = json['cup'] ?? 'Great League';
     setCup(cupTitle);
@@ -252,7 +251,7 @@ class UserPokemonTeam extends PokemonTeam {
   Map<String, dynamic> toJson() {
     return {
       'pokemonTeam': _pokemonTeamToJson(),
-      '_locked': _locked,
+      'locked': locked,
       'cup': cup.title,
       'logs': _logsToJson()
     };
@@ -294,14 +293,14 @@ class LogPokemonTeam extends PokemonTeam {
   void fromJson(json) {
     _winLossKey = json['_winLossKey'] ?? 'Win';
     _pokemonTeamFromJson(json['pokemonTeam']);
-    _locked = json['_locked'] ?? true;
+    locked = json['locked'] ?? true;
   }
 
   Map<String, dynamic> toJson() {
     return {
       '_winLossKey': _winLossKey,
       'pokemonTeam': _pokemonTeamToJson(),
-      '_locked': _locked
+      'locked': locked
     };
   }
 }

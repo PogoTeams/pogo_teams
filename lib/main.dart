@@ -15,6 +15,9 @@ import 'data/globals.dart' as globals;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Restrict view orientation to portrait only
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   // Global gamemaster reference setup
   // All Pokemon GO related data is in the gamemaster
   globals.gamemaster = await GameMaster.generateGameMaster();
@@ -22,10 +25,6 @@ void main() async {
   // Initialize the database for user data persistance
   await Hive.initFlutter();
   await Hive.openBox('teams');
-
-  // Restrict view orientation to portrait only
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(
     ChangeNotifierProvider(

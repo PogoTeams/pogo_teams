@@ -25,6 +25,7 @@ class TeamsProvider with ChangeNotifier {
     for (int i = 0; i < teamsCount; ++i) {
       builderTeams.add(UserPokemonTeam(save: () => _save(i)));
       builderTeams[i].fromJson(_box.getAt(i));
+      _save(i);
     }
   }
 
