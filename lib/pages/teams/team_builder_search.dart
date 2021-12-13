@@ -47,7 +47,7 @@ class TeamBuilderSearch extends StatefulWidget {
 }
 
 class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
-  late Cup _cup = widget.cup;
+  late Cup _cup = Cup.from(widget.cup);
 
   // If the user decides not to keep the changes, this ref is used
   // to restore team state
@@ -172,8 +172,9 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
             onPressed: () {
               // Restore old team
               widget.team.setTeam(_oldTeam);
+              widget.team.setTeamSize(_oldTeam.length);
               if (widget.team.runtimeType == UserPokemonTeam) {
-                (widget.team as UserPokemonTeam).cup = widget.cup;
+                (widget.team as UserPokemonTeam).setCup(widget.cup.title);
               }
 
               Navigator.pop(context);

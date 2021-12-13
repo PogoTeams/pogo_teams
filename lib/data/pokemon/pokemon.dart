@@ -160,6 +160,18 @@ class Pokemon {
     return typing.toString();
   }
 
+  // If the move is an elite move, slap a * on there to make it special
+  String getFormattedMoveName(Move move) {
+    if (isElite(move.moveId)) {
+      return move.name.padRight(move.name.length + 1, ' *');
+    }
+    return move.name;
+  }
+
+  bool isElite(String moveId) {
+    return eliteMoves == null ? false : eliteMoves!.contains(moveId);
+  }
+
   // True if one of the specified types exists in this Pokemon's typing
   bool hasType(List<Type> types) {
     return typing.containsType(types);

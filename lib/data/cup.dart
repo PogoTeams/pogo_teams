@@ -34,6 +34,16 @@ class Cup {
     return Cup.fromJson(json, key, cp, rankings);
   }
 
+  static Cup from(Cup other) {
+    return Cup(
+      key: other.key,
+      title: other.title,
+      cp: other.cp,
+      cupColor: other.cupColor,
+      rankings: other.rankings,
+    );
+  }
+
   factory Cup.fromJson(
       Map<String, dynamic> json, String key, int cp, Rankings rankings) {
     final title = json['title'] as String;

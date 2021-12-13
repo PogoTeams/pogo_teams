@@ -15,6 +15,7 @@ import '../pvp_stats.dart';
 import '../dropdowns/move_dropdowns.dart';
 import '../traits_icons.dart';
 import '../colored_container.dart';
+import '../formatted_pokemon_name.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -59,8 +60,7 @@ class PokemonNode extends StatelessWidget {
     body = _SmallNodeBody(
       pokemon: pokemon!,
       dropdowns: dropdowns,
-      onMoveChanged: () =>
-          onMoveChanged == null ? (_) {} : onMoveChanged!(pokemon!),
+      onMoveChanged: onMoveChanged,
     );
   }
 
@@ -85,15 +85,14 @@ class PokemonNode extends StatelessWidget {
       pokemon: pokemon!,
       cup: cup,
       footer: footer,
-      onMoveChanged: () =>
-          onMoveChanged == null ? (_) {} : onMoveChanged!(pokemon!),
+      onMoveChanged: onMoveChanged,
     );
   }
 
   final Pokemon? pokemon;
   late final VoidCallback? onPressed;
   late final VoidCallback? onEmptyPressed;
-  late final Function(Pokemon)? onMoveChanged;
+  late final VoidCallback? onMoveChanged;
 
   late final double width;
   late final double height;
@@ -150,12 +149,17 @@ class _SquareNodeBody extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         // Pokemon name
-        Text(
-          pokemon.speciesName,
+        FormattedPokemonName(
+          name: pokemon.speciesName,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: SizeConfig.blockSizeHorizontal * 3.0,
             fontWeight: FontWeight.bold,
+            fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+          ),
+          suffixStyle: TextStyle(
+            fontSize: SizeConfig.blockSizeHorizontal * 2.5,
+            fontFamily: DefaultTextStyle.of(context).style.fontFamily,
           ),
         ),
 
@@ -163,6 +167,11 @@ class _SquareNodeBody extends StatelessWidget {
         Divider(
           color: Colors.white,
           thickness: SizeConfig.blockSizeHorizontal * 0.2,
+        ),
+
+        TraitsIcons(
+          pokemon: pokemon,
+          scale: .7,
         ),
 
         MoveDots(moveColors: pokemon.getMoveColors()),

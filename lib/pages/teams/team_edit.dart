@@ -212,8 +212,8 @@ class _TeamEditState extends State<TeamEdit>
                     PokemonNode.large(
                       pokemon: pokemonTeam[index],
                       onEmptyPressed: () => _searchMode(index),
-                      onMoveChanged: (pokemon) {
-                        _team.setPokemon(index, pokemon);
+                      onMoveChanged: () {
+                        _team.save();
                         _provider.notify();
                       },
                       cup: _team.cup,
@@ -229,8 +229,8 @@ class _TeamEditState extends State<TeamEdit>
               : PokemonNode.large(
                   pokemon: pokemonTeam[index],
                   onEmptyPressed: () => _searchMode(index),
-                  onMoveChanged: (pokemon) {
-                    _team.setPokemon(index, pokemon);
+                  onMoveChanged: () {
+                    _team.save();
                     _provider.notify();
                   },
                   cup: _team.cup,

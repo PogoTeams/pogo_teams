@@ -158,6 +158,9 @@ class _AnalysisState extends State<Analysis> {
       defenseThreats: defenseThreats,
       offenseCoverage: offenseCoverage,
       netEffectiveness: netEffectiveness,
+      recalculate: (team, effectiveness) => setState(() {
+        _calculateSingleCoverage(team, effectiveness);
+      }),
     );
   }
 }

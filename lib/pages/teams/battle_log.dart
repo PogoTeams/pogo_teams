@@ -78,7 +78,14 @@ class _BattleLogState extends State<BattleLog> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // The user's team
           _buildTeamNode(),
+
+          // Spacer
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 2.0,
+          ),
+
           Text(
             '- Opponent Teams -',
             style: TextStyle(
@@ -92,6 +99,8 @@ class _BattleLogState extends State<BattleLog> {
           SizedBox(
             height: SizeConfig.blockSizeVertical * 2.0,
           ),
+
+          // Logged opponent teams
           _buildLogsList(),
         ],
       ),

@@ -18,9 +18,11 @@ class TraitsIcons extends StatelessWidget {
   const TraitsIcons({
     Key? key,
     required this.pokemon,
+    this.scale = 1.0,
   }) : super(key: key);
 
   final Pokemon pokemon;
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +30,8 @@ class TraitsIcons extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          pokemon.isXs ? const XlIcon() : Container(),
-          pokemon.isShadow ? const ShadowIcon() : Container(),
+          pokemon.isXs ? XlIcon(scale: scale) : Container(),
+          pokemon.isShadow ? ShadowIcon(scale: scale) : Container(),
         ],
       ),
     );
@@ -37,28 +39,32 @@ class TraitsIcons extends StatelessWidget {
 }
 
 class XlIcon extends StatelessWidget {
-  const XlIcon({Key? key}) : super(key: key);
+  const XlIcon({
+    Key? key,
+    required this.scale,
+  }) : super(key: key);
+
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.black45,
-        borderRadius:
-            BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: SizeConfig.blockSizeHorizontal * 2.0,
-          right: SizeConfig.blockSizeHorizontal * 2.0,
-        ),
-        child: SizedBox(
-          height: SizeConfig.blockSizeVertical * 3.0,
+      child: SizedBox(
+        height: SizeConfig.blockSizeVertical * 3.0 * scale,
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: SizeConfig.blockSizeHorizontal * 2.5 * scale,
+            right: SizeConfig.blockSizeHorizontal * 2.5 * scale,
+          ),
           child: Center(
             child: Text(
               'X L',
               style: TextStyle(
-                fontSize: SizeConfig.h3,
+                fontSize: SizeConfig.h3 * scale,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -70,28 +76,33 @@ class XlIcon extends StatelessWidget {
 }
 
 class ShadowIcon extends StatelessWidget {
-  const ShadowIcon({Key? key}) : super(key: key);
+  const ShadowIcon({
+    Key? key,
+    required this.scale,
+  }) : super(key: key);
+
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: SizeConfig.blockSizeHorizontal * 2.0,
-        right: SizeConfig.blockSizeHorizontal * 2.0,
-      ),
-      child: Icon(
-        Icons.local_fire_department_rounded,
-        color: Colors.purple[900]!,
-      ),
+    return Icon(
+      Icons.local_fire_department_rounded,
+      color: Colors.purple[900]!,
+      size: SizeConfig.blockSizeHorizontal * 6.0 * scale,
     );
   }
 }
 
 // Currently unused, but may prove to be useful
 class MetaIcon extends StatelessWidget {
-  const MetaIcon({Key? key, required this.rating}) : super(key: key);
+  const MetaIcon({
+    Key? key,
+    required this.rating,
+    required this.scale,
+  }) : super(key: key);
 
   final num rating;
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +115,7 @@ class MetaIcon extends StatelessWidget {
             child: Icon(
               Icons.star_rounded,
               color: Colors.yellow[600],
+              size: SizeConfig.blockSizeHorizontal * 6.0 * scale,
             ),
           )
         : Container();

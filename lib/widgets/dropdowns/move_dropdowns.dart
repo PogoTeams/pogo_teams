@@ -64,13 +64,13 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
   // Filter the left and right charged move lists for the dropdowns
   void _updateChargedMoveOptions() {
     chargedMoveNamesL = widget.pokemon.chargedMoves
-        .where((move) =>
-            move.moveId != widget.pokemon.selectedChargedMoves[1].moveId)
+        .where(
+            (move) => !move.isSameMove(widget.pokemon.selectedChargedMoves[1]))
         .toList();
 
     chargedMoveNamesR = widget.pokemon.chargedMoves
-        .where((move) =>
-            move.moveId != widget.pokemon.selectedChargedMoves[0].moveId)
+        .where(
+            (move) => !move.isSameMove(widget.pokemon.selectedChargedMoves[0]))
         .toList();
 
     chargedMoveOptionsL = _generateDropdownItems(chargedMoveNamesL);
@@ -86,7 +86,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
         value: move,
         child: Center(
           child: Text(
-            move.name,
+            widget.pokemon.getFormattedMoveName(move),
             style: TextStyle(
               fontFamily: DefaultTextStyle.of(context).style.fontFamily,
               fontSize: SizeConfig.p,

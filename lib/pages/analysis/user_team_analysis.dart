@@ -29,12 +29,14 @@ class UserTeamAnalysis extends StatefulWidget {
     required this.defenseThreats,
     required this.offenseCoverage,
     required this.netEffectiveness,
+    required this.recalculate,
   }) : super(key: key);
 
   final UserPokemonTeam team;
   final List<Pair<Type, double>> defenseThreats;
   final List<Pair<Type, double>> offenseCoverage;
   final List<Pair<Type, double>> netEffectiveness;
+  final Function(List<Pokemon>, List<double>) recalculate;
 
   @override
   _UserTeamAnalysisState createState() => _UserTeamAnalysisState();
@@ -111,8 +113,14 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
     );
 
     if (newTeam != null) {
+      widget.team.setTeam(newTeam);
+
+      widget.recalculate(
+        widget.team.getPokemonTeam(),
+        widget.team.effectiveness,
+      );
+
       setState(() {
-        widget.team.setTeam(newTeam);
         _scrollController.animateTo(
           0.0,
           duration: const Duration(seconds: 1),
@@ -123,8 +131,14 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
   }
 
   void _onAddPokemon(Pokemon pokemon) {
+    widget.team.addPokemon(pokemon);
+
+    widget.recalculate(
+      widget.team.getPokemonTeam(),
+      widget.team.effectiveness,
+    );
+
     setState(() {
-      widget.team.addPokemon(pokemon);
       _scrollController.animateTo(
         0.0,
         duration: const Duration(seconds: 1),
@@ -182,7 +196,12 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
           ),
           child: PokemonNode.small(
             pokemon: pokemonTeam[index],
-            dropdowns: false,
+            onMoveChanged: () {
+              widget.recalculate(
+                widget.team.getPokemonTeam(),
+                widget.team.effectiveness,
+              );
+            },
           ),
         ),
       ),
