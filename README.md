@@ -5,7 +5,8 @@
 
 ## Features
 - Team Builder and Analysis
-- Rankings
+- Battle Logger, and Analysis to determine potential meta vulnerabilities
+- Rankings which will soon be supported by [Pogo Ranker](https://github.com/SeanSiders/pogo_ranker) (*Pogo Ranker is currently under development*)
 
 ## Development Environment
 This app is built using Google's [Flutter](https://flutter.dev). A framework for building cross-platform mobile UI's within a single codebase.
