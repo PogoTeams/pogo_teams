@@ -20,10 +20,12 @@ class CoverageGrids extends StatelessWidget {
     Key? key,
     required this.defenseThreats,
     required this.offenseCoverage,
+    required this.includedTypesKeys,
   }) : super(key: key);
 
   final List<Pair<Type, double>> defenseThreats;
   final List<Pair<Type, double>> offenseCoverage;
+  final List<String> includedTypesKeys;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class CoverageGrids extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Colors.red[900]!, Colors.red[200]!],
+                colors: [Colors.red[900]!, Colors.red[400]!],
                 tileMode: TileMode.clamp,
               ),
             ),
@@ -64,7 +66,7 @@ class CoverageGrids extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${defenseThreats.length} / 18',
+                      '${defenseThreats.length} / ${includedTypesKeys.length}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         letterSpacing: SizeConfig.blockSizeHorizontal * .8,
@@ -115,7 +117,7 @@ class CoverageGrids extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Colors.green[900]!, Colors.green[200]!],
+                colors: [Colors.green[900]!, Colors.green[400]!],
                 tileMode: TileMode.clamp,
               ),
             ),
@@ -135,7 +137,7 @@ class CoverageGrids extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${offenseCoverage.length} / 18',
+                      '${offenseCoverage.length} / ${includedTypesKeys.length}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         letterSpacing: SizeConfig.blockSizeHorizontal * .8,

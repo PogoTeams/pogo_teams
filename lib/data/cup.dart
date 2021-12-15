@@ -7,6 +7,7 @@ import 'colors.dart';
 import 'pokemon_rankings.dart';
 import 'pokemon/pokemon.dart';
 import 'pokemon/typing.dart';
+import 'masters/type_master.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -22,6 +23,7 @@ class Cup {
     required this.cp,
     required this.cupColor,
     required this.rankings,
+    required this.includedTypesKeys,
   });
 
   // Called to load in the given cup from a JSON
@@ -34,20 +36,25 @@ class Cup {
     return Cup.fromJson(json, key, cp, rankings);
   }
 
-  static Cup from(Cup other) {
-    return Cup(
-      key: other.key,
-      title: other.title,
-      cp: other.cp,
-      cupColor: other.cupColor,
-      rankings: other.rankings,
-    );
-  }
-
   factory Cup.fromJson(
       Map<String, dynamic> json, String key, int cp, PokemonRankings rankings) {
     final title = json['title'] as String;
     final Color cupColor = (cupColors[title] ?? Colors.cyan);
+
+    List<String>? includedTypesKeys;
+
+    // Get included types for this cup
+    if (json.containsKey('include')) {
+      final includes = List.from(json['include']);
+      for (int i = 0; i < includes.length; ++i) {
+        if (includes[i]['filterType'] == 'type') {
+          includedTypesKeys = List<String>.from(includes[i]['values']);
+        }
+      }
+    }
+
+    // If included type keys is not specified, all types are included
+    includedTypesKeys ??= TypeMaster.typeKeysList;
 
     return Cup(
       key: key,
@@ -55,6 +62,18 @@ class Cup {
       cp: cp,
       cupColor: cupColor,
       rankings: rankings,
+      includedTypesKeys: includedTypesKeys,
+    );
+  }
+
+  static Cup from(Cup other) {
+    return Cup(
+      key: other.key,
+      title: other.title,
+      cp: other.cp,
+      cupColor: other.cupColor,
+      rankings: other.rankings,
+      includedTypesKeys: other.includedTypesKeys,
     );
   }
 
@@ -81,4 +100,5 @@ class Cup {
   final int cp;
   final Color cupColor;
   final PokemonRankings rankings;
+  final List<String> includedTypesKeys;
 }

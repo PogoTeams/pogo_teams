@@ -14,9 +14,10 @@ a helper class that effectively handles the case of a Pokemon with 2 types.
 */
 
 class Typing {
-  Typing(List<String> typeKeys)
-      : typeA = TypeMaster.typeMap[typeKeys[0]]!,
-        typeB = TypeMaster.typeMap[typeKeys[1]]!;
+  Typing(List<String> typeKeys) {
+    typeA = TypeMaster.typeMap[typeKeys[0]]!;
+    typeB = TypeMaster.typeMap[typeKeys[1]] ?? Type(typeKey: 'none');
+  }
 
   late final Type typeA;
   late final Type typeB;
@@ -75,7 +76,9 @@ class Type {
   Type({required this.typeKey}) {
     typeColor = typeColors[typeKey]!;
 
-    if ('none' != typeKey) {
+    if ('none' == typeKey) {
+      effectivenessMap = {};
+    } else {
       effectivenessMap = TypeMaster.getEffectivenessMap(typeKey);
     }
   }

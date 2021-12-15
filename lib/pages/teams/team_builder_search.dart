@@ -209,14 +209,14 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     });
   }
 
+  // When the cup is changed, set the filter the new Pokemon rankings list
   void _onCupChanged(String? newCup) {
     if (newCup == null) return;
 
     setState(() {
       (widget.team as UserPokemonTeam).setCup(newCup);
       _cup = (widget.team as UserPokemonTeam).cup;
-      pokemon = _cup.getRankedPokemonList(_selectedCategory);
-      _filterPokemonList();
+      _filterCategory(_selectedCategory);
     });
   }
 

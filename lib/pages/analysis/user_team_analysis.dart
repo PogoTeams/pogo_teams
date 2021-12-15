@@ -43,6 +43,9 @@ class UserTeamAnalysis extends StatefulWidget {
 }
 
 class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
+  // The included type keys of the team's given cup
+  late final List<String> includedTypesKeys = widget.team.cup.includedTypesKeys;
+
   // The list of expansion panels
   List<PanelStates> _expansionPanels = [];
 
@@ -54,7 +57,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
         widget.defenseThreats.map((typeData) => typeData.a).toList();
 
     final List<Type> threatCounterTypes =
-        TypeMaster.getCounters(defenseThreatTypes);
+        TypeMaster.getCounterTypes(defenseThreatTypes, includedTypesKeys);
 
     _expansionPanels = [
       // Meta Threats
@@ -294,6 +297,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
               netEffectiveness: widget.netEffectiveness,
               defenseThreats: widget.defenseThreats,
               offenseCoverage: widget.offenseCoverage,
+              includedTypesKeys: includedTypesKeys,
             ),
 
             // Collapsible Pokemon threats and counters

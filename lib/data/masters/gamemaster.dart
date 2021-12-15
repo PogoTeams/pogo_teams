@@ -11,6 +11,7 @@ import '../pokemon/move.dart';
 import '../cup.dart';
 import '../colors.dart';
 import '../pokemon_rankings.dart';
+import '../pokemon/typing.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -33,54 +34,12 @@ class GameMaster {
     // Load the JSON string
     final String gmString =
         await rootBundle.loadString('assets/gamemaster.json');
+
     // Decode to a map
     final Map<String, dynamic> gmJson = jsonDecode(gmString);
 
     // Standard GBL cups
-    final List<Cup> cups = [
-      Cup(
-        key: 'all',
-        title: 'Great League',
-        cp: 1500,
-        cupColor: cupColors['Great League']!,
-        rankings: await PokemonRankings.load('all', 1500),
-      ),
-      Cup(
-        key: 'all',
-        title: 'Ultra League',
-        cp: 2500,
-        cupColor: cupColors['Ultra League']!,
-        rankings: await PokemonRankings.load('all', 2500),
-      ),
-      Cup(
-        key: 'all',
-        title: 'Master League',
-        cp: 10000,
-        cupColor: cupColors['Master League']!,
-        rankings: await PokemonRankings.load('all', 10000),
-      ),
-      Cup(
-        key: 'remix',
-        title: 'Great League (Remix)',
-        cp: 1500,
-        cupColor: cupColors['Great League']!,
-        rankings: await PokemonRankings.load('remix', 1500),
-      ),
-      Cup(
-        key: 'remix',
-        title: 'Ultra League (Remix)',
-        cp: 2500,
-        cupColor: cupColors['Ultra League']!,
-        rankings: await PokemonRankings.load('remix', 2500),
-      ),
-      Cup(
-        key: 'remix',
-        title: 'Master League (Remix)',
-        cp: 10000,
-        cupColor: cupColors['Master League']!,
-        rankings: await PokemonRankings.load('remix', 10000),
-      ),
-    ];
+    final List<Cup> cups = await _generateDefaultCupsList();
 
     // All keys cooresponding to the cups that should be loaded
     final List<String> openCups = List<String>.from(gmJson['openCups']);
@@ -116,13 +75,14 @@ class GameMaster {
     // NONE will take that 2nd slot in that case
     moves.add(
       Move(
-          moveId: 'NONE',
-          name: 'none',
-          type: TypeMaster.typeList[18],
-          power: 0.0,
-          energy: 0.0,
-          energyGain: 0.0,
-          cooldown: 0.0),
+        moveId: 'NONE',
+        name: 'none',
+        type: Type(typeKey: 'none'),
+        power: 0.0,
+        energy: 0.0,
+        energyGain: 0.0,
+        cooldown: 0.0,
+      ),
     );
 
     List<Pokemon> pokemon = [];
@@ -145,6 +105,60 @@ class GameMaster {
       moves: moves,
       cups: cups,
     );
+  }
+
+  // Generate the default PVP Cups
+  static Future<List<Cup>> _generateDefaultCupsList() async {
+    return [
+      Cup(
+        key: 'all',
+        title: 'Great League',
+        cp: 1500,
+        cupColor: cupColors['Great League']!,
+        rankings: await PokemonRankings.load('all', 1500),
+        includedTypesKeys: TypeMaster.typeKeysList,
+      ),
+      Cup(
+        key: 'all',
+        title: 'Ultra League',
+        cp: 2500,
+        cupColor: cupColors['Ultra League']!,
+        rankings: await PokemonRankings.load('all', 2500),
+        includedTypesKeys: TypeMaster.typeKeysList,
+      ),
+      Cup(
+        key: 'all',
+        title: 'Master League',
+        cp: 10000,
+        cupColor: cupColors['Master League']!,
+        rankings: await PokemonRankings.load('all', 10000),
+        includedTypesKeys: TypeMaster.typeKeysList,
+      ),
+      Cup(
+        key: 'remix',
+        title: 'Great League (Remix)',
+        cp: 1500,
+        cupColor: cupColors['Great League']!,
+        rankings: await PokemonRankings.load('remix', 1500),
+        includedTypesKeys: TypeMaster.typeKeysList,
+      ),
+      Cup(
+        key: 'remix',
+        title: 'Ultra League (Remix)',
+        cp: 2500,
+        cupColor: cupColors['Ultra League']!,
+        rankings: await PokemonRankings.load('remix', 2500),
+        includedTypesKeys: TypeMaster.typeKeysList,
+      ),
+      Cup(
+        key: 'remix',
+        title: 'Master League (Remix)',
+        cp: 10000,
+        cupColor: cupColors['Master League']!,
+        rankings: await PokemonRankings.load('remix', 10000),
+        includedTypesKeys: TypeMaster.typeKeysList,
+      ),
+    ];
   }
 
   // The master list of ALL moves

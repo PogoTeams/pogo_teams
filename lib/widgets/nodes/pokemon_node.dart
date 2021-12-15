@@ -158,12 +158,12 @@ class _SquareNodeBody extends StatelessWidget {
           name: pokemon.speciesName,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: SizeConfig.blockSizeHorizontal * 3.0,
+            fontSize: SizeConfig.h3,
             fontWeight: FontWeight.bold,
             fontFamily: DefaultTextStyle.of(context).style.fontFamily,
           ),
           suffixStyle: TextStyle(
-            fontSize: SizeConfig.blockSizeHorizontal * 2.5,
+            fontSize: SizeConfig.p,
             fontFamily: DefaultTextStyle.of(context).style.fontFamily,
           ),
         ),

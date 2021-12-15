@@ -128,6 +128,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
               netEffectiveness: netEffectiveness,
               defenseThreats: defenseThreats,
               offenseCoverage: offenseCoverage,
+              includedTypesKeys: team.cup.includedTypesKeys,
             ),
 
             // Spacer

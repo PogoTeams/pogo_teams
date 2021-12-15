@@ -137,7 +137,8 @@ class PokemonRankings {
     return ratings;
   }
 
-  // Branch for all possible categories
+  // Get a sorted list of Pokemon from the rankings category specified
+  // Each Pokemon will have a rating based on that category
   List<Pokemon> getRankedPokemonList(String rankingsCategory) {
     final rankedList =
         rankingsMap.values.map<Pokemon>((RankedPokemon rankedPokemon) {
@@ -154,18 +155,24 @@ class PokemonRankings {
     return rankedList;
   }
 
+  // Get a list of Pokemon that contain one of the specified types
+  // The rankings category
+  // The list length will be up to the limit
   List<Pokemon> getFilteredRankedPokemonList(
       List<Type> types, String rankingsCategory, int limit) {
     List<Pokemon> rankedList = getRankedPokemonList(rankingsCategory);
 
-    return rankedList
-        .where((pokemon) => pokemon.hasType(types))
-        .toList()
-        .getRange(0, limit)
-        .toList();
+    rankedList = rankedList.where((pokemon) => pokemon.hasType(types)).toList();
+
+    // There weren't enough Pokemon in this cup to satisfy the filtered limit
+    if (rankedList.length < limit) {
+      return rankedList;
+    }
+
+    return rankedList.getRange(0, limit).toList();
   }
 
-  late final Map<String, RankedPokemon> rankingsMap;
+  final Map<String, RankedPokemon> rankingsMap;
 }
 
 // Container for ranking information

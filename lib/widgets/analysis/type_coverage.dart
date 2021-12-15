@@ -11,7 +11,7 @@ import '../../configs/size_config.dart';
 
 /*
 -------------------------------------------------------------------------------
-A column of type coverage analysis widgets. Used in team analysis.
+A column of type coverage analysis widgets. Used in any team analysis.
 -------------------------------------------------------------------------------
 */
 
@@ -21,11 +21,13 @@ class TypeCoverage extends StatelessWidget {
     required this.netEffectiveness,
     required this.defenseThreats,
     required this.offenseCoverage,
+    required this.includedTypesKeys,
   }) : super(key: key);
 
   final List<Pair<Type, double>> netEffectiveness;
   final List<Pair<Type, double>> defenseThreats;
   final List<Pair<Type, double>> offenseCoverage;
+  final List<String> includedTypesKeys;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class TypeCoverage extends StatelessWidget {
         CoverageGrids(
           defenseThreats: defenseThreats,
           offenseCoverage: offenseCoverage,
+          includedTypesKeys: includedTypesKeys,
         ),
 
         // Spacer
@@ -42,9 +45,7 @@ class TypeCoverage extends StatelessWidget {
           height: SizeConfig.blockSizeVertical * 2.5,
         ),
 
-        CoverageGraph(
-          netEffectiveness: netEffectiveness,
-        ),
+        CoverageGraph(netEffectiveness: netEffectiveness),
       ],
     );
   }
