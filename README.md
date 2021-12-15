@@ -1,12 +1,13 @@
 ![PogoTeamsIcon](https://user-images.githubusercontent.com/41221800/143391296-e61059a4-1e63-4a66-9e1f-fe41a686b769.png)
 
 # POGO Teams
-*A Pokemon Go resource for the GBL (Go Battle League). Available on iPhone & Android devices.*
-
+A Pokemon Go resource for the GBL (Go Battle League). Available on iPhone & Android devices.
+All Pokemon data is provided by [**PvPoke.com**](https://pvpoke.com), an outstanding web-based pvp resource.
+ 
 ## Features
 - Team Builder and Analysis.
 - Battle Logger, and Analysis to determine potential meta vulnerabilities.
-- Game master and rankings data is provided by the [PvPoke Repository](https://github.com/pvpoke/pvpoke/tree/master/src) *(a web-based pvp resource [PvPoke.com](https://pvpoke.com))*
+- Game master and rankings data is provided by the [PvPoke Repository](https://github.com/pvpoke/pvpoke/tree/master/src)
 
 ## Development Environment
 This app is built using Google's [Flutter](https://flutter.dev). A framework for building cross-platform mobile UI's within a single codebase.
