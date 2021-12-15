@@ -4,9 +4,9 @@
 *A Pokemon Go resource for the GBL (Go Battle League). Available on iPhone & Android devices.*
 
 ## Features
-- Team Builder and Analysis
-- Battle Logger, and Analysis to determine potential meta vulnerabilities
-- Rankings which will soon be supported by [Pogo Ranker](https://github.com/SeanSiders/pogo_ranker) (*Pogo Ranker is currently under development*)
+- Team Builder and Analysis.
+- Battle Logger, and Analysis to determine potential meta vulnerabilities.
+- Game master and rankings data is provided by the [PvPoke Repository](https://github.com/pvpoke/pvpoke/tree/master/src) *(a web-based pvp resource [PvPoke.com](https://pvpoke.com))*
 
 ## Development Environment
 This app is built using Google's [Flutter](https://flutter.dev). A framework for building cross-platform mobile UI's within a single codebase.
