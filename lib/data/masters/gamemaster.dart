@@ -9,6 +9,8 @@ import 'package:pogo_teams/data/masters/type_master.dart';
 import '../pokemon/pokemon.dart';
 import '../pokemon/move.dart';
 import '../cup.dart';
+import '../colors.dart';
+import '../pokemon_rankings.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -34,12 +36,69 @@ class GameMaster {
     // Decode to a map
     final Map<String, dynamic> gmJson = jsonDecode(gmString);
 
-    final List<dynamic> cupsJsonList = gmJson['cups'];
+    // Standard GBL cups
+    final List<Cup> cups = [
+      Cup(
+        key: 'all',
+        title: 'Great League',
+        cp: 1500,
+        cupColor: cupColors['Great League']!,
+        rankings: await PokemonRankings.load('all', 1500),
+      ),
+      Cup(
+        key: 'all',
+        title: 'Ultra League',
+        cp: 2500,
+        cupColor: cupColors['Ultra League']!,
+        rankings: await PokemonRankings.load('all', 2500),
+      ),
+      Cup(
+        key: 'all',
+        title: 'Master League',
+        cp: 10000,
+        cupColor: cupColors['Master League']!,
+        rankings: await PokemonRankings.load('all', 10000),
+      ),
+      Cup(
+        key: 'remix',
+        title: 'Great League (Remix)',
+        cp: 1500,
+        cupColor: cupColors['Great League']!,
+        rankings: await PokemonRankings.load('remix', 1500),
+      ),
+      Cup(
+        key: 'remix',
+        title: 'Ultra League (Remix)',
+        cp: 2500,
+        cupColor: cupColors['Ultra League']!,
+        rankings: await PokemonRankings.load('remix', 2500),
+      ),
+      Cup(
+        key: 'remix',
+        title: 'Master League (Remix)',
+        cp: 10000,
+        cupColor: cupColors['Master League']!,
+        rankings: await PokemonRankings.load('remix', 10000),
+      ),
+    ];
 
-    final List<Cup> cups =
+    // All keys cooresponding to the cups that should be loaded
+    final List<String> openCups = List<String>.from(gmJson['openCups']);
+
+    // Load non-standard cups
+    List<dynamic> cupsJsonList = gmJson['cups'];
+
+    cupsJsonList = cupsJsonList
+        .where((cupJson) => openCups.contains(cupJson['name']))
+        .toList();
+
+    final List<Cup> nonStandardCups =
         await Future.wait(cupsJsonList.map((dynamic cupJson) async {
       return Cup.generateCup(cupJson);
     }).toList());
+
+    // Append the non-standard cups
+    cups.addAll(nonStandardCups);
 
     return GameMaster.fromJson(gmJson, cups);
   }
@@ -99,4 +158,16 @@ class GameMaster {
 
   // The master list of ALL cups
   late final List<Cup> cups;
+
+  // Attempt to retrieve by the idMap
+  // If this fails, find the closest matching ID in the list
+  // This should guarantee a non-null Pokemon return
+  Pokemon retrievePokemon(String speciesId) {
+    return (pokemonIdMap[speciesId] == null
+        ? pokemon.firstWhere((pokemon) {
+            return speciesId.contains(pokemon.speciesId) ||
+                pokemon.speciesId.contains(speciesId);
+          })
+        : pokemonIdMap[speciesId]!);
+  }
 }

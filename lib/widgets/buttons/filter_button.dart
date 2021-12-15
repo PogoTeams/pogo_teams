@@ -20,11 +20,13 @@ class FilterButton extends StatelessWidget {
     required this.onSelected,
     required this.selectedCategory,
     this.size,
+    this.dex = false,
   }) : super(key: key);
 
   final void Function(dynamic) onSelected;
   final String selectedCategory;
   final double? size;
+  final bool dex;
 
   @override
   Widget build(BuildContext context) {
@@ -47,64 +49,76 @@ class FilterButton extends StatelessWidget {
         iconSize: _size / 2,
 
         // Category options
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-          PopupMenuItem<String>(
-            value: 'overall',
-            child: PopupItem(
-              category: 'overall',
-              selectedCategory: selectedCategory,
+        itemBuilder: (BuildContext context) {
+          final items = <PopupMenuEntry<String>>[
+            PopupMenuItem<String>(
+              value: 'overall',
+              child: PopupItem(
+                category: 'overall',
+                selectedCategory: selectedCategory,
+              ),
             ),
-          ),
-          PopupMenuItem<String>(
-            value: 'leads',
-            child: PopupItem(
-              category: 'leads',
-              selectedCategory: selectedCategory,
+            PopupMenuItem<String>(
+              value: 'leads',
+              child: PopupItem(
+                category: 'leads',
+                selectedCategory: selectedCategory,
+              ),
             ),
-          ),
-          PopupMenuItem<String>(
-            value: 'attackers',
-            child: PopupItem(
-              category: 'attackers',
-              selectedCategory: selectedCategory,
+            PopupMenuItem<String>(
+              value: 'attackers',
+              child: PopupItem(
+                category: 'attackers',
+                selectedCategory: selectedCategory,
+              ),
             ),
-          ),
-          PopupMenuItem<String>(
-            value: 'closers',
-            child: PopupItem(
-              category: 'closers',
-              selectedCategory: selectedCategory,
+            PopupMenuItem<String>(
+              value: 'closers',
+              child: PopupItem(
+                category: 'closers',
+                selectedCategory: selectedCategory,
+              ),
             ),
-          ),
-          PopupMenuItem<String>(
-            value: 'chargers',
-            child: PopupItem(
-              category: 'chargers',
-              selectedCategory: selectedCategory,
+            PopupMenuItem<String>(
+              value: 'chargers',
+              child: PopupItem(
+                category: 'chargers',
+                selectedCategory: selectedCategory,
+              ),
             ),
-          ),
-          PopupMenuItem<String>(
-            value: 'consistency',
-            child: PopupItem(
-              category: 'consistency',
-              selectedCategory: selectedCategory,
+            PopupMenuItem<String>(
+              value: 'consistency',
+              child: PopupItem(
+                category: 'consistency',
+                selectedCategory: selectedCategory,
+              ),
             ),
-          ),
-          PopupMenuItem<String>(
-            value: 'switches',
-            child: PopupItem(
-              category: 'switches',
-              selectedCategory: selectedCategory,
+            PopupMenuItem<String>(
+              value: 'switches',
+              child: PopupItem(
+                category: 'switches',
+                selectedCategory: selectedCategory,
+              ),
             ),
-          ),
-          PopupMenuItem<String>(
-            value: 'dex',
-            child: PopupItem(
-              category: 'dex',
-              selectedCategory: selectedCategory,
-            ),
-          ),
-        ],
+          ];
+
+          // Optionally add dex
+          // This option is excluded in the rankings page
+          // since PvPoke only ranks a subset of the dex
+          if (dex) {
+            items.add(
+              PopupMenuItem<String>(
+                value: 'dex',
+                child: PopupItem(
+                  category: 'dex',
+                  selectedCategory: selectedCategory,
+                ),
+              ),
+            );
+          }
+
+          return items;
+        },
       ),
     );
   }

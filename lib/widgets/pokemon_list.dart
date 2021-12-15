@@ -22,11 +22,13 @@ class PokemonList extends StatelessWidget {
     required this.pokemon,
     required this.onPokemonSelected,
     this.dropdowns = true,
+    this.rating = false,
   }) : super(key: key);
 
   final List<Pokemon> pokemon;
   final Function(Pokemon) onPokemonSelected;
   final bool dropdowns;
+  final bool rating;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +59,7 @@ class PokemonList extends StatelessWidget {
                   child: PokemonNode.small(
                     pokemon: pokemon[index],
                     dropdowns: dropdowns,
+                    rating: rating,
                   ),
                 ),
               );

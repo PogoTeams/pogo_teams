@@ -243,6 +243,10 @@ class Pokemon {
     rating = r;
   }
 
+  String getRatingString() {
+    return rating.toStringAsFixed(0);
+  }
+
   // This json will contain moveset info and an id
   // This id is used to retrieve an actual Pokemon ref from the idMap
   static Pokemon? fromStateJson(dynamic json, Map<String, Pokemon> idMap) {

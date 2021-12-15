@@ -24,9 +24,7 @@ The PvPoke model.
 */
 
 class Rankings extends StatefulWidget {
-  const Rankings({
-    Key? key,
-  }) : super(key: key);
+  const Rankings({Key? key}) : super(key: key);
 
   @override
   _RankingsState createState() => _RankingsState();
@@ -60,13 +58,7 @@ class _RankingsState extends State<Rankings> {
   void _filterCategory(dynamic rankingsCategory) {
     _selectedCategory = rankingsCategory;
 
-    // Dex is a special case where all Pokemon are in the list
-    // Otherwise get the list from the ratings category
-    if ('dex' == _selectedCategory) {
-      pokemon = globals.gamemaster.pokemon;
-    } else {
-      pokemon = cup.getRankedPokemonList(_selectedCategory);
-    }
+    pokemon = cup.getRankedPokemonList(_selectedCategory);
 
     _filterPokemonList();
   }
@@ -120,6 +112,7 @@ class _RankingsState extends State<Rankings> {
             pokemon: filteredPokemon,
             onPokemonSelected: (_) {},
             dropdowns: false,
+            rating: true,
           ),
         ],
       ),

@@ -17,14 +17,16 @@ class PogoTextField extends StatelessWidget {
   const PogoTextField({
     Key? key,
     required this.controller,
+    this.width = double.infinity,
   }) : super(key: key);
 
   final TextEditingController controller;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: SizeConfig.screenWidth * 0.95,
+      width: width,
       height: SizeConfig.blockSizeVertical * 5.0,
       child: TextField(
         // Native toolbar options

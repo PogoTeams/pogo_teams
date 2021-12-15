@@ -18,9 +18,11 @@ import '../../widgets/pogo_text_field.dart';
 import '../../widgets/dropdowns/cup_dropdown.dart';
 import '../../widgets/dropdowns/team_size_dropdown.dart';
 import '../../widgets/dropdowns/win_loss_dropdown.dart';
+import '../../widgets/buttons/filter_button.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../data/pokemon/pokemon_team.dart';
 import '../../data/teams_provider.dart';
+import '../../data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
@@ -64,6 +66,8 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
 
   // A variable list of Pokemon based on search bar text input
   List<Pokemon> filteredPokemon = [];
+
+  String _selectedCategory = 'overall';
 
   // Generate a filtered list of Pokemon based off of the text field input.
   // List can filter by Pokemon name (speciesName) and types.
@@ -211,6 +215,8 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     setState(() {
       (widget.team as UserPokemonTeam).setCup(newCup);
       _cup = (widget.team as UserPokemonTeam).cup;
+      pokemon = _cup.getRankedPokemonList(_selectedCategory);
+      _filterPokemonList();
     });
   }
 
@@ -220,6 +226,22 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     setState(() {
       (widget.team as UserPokemonTeam).setTeamSize(newSize);
     });
+  }
+
+  // Callback for the FilterButton
+  // Sets the ranking list associated with rankingsCategory
+  void _filterCategory(dynamic rankingsCategory) {
+    _selectedCategory = rankingsCategory;
+
+    // Dex is a special case where all Pokemon are in the list
+    // Otherwise get the list from the ratings category
+    if ('dex' == _selectedCategory) {
+      pokemon = globals.gamemaster.pokemon;
+    } else {
+      pokemon = _cup.getRankedPokemonList(_selectedCategory);
+    }
+
+    _filterPokemonList();
   }
 
   // Setup the input controller
@@ -232,7 +254,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     _oldTeam = List.from(widget.team.pokemonTeam);
 
     // Get the selected cup and list of Pokemon based on the category
-    pokemon = widget.cup.getRankedPokemonList('overall');
+    pokemon = widget.cup.getRankedPokemonList(_selectedCategory);
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);
@@ -269,7 +291,23 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
                 height: SizeConfig.blockSizeVertical * 1.0,
               ),
 
-              PogoTextField(controller: _searchController),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  // User input text field
+                  PogoTextField(
+                      controller: _searchController,
+                      width: SizeConfig.screenWidth * .8),
+
+                  // Filter by ranking category
+                  FilterButton(
+                    onSelected: _filterCategory,
+                    selectedCategory: _selectedCategory,
+                    size: SizeConfig.blockSizeHorizontal * 11.0,
+                    dex: true,
+                  ),
+                ],
+              ),
 
               // Spacer
               SizedBox(

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import 'colors.dart';
-import 'rankings.dart';
+import 'pokemon_rankings.dart';
 import 'pokemon/pokemon.dart';
 import 'pokemon/typing.dart';
 
@@ -25,11 +25,11 @@ class Cup {
   });
 
   // Called to load in the given cup from a JSON
-  // Rankings.load will load all jsons from the pvpoke supplied 'data' directory
+  // PokemonRankings.load will load all jsons from the pvpoke supplied 'data' directory
   static Future<Cup> generateCup(Map<String, dynamic> json) async {
-    final key = json['key'] as String;
-    final cp = json['cp'] as int;
-    final rankings = await Rankings.load(key, cp);
+    final key = json['name'] as String;
+    final int cp = json['cp'] ?? 1500;
+    final rankings = await PokemonRankings.load(key, cp);
 
     return Cup.fromJson(json, key, cp, rankings);
   }
@@ -45,9 +45,9 @@ class Cup {
   }
 
   factory Cup.fromJson(
-      Map<String, dynamic> json, String key, int cp, Rankings rankings) {
+      Map<String, dynamic> json, String key, int cp, PokemonRankings rankings) {
     final title = json['title'] as String;
-    final cupColor = cupColors[title] as Color;
+    final Color cupColor = (cupColors[title] ?? Colors.cyan);
 
     return Cup(
       key: key,
@@ -80,5 +80,5 @@ class Cup {
   final String title;
   final int cp;
   final Color cupColor;
-  final Rankings rankings;
+  final PokemonRankings rankings;
 }

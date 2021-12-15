@@ -14,9 +14,9 @@ class BaseStats {
   });
 
   factory BaseStats.fromJson(Map<String, dynamic> json) {
-    final atk = json['atk'] as num;
-    final def = json['def'] as num;
-    final hp = json['hp'] as num;
+    final num atk = json['atk'] ?? 0;
+    final num def = json['def'] ?? 0;
+    final num hp = json['hp'] ?? 0;
 
     return BaseStats(
       atk: atk,
@@ -47,9 +47,12 @@ class DefaultIVs {
 
   // JSON -> OBJ conversion
   factory DefaultIVs.fromJson(Map<String, dynamic> json) {
-    final List<num> cp500 = List<num>.from(json['cp500']);
-    final List<num> cp1500 = List<num>.from(json['cp1500']);
-    final List<num> cp2500 = List<num>.from(json['cp2500']);
+    final List<num> cp500 =
+        json['cp500'] == null ? [0, 0, 0, 0] : List<num>.from(json['cp500']);
+    final List<num> cp1500 =
+        json['cp1500'] == null ? [0, 0, 0, 0] : List<num>.from(json['cp1500']);
+    final List<num> cp2500 =
+        json['cp2500'] == null ? [0, 0, 0, 0] : List<num>.from(json['cp2500']);
 
     return DefaultIVs(
       cp500: cp500,

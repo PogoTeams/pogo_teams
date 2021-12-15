@@ -35,6 +35,7 @@ class PokemonNode extends StatelessWidget {
   }) : super(key: key) {
     cup = null;
     dropdowns = false;
+    rating = false;
 
     width = SizeConfig.blockSizeHorizontal * 25.0;
     height = SizeConfig.blockSizeHorizontal * 25.0;
@@ -53,6 +54,7 @@ class PokemonNode extends StatelessWidget {
     this.emptyTransparent = false,
     this.padding,
     this.dropdowns = true,
+    this.rating = false,
   }) : super(key: key) {
     width = SizeConfig.screenWidth * .95;
     height = SizeConfig.blockSizeVertical * 14.0;
@@ -61,6 +63,7 @@ class PokemonNode extends StatelessWidget {
       pokemon: pokemon!,
       dropdowns: dropdowns,
       onMoveChanged: onMoveChanged,
+      rating: rating,
     );
   }
 
@@ -78,6 +81,7 @@ class PokemonNode extends StatelessWidget {
     width = SizeConfig.screenWidth * .95;
     height = SizeConfig.screenHeight * .2;
     dropdowns = false;
+    rating = false;
 
     if (pokemon == null) return;
 
@@ -104,6 +108,7 @@ class PokemonNode extends StatelessWidget {
   final bool emptyTransparent;
   final EdgeInsets? padding;
   late final bool dropdowns;
+  late final bool rating;
 
   @override
   Widget build(BuildContext context) {
@@ -186,14 +191,54 @@ class _SmallNodeBody extends StatelessWidget {
     required this.pokemon,
     required this.dropdowns,
     required this.onMoveChanged,
+    required this.rating,
   }) : super(key: key);
 
   final Pokemon pokemon;
   final bool dropdowns;
   final VoidCallback? onMoveChanged;
+  final bool rating;
 
   // Display the Pokemon's name perfect PVP ivs and typing icon(s)
+  // If rating is true, place the rating in the upper left corner
   Row _buildNodeHeader(Pokemon pokemon) {
+    if (rating) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Pokemon cup - specific rating
+          // Used for the ratings pages
+          Text(
+            pokemon.getRatingString(),
+            style: TextStyle(
+              fontSize: SizeConfig.h1,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          // Pokemon name
+          Text(
+            pokemon.speciesName,
+            style: TextStyle(
+              fontSize: SizeConfig.h1,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          // Traits Icons
+          TraitsIcons(pokemon: pokemon),
+
+          // Typing icon(s)
+          Container(
+            alignment: Alignment.topRight,
+            height: SizeConfig.blockSizeHorizontal * 8.0,
+            child: Row(
+              children: pokemon.getTypeIcons(),
+            ),
+          ),
+        ],
+      );
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
