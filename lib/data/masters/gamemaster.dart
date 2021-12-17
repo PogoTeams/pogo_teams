@@ -17,17 +17,24 @@ the entire app.
 */
 
 class GameMaster {
+  GameMaster.empty() {
+    moves = List.empty(growable: true);
+    pokemon = List.empty(growable: true);
+    pokemonIdMap = {};
+    cups = List.empty(growable: true);
+  }
+
   GameMaster({
+    required this.moves,
     required this.pokemon,
     required this.pokemonIdMap,
-    required this.moves,
     required this.cups,
   });
 
   // Read in gamemaster.json and populate the global GameMaster object
-  static Future<GameMaster> generateGameMaster(gmJson, Client client,
+  static Future<GameMaster> generateGameMaster(
+      gmJson, Client client, Box rankingsBox,
       {bool update = false}) async {
-    final Box rankingsBox = await Hive.openBox('rankings');
     final List<dynamic> cupsJson = gmJson['openCups'];
     List<Cup> cups = List.empty(growable: true);
     Cup cupBuffer;
@@ -52,7 +59,6 @@ class GameMaster {
       }
     }
 
-    rankingsBox.close();
     return GameMaster.fromJson(gmJson, cups);
   }
 
@@ -61,7 +67,11 @@ class GameMaster {
     final List<dynamic> pokemonJsonList = json['pokemon'];
     final List<dynamic> moveJsonList = json['moves'];
 
-    final List<Move> moves = moveJsonList.map<Move>((dynamic moveJson) {
+    List<Move> moves = List.empty(growable: true);
+    List<Pokemon> pokemon = List.empty(growable: true);
+    Map<String, Pokemon> pokemonIdMap = {};
+
+    moves = moveJsonList.map<Move>((dynamic moveJson) {
       return Move.fromJson(moveJson);
     }).toList();
 
@@ -79,10 +89,7 @@ class GameMaster {
       ),
     );
 
-    List<Pokemon> pokemon = [];
-    Map<String, Pokemon> pokemonIdMap = {};
-
-    void _parsePokemon(dynamic pokemonJson) {
+    void _parsePokemon(dynamic pokemonJson) async {
       // Retrieve the move objects from 'moves' internally for this Pokemon
       final Pokemon pkm = Pokemon.fromJson(pokemonJson, moves);
 
@@ -94,9 +101,9 @@ class GameMaster {
     pokemonJsonList.forEach(_parsePokemon);
 
     return GameMaster(
+      moves: moves,
       pokemon: pokemon,
       pokemonIdMap: pokemonIdMap,
-      moves: moves,
       cups: cups,
     );
   }

@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import 'pogo_scaffold.dart';
+import 'pages/startup_load_screen.dart';
 
 //// APPLICATION ROOT
 class PogoTeamsApp extends StatelessWidget {
@@ -17,10 +17,10 @@ class PogoTeamsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'POGO Teams',
+      title: 'Pogo Teams',
       theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Futura'),
 
-      home: const PogoScaffold(),
+      home: const StartupLoadScreen(),
 
       //Removes the debug banner
       debugShowCheckedModeBanner: false,

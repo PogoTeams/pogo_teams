@@ -39,9 +39,6 @@ APP STARTUP CASES (for gamemaster and rankings data)
 -------------------------------------------------------------------------------
 */
 
-// The earliest timestamp (used for initial app start up)
-const String earliestTimestamp = '2021-01-01 00:00:00.00';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -51,80 +48,6 @@ void main() async {
   // Initialize the database for user data persistance
   await Hive.initFlutter();
   await Hive.openBox('teams'); // User data
-  Box gmBox = await Hive.openBox('gamemaster'); // Pokemon GO data
 
-  // DEBUGGING : implicitly invoke update
-  gmBox.put('timestamp', earliestTimestamp);
-
-  final client = RetryClient(Client());
-  dynamic gmJson;
-
-  // If an update is available, load the new gamemaster data
-  try {
-    if (await _updateAvailable(gmBox, client)) {
-      // Retrieve gamemaster
-      String response =
-          await client.read(Uri.https(globals.url, '/gamemaster.json'));
-
-      // If request was successful, load in the new gamemaster,
-      gmJson = jsonDecode(response);
-    } else {
-      gmJson = await _loadCachedGamemaster(gmBox);
-    }
-  } catch (error) {
-    gmJson = await _loadCachedGamemaster(gmBox);
-  }
-
-  globals.gamemaster =
-      await GameMaster.generateGameMaster(gmJson, client, update: true);
-  gmBox.put('gamemaster', gmJson);
-  client.close();
-
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => TeamsProvider(),
-      child: const PogoTeamsApp(),
-      lazy: false,
-    ),
-  );
-}
-
-Future<bool> _updateAvailable(Box box, Client client) async {
-  bool updateAvailable = false;
-
-  // Retrieve local timestamp
-  final String timestampString = box.get('timestamp') ?? earliestTimestamp;
-  DateTime localTimeStamp = DateTime.parse(timestampString);
-
-  // Retrieve server timestamp
-  String response = await client.read(Uri.https(globals.url, '/timestamp.txt'));
-
-  // If request is successful, compare timestamps to determine update
-  final latestTimestamp = DateTime.tryParse(response);
-
-  if (latestTimestamp != null &&
-      !localTimeStamp.isAtSameMomentAs(latestTimestamp)) {
-    updateAvailable = true;
-    localTimeStamp = latestTimestamp;
-  }
-
-  // Store the timestamp in the local db
-  box.put('timestamp', localTimeStamp.toString());
-
-  return updateAvailable;
-}
-
-// Attempt to load gm from the local db, if that fails, load the assets gm
-dynamic _loadCachedGamemaster(Box box) async {
-  return box.get('gamemaster') ?? await _loadFromAssets();
-}
-
-// Load the gm from local assets
-// This is the final fail safe for loading gamemaster data
-Future<Map<String, dynamic>> _loadFromAssets() async {
-  // Load the JSON string
-  final String gmString = await rootBundle.loadString('assets/gamemaster.json');
-
-  // Decode to a map
-  return jsonDecode(gmString);
+  runApp(const PogoTeamsApp());
 }

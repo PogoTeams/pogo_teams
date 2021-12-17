@@ -8,7 +8,6 @@ import 'package:flutter/widgets.dart';
 
 // Package Imports
 import 'package:provider/provider.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 // Local Imports
 import 'pages/teams/teams_builder.dart';
@@ -105,14 +104,6 @@ class _PogoScaffoldState extends State<PogoScaffold>
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    // Begin fade in animation
-    _animController.forward();
-  }
-
-  @override
   void dispose() {
     _animController.dispose();
     super.dispose();
@@ -120,29 +111,24 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
   @override
   Widget build(BuildContext context) {
-    // Initialize media queries
-    SizeConfig().init(context);
+    // Begin fade in animation
+    _animController.forward();
 
-    return ValueListenableBuilder<Box>(
-      valueListenable: Hive.box('teams').listenable(),
-      builder: (context, box, widget) {
-        return Scaffold(
-          appBar: _buildAppBar(),
-          drawer: PogoDrawer(
-            onNavSelected: _onNavSelected,
+    return Scaffold(
+      appBar: _buildAppBar(),
+      drawer: PogoDrawer(
+        onNavSelected: _onNavSelected,
+      ),
+      body: FadeTransition(
+        opacity: _animation,
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: SizeConfig.blockSizeHorizontal * 2.0,
+            right: SizeConfig.blockSizeHorizontal * 2.0,
           ),
-          body: FadeTransition(
-            opacity: _animation,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: SizeConfig.blockSizeHorizontal * 2.0,
-                right: SizeConfig.blockSizeHorizontal * 2.0,
-              ),
-              child: _pages[_navKey],
-            ),
-          ),
-        );
-      },
+          child: _pages[_navKey],
+        ),
+      ),
     );
   }
 }

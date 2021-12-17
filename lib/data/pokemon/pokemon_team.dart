@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'pokemon.dart';
 import '../cup.dart';
 import '../masters/type_master.dart';
+import '../masters/gamemaster.dart';
 import '../globals.dart' as globals;
 
 /*
