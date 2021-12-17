@@ -14,12 +14,12 @@ import 'pokemon/pokemon_team.dart';
 */
 
 class TeamsProvider with ChangeNotifier {
-  TeamsProvider() {
+  void init() {
     _box = Hive.box('teams');
     _load();
   }
 
-  void _load() async {
+  void _load() {
     teamsCount = (_box.get('teamsCount') ?? 0) as int;
 
     for (int i = 0; i < teamsCount; ++i) {

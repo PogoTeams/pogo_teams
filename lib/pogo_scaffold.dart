@@ -104,6 +104,12 @@ class _PogoScaffoldState extends State<PogoScaffold>
   }
 
   @override
+  void initState() {
+    super.initState();
+    Provider.of<TeamsProvider>(context, listen: false).init();
+  }
+
+  @override
   void dispose() {
     _animController.dispose();
     super.dispose();

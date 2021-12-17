@@ -17,7 +17,7 @@ class PogoTeamsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pogo Teams',
+      title: 'Pogo Teams Load Screen',
       theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Futura'),
 
       home: const StartupLoadScreen(),

@@ -4,9 +4,11 @@ import 'package:flutter/services.dart';
 
 // Package Imports
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 
 // Local Imports
 import 'pogo_teams_app.dart';
+import 'data/teams_provider.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -40,5 +42,11 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('teams'); // User data
 
-  runApp(const PogoTeamsApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => TeamsProvider(),
+      child: const PogoTeamsApp(),
+      lazy: false,
+    ),
+  );
 }

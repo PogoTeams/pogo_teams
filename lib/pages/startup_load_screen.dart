@@ -6,14 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
-import 'package:pogo_teams/data/teams_provider.dart';
 import 'package:pogo_teams/pogo_scaffold.dart';
 
 // Package Imports
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:http/retry.dart';
-import 'package:provider/provider.dart';
 
 // Local Imports
 import '../configs/size_config.dart';
@@ -64,7 +62,7 @@ class _LoadingScaffold extends State<StartupLoadScreen>
     final Box rankingsBox = await Hive.openBox('rankings');
 
     // DEBUGGING : uncomment to implicitly invoke update
-    await gmBox.put('timestamp', globals.earliestTimestamp);
+    //await gmBox.put('timestamp', globals.earliestTimestamp);
 
     final client = RetryClient(Client());
     dynamic gmJson;
@@ -183,25 +181,20 @@ class _LoadingScaffold extends State<StartupLoadScreen>
       initialData: 0.0,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return ChangeNotifierProvider(
-            create: (_) => TeamsProvider(),
-            child: MaterialApp(
-              title: 'Pogo Teams',
-              theme:
-                  ThemeData(brightness: Brightness.dark, fontFamily: 'Futura'),
+          return MaterialApp(
+            title: 'Pogo Teams',
+            theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Futura'),
 
-              home: const PogoScaffold(),
+            home: const PogoScaffold(),
 
-              //Removes the debug banner
-              debugShowCheckedModeBanner: false,
-            ),
-            lazy: false,
+            //Removes the debug banner
+            debugShowCheckedModeBanner: false,
           );
         }
 
         if (snapshot.hasData) {
           _animationController.animateTo(snapshot.data!,
-              curve: Curves.decelerate);
+              curve: Curves.easeInOut);
         }
 
         return Scaffold(
