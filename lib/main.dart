@@ -1,21 +1,12 @@
-// Dart Imports
-import 'dart:convert';
-
 // Flutter Imports
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package Imports
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart';
-import 'package:http/retry.dart';
 
 // Local Imports
 import 'pogo_teams_app.dart';
-import 'data/teams_provider.dart';
-import 'data/masters/gamemaster.dart';
-import 'data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------

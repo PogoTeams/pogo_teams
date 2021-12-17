@@ -6,18 +6,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
+import 'package:pogo_teams/data/teams_provider.dart';
 import 'package:pogo_teams/pogo_scaffold.dart';
 
 // Package Imports
-import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:http/retry.dart';
+import 'package:provider/provider.dart';
 
 // Local Imports
 import '../configs/size_config.dart';
 import '../data/masters/gamemaster.dart';
-import '../data/teams_provider.dart';
 import '../data/globals.dart' as globals;
 
 /*
@@ -63,10 +63,8 @@ class _LoadingScaffold extends State<StartupLoadScreen>
     yield .3;
     final Box rankingsBox = await Hive.openBox('rankings');
 
-    /*
     // DEBUGGING : uncomment to implicitly invoke update
-    //await gmBox.put('timestamp', globals.earliestTimestamp);
-    */
+    await gmBox.put('timestamp', globals.earliestTimestamp);
 
     final client = RetryClient(Client());
     dynamic gmJson;
@@ -81,34 +79,35 @@ class _LoadingScaffold extends State<StartupLoadScreen>
         String response =
             await client.read(Uri.https(globals.url, '/gamemaster.json'));
 
-        yield 1.0;
+        yield .8;
         // If request was successful, load in the new gamemaster,
         gmJson = jsonDecode(response);
       }
       // No new update available, attempt to load locally
       // Upon db failure, an http request will be made
       else {
-        yield 1.0;
+        yield .8;
         gmJson = await _loadCachedGamemaster(gmBox, client, httpAttempt: true);
       }
     }
     // If HTTP request or json decoding fails
     catch (error) {
       update = false;
-      yield 1.0;
+      yield .8;
       gmJson = await _loadCachedGamemaster(gmBox, client);
     }
 
     await gmBox.put('gamemaster', gmJson);
-    await gmBox.close();
-    client.close();
-
     globals.gamemaster = await GameMaster.generateGameMaster(
         gmJson, client, rankingsBox,
         update: update);
 
+    yield 1.0;
     // Just an asthetic for allowing the loading progress indicator to fill
     await Future.delayed(const Duration(milliseconds: 1200));
+
+    client.close();
+    await gmBox.close();
   }
 
   Future<bool> _updateAvailable(Box box, Client client) async {
@@ -186,13 +185,22 @@ class _LoadingScaffold extends State<StartupLoadScreen>
         if (snapshot.connectionState == ConnectionState.done) {
           return ChangeNotifierProvider(
             create: (_) => TeamsProvider(),
-            child: const PogoScaffold(),
+            child: MaterialApp(
+              title: 'Pogo Teams',
+              theme:
+                  ThemeData(brightness: Brightness.dark, fontFamily: 'Futura'),
+
+              home: const PogoScaffold(),
+
+              //Removes the debug banner
+              debugShowCheckedModeBanner: false,
+            ),
             lazy: false,
           );
         }
 
         if (snapshot.hasData) {
-          _animationController.animateTo(snapshot.data! * 3,
+          _animationController.animateTo(snapshot.data!,
               curve: Curves.decelerate);
         }
 

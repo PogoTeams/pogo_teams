@@ -12,7 +12,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 // Local Imports
 import 'pokemon/pokemon.dart';
 import 'pokemon/typing.dart';
-import '../data/masters/gamemaster.dart';
 import '../data/globals.dart' as globals;
 
 /*

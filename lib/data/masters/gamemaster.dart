@@ -45,12 +45,14 @@ class GameMaster {
           cupBuffer = await Cup.updateCup(cupsJson[i], rankingsBox, client);
           cups.add(cupBuffer);
         }
-      } catch (error) {
-        cups.clear();
-        for (int i = 0; i < cupsJson.length; ++i) {
-          cupBuffer = await Cup.loadCup(cupsJson[i], rankingsBox);
-          cups.add(cupBuffer);
-        }
+      } catch (_) {
+        try {
+          cups.clear();
+          for (int i = 0; i < cupsJson.length; ++i) {
+            cupBuffer = await Cup.loadCup(cupsJson[i], rankingsBox);
+            cups.add(cupBuffer);
+          }
+        } catch (_) {}
       }
     } else {
       for (int i = 0; i < cupsJson.length; ++i) {
