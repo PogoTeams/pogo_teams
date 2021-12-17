@@ -17,4 +17,7 @@ late final GameMaster gamemaster;
 
 // The current app version
 // Displayed at the footer of the app's drawer
-const String version = 'V 0.0.4 [Beta]';
+const String version = 'v1.0.0';
+
+// Server url for retrieving all updates
+const String url = 'pogoteams.github.io';

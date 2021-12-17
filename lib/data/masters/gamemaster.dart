@@ -1,16 +1,11 @@
-// Dart Imports
-import 'dart:convert';
-
-// Flutter Imports
-import 'package:flutter/services.dart';
-import 'package:pogo_teams/data/masters/type_master.dart';
+// Package Imports
+import 'package:http/http.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 // Local Imports
 import '../pokemon/pokemon.dart';
 import '../pokemon/move.dart';
 import '../cup.dart';
-import '../colors.dart';
-import '../pokemon_rankings.dart';
 import '../pokemon/typing.dart';
 
 /*
@@ -30,40 +25,39 @@ class GameMaster {
   });
 
   // Read in gamemaster.json and populate the global GameMaster object
-  static Future<GameMaster> generateGameMaster() async {
-    // Load the JSON string
-    final String gmString =
-        await rootBundle.loadString('assets/gamemaster.json');
+  static Future<GameMaster> generateGameMaster(gmJson, Client client,
+      {bool update = false}) async {
+    final Box rankingsBox = await Hive.openBox('rankings');
+    final List<dynamic> cupsJson = gmJson['openCups'];
+    List<Cup> cups = List.empty(growable: true);
+    Cup cupBuffer;
 
-    // Decode to a map
-    final Map<String, dynamic> gmJson = jsonDecode(gmString);
+    if (update) {
+      try {
+        for (int i = 0; i < cupsJson.length; ++i) {
+          cupBuffer = await Cup.updateCup(cupsJson[i], rankingsBox, client);
+          cups.add(cupBuffer);
+        }
+      } catch (error) {
+        cups.clear();
+        for (int i = 0; i < cupsJson.length; ++i) {
+          cupBuffer = await Cup.loadCup(cupsJson[i], rankingsBox);
+          cups.add(cupBuffer);
+        }
+      }
+    } else {
+      for (int i = 0; i < cupsJson.length; ++i) {
+        cupBuffer = await Cup.loadCup(cupsJson[i], rankingsBox);
+        cups.add(cupBuffer);
+      }
+    }
 
-    // Standard GBL cups
-    final List<Cup> cups = await _generateDefaultCupsList();
-
-    // All keys cooresponding to the cups that should be loaded
-    final List<String> openCups = List<String>.from(gmJson['openCups']);
-
-    // Load non-standard cups
-    List<dynamic> cupsJsonList = gmJson['cups'];
-
-    cupsJsonList = cupsJsonList
-        .where((cupJson) => openCups.contains(cupJson['name']))
-        .toList();
-
-    final List<Cup> nonStandardCups =
-        await Future.wait(cupsJsonList.map((dynamic cupJson) async {
-      return Cup.generateCup(cupJson);
-    }).toList());
-
-    // Append the non-standard cups
-    cups.addAll(nonStandardCups);
-
+    rankingsBox.close();
     return GameMaster.fromJson(gmJson, cups);
   }
 
   // JSON -> OBJ conversion
-  factory GameMaster.fromJson(Map<String, dynamic> json, List<Cup> cups) {
+  factory GameMaster.fromJson(json, List<Cup> cups) {
     final List<dynamic> pokemonJsonList = json['pokemon'];
     final List<dynamic> moveJsonList = json['moves'];
 
@@ -105,60 +99,6 @@ class GameMaster {
       moves: moves,
       cups: cups,
     );
-  }
-
-  // Generate the default PVP Cups
-  static Future<List<Cup>> _generateDefaultCupsList() async {
-    return [
-      Cup(
-        key: 'all',
-        title: 'Great League',
-        cp: 1500,
-        cupColor: cupColors['Great League']!,
-        rankings: await PokemonRankings.load('all', 1500),
-        includedTypesKeys: TypeMaster.typeKeysList,
-      ),
-      Cup(
-        key: 'all',
-        title: 'Ultra League',
-        cp: 2500,
-        cupColor: cupColors['Ultra League']!,
-        rankings: await PokemonRankings.load('all', 2500),
-        includedTypesKeys: TypeMaster.typeKeysList,
-      ),
-      Cup(
-        key: 'all',
-        title: 'Master League',
-        cp: 10000,
-        cupColor: cupColors['Master League']!,
-        rankings: await PokemonRankings.load('all', 10000),
-        includedTypesKeys: TypeMaster.typeKeysList,
-      ),
-      Cup(
-        key: 'remix',
-        title: 'Great League (Remix)',
-        cp: 1500,
-        cupColor: cupColors['Great League']!,
-        rankings: await PokemonRankings.load('remix', 1500),
-        includedTypesKeys: TypeMaster.typeKeysList,
-      ),
-      Cup(
-        key: 'remix',
-        title: 'Ultra League (Remix)',
-        cp: 2500,
-        cupColor: cupColors['Ultra League']!,
-        rankings: await PokemonRankings.load('remix', 2500),
-        includedTypesKeys: TypeMaster.typeKeysList,
-      ),
-      Cup(
-        key: 'remix',
-        title: 'Master League (Remix)',
-        cp: 10000,
-        cupColor: cupColors['Master League']!,
-        rankings: await PokemonRankings.load('remix', 10000),
-        includedTypesKeys: TypeMaster.typeKeysList,
-      ),
-    ];
   }
 
   // The master list of ALL moves

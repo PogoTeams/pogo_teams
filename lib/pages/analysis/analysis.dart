@@ -87,6 +87,14 @@ class _AnalysisState extends State<Analysis> {
       offense,
       includedTypesKeys,
     );
+
+    // Scale effectiveness to non-effectiveness
+    // TBH, this is convoluted, but hey it works...
+    // The big complication is the net coverage of all logged opponents also
+    // uses this abstraction.
+    final double teamLength = pokemonTeam.length * TypeMaster.notEffective;
+    void _scaleEffectiveness(typeData) => typeData.b *= teamLength;
+    netEffectiveness.forEach(_scaleEffectiveness);
   }
 
   // For the logged opponent teams, calculate the net coverage

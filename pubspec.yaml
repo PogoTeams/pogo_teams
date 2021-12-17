@@ -75,110 +75,13 @@ flutter:
     - assets/
     - assets/white_type_icons/
 
-    - assets/rankings/adl/attackers/
-    - assets/rankings/adl/chargers/
-    - assets/rankings/adl/closers/
-    - assets/rankings/adl/consistency/
-    - assets/rankings/adl/leads/
-    - assets/rankings/adl/overall/
-    - assets/rankings/adl/switches/
-
-    - assets/rankings/all/attackers/
-    - assets/rankings/all/chargers/
-    - assets/rankings/all/closers/
-    - assets/rankings/all/consistency/
-    - assets/rankings/all/leads/
-    - assets/rankings/all/overall/
-    - assets/rankings/all/switches/
-
-    - assets/rankings/brawler/attackers/
-    - assets/rankings/brawler/chargers/
-    - assets/rankings/brawler/closers/
-    - assets/rankings/brawler/consistency/
-    - assets/rankings/brawler/leads/
-    - assets/rankings/brawler/overall/
-    - assets/rankings/brawler/switches/
-    
-    - assets/rankings/classic/attackers/
-    - assets/rankings/classic/chargers/
-    - assets/rankings/classic/closers/
-    - assets/rankings/classic/consistency/
-    - assets/rankings/classic/leads/
-    - assets/rankings/classic/overall/
-    - assets/rankings/classic/switches/
-
-    - assets/rankings/cliffhanger/attackers/
-    - assets/rankings/cliffhanger/chargers/
-    - assets/rankings/cliffhanger/closers/
-    - assets/rankings/cliffhanger/consistency/
-    - assets/rankings/cliffhanger/leads/
-    - assets/rankings/cliffhanger/overall/
-    - assets/rankings/cliffhanger/switches/
-
-    - assets/rankings/factions/attackers/
-    - assets/rankings/factions/chargers/
-    - assets/rankings/factions/closers/
-    - assets/rankings/factions/consistency/
-    - assets/rankings/factions/leads/
-    - assets/rankings/factions/overall/
-    - assets/rankings/factions/switches/
-
-
-    - assets/rankings/holiday/attackers/
-    - assets/rankings/holiday/chargers/
-    - assets/rankings/holiday/closers/
-    - assets/rankings/holiday/consistency/
-    - assets/rankings/holiday/leads/
-    - assets/rankings/holiday/overall/
-    - assets/rankings/holiday/switches/
-
-    - assets/rankings/kanto/attackers/
-    - assets/rankings/kanto/chargers/
-    - assets/rankings/kanto/closers/
-    - assets/rankings/kanto/consistency/
-    - assets/rankings/kanto/leads/
-    - assets/rankings/kanto/overall/
-    - assets/rankings/kanto/switches/
-
-    - assets/rankings/premier/attackers/
-    - assets/rankings/premier/chargers/
-    - assets/rankings/premier/closers/
-    - assets/rankings/premier/consistency/
-    - assets/rankings/premier/leads/
-    - assets/rankings/premier/overall/
-    - assets/rankings/premier/switches/
-
-    - assets/rankings/premierclassic/attackers/
-    - assets/rankings/premierclassic/chargers/
-    - assets/rankings/premierclassic/closers/
-    - assets/rankings/premierclassic/consistency/
-    - assets/rankings/premierclassic/leads/
-    - assets/rankings/premierclassic/overall/
-    - assets/rankings/premierclassic/switches/
-
-    - assets/rankings/remix/attackers/
-    - assets/rankings/remix/chargers/
-    - assets/rankings/remix/closers/
-    - assets/rankings/remix/consistency/
-    - assets/rankings/remix/leads/
-    - assets/rankings/remix/overall/
-    - assets/rankings/remix/switches/
-
-    - assets/rankings/sinnoh/attackers/
-    - assets/rankings/sinnoh/chargers/
-    - assets/rankings/sinnoh/closers/
-    - assets/rankings/sinnoh/consistency/
-    - assets/rankings/sinnoh/leads/
-    - assets/rankings/sinnoh/overall/
-    - assets/rankings/sinnoh/switches/
-
-    - assets/rankings/unity/attackers/
-    - assets/rankings/unity/chargers/
-    - assets/rankings/unity/closers/
-    - assets/rankings/unity/consistency/
-    - assets/rankings/unity/leads/
-    - assets/rankings/unity/overall/
-    - assets/rankings/unity/switches/
+    - assets/rankings/gobattleleague/attackers/
+    - assets/rankings/gobattleleague/chargers/
+    - assets/rankings/gobattleleague/closers/
+    - assets/rankings/gobattleleague/consistency/
+    - assets/rankings/gobattleleague/leads/
+    - assets/rankings/gobattleleague/overall/
+    - assets/rankings/gobattleleague/switches/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

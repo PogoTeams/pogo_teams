@@ -67,7 +67,7 @@ class Pokemon {
   }
 
   // JSON -> OBJ conversion
-  factory Pokemon.fromJson(Map<String, dynamic> json, List<Move> moves) {
+  factory Pokemon.fromJson(json, List<Move> moves) {
     final dex = json['dex'] as int;
     String speciesName = json['speciesName'] as String;
     final speciesId = json['speciesId'] as String;

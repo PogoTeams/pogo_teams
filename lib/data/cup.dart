@@ -2,6 +2,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+// Package Imports
+import 'package:http/http.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 // Local Imports
 import 'colors.dart';
 import 'pokemon_rankings.dart';
@@ -28,18 +32,31 @@ class Cup {
 
   // Called to load in the given cup from a JSON
   // PokemonRankings.load will load all jsons from the pvpoke supplied 'data' directory
-  static Future<Cup> generateCup(Map<String, dynamic> json) async {
+  static Future<Cup> loadCup(json, Box rankingsBox) async {
     final key = json['name'] as String;
     final int cp = json['cp'] ?? 1500;
-    final rankings = await PokemonRankings.load(key, cp);
+    final rankings =
+        await PokemonRankings.load(key, cp.toString(), rankingsBox);
 
     return Cup.fromJson(json, key, cp, rankings);
   }
 
-  factory Cup.fromJson(
-      Map<String, dynamic> json, String key, int cp, PokemonRankings rankings) {
+  static Future<Cup> updateCup(
+    json,
+    Box rankingsBox,
+    Client client,
+  ) async {
+    final key = json['name'] as String;
+    final int cp = json['cp'] ?? 1500;
+    final rankings =
+        await PokemonRankings.update(key, cp.toString(), rankingsBox, client);
+
+    return Cup.fromJson(json, key, cp, rankings);
+  }
+
+  factory Cup.fromJson(json, String key, int cp, PokemonRankings rankings) {
     final title = json['title'] as String;
-    final Color cupColor = (cupColors[title] ?? Colors.cyan);
+    final Color cupColor = CupColors.getCupColor(title);
 
     List<String>? includedTypesKeys;
 

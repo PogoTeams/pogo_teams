@@ -23,7 +23,7 @@ class Move {
     this.abbreviation,
   });
 
-  factory Move.fromJson(Map<String, dynamic> json) {
+  factory Move.fromJson(json) {
     final moveId = json['moveId'] as String;
     String name = json['name'] as String;
 

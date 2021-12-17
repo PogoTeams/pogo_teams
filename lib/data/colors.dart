@@ -29,8 +29,19 @@ final Map<String, Color> typeColors = {
   'none': Colors.black,
 };
 
-final Map<String, Color> cupColors = {
-  'Great League': Colors.blue,
-  'Ultra League': const Color(0xFFC8B603),
-  'Master League': Colors.purple,
-};
+class CupColors {
+  // Attempt to retrieve a unique color for the cup
+  // Otherwise the default is cyan
+  static Color getCupColor(String cupTitle) {
+    String key = cupColors.keys
+        .firstWhere((key) => cupTitle.contains(key), orElse: () => 'default');
+    return cupColors[key] ?? Colors.cyan;
+  }
+
+  static const Map<String, Color> cupColors = {
+    'Great League': Colors.blue,
+    'Ultra League': Color(0xFFC8B603),
+    'Master League': Colors.purple,
+    'default': Colors.cyan,
+  };
+}
