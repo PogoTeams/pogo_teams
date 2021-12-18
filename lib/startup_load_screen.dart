@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
+import 'package:pogo_teams/data/builder_teams.dart';
 import 'package:pogo_teams/pogo_scaffold.dart';
 
 // Package Imports
@@ -14,9 +15,9 @@ import 'package:http/http.dart';
 import 'package:http/retry.dart';
 
 // Local Imports
-import '../configs/size_config.dart';
-import '../data/masters/gamemaster.dart';
-import '../data/globals.dart' as globals;
+import 'configs/size_config.dart';
+import 'data/masters/gamemaster.dart';
+import 'data/globals.dart' as globals;
 
 /*
 -------------------------------------------------------------------------------
@@ -37,12 +38,15 @@ class _LoadingScaffold extends State<StartupLoadScreen>
   // To smooth the progress bar animation
   late final AnimationController _animationController;
 
+  // User teams data
+  final UserTeams _teams = UserTeams();
+
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 4),
+      duration: const Duration(seconds: 2),
     );
   }
 
@@ -56,9 +60,7 @@ class _LoadingScaffold extends State<StartupLoadScreen>
   // Load the gamemaster, and yield values to the progress indicator
   Stream<double> _loadGamemaster() async* {
     bool update = false;
-    yield .1;
     final Box gmBox = await Hive.openBox('gamemaster'); // Pokemon GO data
-    yield .3;
     final Box rankingsBox = await Hive.openBox('rankings');
 
     // DEBUGGING : uncomment to implicitly invoke update
@@ -72,7 +74,6 @@ class _LoadingScaffold extends State<StartupLoadScreen>
       // make an http request for the new gamemaster
       if (await _updateAvailable(gmBox, client)) {
         update = true;
-        yield .5;
         // Retrieve gamemaster
         String response =
             await client.read(Uri.https(globals.url, '/gamemaster.json'));
@@ -95,17 +96,21 @@ class _LoadingScaffold extends State<StartupLoadScreen>
       gmJson = await _loadCachedGamemaster(gmBox, client);
     }
 
+    yield .9;
     await gmBox.put('gamemaster', gmJson);
     globals.gamemaster = await GameMaster.generateGameMaster(
         gmJson, client, rankingsBox,
         update: update);
 
-    yield 1.0;
-    // Just an asthetic for allowing the loading progress indicator to fill
-    await Future.delayed(const Duration(milliseconds: 1200));
-
     client.close();
     await gmBox.close();
+
+    yield 1.0;
+    // Initialize user teams data
+    await _teams.init();
+
+    // Just an asthetic for allowing the loading progress indicator to fill
+    await Future.delayed(const Duration(seconds: 2));
   }
 
   Future<bool> _updateAvailable(Box box, Client client) async {
@@ -151,12 +156,11 @@ class _LoadingScaffold extends State<StartupLoadScreen>
         // If request was successful, load in the new gamemaster,
         gmJson = jsonDecode(response);
       } catch (error) {
-        await _loadFromAssets();
+        gmJson = await _loadFromAssets();
       }
-    } else if (gmJson == null) {
-      await _loadFromAssets();
     }
 
+    gmJson ??= await _loadFromAssets();
     return gmJson;
   }
 
@@ -185,7 +189,7 @@ class _LoadingScaffold extends State<StartupLoadScreen>
             title: 'Pogo Teams',
             theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Futura'),
 
-            home: const PogoScaffold(),
+            home: PogoScaffold(teams: _teams),
 
             //Removes the debug banner
             debugShowCheckedModeBanner: false,
@@ -206,14 +210,27 @@ class _LoadingScaffold extends State<StartupLoadScreen>
             ),
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, child) => LinearProgressIndicator(
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.cyan),
-                  value: _animationController.value,
-                  semanticsLabel: 'Pogo Teams Loading Progress',
-                  semanticsValue: snapshot.data.toString(),
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 80.0,
+                    child: AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) => LinearProgressIndicator(
+                        valueColor:
+                            const AlwaysStoppedAnimation<Color>(Colors.cyan),
+                        value: _animationController.value,
+                        semanticsLabel: 'Pogo Teams Loading Progress',
+                        semanticsValue: snapshot.data.toString(),
+                      ),
+                    ),
+                  ),
+                  Image.asset(
+                    'assets/pokeball_icon.png',
+                    width: SizeConfig.blockSizeHorizontal * 5.0,
+                  ),
+                ],
               ),
             ),
           ),

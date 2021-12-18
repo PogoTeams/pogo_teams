@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import 'pages/startup_load_screen.dart';
+import 'startup_load_screen.dart';
 
 //// APPLICATION ROOT
 class PogoTeamsApp extends StatelessWidget {

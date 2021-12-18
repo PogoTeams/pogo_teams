@@ -2,8 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-// Package Import
-import 'package:provider/provider.dart';
 
 // Local Imports
 import 'team_builder_search.dart';
@@ -15,7 +13,6 @@ import '../../widgets/dropdowns/team_size_dropdown.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../data/pokemon/pokemon_team.dart';
 import '../../data/pokemon/pokemon.dart';
-import '../../data/teams_provider.dart';
 import '../../data/cup.dart';
 
 /*
@@ -33,30 +30,25 @@ each Pokemon node on the team :
 class TeamEdit extends StatefulWidget {
   const TeamEdit({
     Key? key,
-    required this.teamIndex,
+    required this.team,
   }) : super(key: key);
 
-  final int teamIndex;
+  final UserPokemonTeam team;
 
   @override
   _TeamEditState createState() => _TeamEditState();
 }
 
-class _TeamEditState extends State<TeamEdit>
-    with AutomaticKeepAliveClientMixin {
-  // Used to manually notify parent listeners that use this team
-  late TeamsProvider _provider;
-
-  // The team at to edit
-  late UserPokemonTeam _team;
+class _TeamEditState extends State<TeamEdit> {
+  // The working copy of this team
+  late final UserPokemonTeam _builderTeam = widget.team;
 
   // SETTER CALLBACKS
   void _onCupChanged(String? newCup) {
     if (newCup == null) return;
 
     setState(() {
-      _team.setCup(newCup);
-      _provider.notify();
+      _builderTeam.setCup(newCup);
     });
   }
 
@@ -64,32 +56,29 @@ class _TeamEditState extends State<TeamEdit>
     if (newSize == null) return;
 
     setState(() {
-      _team.setTeamSize(newSize);
-      _provider.notify();
+      _builderTeam.setTeamSize(newSize);
     });
   }
 
   void _onPokemonChanged(int index, Pokemon? newPokemon) {
     setState(() {
-      _team.setPokemon(index, newPokemon);
-      _provider.notify();
+      _builderTeam.setPokemon(index, newPokemon);
     });
   }
 
   void _onTeamChanged(List<Pokemon?> newPokemonTeam) {
     setState(() {
-      _team.setTeam(newPokemonTeam);
-      _provider.notify();
+      _builderTeam.setPokemonTeam(newPokemonTeam);
     });
   }
 
-  void _searchMode(int nodeIndex) async {
+  void _onSearchPressed(int nodeIndex) async {
     final _newTeam = await Navigator.push(
       context,
       MaterialPageRoute<UserPokemonTeam>(builder: (BuildContext context) {
         return TeamBuilderSearch(
-          team: _team,
-          cup: _team.cup,
+          team: _builderTeam,
+          cup: _builderTeam.cup,
           focusIndex: nodeIndex,
         );
       }),
@@ -97,8 +86,7 @@ class _TeamEditState extends State<TeamEdit>
 
     if (_newTeam != null) {
       setState(() {
-        Provider.of<TeamsProvider>(context, listen: false)
-            .setTeamAt(widget.teamIndex, _newTeam);
+        _builderTeam.fromBuilderCopy(_newTeam);
       });
     }
   }
@@ -106,12 +94,12 @@ class _TeamEditState extends State<TeamEdit>
   // Scroll to the analysis portion of the screen
   void _onAnalyzePressed() async {
     // If the team is empty, no action will be taken
-    if (_team.isEmpty()) return;
+    if (_builderTeam.isEmpty()) return;
 
     final newTeam = await Navigator.push(
       context,
       MaterialPageRoute<List<Pokemon?>>(builder: (BuildContext context) {
-        return Analysis(team: _team);
+        return Analysis(team: _builderTeam);
       }),
     );
 
@@ -120,6 +108,14 @@ class _TeamEditState extends State<TeamEdit>
 
   AppBar _buildAppBar() {
     return AppBar(
+      // Upon navigating back, return the updated team ref
+      leading: IconButton(
+        onPressed: () => Navigator.pop(
+          context,
+          _builderTeam,
+        ),
+        icon: const Icon(Icons.arrow_back_ios),
+      ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -165,7 +161,7 @@ class _TeamEditState extends State<TeamEdit>
           iconSize: iconSize,
         ),
         IconButton(
-          onPressed: () => _searchMode(nodeIndex),
+          onPressed: () => _onSearchPressed(nodeIndex),
           icon: const Icon(Icons.swap_horiz),
           tooltip: 'search for a different pokemon',
           iconSize: iconSize,
@@ -211,12 +207,11 @@ class _TeamEditState extends State<TeamEdit>
                   children: [
                     PokemonNode.large(
                       pokemon: pokemonTeam[index],
-                      onEmptyPressed: () => _searchMode(index),
+                      onEmptyPressed: () => _onSearchPressed(index),
                       onMoveChanged: () {
-                        _team.save();
-                        _provider.notify();
+                        _builderTeam.save();
                       },
-                      cup: _team.cup,
+                      cup: _builderTeam.cup,
                       footer: _buildNodeFooter(pokemonTeam[index], index),
                     ),
 
@@ -228,12 +223,11 @@ class _TeamEditState extends State<TeamEdit>
                 )
               : PokemonNode.large(
                   pokemon: pokemonTeam[index],
-                  onEmptyPressed: () => _searchMode(index),
+                  onEmptyPressed: () => _onSearchPressed(index),
                   onMoveChanged: () {
-                    _team.save();
-                    _provider.notify();
+                    _builderTeam.save();
                   },
-                  cup: _team.cup,
+                  cup: _builderTeam.cup,
                   footer: _buildNodeFooter(pokemonTeam[index], index),
                 ),
         ),
@@ -242,19 +236,9 @@ class _TeamEditState extends State<TeamEdit>
     );
   }
 
-  // Keeps page state upon swiping away in PageView
-  @override
-  bool get wantKeepAlive => true;
-
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
-    // Provider retrieval
-    _provider = Provider.of<TeamsProvider>(context);
-    _team = _provider.builderTeams[widget.teamIndex];
-
-    final pokemonTeam = _team.pokemonTeam;
+    final pokemonTeam = _builderTeam.pokemonTeam;
 
     return Scaffold(
       appBar: _buildAppBar(),
@@ -267,7 +251,7 @@ class _TeamEditState extends State<TeamEdit>
         child: ListView(
           children: [
             // Cup and team size dropdown menus at the top of the page
-            _buildHeaderDropdowns(_team.cup, pokemonTeam.length),
+            _buildHeaderDropdowns(_builderTeam.cup, pokemonTeam.length),
 
             // Spacer
             SizedBox(
@@ -284,7 +268,7 @@ class _TeamEditState extends State<TeamEdit>
           ],
         ),
       ),
-      floatingActionButton: _team.isEmpty()
+      floatingActionButton: _builderTeam.isEmpty()
           ? Container()
           : GradientButton(
               onPressed: _onAnalyzePressed,

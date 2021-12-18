@@ -181,7 +181,7 @@ class PokemonRankings {
   ) async {
     final String path = 'rankings/$cupKey/$category/rankings-$cp';
     final rankingsJson = rankingsBox.get(path) ??
-        jsonDecode(await rootBundle.loadString('$path.json'));
+        jsonDecode(await rootBundle.loadString('assets/$path.json'));
 
     rankingsBox.put(path, rankingsJson);
     return _loadJson(rankingsJson);
