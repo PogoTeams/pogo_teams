@@ -8,7 +8,10 @@ import 'package:flutter/widgets.dart';
 import '../../configs/size_config.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
+A dropdown button for selecting a "win", "tie", or "loss" for a match. This is
+used in the battle log page where a user can report these matches as a
+backlog.
 -------------------------------------------------------------------------------
 */
 

@@ -14,7 +14,7 @@ import 'pokemon/typing.dart';
 import 'masters/type_master.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 Every possible cup in PVP can be encapsulated here. The GameMaster will read
 in a list of cups from the assets/gamemaster.json.
 -------------------------------------------------------------------------------

@@ -8,7 +8,7 @@ import '../configs/size_config.dart';
 import '../data/globals.dart' as globals;
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 The drawer that handles all app navigation and some other functionality. It is
 accessible to the user by any screen that contains a scaffold app bar.
 -------------------------------------------------------------------------------

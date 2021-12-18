@@ -16,7 +16,7 @@ import '../../configs/size_config.dart';
 import '../../tools/pair.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 An analysis page for a single user team. The user will be able to edit their
 team via the swap feature, given the current threats / counters of their team.
 -------------------------------------------------------------------------------

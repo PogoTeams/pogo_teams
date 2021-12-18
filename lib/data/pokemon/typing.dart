@@ -7,7 +7,7 @@ import '../colors.dart';
 import '../globals.dart' as globals;
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 Manages a Pokemon's typing which can be exactly 1 or 2 types. This is basically
 a helper class that effectively handles the case of a Pokemon with 2 types.
 -------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ class Typing {
 }
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 Manages all data cooresponding to a single type. This can be a type from a
 Pokemon's duo / mono typing or a Pokemon move.
 -------------------------------------------------------------------------------

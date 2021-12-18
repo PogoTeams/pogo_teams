@@ -13,7 +13,9 @@ import '../../configs/size_config.dart';
 import '../../tools/pair.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
+A net analysis of all logged opponent teams. This page follows the same pattern
+as OpponentTeamAnalysis.
 -------------------------------------------------------------------------------
 */
 

@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import '../../configs/size_config.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 A floating action button that is docked at the bottom right of the Pokemon
 search screen. This button allows the user to sort the list by various
 PVP related categories.

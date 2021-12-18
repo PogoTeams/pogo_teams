@@ -11,12 +11,12 @@ import 'battle_log.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../configs/size_config.dart';
-import '../../data/builder_teams.dart';
+import '../../data/user_teams.dart';
 import '../../data/pokemon/pokemon.dart';
 import '../../data/pokemon/pokemon_team.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 A list view of the user's pvp teams is displayed. Each team is a TeamNode,
 containing the following functionality :
 
@@ -178,7 +178,7 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
 
     if (newTeam != null) {
       setState(() {
-        _teams[teamIndex] = (newTeam as UserPokemonTeam);
+        _teams[teamIndex].fromBuilderCopy((newTeam as UserPokemonTeam));
       });
     }
   }
@@ -233,7 +233,7 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
 
     if (newTeam != null) {
       setState(() {
-        _teams[teamIndex] = (newTeam as UserPokemonTeam);
+        _teams[teamIndex].fromBuilderCopy(newTeam as UserPokemonTeam);
       });
     }
   }

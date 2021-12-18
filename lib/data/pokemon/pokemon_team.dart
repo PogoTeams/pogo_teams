@@ -8,7 +8,7 @@ import '../masters/type_master.dart';
 import '../globals.dart' as globals;
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 The Pokemon Team data model contains a list of 3 nullable Pokemon references
 and a Cup reference. This collection represents a single Pokemon PVP Team.
 This Pokemon Team can then be used to compute various information throughout

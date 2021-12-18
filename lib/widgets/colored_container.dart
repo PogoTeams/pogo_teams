@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../data/pokemon/pokemon.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 This Container will take a Pokemon, and apply a color style based off of that
 Pokemon's typing. If it is mono-type, a solid color cooresponding to that
 color will be applied, otherwise a linear gradient will be applied.

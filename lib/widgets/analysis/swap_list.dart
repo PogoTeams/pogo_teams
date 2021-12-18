@@ -12,7 +12,7 @@ import '../../configs/size_config.dart';
 import '../buttons/pokemon_action_button.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 Generate a list of the top 20 Pokemon that have one of the specified types.
 Each Pokemon will be displayed as a node with a footer widget, which allowing
 the user to swap this Pokemon with another in their team.

@@ -18,7 +18,7 @@ import '../colored_container.dart';
 import '../formatted_pokemon_name.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 Any Pokemon information being displayed in the app is done so through a
 PokemonNode. The node can take many different forms depending on the context.
 -------------------------------------------------------------------------------

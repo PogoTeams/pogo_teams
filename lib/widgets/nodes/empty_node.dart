@@ -11,7 +11,7 @@ import 'package:flutter/widgets.dart';
 import '../../configs/size_config.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 An empty node indicates an empty space in a Pokemon Team. Depending on the
 context, this empty node can be tapped to apply various callbacks. The empty
 node can also be completely emptyTransparent. All PokemonNodes use an empty node

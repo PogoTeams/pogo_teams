@@ -3,7 +3,7 @@ import 'typing.dart';
 import '../masters/type_master.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 A single Pokemon move which is either a fast move or charged move with
 respective typing, coloring, and stats. GameMaster will read in and manage a
 list of moves from assets/gamemaster.json.

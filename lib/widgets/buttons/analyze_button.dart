@@ -12,7 +12,7 @@ import 'gradient_button.dart';
 import '../../configs/size_config.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 A button that will appear when there is 1 or more Pokemon on a team. When the
 team is empty, the button will take up that same space as blank space.
 -------------------------------------------------------------------------------

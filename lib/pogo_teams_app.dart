@@ -10,7 +10,13 @@ import 'package:flutter/widgets.dart';
 // Local Imports
 import 'startup_load_screen.dart';
 
-//// APPLICATION ROOT
+/*
+-------------------------------------------------------------------- @PogoTeams
+This is the root widget for Pogo Teams. It starts up the loading phase with
+StartupLoadScreen.
+-------------------------------------------------------------------------------
+*/
+
 class PogoTeamsApp extends StatelessWidget {
   const PogoTeamsApp({Key? key}) : super(key: key);
 

@@ -9,7 +9,7 @@ import '../../configs/size_config.dart';
 import '../../data/pokemon/pokemon.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 A button that displays at the bottom of a Pokemon node, indicating the user
 can perform an action with that Pokemon.
 -------------------------------------------------------------------------------

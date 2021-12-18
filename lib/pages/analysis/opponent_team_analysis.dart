@@ -14,7 +14,7 @@ import '../../configs/size_config.dart';
 import '../../tools/pair.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 An analysis page for a single opponent team. Changes can be made to the user's
 team as well, via the swap feature.
 -------------------------------------------------------------------------------

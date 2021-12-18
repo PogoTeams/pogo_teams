@@ -10,7 +10,7 @@ import '../../data/pokemon/pokemon.dart';
 import '../../configs/size_config.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 This class manages the 3 dropdown menu buttons cooresponding to a Pokemon's :
 - Fast Move
 - Charge Move 1

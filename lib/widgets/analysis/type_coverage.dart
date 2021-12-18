@@ -10,7 +10,7 @@ import '../../data/pokemon/typing.dart';
 import '../../configs/size_config.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 A column of type coverage analysis widgets. Used in any team analysis.
 -------------------------------------------------------------------------------
 */

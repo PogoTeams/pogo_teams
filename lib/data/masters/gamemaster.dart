@@ -9,7 +9,7 @@ import '../cup.dart';
 import '../pokemon/typing.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 The gamemaster contains all Pokemon Go data. A global GameMaster object is
 populated by assets/gamemaster.json. GameMaster can be considered the model of
 the entire app.

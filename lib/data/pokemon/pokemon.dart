@@ -10,7 +10,7 @@ import '../masters/cp_master.dart';
 import '../globals.dart' as globals;
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 Pokemon is the encapsulation of a single Pokemon and all of its traits.
 Additionally, there are instance related variables that determine the 
 relative 'state' of a pokemon. The 'state' is effected by various user UI
@@ -137,6 +137,31 @@ class Pokemon {
     );
   }
 
+  // This json will contain moveset info and an id
+  // This id is used to retrieve an actual Pokemon ref from the idMap
+  static Pokemon? fromStateJson(dynamic json, Map<String, Pokemon> idMap) {
+    if (json == null) return null;
+
+    Pokemon stateJson = Pokemon.from(idMap[json['speciesId']]!);
+
+    stateJson.setMoveset(json['selectedFastMove'] as String,
+        List<String>.from(json['selectedChargedMoves']));
+
+    return stateJson;
+  }
+
+  // For writing out to local storage
+  Map<String, dynamic> toStateJson() {
+    return {
+      'speciesId': speciesId,
+      'selectedFastMove': selectedFastMove.moveId,
+      'selectedChargedMoves': [
+        selectedChargedMoves[0].moveId,
+        selectedChargedMoves[1].moveId,
+      ],
+    };
+  }
+
   // REQUIRED
   final int dex;
   final String speciesName;
@@ -245,31 +270,6 @@ class Pokemon {
 
   String getRatingString() {
     return rating.toStringAsFixed(0);
-  }
-
-  // This json will contain moveset info and an id
-  // This id is used to retrieve an actual Pokemon ref from the idMap
-  static Pokemon? fromStateJson(dynamic json, Map<String, Pokemon> idMap) {
-    if (json == null) return null;
-
-    Pokemon stateJson = Pokemon.from(idMap[json['speciesId']]!);
-
-    stateJson.setMoveset(json['selectedFastMove'] as String,
-        List<String>.from(json['selectedChargedMoves']));
-
-    return stateJson;
-  }
-
-  // For writing out to local storage
-  Map<String, dynamic> toStateJson() {
-    return {
-      'speciesId': speciesId,
-      'selectedFastMove': selectedFastMove.moveId,
-      'selectedChargedMoves': [
-        selectedChargedMoves[0].moveId,
-        selectedChargedMoves[1].moveId,
-      ],
-    };
   }
 
   List<Color> getMoveColors() {

@@ -21,7 +21,7 @@ import '../../data/pokemon/pokemon_team.dart';
 import '../../data/globals.dart' as globals;
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 A search and build page, where the team being edited is rendered as a grid
 above a searchable / filterable list of Pokemon. The user can press on any
 node in the grid to put focus on that node for adding a Pokemon. 

@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import '../configs/size_config.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 A text field for the user to search by string. It is assumed that the
 controller is already initialized and has listeners.
 -------------------------------------------------------------------------------

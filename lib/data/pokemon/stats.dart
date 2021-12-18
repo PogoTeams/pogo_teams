@@ -1,5 +1,5 @@
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 All Pokemon stats are managed here. Every Pokemon has a BaseStats object that
 manages a Pokemon's attack, defense, and hp. DefaultIVs contains a Pokemon's
 100% IVs for each cp cap scenario (500, 1500, 2500, and 10000 : Master).

@@ -10,7 +10,7 @@ import '../../configs/size_config.dart';
 import '../../data/globals.dart' as globals;
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 A single dropdown button to display all pvp cup options.
 The selected cup will affect all meta calculations
 as well as the Pokemon's ideal IVs.

@@ -10,7 +10,7 @@ import '../../data/pokemon/move.dart';
 import '../../configs/size_config.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 Any Pokemon move displays that are not a dropdown are managed by these
 MoveNodes.
 -------------------------------------------------------------------------------

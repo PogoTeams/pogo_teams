@@ -8,7 +8,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 A gradient button that uses gradient coloring in theme with the app design.
 -------------------------------------------------------------------------------
 */

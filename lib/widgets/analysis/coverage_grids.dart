@@ -9,7 +9,7 @@ import '../../data/pokemon/typing.dart';
 import '../../configs/size_config.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 2 grids, displaying the type icons that are top defense threats team, and a
 teams offense coverage based on movesets.
 -------------------------------------------------------------------------------

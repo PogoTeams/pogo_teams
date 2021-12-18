@@ -13,7 +13,7 @@ import '../../data/pokemon/typing.dart';
 import '../../tools/pair.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 An analysis page that will generate different results, given the provided
 team(s). This widget is used to branch unique analysis pages for a :
 

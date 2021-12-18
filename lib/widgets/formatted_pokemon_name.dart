@@ -5,6 +5,14 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
+/*
+-------------------------------------------------------------------- @PogoTeams
+For any Pokemon that have a portion of their name enclosed by "()", a
+conditional formatting will occur. Ex. for Stunfisk (Galarian), different
+formatting can occur for "Stunfisk" and "(Galarian)".
+-------------------------------------------------------------------------------
+*/
+
 class FormattedPokemonName extends StatelessWidget {
   const FormattedPokemonName({
     Key? key,

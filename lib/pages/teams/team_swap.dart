@@ -17,7 +17,7 @@ import '../../widgets/nodes/pokemon_node.dart';
 import '../../data/pokemon/pokemon_team.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 The user will be able to swap any of the current Pokemon in their team with
 the swap Pokemon. Movesets may also be edited here.
 -------------------------------------------------------------------------------

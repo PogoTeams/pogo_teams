@@ -11,13 +11,13 @@ import '../nodes/pokemon_node.dart';
 import '../../configs/size_config.dart';
 
 /*
--------------------------------------------------------------------------------
-A list of 
+-------------------------------------------------------------------- @PogoTeams
+A list of Pokemon that are filtered by a specified subset of types.
 -------------------------------------------------------------------------------
 */
 
-class OpponentCountersList extends StatelessWidget {
-  const OpponentCountersList({
+class TypeFilteredPokemonList extends StatelessWidget {
+  const TypeFilteredPokemonList({
     Key? key,
     required this.cup,
     required this.types,

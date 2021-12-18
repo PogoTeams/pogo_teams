@@ -13,7 +13,7 @@ import '../../data/cup.dart';
 import '../../data/pokemon/pokemon_team.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 A top level view of a Pokemon team. Each Pokemon (or lack there of) is
 displayed in a square node, any null space in the team is a button that will
 call onEmptyPressed. Every team is provided an index, via the TeamBuilder,

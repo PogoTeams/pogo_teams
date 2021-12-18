@@ -16,14 +16,11 @@ import '../../data/pokemon/pokemon.dart';
 import '../../data/cup.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 A full page view of a user's Pokemon team. When there is at least 1 Pokemon on
 the team, an Analysis button will appear, where the user can view a complete
-analysis of their team. The following operations are currently supported for
-each Pokemon node on the team :
-
-- Remove Pokemon
-- Swap Pokemon
+analysis of their team. The Pokemon can be removed, swapped out, or their
+moveset can be adjusted.
 -------------------------------------------------------------------------------
 */
 

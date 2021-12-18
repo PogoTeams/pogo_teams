@@ -12,7 +12,7 @@ import '../../data/pokemon/typing.dart';
 import '../../configs/size_config.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 Displays a horizontal bar graph, that visually indicates the team's net
 coverage against all types. A balanced team should have most of the bars
 half way across the screen.

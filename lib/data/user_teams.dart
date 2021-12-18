@@ -5,13 +5,16 @@ import 'package:hive/hive.dart';
 import 'pokemon/pokemon_team.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
+All user created teams are managed by this abstraction. All user db operations
+are also handled here as well.
 -------------------------------------------------------------------------------
 */
 
 class UserTeams {
   init() async => await _load();
 
+  // Load data from the db
   Future<void> _load() async {
     _box = await Hive.openBox('teams'); // User data
 
@@ -24,14 +27,12 @@ class UserTeams {
     }
   }
 
-  UserPokemonTeam operator [](int index) => _builderTeams[index];
-
-  void operator []=(int index, UserPokemonTeam other) async =>
-      _builderTeams[index].fromBuilderCopy(other);
-
   late final Box _box;
   final List<UserPokemonTeam> _builderTeams = List.empty(growable: true);
   int teamsCount = 0;
+
+  // Getter
+  UserPokemonTeam operator [](int index) => _builderTeams[index];
 
   // Add a new empty team
   void addTeam() async {
@@ -52,9 +53,10 @@ class UserTeams {
     await _box.delete('team_$index');
   }
 
-  void _save(int index) async {
-    await _box.put('team_$index', _builderTeams[index].toJson());
-  }
+  // Save the team at specified index
+  void _save(int index) async =>
+      await _box.put('team_$index', _builderTeams[index].toJson());
 
+  // Close the db
   void close() async => await _box.close();
 }

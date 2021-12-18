@@ -6,7 +6,7 @@ import '../data/pokemon/pokemon.dart';
 import '../configs/size_config.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 These icons will appear in a row in a Pokemon's node. Here are the current
 possible icons :
 XL - XL candy Pokemon
@@ -90,34 +90,5 @@ class ShadowIcon extends StatelessWidget {
       color: Colors.purple[900]!,
       size: SizeConfig.blockSizeHorizontal * 6.0 * scale,
     );
-  }
-}
-
-// Currently unused, but may prove to be useful
-class MetaIcon extends StatelessWidget {
-  const MetaIcon({
-    Key? key,
-    required this.rating,
-    required this.scale,
-  }) : super(key: key);
-
-  final num rating;
-  final double scale;
-
-  @override
-  Widget build(BuildContext context) {
-    return rating > 650
-        ? Padding(
-            padding: EdgeInsets.only(
-              left: SizeConfig.blockSizeHorizontal * 2.0,
-              right: SizeConfig.blockSizeHorizontal * 2.0,
-            ),
-            child: Icon(
-              Icons.star_rounded,
-              color: Colors.yellow[600],
-              size: SizeConfig.blockSizeHorizontal * 6.0 * scale,
-            ),
-          )
-        : Container();
   }
 }

@@ -6,7 +6,7 @@ import '../../tools/logic.dart';
 import '../globals.dart' as globals;
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 All type effectiveness relationships are handled here. The effectivenessMaster
 map contains these numeric relationships, effectively scaling all type on type
 offense / defense scenerios that can occur.

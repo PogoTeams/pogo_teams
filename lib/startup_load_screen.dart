@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
-import 'package:pogo_teams/data/builder_teams.dart';
+import 'package:pogo_teams/data/user_teams.dart';
 import 'package:pogo_teams/pogo_scaffold.dart';
 
 // Package Imports
@@ -20,9 +20,30 @@ import 'data/masters/gamemaster.dart';
 import 'data/globals.dart' as globals;
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 Gamemaster and Pokemon Rankings data is loaded here. An empty screen with a
-progress indicator is displayed to the user via a StreamBuilder.
+progress indicator is displayed to the user via a StreamBuilder. Several cases
+are handled during the app's loading phase, and they are described below
+
+-------------------------------------------------------------------------------
+
+APP STARTUP CASES (for gamemaster and rankings data)
+
+* LOCAL RETRIEVE
+  - Attempt to read from local database
+  - If db fails: read from assets
+
+1) No network connection : *
+
+2) HTTPS timestamp.txt fails : *
+
+3) The server timestamp is the same as the local one (no update) : *
+
+4) The server timestamp is different from the local one (update)
+  a) HTTP request for gamemaster.json
+    - If request fails : *
+
+  b) Decode response, generate gamemaster, save to local db
 -------------------------------------------------------------------------------
 */
 
@@ -53,6 +74,7 @@ class _LoadingScaffold extends State<StartupLoadScreen>
   @override
   void dispose() {
     _animationController.dispose();
+    _teams.close();
 
     super.dispose();
   }
@@ -97,6 +119,7 @@ class _LoadingScaffold extends State<StartupLoadScreen>
     }
 
     yield .9;
+    // Setup the gamemaster instance
     await gmBox.put('gamemaster', gmJson);
     globals.gamemaster = await GameMaster.generateGameMaster(
         gmJson, client, rankingsBox,

@@ -16,7 +16,7 @@ import '../widgets/buttons/filter_button.dart';
 import '../data/globals.dart' as globals;
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 This screen will display a list of rankings based on selected cup, and
 category. These categories and ranking information are all currently used from
 The PvPoke model.

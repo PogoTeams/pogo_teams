@@ -15,7 +15,7 @@ import 'pokemon/typing.dart';
 import '../data/globals.dart' as globals;
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 All pokemon rankings are managed here. For every 'cup' available in the
 assets/gamemaster.json is a PokemonRankings object. Within this cup, there is a
 list of Pokemon and respective movesets that are ranked in 7 different

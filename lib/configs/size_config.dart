@@ -2,7 +2,7 @@
 import 'package:flutter/widgets.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
 All screen size queries are handled here. This class is initialized via init
 upon the initial app build.
 -------------------------------------------------------------------------------

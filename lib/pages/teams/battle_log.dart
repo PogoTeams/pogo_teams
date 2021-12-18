@@ -13,7 +13,11 @@ import '../../../configs/size_config.dart';
 import '../../../data/pokemon/pokemon_team.dart';
 
 /*
--------------------------------------------------------------------------------
+-------------------------------------------------------------------- @PogoTeams
+The battle log page for a single user team. From here, the user can add or
+"log" opponent teams that they've encountered with their team. They can then
+perform an analysis on any individual opponent team or a net analysis of all
+logged opponenents associated with their team.
 -------------------------------------------------------------------------------
 */
 
