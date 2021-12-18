@@ -3,9 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-// Package Imports
-import 'package:provider/provider.dart';
-
 // Local Imports
 import 'team_edit.dart';
 import 'team_builder_search.dart';
@@ -14,7 +11,7 @@ import 'battle_log.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../configs/size_config.dart';
-import '../../data/teams_provider.dart';
+import '../../data/builder_teams.dart';
 import '../../data/pokemon/pokemon.dart';
 import '../../data/pokemon/pokemon_team.dart';
 
@@ -31,24 +28,23 @@ containing the following functionality :
 */
 
 class TeamsBuilder extends StatefulWidget {
-  const TeamsBuilder({Key? key}) : super(key: key);
+  const TeamsBuilder({Key? key, required this.teams}) : super(key: key);
 
+  final UserTeams teams;
   @override
   _TeamsBuilderState createState() => _TeamsBuilderState();
 }
 
 class _TeamsBuilderState extends State<TeamsBuilder> {
+  late final UserTeams _teams = widget.teams;
+
   // Build the list of TeamNodes, with the necessary callbacks
   Widget _buildTeamsList(BuildContext context) {
-    // Provider retrieve
-    final _teams =
-        Provider.of<TeamsProvider>(context, listen: true).builderTeams;
-
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: _teams.length,
+      itemCount: _teams.teamsCount,
       itemBuilder: (context, index) {
-        if (index == _teams.length - 1) {
+        if (index == _teams.teamsCount - 1) {
           return Column(
             children: [
               TeamNode(
@@ -87,16 +83,14 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
     // Size of the footer icons
     final double iconSize = SizeConfig.blockSizeHorizontal * 6.0;
 
-    // Provider retrieve
-    final _team = Provider.of<TeamsProvider>(context, listen: true)
-        .builderTeams[teamIndex];
-    final IconData lockIcon = _team.locked ? Icons.lock : Icons.lock_open;
+    final IconData lockIcon =
+        _teams[teamIndex].locked ? Icons.lock : Icons.lock_open;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Remove team option if the team is unlocked
-        _team.locked
+        _teams[teamIndex].locked
             ? Container()
             : IconButton(
                 onPressed: () => _onClearTeam(teamIndex),
@@ -147,89 +141,99 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
   // Remove the team at specified index
   void _onClearTeam(int teamIndex) {
     setState(() {
-      Provider.of<TeamsProvider>(context, listen: false)
-          .removeTeamAt(teamIndex);
+      _teams.removeTeamAt(teamIndex);
     });
   }
 
   // Scroll to the analysis portion of the screen
   void _onAnalyzeTeam(int teamIndex) async {
-    final _team = Provider.of<TeamsProvider>(context, listen: false)
-        .builderTeams[teamIndex];
-
     // If the team is empty, no action will be taken
-    if (_team.isEmpty()) return;
+    if (_teams[teamIndex].isEmpty()) return;
 
-    final newTeam = await Navigator.push(
+    final newPokemonTeam = await Navigator.push(
       context,
       MaterialPageRoute<List<Pokemon?>>(builder: (BuildContext context) {
-        return Analysis(team: _team);
+        return Analysis(team: _teams[teamIndex]);
       }),
     );
 
-    if (newTeam != null) {
+    if (newPokemonTeam != null) {
       setState(() {
-        _team.setTeam(newTeam);
+        _teams[teamIndex].setPokemonTeam(newPokemonTeam);
       });
     }
   }
 
-  void _onLogTeam(int teamIndex) {
-    Navigator.push(
+  void _onLogTeam(int teamIndex) async {
+    final team = _teams[teamIndex];
+
+    final newTeam = await Navigator.push(
       context,
-      MaterialPageRoute<Pokemon>(
+      MaterialPageRoute<PokemonTeam>(
         builder: (BuildContext context) => BattleLog(
-          teamIndex: teamIndex,
+          team: team,
         ),
       ),
     );
+
+    if (newTeam != null) {
+      setState(() {
+        _teams[teamIndex] = (newTeam as UserPokemonTeam);
+      });
+    }
   }
 
   // Edit the team at specified index
-  void _onEditTeam(int teamIndex) {
-    Navigator.push(
+  void _onEditTeam(int teamIndex) async {
+    final team = _teams[teamIndex];
+
+    final newTeam = await Navigator.push(
       context,
-      MaterialPageRoute<Pokemon>(
-        builder: (BuildContext context) => TeamEdit(
-          teamIndex: teamIndex,
-        ),
+      MaterialPageRoute<PokemonTeam>(
+        builder: (BuildContext context) => TeamEdit(team: team),
       ),
     );
+
+    if (newTeam != null) {
+      setState(() {
+        _teams[teamIndex].fromBuilderCopy((newTeam as UserPokemonTeam));
+      });
+    }
   }
 
+  // On locking a team, the clear option is removed
   void _onLockPressed(int teamIndex) {
     setState(() {
-      Provider.of<TeamsProvider>(context, listen: false)
-          .builderTeams[teamIndex]
-          .toggleLock();
+      _teams[teamIndex].toggleLock();
     });
   }
 
   // Add a new empty team
   void _onAddTeam() {
-    Provider.of<TeamsProvider>(context, listen: false).addTeam();
+    setState(() {
+      _teams.addTeam();
+    });
   }
 
   // Navigate to the team build search page, with focus on the specified
   // nodeIndex
   void _onEmptyPressed(int teamIndex, int nodeIndex) async {
-    UserPokemonTeam _team = Provider.of<TeamsProvider>(context, listen: false)
-        .builderTeams[teamIndex];
+    final team = _teams[teamIndex];
 
-    final _newTeam = await Navigator.push(
+    final newTeam = await Navigator.push(
       context,
-      MaterialPageRoute<UserPokemonTeam>(builder: (BuildContext context) {
+      MaterialPageRoute<PokemonTeam>(builder: (BuildContext context) {
         return TeamBuilderSearch(
-          team: _team,
-          cup: _team.cup,
+          team: team,
+          cup: team.cup,
           focusIndex: nodeIndex,
         );
       }),
     );
 
-    if (_newTeam != null) {
+    if (newTeam != null) {
       setState(() {
-        _team = _newTeam;
+        _teams[teamIndex] = (newTeam as UserPokemonTeam);
       });
     }
   }

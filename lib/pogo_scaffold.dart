@@ -6,25 +6,28 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-// Package Imports
-import 'package:provider/provider.dart';
-
 // Local Imports
+import 'data/builder_teams.dart';
 import 'pages/teams/teams_builder.dart';
 import 'pages/rankings.dart';
 import 'configs/size_config.dart';
-import 'data/teams_provider.dart';
 import 'widgets/pogo_drawer.dart';
 
 /*
 -------------------------------------------------------------------------------
 The top level scaffold for the app. Navigation via the scaffold's drawer, will
-apply changes to the body, and app bar title.
+apply changes to the body, and app bar title. This widget renders upon the app
+finishing it's loading phase.
 -------------------------------------------------------------------------------
 */
 
 class PogoScaffold extends StatefulWidget {
-  const PogoScaffold({Key? key}) : super(key: key);
+  const PogoScaffold({
+    Key? key,
+    required this.teams,
+  }) : super(key: key);
+
+  final UserTeams teams;
 
   @override
   _PogoScaffoldState createState() => _PogoScaffoldState();
@@ -33,11 +36,7 @@ class PogoScaffold extends StatefulWidget {
 class _PogoScaffoldState extends State<PogoScaffold>
     with SingleTickerProviderStateMixin {
   // All pages that are accessible at the top level of the app
-  final Map<String, Widget> _pages = {
-    'Teams': Consumer<TeamsProvider>(
-        builder: (context, value, child) => const TeamsBuilder()),
-    'Rankings': const Rankings(),
-  };
+  late final Map<String, Widget> _pages;
 
   // Icons cooresponding to the pages
   late final Map<String, Widget> _icons = {
@@ -106,7 +105,10 @@ class _PogoScaffoldState extends State<PogoScaffold>
   @override
   void initState() {
     super.initState();
-    Provider.of<TeamsProvider>(context, listen: false).init();
+    _pages = {
+      'Teams': TeamsBuilder(teams: widget.teams),
+      'Rankings': const Rankings(),
+    };
   }
 
   @override

@@ -4,16 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pogo_teams/pages/analysis/analysis.dart';
 
-// Package Imports
-import 'package:provider/provider.dart';
-
 // Local Imports
 import 'team_builder_search.dart';
 import '../../../widgets/nodes/team_node.dart';
 import '../../../widgets/buttons/gradient_button.dart';
 import '../../../widgets/nodes/win_loss_node.dart';
 import '../../../configs/size_config.dart';
-import '../../../data/teams_provider.dart';
 import '../../../data/pokemon/pokemon_team.dart';
 
 /*
@@ -24,23 +20,29 @@ import '../../../data/pokemon/pokemon_team.dart';
 class BattleLog extends StatefulWidget {
   const BattleLog({
     Key? key,
-    required this.teamIndex,
+    required this.team,
   }) : super(key: key);
 
-  final int teamIndex;
+  final UserPokemonTeam team;
 
   @override
   _BattleLogState createState() => _BattleLogState();
 }
 
 class _BattleLogState extends State<BattleLog> {
-  late final UserPokemonTeam _team =
-      Provider.of<TeamsProvider>(context, listen: false)
-          .builderTeams[widget.teamIndex];
+  late final UserPokemonTeam _team = widget.team;
 
   // Build the app bar with the current page title, and icon
   AppBar _buildAppBar() {
     return AppBar(
+      // Upon navigating back, return the updated team ref
+      leading: IconButton(
+        onPressed: () => Navigator.pop(
+          context,
+          _team,
+        ),
+        icon: const Icon(Icons.arrow_back_ios),
+      ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -127,7 +129,6 @@ class _BattleLogState extends State<BattleLog> {
 
   // Build the list of TeamNodes, with the necessary callbacks
   Widget _buildLogsList() {
-    // Provider retrieve
     final List<LogPokemonTeam> _logs = _team.logs;
 
     return Expanded(
@@ -172,14 +173,14 @@ class _BattleLogState extends State<BattleLog> {
     final double iconSize = SizeConfig.blockSizeHorizontal * 6.0;
 
     // Provider retrieve
-    final _log = _team.logs[teamIndex];
-    final IconData lockIcon = _log.locked ? Icons.lock : Icons.lock_open;
+    final log = _team.logs[teamIndex];
+    final IconData lockIcon = log.locked ? Icons.lock : Icons.lock_open;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Remove team option if the team is unlocked
-        _log.locked
+        log.locked
             ? Container()
             : IconButton(
                 onPressed: () => _onClearTeam(teamIndex),
@@ -191,7 +192,7 @@ class _BattleLogState extends State<BattleLog> {
 
         // Analyze team
         IconButton(
-          onPressed: () => _onAnalyzeTeam(teamIndex),
+          onPressed: () => _onAnalyzeLogTeam(teamIndex),
           icon: const Icon(Icons.analytics),
           tooltip: 'Analyze Team',
           iconSize: iconSize,
@@ -200,7 +201,7 @@ class _BattleLogState extends State<BattleLog> {
 
         // Edit team
         IconButton(
-          onPressed: () => _onEditTeam(teamIndex),
+          onPressed: () => _onEditLogTeam(teamIndex),
           icon: const Icon(Icons.build_circle),
           tooltip: 'Edit Team',
           iconSize: iconSize,
@@ -217,7 +218,7 @@ class _BattleLogState extends State<BattleLog> {
         ),
 
         // Win, tie, loss indicator
-        WinLossNode(winLossKey: _log.winLossKey),
+        WinLossNode(winLossKey: log.winLossKey),
       ],
     );
   }
@@ -328,41 +329,41 @@ class _BattleLogState extends State<BattleLog> {
   }
 
   // Scroll to the analysis portion of the screen
-  void _onAnalyzeTeam(int teamIndex) {
-    final _log = _team.logs[teamIndex];
+  void _onAnalyzeLogTeam(int teamIndex) {
+    final log = _team.logs[teamIndex];
 
     // If the team is empty, no action will be taken
-    if (_log.isEmpty()) return;
+    if (log.isEmpty()) return;
 
     Navigator.push(
       context,
       MaterialPageRoute(builder: (BuildContext context) {
         return Analysis(
           team: _team,
-          opponentTeam: _log,
+          opponentTeam: log,
         );
       }),
     );
   }
 
   // Edit the team at specified index
-  void _onEditTeam(int teamIndex) async {
-    PokemonTeam _log = _team.logs[teamIndex];
+  void _onEditLogTeam(int teamIndex) async {
+    PokemonTeam log = _team.logs[teamIndex];
 
-    final _newLog = await Navigator.push(
+    final newLog = await Navigator.push(
       context,
-      MaterialPageRoute<PokemonTeam>(builder: (BuildContext context) {
+      MaterialPageRoute<LogPokemonTeam>(builder: (BuildContext context) {
         return TeamBuilderSearch(
-          team: _log,
+          team: log,
           cup: _team.cup,
           focusIndex: 0,
         );
       }),
     );
 
-    if (_newLog != null) {
+    if (newLog != null) {
       setState(() {
-        _team.setLogAt(teamIndex, _newLog as LogPokemonTeam);
+        _team.setLogAt(teamIndex, newLog);
       });
     }
   }
@@ -371,7 +372,7 @@ class _BattleLogState extends State<BattleLog> {
   void _onAddTeam() async {
     _team.addLog();
 
-    final _newLog = await Navigator.push(
+    final newLog = await Navigator.push(
       context,
       MaterialPageRoute<LogPokemonTeam>(builder: (BuildContext context) {
         return TeamBuilderSearch(
@@ -383,32 +384,32 @@ class _BattleLogState extends State<BattleLog> {
     );
 
     setState(() {
-      if (_newLog != null) {
-        _team.setLogAt(_team.logs.length - 1, _newLog);
+      if (newLog != null) {
+        _team.setLogAt(_team.logs.length - 1, newLog);
       } else {
         _team.removeLogAt(_team.logs.length - 1);
       }
     });
   }
 
-  // Wrapper for _onEditTeam
+  // Wrapper for _onEditLogTeam
   void _onEmptyPressed(int teamIndex, int nodeIndex) async {
-    PokemonTeam _log = _team.logs[teamIndex];
+    PokemonTeam log = _team.logs[teamIndex];
 
-    final _newLog = await Navigator.push(
+    final newLog = await Navigator.push(
       context,
-      MaterialPageRoute<PokemonTeam>(builder: (BuildContext context) {
+      MaterialPageRoute<LogPokemonTeam>(builder: (BuildContext context) {
         return TeamBuilderSearch(
-          team: _log,
+          team: log,
           cup: _team.cup,
           focusIndex: nodeIndex,
         );
       }),
     );
 
-    if (_newLog != null) {
+    if (newLog != null) {
       setState(() {
-        _team.setLogAt(teamIndex, _newLog as LogPokemonTeam);
+        _team.setLogAt(teamIndex, newLog);
       });
     }
   }
@@ -438,7 +439,7 @@ class _BattleLogState extends State<BattleLog> {
       appBar: _buildAppBar(),
       body: _buildScaffoldBody(),
 
-      // Log opponent team FAB
+      // Log / Analyze opponent teams FABs
       floatingActionButton: _buildFloatingActionButtons(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

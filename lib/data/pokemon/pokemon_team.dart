@@ -36,9 +36,11 @@ class PokemonTeam {
   );
 
   // Make a copy of the newTeam, keeping the size of the original team
-  void setTeam(List<Pokemon?> newTeam) {
-    pokemonTeam = List.generate(pokemonTeam.length,
-        (index) => index < newTeam.length ? newTeam[index] : null);
+  void setPokemonTeam(List<Pokemon?> newPokemonTeam) {
+    pokemonTeam = List.generate(
+        pokemonTeam.length,
+        (index) =>
+            index < newPokemonTeam.length ? newPokemonTeam[index] : null);
 
     _updateEffectiveness();
 
@@ -52,6 +54,7 @@ class PokemonTeam {
     } else {
       pokemonTeam[index] = Pokemon.from(pokemon);
     }
+
     _updateEffectiveness();
 
     save();
@@ -77,11 +80,11 @@ class PokemonTeam {
         added = true;
       }
     }
+
     if (added) {
       _updateEffectiveness();
+      save();
     }
-
-    save();
   }
 
   // True if the Pokemon ref is null at the given index
@@ -174,6 +177,25 @@ class PokemonTeam {
 class UserPokemonTeam extends PokemonTeam {
   UserPokemonTeam({required save}) : super(save: save);
 
+  // Make a copy of other, but with no save to db callback
+  // This is used in team editing, to allow for a confirm to save working copy
+  static UserPokemonTeam builderCopy(UserPokemonTeam other) {
+    final copy = UserPokemonTeam(save: () => {});
+    copy.locked = other.locked;
+    copy.cup = Cup.from(other.cup);
+    copy.logs = List.from(other.logs);
+    copy.setPokemonTeam(other.pokemonTeam);
+
+    return copy;
+  }
+
+  // Copy over the cup, and Pokemon team
+  // Saves to db in PokemonTeam
+  void fromBuilderCopy(UserPokemonTeam other) {
+    cup = other.cup;
+    setPokemonTeam(other.pokemonTeam);
+  }
+
   // The selected PVP cup for this team
   // Defaults to Great League
   Cup cup = globals.gamemaster.cups[0];
@@ -181,12 +203,6 @@ class UserPokemonTeam extends PokemonTeam {
   // A list of logged opponent teams on this team
   // The user can report wins, ties, and losses given this list
   List<LogPokemonTeam> logs = List.empty(growable: true);
-
-  void setLogs(List<LogPokemonTeam> newLogs) {
-    logs = newLogs;
-
-    save();
-  }
 
   // Switch to a different cup with the specified cupTitle
   void setCup(String cupTitle) {
@@ -272,6 +288,24 @@ class UserPokemonTeam extends PokemonTeam {
 // A logged opponent team
 class LogPokemonTeam extends PokemonTeam {
   LogPokemonTeam({required save}) : super(save: save);
+
+  // Make a copy of other, but with no save to db callback
+  // This is used in team editing, to allow for a confirm to save working copy
+  static LogPokemonTeam builderCopy(LogPokemonTeam other) {
+    final copy = LogPokemonTeam(save: () => {});
+    copy._winLossKey = other._winLossKey;
+    copy.locked = other.locked;
+    copy.setPokemonTeam(other.pokemonTeam);
+
+    return copy;
+  }
+
+  // Copy over the winLossKey, and Pokemon team
+  // Saves to db in PokemonTeam
+  void fromBuilderCopy(LogPokemonTeam other) {
+    _winLossKey = other._winLossKey;
+    setPokemonTeam(other.pokemonTeam);
+  }
 
   // For logging opponent teams, this value can either be :
   // Win

@@ -35,17 +35,21 @@ class GameMaster {
   static Future<GameMaster> generateGameMaster(
       gmJson, Client client, Box rankingsBox,
       {bool update = false}) async {
+    // All available cups data
     final List<dynamic> cupsJson = gmJson['openCups'];
     List<Cup> cups = List.empty(growable: true);
     Cup cupBuffer;
 
+    // An update is available, attempt to retrieve new Rankings with HTTPS
     if (update) {
       try {
         for (int i = 0; i < cupsJson.length; ++i) {
           cupBuffer = await Cup.updateCup(cupsJson[i], rankingsBox, client);
           cups.add(cupBuffer);
         }
-      } catch (_) {
+      }
+      // HTTPS fail : attempt to read from db, then assets as last resort
+      catch (_) {
         try {
           cups.clear();
           for (int i = 0; i < cupsJson.length; ++i) {
@@ -54,10 +58,14 @@ class GameMaster {
           }
         } catch (_) {}
       }
-    } else {
+    }
+    // No update available, read Rankings from db, then assets as last resort
+    else {
       for (int i = 0; i < cupsJson.length; ++i) {
-        cupBuffer = await Cup.loadCup(cupsJson[i], rankingsBox);
-        cups.add(cupBuffer);
+        try {
+          cupBuffer = await Cup.loadCup(cupsJson[i], rankingsBox);
+          cups.add(cupBuffer);
+        } catch (_) {}
       }
     }
 

@@ -116,7 +116,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
     );
 
     if (newTeam != null) {
-      widget.team.setTeam(newTeam);
+      widget.team.setPokemonTeam(newTeam);
 
       widget.recalculate(
         widget.team.getPokemonTeam(),
