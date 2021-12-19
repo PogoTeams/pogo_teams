@@ -1,14 +1,17 @@
 {
   "images" : [
     {
+      "filename" : "Pogo Teams Launch Screen copy.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Pogo Teams Launch Screen copy-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Pogo Teams Launch Screen copy-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

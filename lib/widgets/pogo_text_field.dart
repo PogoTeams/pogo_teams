@@ -29,6 +29,8 @@ class PogoTextField extends StatelessWidget {
       width: width,
       height: SizeConfig.blockSizeVertical * 5.0,
       child: TextField(
+        controller: controller,
+
         // Native toolbar options
         toolbarOptions: const ToolbarOptions(
           copy: true,
@@ -49,12 +51,9 @@ class PogoTextField extends StatelessWidget {
             borderSide: const BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(100),
           ),
-          //labelText: 'Search for a Pokemon',
           label: const Icon(Icons.search),
-          //labelStyle: const TextStyle(color: Colors.greenAccent),
         ),
         textAlign: TextAlign.center,
-        controller: controller,
       ),
     );
   }

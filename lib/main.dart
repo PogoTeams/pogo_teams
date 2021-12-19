@@ -16,5 +16,6 @@ void main() async {
 
   // Initialize the database for user data persistance
   await Hive.initFlutter();
+
   runApp(const PogoTeamsApp());
 }

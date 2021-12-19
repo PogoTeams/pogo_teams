@@ -68,6 +68,8 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     // Get the lowercase user input
     final String input = _searchController.text.toLowerCase();
 
+    if (input.isEmpty) return;
+
     setState(() {
       // Split any comma seperated list into individual search terms
       final List<String> terms = input.split(', ');
@@ -167,17 +169,6 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
           ExitButton(
             key: UniqueKey(),
             onPressed: () {
-              // Restore old team
-              /*
-              widget.team.setPokemonTeam(_oldTeam);
-              if (widget.team.runtimeType == UserPokemonTeam) {
-                (widget.team as UserPokemonTeam).setCup(_cup.title);
-              } else {
-                (widget.team as LogPokemonTeam)
-                    .setWinLossKey((_oldTeam as LogPokemonTeam).winLossKey);
-              }
-              */
-
               Navigator.pop(context);
             },
             backgroundColor: Colors.red[400]!,

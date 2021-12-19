@@ -69,6 +69,8 @@ class _RankingsState extends State<Rankings> {
     // Get the lowercase user input
     final String input = _searchController.text.toLowerCase();
 
+    if (input.isEmpty) return;
+
     setState(() {
       // Split any comma seperated list into individual search terms
       final List<String> terms = input.split(', ');
@@ -99,14 +101,22 @@ class _RankingsState extends State<Rankings> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Dropdowns for selecting a cup and a category
           _buildDropdowns(),
+
+          // Spacer
           SizedBox(
             height: SizeConfig.blockSizeVertical * 2.0,
           ),
+
+          // User text input
           PogoTextField(controller: _searchController),
+
+          // Spacer
           SizedBox(
             height: SizeConfig.blockSizeVertical * 2.0,
           ),
+
           // Build list
           PokemonList(
             pokemon: filteredPokemon,
@@ -135,6 +145,7 @@ class _RankingsState extends State<Rankings> {
             width: SizeConfig.screenWidth * .7,
           ),
 
+          // Category filter dropdown
           FilterButton(
             onSelected: _filterCategory,
             selectedCategory: _selectedCategory,
@@ -159,8 +170,8 @@ class _RankingsState extends State<Rankings> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the widget tree.
     _searchController.dispose();
+
     super.dispose();
   }
 
