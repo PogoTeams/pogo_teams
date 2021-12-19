@@ -1,14 +1,13 @@
 // Flutter Imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 
 // Local Imports
 import '../../configs/size_config.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+A dropdown menu for indicating a "win", "tie" or "loss" for a match between the
+user's team and a logged opponent team.
 -------------------------------------------------------------------------------
 */
 

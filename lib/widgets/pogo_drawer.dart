@@ -1,7 +1,5 @@
 // Flutter Imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 // Local Imports
 import '../configs/size_config.dart';
@@ -80,8 +78,8 @@ class PogoDrawer extends StatelessWidget {
                       ],
                     ),
                     onTap: () {
-                      Navigator.pop(context);
                       onNavSelected('Teams');
+                      Navigator.pop(context);
                     },
                   ),
                   ListTile(
@@ -102,8 +100,8 @@ class PogoDrawer extends StatelessWidget {
                       ],
                     ),
                     onTap: () {
-                      Navigator.pop(context);
                       onNavSelected('Rankings');
+                      Navigator.pop(context);
                     },
                   ),
                 ],

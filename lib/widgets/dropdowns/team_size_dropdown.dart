@@ -1,14 +1,14 @@
 // Flutter Imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 
 // Local Imports
 import '../../configs/size_config.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+For selecting the size of a user's team. This will always be 3 by default, but
+do to custom tournaments it can be helpful to do an analysis on teams of 6.
+All logged Pokemon teams under this team will then be adjusted to be of size 6.
 -------------------------------------------------------------------------------
 */
 

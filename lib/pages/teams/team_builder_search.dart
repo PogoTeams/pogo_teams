@@ -1,9 +1,5 @@
 // Flutter Imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 // Local Imports
 import '../../configs/size_config.dart';
@@ -67,8 +63,6 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   void _filterPokemonList() {
     // Get the lowercase user input
     final String input = _searchController.text.toLowerCase();
-
-    if (input.isEmpty) return;
 
     setState(() {
       // Split any comma seperated list into individual search terms

@@ -1,8 +1,6 @@
 // Flutter Imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
@@ -69,8 +67,6 @@ class _RankingsState extends State<Rankings> {
     // Get the lowercase user input
     final String input = _searchController.text.toLowerCase();
 
-    if (input.isEmpty) return;
-
     setState(() {
       // Split any comma seperated list into individual search terms
       final List<String> terms = input.split(', ');
@@ -91,42 +87,6 @@ class _RankingsState extends State<Rankings> {
       // Filter by the search terms
       filteredPokemon = pokemon.where(filterPokemon).toList();
     });
-  }
-
-  Widget _buildScaffoldBody() {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeVertical * 2.0,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Dropdowns for selecting a cup and a category
-          _buildDropdowns(),
-
-          // Spacer
-          SizedBox(
-            height: SizeConfig.blockSizeVertical * 2.0,
-          ),
-
-          // User text input
-          PogoTextField(controller: _searchController),
-
-          // Spacer
-          SizedBox(
-            height: SizeConfig.blockSizeVertical * 2.0,
-          ),
-
-          // Build list
-          PokemonList(
-            pokemon: filteredPokemon,
-            onPokemonSelected: (_) {},
-            dropdowns: false,
-            rating: true,
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _buildDropdowns() {
@@ -182,6 +142,38 @@ class _RankingsState extends State<Rankings> {
       filteredPokemon = pokemon;
     }
 
-    return _buildScaffoldBody();
+    return Padding(
+      padding: EdgeInsets.only(
+        top: SizeConfig.blockSizeVertical * 2.0,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Dropdowns for selecting a cup and a category
+          _buildDropdowns(),
+
+          // Spacer
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 2.0,
+          ),
+
+          // User text input
+          PogoTextField(controller: _searchController),
+
+          // Spacer
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 2.0,
+          ),
+
+          // Build list
+          PokemonList(
+            pokemon: filteredPokemon,
+            onPokemonSelected: (_) {},
+            dropdowns: false,
+            rating: true,
+          ),
+        ],
+      ),
+    );
   }
 }

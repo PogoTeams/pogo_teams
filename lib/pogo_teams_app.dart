@@ -1,14 +1,8 @@
-// Dart Imports
-import 'dart:ui';
-
 // Flutter Imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 // Local Imports
-import 'startup_load_screen.dart';
+import 'pogo_scaffold.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -26,7 +20,7 @@ class PogoTeamsApp extends StatelessWidget {
       title: 'Pogo Teams Load Screen',
       theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Futura'),
 
-      home: const StartupLoadScreen(),
+      home: const PogoScaffold(),
 
       //Removes the debug banner
       debugShowCheckedModeBanner: false,

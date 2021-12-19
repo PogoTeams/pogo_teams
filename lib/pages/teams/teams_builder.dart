@@ -1,7 +1,5 @@
 // Flutter Imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 // Local Imports
 import 'team_edit.dart';
@@ -28,9 +26,13 @@ containing the following functionality :
 */
 
 class TeamsBuilder extends StatefulWidget {
-  const TeamsBuilder({Key? key, required this.teams}) : super(key: key);
+  const TeamsBuilder({
+    Key? key,
+    required this.teams,
+  }) : super(key: key);
 
   final UserTeams teams;
+
   @override
   _TeamsBuilderState createState() => _TeamsBuilderState();
 }

@@ -1,16 +1,12 @@
 // Flutter Imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
+import '../../configs/size_config.dart';
+import '../../data/cup.dart';
+import '../../data/pokemon/pokemon.dart';
+import '../../data/pokemon/pokemon_team.dart';
 // Local Imports
 import 'pokemon_node.dart';
-import '../../configs/size_config.dart';
-import '../../data/pokemon/pokemon.dart';
-import '../../data/cup.dart';
-import '../../data/pokemon/pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
