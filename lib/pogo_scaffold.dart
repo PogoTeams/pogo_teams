@@ -64,8 +64,11 @@ class PogoScaffold extends StatefulWidget {
 class _PogoScaffoldState extends State<PogoScaffold>
     with TickerProviderStateMixin {
   bool _loaded = false;
+
+  // User data
   final UserTeams teams = UserTeams();
 
+  // Initialize all user data, called once after loading is done
   void _initializeTeams() async => await teams.init();
 
   // All pages that are accessible at the top level of the app
@@ -90,15 +93,18 @@ class _PogoScaffoldState extends State<PogoScaffold>
   String _navKey = 'Teams';
 
   // Fade in animation on page startup
-  late final AnimationController _animController = AnimationController(
+  late final AnimationController _fadeInAnimController = AnimationController(
     duration: const Duration(seconds: 1),
     vsync: this,
   );
 
   late final Animation<double> _animation = CurvedAnimation(
-    parent: _animController,
+    parent: _fadeInAnimController,
     curve: Curves.easeIn,
   );
+
+  // For animating the loading progress bar
+  late final AnimationController _progressBarAnimController;
 
   // Build the app bar with the current page title, and icon
   AppBar _buildAppBar() {
@@ -130,31 +136,13 @@ class _PogoScaffoldState extends State<PogoScaffold>
   // Callback for navigating to a new page in the app
   void _onNavSelected(String navKey) {
     // Reset and replay the fade in animation
-    _animController.reset();
-    _animController.forward();
+    _fadeInAnimController.reset();
+    _fadeInAnimController.forward();
 
     setState(() {
       _navKey = navKey;
     });
   }
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    );
-  }
-
-  @override
-  void dispose() {
-    _animController.dispose();
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  late final AnimationController _animationController;
 
   // Load the gamemaster, and yield values to the progress indicator
   Stream<double> _loadGamemaster() async* {
@@ -295,6 +283,22 @@ class _PogoScaffoldState extends State<PogoScaffold>
   }
 
   @override
+  void initState() {
+    super.initState();
+    _progressBarAnimController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+  }
+
+  @override
+  void dispose() {
+    _fadeInAnimController.dispose();
+    _progressBarAnimController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Initialize media queries
     SizeConfig().init(context);
@@ -311,14 +315,14 @@ class _PogoScaffoldState extends State<PogoScaffold>
           _loaded = true;
 
           // Begin fade in animation
-          _animController.forward();
+          _fadeInAnimController.forward();
 
           return _buildPogoScaffold();
         }
 
         // Progress update
         if (snapshot.hasData) {
-          _animationController.animateTo(snapshot.data!,
+          _progressBarAnimController.animateTo(snapshot.data!,
               curve: Curves.easeInOut);
         }
 
@@ -338,11 +342,11 @@ class _PogoScaffoldState extends State<PogoScaffold>
                   SizedBox(
                     width: SizeConfig.blockSizeHorizontal * 80.0,
                     child: AnimatedBuilder(
-                      animation: _animationController,
+                      animation: _progressBarAnimController,
                       builder: (context, child) => LinearProgressIndicator(
                         valueColor:
                             const AlwaysStoppedAnimation<Color>(Colors.cyan),
-                        value: _animationController.value,
+                        value: _progressBarAnimController.value,
                         semanticsLabel: 'Pogo Teams Loading Progress',
                         semanticsValue: snapshot.data.toString(),
                       ),
