@@ -184,6 +184,7 @@ class UserPokemonTeam extends PokemonTeam {
     copy.locked = other.locked;
     copy.cup = Cup.from(other.cup);
     copy.logs = List.from(other.logs);
+    copy.setTeamSize(other.pokemonTeam.length);
     copy.setPokemonTeam(other.pokemonTeam);
 
     return copy;
@@ -193,6 +194,7 @@ class UserPokemonTeam extends PokemonTeam {
   // Saves to db in PokemonTeam
   void fromBuilderCopy(UserPokemonTeam other) {
     cup = other.cup;
+    setTeamSize(other.pokemonTeam.length);
     setPokemonTeam(other.pokemonTeam);
   }
 
@@ -295,6 +297,7 @@ class LogPokemonTeam extends PokemonTeam {
     final copy = LogPokemonTeam(save: () => {});
     copy._winLossKey = other._winLossKey;
     copy.locked = other.locked;
+    copy.setTeamSize(other.pokemonTeam.length);
     copy.setPokemonTeam(other.pokemonTeam);
 
     return copy;
@@ -304,6 +307,7 @@ class LogPokemonTeam extends PokemonTeam {
   // Saves to db in PokemonTeam
   void fromBuilderCopy(LogPokemonTeam other) {
     _winLossKey = other._winLossKey;
+    setTeamSize(other.pokemonTeam.length);
     setPokemonTeam(other.pokemonTeam);
   }
 

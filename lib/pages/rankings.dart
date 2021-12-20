@@ -158,7 +158,12 @@ class _RankingsState extends State<Rankings> {
           ),
 
           // User text input
-          PogoTextField(controller: _searchController),
+          PogoTextField(
+            controller: _searchController,
+            onClear: () => setState(() {
+              _searchController.clear();
+            }),
+          ),
 
           // Spacer
           SizedBox(

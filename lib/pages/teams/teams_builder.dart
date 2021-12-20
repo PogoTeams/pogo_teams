@@ -240,6 +240,14 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
     }
   }
 
+  // Ensure the widget is mounted before setState
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

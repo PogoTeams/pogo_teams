@@ -92,7 +92,10 @@ class SwapList extends StatelessWidget {
         ),
         child: PokemonNode.large(
           pokemon: counters[index],
-          footer: _buildFooter(context, counters[index]),
+          footer: _buildFooter(
+            context,
+            counters[index],
+          ),
         ),
       ),
       physics: const NeverScrollableScrollPhysics(),

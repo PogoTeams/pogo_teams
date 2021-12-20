@@ -202,6 +202,21 @@ class Pokemon {
     return typing.containsType(types);
   }
 
+  // True if this Pokemon's selected moveset contains one of the types
+  bool hasSelectedMovesetType(List<Type> types) {
+    bool hasMovesetType = false;
+
+    for (int i = 0; i < types.length && !hasMovesetType; ++i) {
+      if ((selectedFastMove.type.typeKey == types[i].typeKey) ||
+          (selectedChargedMoves[0].type.typeKey == types[i].typeKey) ||
+          (selectedChargedMoves[1].type.typeKey == types[i].typeKey)) {
+        hasMovesetType = true;
+      }
+    }
+
+    return hasMovesetType;
+  }
+
   // Get the color(s) of this Pokemon's typing
   // If this Pokemon is monotype, this will be a single element list
   List<Color> getTypeColors() {

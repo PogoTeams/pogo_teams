@@ -16,10 +16,12 @@ class PogoTextField extends StatelessWidget {
     Key? key,
     required this.controller,
     this.width = double.infinity,
+    required this.onClear,
   }) : super(key: key);
 
   final TextEditingController controller;
   final double width;
+  final VoidCallback onClear;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,7 @@ class PogoTextField extends StatelessWidget {
         // Styling
         keyboardAppearance: Brightness.dark,
         cursorColor: Colors.white,
+        showCursor: true,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.white),
@@ -50,6 +53,14 @@ class PogoTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(100),
           ),
           label: const Icon(Icons.search),
+          suffixIcon: controller.text.isEmpty
+              ? Container()
+              : IconButton(
+                  onPressed: onClear,
+                  icon: const Icon(Icons.clear),
+                  iconSize: SizeConfig.blockSizeHorizontal * 5.0,
+                  color: Colors.white,
+                ),
         ),
         textAlign: TextAlign.center,
       ),

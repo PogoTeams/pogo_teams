@@ -239,6 +239,7 @@ class PokemonRankings {
       return pokemon;
     }).toList();
 
+    // Sort by rating, highest to lowest
     rankedList.sort((a, b) => ((b.rating - a.rating) * 100).toInt());
 
     return rankedList;
@@ -251,7 +252,12 @@ class PokemonRankings {
       List<Type> types, String rankingsCategory, int limit) {
     List<Pokemon> rankedList = getRankedPokemonList(rankingsCategory);
 
-    rankedList = rankedList.where((pokemon) => pokemon.hasType(types)).toList();
+    // Filter the list to Pokemon that have one of the types in their typing
+    // or their selected moveset
+    rankedList = rankedList
+        .where((pokemon) =>
+            pokemon.hasType(types) || pokemon.hasSelectedMovesetType(types))
+        .toList();
 
     // There weren't enough Pokemon in this cup to satisfy the filtered limit
     if (rankedList.length < limit) {
@@ -261,6 +267,7 @@ class PokemonRankings {
     return rankedList.getRange(0, limit).toList();
   }
 
+  // The id map of all ranked Pokemon for the cup that owns this rankings obj
   final Map<String, RankedPokemon> rankingsMap;
 }
 

@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.pogo_teams">
+    package="com.pogoteams">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="pogo_teams"
+        android:label="Pogo Teams"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

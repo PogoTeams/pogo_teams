@@ -205,6 +205,10 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     if (newSize == null) return;
 
     setState(() {
+      if (_builderIndex > newSize - 1) {
+        _builderIndex = newSize - 1;
+      }
+
       (_builderTeam as UserPokemonTeam).setTeamSize(newSize);
     });
   }
@@ -286,8 +290,12 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
                 children: [
                   // User input text field
                   PogoTextField(
-                      controller: _searchController,
-                      width: SizeConfig.screenWidth * .8),
+                    controller: _searchController,
+                    width: SizeConfig.screenWidth * .8,
+                    onClear: () => setState(() {
+                      _searchController.clear();
+                    }),
+                  ),
 
                   // Filter by ranking category
                   FilterButton(

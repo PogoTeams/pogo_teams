@@ -11,6 +11,7 @@ import 'package:http/http.dart';
 import 'package:http/retry.dart';
 
 // Local Imports
+import 'tools/pair.dart';
 import 'data/user_teams.dart';
 import 'pages/teams/teams_builder.dart';
 import 'pages/rankings.dart';
@@ -62,7 +63,8 @@ class PogoScaffold extends StatefulWidget {
 }
 
 class _PogoScaffoldState extends State<PogoScaffold>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
+  // Flag for when the app has finished the loading phase
   bool _loaded = false;
 
   // User data
@@ -92,19 +94,12 @@ class _PogoScaffoldState extends State<PogoScaffold>
   // Used to navigate between pages by key
   String _navKey = 'Teams';
 
-  // Fade in animation on page startup
-  late final AnimationController _fadeInAnimController = AnimationController(
-    duration: const Duration(seconds: 1),
-    vsync: this,
-  );
-
-  late final Animation<double> _animation = CurvedAnimation(
-    parent: _fadeInAnimController,
-    curve: Curves.easeIn,
-  );
-
   // For animating the loading progress bar
-  late final AnimationController _progressBarAnimController;
+  late final AnimationController _progressBarAnimController =
+      AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 2),
+  );
 
   // Build the app bar with the current page title, and icon
   AppBar _buildAppBar() {
@@ -135,23 +130,20 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
   // Callback for navigating to a new page in the app
   void _onNavSelected(String navKey) {
-    // Reset and replay the fade in animation
-    _fadeInAnimController.reset();
-    _fadeInAnimController.forward();
-
     setState(() {
       _navKey = navKey;
     });
   }
 
   // Load the gamemaster, and yield values to the progress indicator
-  Stream<double> _loadGamemaster() async* {
+  Stream<Pair<String, double>> _loadGamemaster() async* {
     bool update = false;
     final Box gmBox = await Hive.openBox('gamemaster'); // Pokemon GO data
     final Box rankingsBox = await Hive.openBox('rankings');
+    String message = 'Loading...'; // Message above progress bar
 
     // DEBUGGING : uncomment to implicitly invoke update
-    //await gmBox.put('timestamp', globals.earliestTimestamp);
+    await gmBox.put('timestamp', globals.earliestTimestamp);
 
     final client = RetryClient(Client());
     dynamic gmJson;
@@ -160,30 +152,34 @@ class _PogoScaffoldState extends State<PogoScaffold>
       // If an update is available
       // make an http request for the new gamemaster
       if (await _updateAvailable(gmBox, client)) {
+        message = 'Updating Pogo Teams...';
+
         update = true;
         // Retrieve gamemaster
         String response =
             await client.read(Uri.https(globals.url, '/gamemaster.json'));
 
-        yield .8;
+        yield Pair(a: message, b: .8);
         // If request was successful, load in the new gamemaster,
         gmJson = jsonDecode(response);
       }
       // No new update available, attempt to load locally
       // Upon db failure, an http request will be made
       else {
-        yield .8;
+        yield Pair(a: message, b: .8);
         gmJson = await _loadCachedGamemaster(gmBox, client, httpAttempt: true);
       }
     }
     // If HTTP request or json decoding fails
     catch (error) {
+      message = 'No Network Connection...';
       update = false;
-      yield .8;
+      yield Pair(a: message, b: .8);
       gmJson = await _loadCachedGamemaster(gmBox, client);
     }
 
-    yield .9;
+    yield Pair(a: message, b: .9);
+
     // Setup the gamemaster instance
     await gmBox.put('gamemaster', gmJson);
     globals.gamemaster = await GameMaster.generateGameMaster(
@@ -193,7 +189,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
     client.close();
     await gmBox.close();
 
-    yield 1.0;
+    yield Pair(a: message, b: 1.0);
     _initializeTeams();
 
     // Just an asthetic for allowing the loading progress indicator to fill
@@ -257,16 +253,13 @@ class _PogoScaffoldState extends State<PogoScaffold>
       drawer: PogoDrawer(
         onNavSelected: _onNavSelected,
       ),
-      body: FadeTransition(
-        opacity: _animation,
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: SizeConfig.blockSizeHorizontal * 2.0,
-            right: SizeConfig.blockSizeHorizontal * 2.0,
-            bottom: SizeConfig.blockSizeVertical * 2.0,
-          ),
-          child: _pages[_navKey],
+      body: Padding(
+        padding: EdgeInsets.only(
+          left: SizeConfig.blockSizeHorizontal * 2.0,
+          right: SizeConfig.blockSizeHorizontal * 2.0,
+          bottom: SizeConfig.blockSizeVertical * 2.0,
         ),
+        child: _pages[_navKey],
       ),
     );
   }
@@ -283,17 +276,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
   }
 
   @override
-  void initState() {
-    super.initState();
-    _progressBarAnimController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    );
-  }
-
-  @override
   void dispose() {
-    _fadeInAnimController.dispose();
     _progressBarAnimController.dispose();
     super.dispose();
   }
@@ -306,23 +289,20 @@ class _PogoScaffoldState extends State<PogoScaffold>
     if (_loaded) return _buildPogoScaffold();
 
     // App loading procedure
-    return StreamBuilder<double>(
+    return StreamBuilder<Pair<String, double>>(
       stream: _loadGamemaster(),
-      initialData: 0.0,
+      initialData: Pair(a: 'Loading...', b: 0.0),
       builder: (context, snapshot) {
         // App is finished loading
         if (snapshot.connectionState == ConnectionState.done) {
           _loaded = true;
-
-          // Begin fade in animation
-          _fadeInAnimController.forward();
+          _progressBarAnimController.stop();
 
           return _buildPogoScaffold();
         }
-
         // Progress update
         if (snapshot.hasData) {
-          _progressBarAnimController.animateTo(snapshot.data!,
+          _progressBarAnimController.animateTo(snapshot.data!.b,
               curve: Curves.easeInOut);
         }
 
@@ -334,30 +314,46 @@ class _PogoScaffoldState extends State<PogoScaffold>
               right: SizeConfig.blockSizeHorizontal * 2.0,
               bottom: SizeConfig.blockSizeVertical * 10.0,
             ),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    width: SizeConfig.blockSizeHorizontal * 80.0,
-                    child: AnimatedBuilder(
-                      animation: _progressBarAnimController,
-                      builder: (context, child) => LinearProgressIndicator(
-                        valueColor:
-                            const AlwaysStoppedAnimation<Color>(Colors.cyan),
-                        value: _progressBarAnimController.value,
-                        semanticsLabel: 'Pogo Teams Loading Progress',
-                        semanticsValue: snapshot.data.toString(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // Loading message
+                Text(
+                  snapshot.data!.a,
+                  style: TextStyle(
+                    fontSize: SizeConfig.h2,
+                  ),
+                ),
+
+                // Spacer
+                SizedBox(
+                  height: SizeConfig.blockSizeVertical * 2.0,
+                ),
+
+                // Progress bar
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: SizeConfig.blockSizeHorizontal * 80.0,
+                      child: AnimatedBuilder(
+                        animation: _progressBarAnimController,
+                        builder: (context, child) => LinearProgressIndicator(
+                          valueColor:
+                              const AlwaysStoppedAnimation<Color>(Colors.cyan),
+                          value: _progressBarAnimController.value,
+                          semanticsLabel: 'Pogo Teams Loading Progress',
+                          semanticsValue: snapshot.data.toString(),
+                        ),
                       ),
                     ),
-                  ),
-                  Image.asset(
-                    'assets/pokeball_icon.png',
-                    width: SizeConfig.blockSizeHorizontal * 5.0,
-                  ),
-                ],
-              ),
+                    Image.asset(
+                      'assets/pokeball_icon.png',
+                      width: SizeConfig.blockSizeHorizontal * 5.0,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         );
