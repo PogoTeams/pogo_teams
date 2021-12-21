@@ -195,7 +195,9 @@ class PokemonRankings {
     Client client,
   ) async {
     final String path = 'rankings/$cupKey/$category/rankings-$cp';
-    String response = await client.read(Uri.https(globals.url, '$path.json'));
+
+    String response = await client
+        .read(Uri.https(globals.url, '${globals.pathPrefix}$path.json'));
     final List<dynamic> rankingsJson = jsonDecode(response);
 
     rankingsBox.put(path, rankingsJson);

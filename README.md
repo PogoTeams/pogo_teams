@@ -16,6 +16,8 @@ This app is built using Google's [Flutter](https://flutter.dev). A framework for
 1) [Install Flutter](https://docs.flutter.dev/get-started/install)
 2) Clone this repo
 3) Navigate to `pogo_teams` in your terminal and run `flutter pub get` to install all app package dependencies
+4) Open a simulator
+5) run `flutter run` in your terminal
 
 ## Development Goals / Outline
 [Here](https://github.com/users/SeanSiders/projects/2) is where all project goals involving Pogo Teams are currently handled.

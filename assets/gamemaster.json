@@ -27,7 +27,7 @@
         "shields": [0, 1],
         "energy": [0, 0]
     }],
-    "openCups": [{
+    "pogoCups": [{
             "name": "gobattleleague",
             "title": "Great League",
             "cp": 1500

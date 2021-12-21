@@ -277,7 +277,7 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
         width: SizeConfig.screenWidth * .85,
         height: SizeConfig.blockSizeVertical * 8.5,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

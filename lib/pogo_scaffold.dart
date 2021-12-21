@@ -56,7 +56,14 @@ APP STARTUP CASES (for gamemaster and rankings data)
 */
 
 class PogoScaffold extends StatefulWidget {
-  const PogoScaffold({Key? key}) : super(key: key);
+  const PogoScaffold({
+    Key? key,
+    required this.testing,
+    required this.forceUpdate,
+  }) : super(key: key);
+
+  final bool testing;
+  final bool forceUpdate;
 
   @override
   _PogoScaffoldState createState() => _PogoScaffoldState();
@@ -137,14 +144,27 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
   // Load the gamemaster, and yield values to the progress indicator
   Stream<Pair<String, double>> _loadGamemaster() async* {
-    bool update = false;
-    final Box gmBox = await Hive.openBox('gamemaster'); // Pokemon GO data
+    bool update = false; // Flag for whether the local gamemaster an update
+
+    // Pokemon GO local db data
+    // This is a "cache" of the latest data model from the server
+    final Box gmBox = await Hive.openBox('gamemaster');
     final Box rankingsBox = await Hive.openBox('rankings');
-    String message = 'Loading...'; // Message above progress bar
 
-    // DEBUGGING : uncomment to implicitly invoke update
-    await gmBox.put('timestamp', globals.earliestTimestamp);
+    String prefix = ''; // For indicating testing
 
+    // TRUE FOR TESTING ONLY
+    if (widget.testing) {
+      globals.pathPrefix = '/test/';
+      prefix = '[ TEST ]  ';
+    }
+
+    // Implicitly invoke an app update via HTTPS
+    if (widget.forceUpdate) {
+      await gmBox.put('timestamp', globals.earliestTimestamp);
+    }
+
+    String message = prefix + 'Loading...'; // Message above progress bar
     final client = RetryClient(Client());
     dynamic gmJson;
 
@@ -152,14 +172,14 @@ class _PogoScaffoldState extends State<PogoScaffold>
       // If an update is available
       // make an http request for the new gamemaster
       if (await _updateAvailable(gmBox, client)) {
-        message = 'Updating Pogo Teams...';
+        message = prefix + 'Updating Pogo Teams...';
+        yield Pair(a: message, b: .8);
 
         update = true;
         // Retrieve gamemaster
-        String response =
-            await client.read(Uri.https(globals.url, '/gamemaster.json'));
+        String response = await client.read(
+            Uri.https(globals.url, '${globals.pathPrefix}gamemaster.json'));
 
-        yield Pair(a: message, b: .8);
         // If request was successful, load in the new gamemaster,
         gmJson = jsonDecode(response);
       }
@@ -172,7 +192,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
     }
     // If HTTP request or json decoding fails
     catch (error) {
-      message = 'No Network Connection...';
+      message = prefix + 'No Network Connection...';
       update = false;
       yield Pair(a: message, b: .8);
       gmJson = await _loadCachedGamemaster(gmBox, client);
@@ -205,8 +225,8 @@ class _PogoScaffoldState extends State<PogoScaffold>
     DateTime localTimeStamp = DateTime.parse(timestampString);
 
     // Retrieve server timestamp
-    String response =
-        await client.read(Uri.https(globals.url, '/timestamp.txt'));
+    String response = await client
+        .read(Uri.https(globals.url, '${globals.pathPrefix}timestamp.txt'));
 
     // If request is successful, compare timestamps to determine update
     final latestTimestamp = DateTime.tryParse(response);
@@ -233,8 +253,8 @@ class _PogoScaffoldState extends State<PogoScaffold>
     if (gmJson == null && httpAttempt) {
       try {
         // Retrieve gamemaster
-        String response =
-            await client.read(Uri.https(globals.url, '/gamemaster.json'));
+        String response = await client.read(
+            Uri.https(globals.url, '${globals.pathPrefix}gamemaster.json'));
 
         // If request was successful, load in the new gamemaster,
         gmJson = jsonDecode(response);
@@ -257,7 +277,6 @@ class _PogoScaffoldState extends State<PogoScaffold>
         padding: EdgeInsets.only(
           left: SizeConfig.blockSizeHorizontal * 2.0,
           right: SizeConfig.blockSizeHorizontal * 2.0,
-          bottom: SizeConfig.blockSizeVertical * 2.0,
         ),
         child: _pages[_navKey],
       ),

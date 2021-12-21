@@ -19,6 +19,9 @@ const String version = 'v1.0.0';
 // Server url for retrieving all updates
 const String url = 'pogoteams.github.io';
 
+// Used to specify the /test directory when testing a new update
+String pathPrefix = '/';
+
 // The earliest timestamp (used for initial app start up)
 const String earliestTimestamp = '2021-01-01 00:00:00.00';
 

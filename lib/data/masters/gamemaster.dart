@@ -36,7 +36,7 @@ class GameMaster {
       gmJson, Client client, Box rankingsBox,
       {bool update = false}) async {
     // All available cups data
-    final List<dynamic> cupsJson = gmJson['openCups'];
+    final List<dynamic> cupsJson = gmJson['pogoCups'];
     List<Cup> cups = List.empty(growable: true);
     Cup cupBuffer;
 
