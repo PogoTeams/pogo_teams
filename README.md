@@ -12,6 +12,9 @@ All Pokemon data is provided by [**PvPoke.com**](https://pvpoke.com), an outstan
 ## Development Environment
 This app is built using Google's [Flutter](https://flutter.dev). A framework for building cross-platform mobile UI's within a single codebase.
 
+## Updating the App Data
+To test and update our data bucket, [follow these instructions](https://github.com/PogoTeams/pogoteams.github.io/blob/main/README.md).
+
 ## Environment Cloning
 1) [Install Flutter](https://docs.flutter.dev/get-started/install)
 2) Clone this repo
