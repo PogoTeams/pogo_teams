@@ -1,4 +1,4 @@
-package com.example.pogo_teams
+package com.pogoteams
 
 import io.flutter.embedding.android.FlutterActivity
 

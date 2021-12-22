@@ -91,7 +91,9 @@ class Type {
   // [1] : defensive
   late final Map<String, List<double>> effectivenessMap;
 
-  Image getIcon({double scale = 1.0}) {
+  // Get a type icon for this type, if size is not specified, the default size
+  // will render
+  Widget getIcon({double scale = 1.0}) {
     return Image.asset(
       'assets/white_type_icons/' + typeKey + '.png',
       scale: scale,

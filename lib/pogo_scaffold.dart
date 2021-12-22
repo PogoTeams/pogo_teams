@@ -90,11 +90,11 @@ class _PogoScaffoldState extends State<PogoScaffold>
   late final Map<String, Widget> _icons = {
     'Teams': Image.asset(
       'assets/pokeball_icon.png',
-      width: SizeConfig.blockSizeHorizontal * 5.0,
+      width: SizeConfig.h2 * 1.2,
     ),
     'Rankings': Icon(
       Icons.bar_chart,
-      size: SizeConfig.blockSizeHorizontal * 6.0,
+      size: SizeConfig.h2 * 1.5,
     ),
   };
 
@@ -107,6 +107,24 @@ class _PogoScaffoldState extends State<PogoScaffold>
     vsync: this,
     duration: const Duration(seconds: 2),
   );
+
+  // The main scaffold for the app
+  // This will build once the loading phase is complete
+  Widget _buildPogoScaffold() {
+    return Scaffold(
+      appBar: _buildAppBar(),
+      drawer: PogoDrawer(
+        onNavSelected: _onNavSelected,
+      ),
+      body: Padding(
+        padding: EdgeInsets.only(
+          left: SizeConfig.blockSizeHorizontal * 2.0,
+          right: SizeConfig.blockSizeHorizontal * 2.0,
+        ),
+        child: _pages[_navKey],
+      ),
+    );
+  }
 
   // Build the app bar with the current page title, and icon
   AppBar _buildAppBar() {
@@ -125,7 +143,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
           // Spacer
           SizedBox(
-            width: SizeConfig.blockSizeHorizontal * 3.0,
+            width: SizeConfig.blockSizeHorizontal * 2.0,
           ),
 
           // Page icon
@@ -265,22 +283,6 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
     gmJson ??= await _loadFromAssets();
     return gmJson;
-  }
-
-  Widget _buildPogoScaffold() {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      drawer: PogoDrawer(
-        onNavSelected: _onNavSelected,
-      ),
-      body: Padding(
-        padding: EdgeInsets.only(
-          left: SizeConfig.blockSizeHorizontal * 2.0,
-          right: SizeConfig.blockSizeHorizontal * 2.0,
-        ),
-        child: _pages[_navKey],
-      ),
-    );
   }
 
   // Load the gm from local assets

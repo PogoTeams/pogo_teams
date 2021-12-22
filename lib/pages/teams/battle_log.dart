@@ -65,7 +65,7 @@ class _BattleLogState extends State<BattleLog> {
           // Page icon
           Icon(
             Icons.query_stats,
-            size: SizeConfig.blockSizeHorizontal * 6.0,
+            size: SizeConfig.h2 * 1.5,
           ),
         ],
       ),
@@ -443,7 +443,7 @@ class _BattleLogState extends State<BattleLog> {
 
       // Log / Analyze opponent teams FABs
       floatingActionButton: _buildFloatingActionButtons(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

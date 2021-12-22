@@ -47,6 +47,12 @@ class UserTeams {
   // Remove a team at the specified index
   void removeTeamAt(int index) async {
     _builderTeams.removeAt(index);
+
+    // Adjust the team callbacks to follow with their new respective index
+    for (int i = index; i < _builderTeams.length; ++i) {
+      _builderTeams[i].save = () => _save(i);
+    }
+
     --teamsCount;
 
     await _box.put('teamsCount', teamsCount);

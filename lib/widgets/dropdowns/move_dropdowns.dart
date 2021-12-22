@@ -78,20 +78,22 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
   // Called for each of the 3 move dropdowns
   List<DropdownMenuItem<Move>> _generateDropdownItems(
       List<Move> moveOptionNames) {
-    return moveOptionNames.map<DropdownMenuItem<Move>>((Move move) {
-      return DropdownMenuItem<Move>(
-        value: move,
-        child: Center(
-          child: Text(
-            widget.pokemon.getFormattedMoveName(move),
-            style: TextStyle(
-              fontFamily: DefaultTextStyle.of(context).style.fontFamily,
-              fontSize: SizeConfig.p,
+    return moveOptionNames.map<DropdownMenuItem<Move>>(
+      (Move move) {
+        return DropdownMenuItem<Move>(
+          value: move,
+          child: Center(
+            child: Text(
+              widget.pokemon.getFormattedMoveName(move),
+              style: TextStyle(
+                fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+                fontSize: SizeConfig.p,
+              ),
             ),
           ),
-        ),
-      );
-    }).toList();
+        );
+      },
+    ).toList();
   }
 
   @override

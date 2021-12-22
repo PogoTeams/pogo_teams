@@ -27,7 +27,7 @@ class PogoTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      height: SizeConfig.blockSizeVertical * 5.0,
+      height: SizeConfig.blockSizeVertical * 5.5,
       child: TextField(
         controller: controller,
 

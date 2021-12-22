@@ -47,15 +47,18 @@ class WinLossNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(
+        top: SizeConfig.blockSizeVertical * .5,
+        bottom: SizeConfig.blockSizeVertical * .5,
+      ),
       alignment: Alignment.center,
       width: SizeConfig.blockSizeHorizontal * 15.0,
-      height: SizeConfig.blockSizeVertical * 3.0,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
           width: SizeConfig.blockSizeHorizontal * .4,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(100),
         color: _getColor(),
       ),
 

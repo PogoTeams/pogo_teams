@@ -56,7 +56,7 @@ class MoveNode extends StatelessWidget {
       margin: EdgeInsets.only(
         top: SizeConfig.blockSizeVertical * .7,
       ),
-      width: SizeConfig.screenWidth * .28,
+      width: SizeConfig.blockSizeHorizontal * 28.0,
       height: SizeConfig.blockSizeVertical * 3.5,
       decoration: BoxDecoration(
         border: Border.all(
@@ -94,7 +94,7 @@ class MoveDots extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
               ),
               height: SizeConfig.blockSizeHorizontal * 4.0,
-              width: SizeConfig.blockSizeHorizontal * 6.0,
+              width: SizeConfig.blockSizeHorizontal * 5.0,
             ),
           )
           .toList(),

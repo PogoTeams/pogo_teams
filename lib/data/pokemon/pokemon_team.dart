@@ -21,7 +21,7 @@ the app.
 class PokemonTeam {
   PokemonTeam({required this.save});
 
-  final VoidCallback save;
+  VoidCallback save;
 
   // The list of 3 pokemon references that make up the team
   List<Pokemon?> pokemonTeam = List.filled(3, null);

@@ -301,7 +301,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
                   FilterButton(
                     onSelected: _filterCategory,
                     selectedCategory: _selectedCategory,
-                    size: SizeConfig.blockSizeHorizontal * 11.0,
+                    size: SizeConfig.blockSizeHorizontal * 12.0,
                     dex: true,
                   ),
                 ],
@@ -318,7 +318,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
         ),
       ),
       floatingActionButton: _buildFloatingActionButtons(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

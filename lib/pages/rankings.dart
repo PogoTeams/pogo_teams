@@ -109,7 +109,7 @@ class _RankingsState extends State<Rankings> {
           FilterButton(
             onSelected: _filterCategory,
             selectedCategory: _selectedCategory,
-            size: SizeConfig.blockSizeHorizontal * 11.0,
+            size: SizeConfig.blockSizeHorizontal * 12.0,
           ),
         ],
       ),

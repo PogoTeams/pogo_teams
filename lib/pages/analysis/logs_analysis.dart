@@ -55,7 +55,7 @@ class LogsAnalysis extends StatelessWidget {
           // Page icon
           Icon(
             Icons.analytics,
-            size: SizeConfig.blockSizeHorizontal * 6.0,
+            size: SizeConfig.h2 * 1.5,
           ),
         ],
       ),
