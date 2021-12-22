@@ -49,7 +49,7 @@ The following testing procedure is illustrated to verify the app is functioning 
 10) **Run `flutter run` on a simulator / device of choice** : *Verify that the load screen indicates test mode with the prefix `[ TEST ]`*
 
 11) **Test the Update**
-- *Build a new team for each new cup**
+- *Build a new team for each new cup*
 - *Navigate to rankings, and ensure all new cups are functioning properly.*
 
 12) **In `lib/pogo_teams_app.dart`, set `testing` and `forceUpdate` to `false`** : *There is no need to commit / push the Pogo Teams app for updates, all model-based updates are pulled from our bucket.*
