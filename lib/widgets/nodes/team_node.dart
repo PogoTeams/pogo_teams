@@ -176,7 +176,6 @@ class TeamNode extends StatelessWidget {
                 top: SizeConfig.blockSizeVertical * 1.0,
                 left: SizeConfig.blockSizeHorizontal * 3.0,
                 right: SizeConfig.blockSizeHorizontal * 3.0,
-                bottom: SizeConfig.blockSizeVertical * 1.0,
               ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -188,7 +187,6 @@ class TeamNode extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(
                   top: SizeConfig.blockSizeVertical,
-                  bottom: SizeConfig.blockSizeVertical,
                 ),
                 child: _buildPokemonNodes(),
               ),

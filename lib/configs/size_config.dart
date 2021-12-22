@@ -14,7 +14,6 @@ class SizeConfig {
   static late double screenHeight;
   static late double blockSizeHorizontal;
   static late double blockSizeVertical;
-  static late double appBarHeight;
 
   static late double h1;
   static late double h2;
@@ -23,15 +22,33 @@ class SizeConfig {
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
-    screenWidth = _mediaQueryData.size.width;
-    screenHeight = _mediaQueryData.size.height;
-    blockSizeHorizontal = screenWidth / 100;
-    blockSizeVertical = screenHeight / 100;
-    appBarHeight = AppBar().preferredSize.height;
+    if (isTablet()) {
+      screenWidth = _mediaQueryData.size.width;
+      screenHeight = _mediaQueryData.size.height;
 
-    h1 = blockSizeHorizontal * 4.0;
-    h2 = blockSizeHorizontal * 3.7;
-    h3 = blockSizeHorizontal * 2.7;
-    p = blockSizeHorizontal * 2.2;
+      blockSizeHorizontal = screenWidth * .8 / 100;
+      blockSizeVertical = screenHeight * 1.2 / 100;
+
+      h1 = blockSizeHorizontal * 4.0;
+      h2 = blockSizeHorizontal * 3.7;
+      h3 = blockSizeHorizontal * 2.7;
+      p = blockSizeHorizontal * 2.2;
+    } else {
+      screenWidth = _mediaQueryData.size.width;
+      screenHeight = _mediaQueryData.size.height;
+
+      blockSizeHorizontal = screenWidth / 100;
+      blockSizeVertical = screenHeight / 100;
+
+      h1 = blockSizeHorizontal * 4.0;
+      h2 = blockSizeHorizontal * 3.7;
+      h3 = blockSizeHorizontal * 2.7;
+      p = blockSizeHorizontal * 2.2;
+    }
+  }
+
+  // Calculate the screen diagonal and determine if the device is a tablet
+  bool isTablet() {
+    return _mediaQueryData.size.shortestSide > 550;
   }
 }

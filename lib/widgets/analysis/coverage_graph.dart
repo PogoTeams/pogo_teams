@@ -44,7 +44,7 @@ class CoverageGraph extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: SizeConfig.blockSizeHorizontal * 61.0,
+              width: SizeConfig.screenWidth * .61,
             ),
             Text(
               'Excellent',
@@ -72,7 +72,7 @@ class CoverageGraph extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
-              width: SizeConfig.blockSizeHorizontal * 84.0,
+              width: SizeConfig.screenWidth * .84,
               height: SizeConfig.blockSizeVertical * .6,
             ),
           ],

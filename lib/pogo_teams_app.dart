@@ -31,7 +31,10 @@ class PogoTeamsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Pogo Teams',
-      theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Futura'),
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        fontFamily: 'Futura',
+      ),
 
       home: PogoScaffold(
         testing: testing,

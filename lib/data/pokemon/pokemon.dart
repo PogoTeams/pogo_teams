@@ -224,7 +224,7 @@ class Pokemon {
   }
 
   // Get the icon(s) of this Pokemon's typing
-  List<Image> getTypeIcons() {
+  List<Widget> getTypeIcons() {
     return typing.isMonoType()
         ? [typing.typeA.getIcon()]
         : [

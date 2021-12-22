@@ -29,6 +29,8 @@ class PokemonNode extends StatelessWidget {
     this.emptyTransparent = false,
     this.padding,
   }) : super(key: key) {
+    width = SizeConfig.blockSizeHorizontal * 25.0;
+    height = SizeConfig.blockSizeHorizontal * 25.0;
     cup = null;
     dropdowns = false;
     rating = false;
@@ -49,6 +51,9 @@ class PokemonNode extends StatelessWidget {
     this.dropdowns = true,
     this.rating = false,
   }) : super(key: key) {
+    width = double.infinity;
+    height = SizeConfig.blockSizeVertical * 15.0;
+
     body = _SmallNodeBody(
       pokemon: pokemon!,
       dropdowns: dropdowns,
@@ -68,6 +73,8 @@ class PokemonNode extends StatelessWidget {
     this.emptyTransparent = false,
     this.padding,
   }) : super(key: key) {
+    width = double.infinity;
+    height = SizeConfig.blockSizeVertical * 22.0;
     dropdowns = false;
     rating = false;
 
@@ -92,12 +99,16 @@ class PokemonNode extends StatelessWidget {
   late final Widget? footer;
   final bool emptyTransparent;
   final EdgeInsets? padding;
+  late final double width;
+  late final double height;
   late final bool dropdowns;
   late final bool rating;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
+      width: width,
+      height: height,
       child: pokemon == null
           ? EmptyNode(
               onPressed: onEmptyPressed,

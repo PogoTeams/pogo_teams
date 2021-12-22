@@ -65,7 +65,7 @@ class _BattleLogState extends State<BattleLog> {
           // Page icon
           Icon(
             Icons.query_stats,
-            size: SizeConfig.appBarHeight,
+            size: SizeConfig.h2 * 1.5,
           ),
         ],
       ),

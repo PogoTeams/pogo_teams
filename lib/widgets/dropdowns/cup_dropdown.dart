@@ -68,9 +68,7 @@ class _CupDropdownState extends State<CupDropdown>
       alignment: Alignment.center,
       width: widget.width,
       padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeVertical * 1.0,
         right: SizeConfig.blockSizeHorizontal * 2.0,
-        bottom: SizeConfig.blockSizeVertical * 1.0,
       ),
       decoration: BoxDecoration(
         border: Border.all(

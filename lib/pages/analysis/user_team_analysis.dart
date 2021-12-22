@@ -177,7 +177,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
           // Page icon
           Icon(
             Icons.analytics,
-            size: SizeConfig.appBarHeight,
+            size: SizeConfig.h2 * 1.5,
           ),
         ],
       ),

@@ -35,6 +35,7 @@ class EmptyNode extends StatelessWidget {
       ),
       child: MaterialButton(
         onPressed: onPressed,
+
         // Evaluate button transparency
         child: emptyTransparent
             ? Container()

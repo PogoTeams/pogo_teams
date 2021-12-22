@@ -56,7 +56,7 @@ class MoveNode extends StatelessWidget {
       margin: EdgeInsets.only(
         top: SizeConfig.blockSizeVertical * .7,
       ),
-      width: SizeConfig.screenWidth * .28,
+      width: SizeConfig.blockSizeHorizontal * 28.0,
       height: SizeConfig.blockSizeVertical * 3.5,
       decoration: BoxDecoration(
         border: Border.all(

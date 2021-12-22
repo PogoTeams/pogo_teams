@@ -83,8 +83,8 @@ class CoverageGrids extends StatelessWidget {
                 // Threat type Icons
                 GridView.count(
                   shrinkWrap: true,
-                  //crossAxisSpacing: SizeConfig.blockSizeHorizontal * .1,
-                  //mainAxisSpacing: SizeConfig.blockSizeVertical * .5,
+                  crossAxisSpacing: SizeConfig.blockSizeHorizontal * .1,
+                  mainAxisSpacing: SizeConfig.blockSizeVertical * .5,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: crossAxisCount,
                   children:
@@ -148,6 +148,8 @@ class CoverageGrids extends StatelessWidget {
                 // Coverage type Icons
                 GridView.count(
                   shrinkWrap: true,
+                  crossAxisSpacing: SizeConfig.blockSizeHorizontal * .1,
+                  mainAxisSpacing: SizeConfig.blockSizeVertical * .5,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: crossAxisCount,
                   children:

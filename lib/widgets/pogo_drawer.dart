@@ -57,9 +57,10 @@ class PogoDrawer extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
+                  // Pogo Teams Logo
                   _buildDrawerHeader(),
 
-                  // Navigation options
+                  // Teams page option
                   ListTile(
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -73,7 +74,7 @@ class PogoDrawer extends StatelessWidget {
                         ),
                         Image.asset(
                           'assets/pokeball_icon.png',
-                          width: SizeConfig.appBarHeight * 1.2,
+                          width: SizeConfig.h2 * 1.2,
                         ),
                       ],
                     ),
@@ -82,6 +83,8 @@ class PogoDrawer extends StatelessWidget {
                       Navigator.pop(context);
                     },
                   ),
+
+                  // Rankings page option
                   ListTile(
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -95,7 +98,7 @@ class PogoDrawer extends StatelessWidget {
                         ),
                         Icon(
                           Icons.bar_chart,
-                          size: SizeConfig.appBarHeight,
+                          size: SizeConfig.h2 * 1.5,
                         ),
                       ],
                     ),
@@ -113,7 +116,7 @@ class PogoDrawer extends StatelessWidget {
               height: SizeConfig.blockSizeVertical * 2.0,
             ),
 
-            // Versioning
+            // Current version
             Text(
               globals.version,
               style: TextStyle(
