@@ -90,11 +90,11 @@ class _PogoScaffoldState extends State<PogoScaffold>
   late final Map<String, Widget> _icons = {
     'Teams': Image.asset(
       'assets/pokeball_icon.png',
-      width: SizeConfig.blockSizeHorizontal * 5.0,
+      width: SizeConfig.appBarHeight * .3,
     ),
     'Rankings': Icon(
       Icons.bar_chart,
-      size: SizeConfig.blockSizeHorizontal * 6.0,
+      size: SizeConfig.appBarHeight,
     ),
   };
 

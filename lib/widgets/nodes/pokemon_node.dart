@@ -33,9 +33,6 @@ class PokemonNode extends StatelessWidget {
     dropdowns = false;
     rating = false;
 
-    width = SizeConfig.blockSizeHorizontal * 25.0;
-    height = SizeConfig.blockSizeHorizontal * 25.0;
-
     if (pokemon == null) return;
 
     body = _SquareNodeBody(pokemon: pokemon!);
@@ -52,9 +49,6 @@ class PokemonNode extends StatelessWidget {
     this.dropdowns = true,
     this.rating = false,
   }) : super(key: key) {
-    width = SizeConfig.screenWidth * .95;
-    height = SizeConfig.blockSizeVertical * 14.0;
-
     body = _SmallNodeBody(
       pokemon: pokemon!,
       dropdowns: dropdowns,
@@ -74,8 +68,6 @@ class PokemonNode extends StatelessWidget {
     this.emptyTransparent = false,
     this.padding,
   }) : super(key: key) {
-    width = SizeConfig.screenWidth * .95;
-    height = SizeConfig.screenHeight * .2;
     dropdowns = false;
     rating = false;
 
@@ -94,9 +86,6 @@ class PokemonNode extends StatelessWidget {
   late final VoidCallback? onEmptyPressed;
   late final VoidCallback? onMoveChanged;
 
-  late final double width;
-  late final double height;
-
   late final Cup? cup;
 
   late final Widget body;
@@ -108,9 +97,7 @@ class PokemonNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      height: height,
+    return Container(
       child: pokemon == null
           ? EmptyNode(
               onPressed: onEmptyPressed,
@@ -119,10 +106,10 @@ class PokemonNode extends StatelessWidget {
           : ColoredContainer(
               padding: padding ??
                   EdgeInsets.only(
-                    top: SizeConfig.blockSizeHorizontal * .5,
+                    top: SizeConfig.blockSizeVertical * .5,
                     left: SizeConfig.blockSizeHorizontal * 2.0,
                     right: SizeConfig.blockSizeHorizontal * 2.0,
-                    bottom: SizeConfig.blockSizeHorizontal * .5,
+                    bottom: SizeConfig.blockSizeVertical * .5,
                   ),
               pokemon: pokemon!,
               child: onPressed == null
@@ -350,13 +337,13 @@ class _LargeNodeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeVertical * 1.0,
+        top: SizeConfig.blockSizeVertical * .5,
         left: SizeConfig.blockSizeHorizontal * 2.0,
         right: SizeConfig.blockSizeHorizontal * 2.0,
         bottom: SizeConfig.blockSizeVertical * .2,
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           // Pokemon name, perfect IVs, and typing icons
           _buildNodeHeader(pokemon, cup),

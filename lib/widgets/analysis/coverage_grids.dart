@@ -28,7 +28,7 @@ class CoverageGrids extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Row length for the coverage grid views
-    int crossAxisCount = defenseThreats.length < 8 ? defenseThreats.length : 8;
+    int crossAxisCount = defenseThreats.length < 6 ? defenseThreats.length : 6;
 
     if (crossAxisCount < 3) crossAxisCount = 3;
 
@@ -83,18 +83,12 @@ class CoverageGrids extends StatelessWidget {
                 // Threat type Icons
                 GridView.count(
                   shrinkWrap: true,
-                  crossAxisSpacing: SizeConfig.blockSizeHorizontal * .1,
-                  mainAxisSpacing: SizeConfig.blockSizeVertical * 1.2,
-                  childAspectRatio: SizeConfig.blockSizeHorizontal * .5,
+                  //crossAxisSpacing: SizeConfig.blockSizeHorizontal * .1,
+                  //mainAxisSpacing: SizeConfig.blockSizeVertical * .5,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: crossAxisCount,
-                  children: defenseThreats
-                      .map(
-                        (pair) => pair.a.getIcon(
-                          scale: SizeConfig.blockSizeHorizontal * 1.0,
-                        ),
-                      )
-                      .toList(),
+                  children:
+                      defenseThreats.map((pair) => pair.a.getIcon()).toList(),
                 ),
               ],
             ),
@@ -154,18 +148,10 @@ class CoverageGrids extends StatelessWidget {
                 // Coverage type Icons
                 GridView.count(
                   shrinkWrap: true,
-                  crossAxisSpacing: SizeConfig.blockSizeHorizontal * .1,
-                  mainAxisSpacing: SizeConfig.blockSizeVertical * 1.2,
-                  childAspectRatio: SizeConfig.blockSizeHorizontal * .5,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: crossAxisCount,
-                  children: offenseCoverage
-                      .map(
-                        (pair) => pair.a.getIcon(
-                          scale: SizeConfig.blockSizeHorizontal * 1.0,
-                        ),
-                      )
-                      .toList(),
+                  children:
+                      offenseCoverage.map((pair) => pair.a.getIcon()).toList(),
                 ),
               ],
             ),

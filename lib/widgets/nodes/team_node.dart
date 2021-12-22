@@ -52,7 +52,6 @@ class TeamNode extends StatelessWidget {
       padding: EdgeInsets.only(
         left: SizeConfig.blockSizeHorizontal * 2.0,
         right: SizeConfig.blockSizeHorizontal * 2.0,
-        bottom: SizeConfig.blockSizeHorizontal * 2.5,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -177,6 +176,7 @@ class TeamNode extends StatelessWidget {
                 top: SizeConfig.blockSizeVertical * 1.0,
                 left: SizeConfig.blockSizeHorizontal * 3.0,
                 right: SizeConfig.blockSizeHorizontal * 3.0,
+                bottom: SizeConfig.blockSizeVertical * 1.0,
               ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -185,7 +185,13 @@ class TeamNode extends StatelessWidget {
               buildHeader ? _buildHeader() : Container(),
 
               // A gridview of the Pokemon in this team
-              _buildPokemonNodes(),
+              Padding(
+                padding: EdgeInsets.only(
+                  top: SizeConfig.blockSizeVertical,
+                  bottom: SizeConfig.blockSizeVertical,
+                ),
+                child: _buildPokemonNodes(),
+              ),
 
               // Icon buttons for team operations
               footer ?? Container(),

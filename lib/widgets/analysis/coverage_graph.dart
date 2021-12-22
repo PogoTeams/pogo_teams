@@ -113,8 +113,9 @@ class GraphRow extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal),
-          child: typeData.a.getIcon(
-            scale: SizeConfig.blockSizeHorizontal * 1.2,
+          child: SizedBox(
+            width: SizeConfig.blockSizeHorizontal * 6.0,
+            child: typeData.a.getIcon(),
           ),
         ),
         Container(

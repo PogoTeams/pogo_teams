@@ -82,9 +82,10 @@ class _WinLossDropdownState extends State<WinLossDropdown>
     return Container(
       alignment: Alignment.center,
       width: widget.width,
-      height: SizeConfig.blockSizeVertical * 4.0,
       padding: EdgeInsets.only(
+        top: SizeConfig.blockSizeVertical,
         right: SizeConfig.blockSizeHorizontal * 2.0,
+        bottom: SizeConfig.blockSizeVertical,
       ),
       decoration: BoxDecoration(
         border: Border.all(

@@ -131,7 +131,7 @@ class _TeamEditState extends State<TeamEdit> {
           // Page icon
           Icon(
             Icons.build_circle,
-            size: SizeConfig.blockSizeHorizontal * 6.0,
+            size: SizeConfig.appBarHeight,
           ),
         ],
       ),
@@ -144,7 +144,7 @@ class _TeamEditState extends State<TeamEdit> {
     if (pokemon == null) return null;
 
     // Size of the footer icons
-    final double iconSize = SizeConfig.blockSizeHorizontal * 6.2;
+    final double iconSize = SizeConfig.blockSizeHorizontal * 6.0;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -288,7 +288,7 @@ class _TeamEditState extends State<TeamEdit> {
               width: SizeConfig.screenWidth * .85,
               height: SizeConfig.blockSizeVertical * 8.5,
             ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

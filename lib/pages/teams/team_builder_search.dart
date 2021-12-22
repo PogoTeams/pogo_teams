@@ -318,7 +318,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
         ),
       ),
       floatingActionButton: _buildFloatingActionButtons(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

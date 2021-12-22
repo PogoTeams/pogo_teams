@@ -67,9 +67,10 @@ class _CupDropdownState extends State<CupDropdown>
     return Container(
       alignment: Alignment.center,
       width: widget.width,
-      height: SizeConfig.blockSizeVertical * 5.0,
       padding: EdgeInsets.only(
+        top: SizeConfig.blockSizeVertical * 1.0,
         right: SizeConfig.blockSizeHorizontal * 2.0,
+        bottom: SizeConfig.blockSizeVertical * 1.0,
       ),
       decoration: BoxDecoration(
         border: Border.all(
@@ -90,7 +91,10 @@ class _CupDropdownState extends State<CupDropdown>
         child: DropdownButton(
           isExpanded: true,
           value: _selectedCup.title,
-          icon: const Icon(Icons.arrow_drop_down_circle),
+          icon: Icon(
+            Icons.arrow_drop_down_circle,
+            size: SizeConfig.blockSizeVertical * 3.0,
+          ),
           style: DefaultTextStyle.of(context).style,
           onChanged: widget.onCupChanged,
           items: cupOptions,

@@ -94,7 +94,7 @@ class MoveDots extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
               ),
               height: SizeConfig.blockSizeHorizontal * 4.0,
-              width: SizeConfig.blockSizeHorizontal * 6.0,
+              width: SizeConfig.blockSizeHorizontal * 5.0,
             ),
           )
           .toList(),
