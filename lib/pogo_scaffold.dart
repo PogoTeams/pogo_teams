@@ -75,14 +75,14 @@ class _PogoScaffoldState extends State<PogoScaffold>
   bool _loaded = false;
 
   // User data
-  final UserTeams teams = UserTeams();
+  final UserTeams _teams = UserTeams();
 
   // Initialize all user data, called once after loading is done
-  void _initializeTeams() async => await teams.init();
+  void _initializeTeams() async => await _teams.init();
 
   // All pages that are accessible at the top level of the app
   late final Map<String, Widget> _pages = {
-    'Teams': TeamsBuilder(teams: teams),
+    'Teams': TeamsBuilder(teams: _teams),
     'Rankings': const Rankings(),
   };
 
@@ -299,6 +299,8 @@ class _PogoScaffoldState extends State<PogoScaffold>
   @override
   void dispose() {
     _progressBarAnimController.dispose();
+    _teams.close();
+
     super.dispose();
   }
 

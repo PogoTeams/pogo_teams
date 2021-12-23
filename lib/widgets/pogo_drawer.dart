@@ -1,6 +1,9 @@
 // Flutter Imports
 import 'package:flutter/material.dart';
 
+// Package Imports
+import 'package:url_launcher/url_launcher.dart';
+
 // Local Imports
 import '../configs/size_config.dart';
 import '../data/globals.dart' as globals;
@@ -19,6 +22,9 @@ class PogoDrawer extends StatelessWidget {
   }) : super(key: key);
 
   final Function(String) onNavSelected;
+
+  void _launchGitHubUrl() async =>
+      await launch('https://github.com/PogoTeams/pogo_teams');
 
   // The background gradient on the drawer
   BoxDecoration _buildGradientDecoration() {
@@ -116,13 +122,28 @@ class PogoDrawer extends StatelessWidget {
               height: SizeConfig.blockSizeVertical * 2.0,
             ),
 
-            // Current version
-            Text(
-              globals.version,
-              style: TextStyle(
-                fontSize: SizeConfig.h2,
-                fontStyle: FontStyle.italic,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Current version
+                Text(
+                  globals.version,
+                  style: TextStyle(
+                    fontSize: SizeConfig.h2,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+
+                // GitHub link
+                SizedBox(
+                  width: SizeConfig.blockSizeHorizontal * 10.0,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: _launchGitHubUrl,
+                    icon: Image.asset('assets/GitHub-Mark-Light-64px.png'),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
