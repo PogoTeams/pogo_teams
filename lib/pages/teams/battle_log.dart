@@ -125,6 +125,7 @@ class _BattleLogState extends State<BattleLog> {
         top: SizeConfig.blockSizeHorizontal * 2.0,
         left: SizeConfig.blockSizeHorizontal * 3.0,
         right: SizeConfig.blockSizeHorizontal * 3.0,
+        bottom: SizeConfig.blockSizeVertical * 2.0,
       ),
     );
   }
