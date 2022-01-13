@@ -1,5 +1,5 @@
-[![Developer Overview v1.0.0 (Youtube)](https://img.youtube.com/vi/Tk1y74eQEd4/0.jpg)](https://www.youtube.com/watch?v=Tk1y74eQEd4)
-[![CS 361 Showcase v0.0.3 (Youtube)](https://img.youtube.com/vi/TOMGtCJ7c4U/0.jpg)](https://www.youtube.com/watch?v=TOMGtCJ7c4U)
+[Developer Overview v1.0.0 (Youtube)](https://www.youtube.com/watch?v=Tk1y74eQEd4)
+[CS 361 Showcase v0.0.3 (Youtube)](https://www.youtube.com/watch?v=TOMGtCJ7c4U)
 
 ![PogoTeamsIcon](https://user-images.githubusercontent.com/41221800/143391296-e61059a4-1e63-4a66-9e1f-fe41a686b769.png)
 
