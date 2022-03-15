@@ -208,7 +208,8 @@ class UserPokemonTeam extends PokemonTeam {
 
   // Switch to a different cup with the specified cupTitle
   void setCup(String cupTitle) {
-    cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == cupTitle);
+    cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == cupTitle,
+        orElse: () => globals.gamemaster.cups[0]);
 
     save();
   }

@@ -138,7 +138,7 @@ class GameMaster {
         ? pokemon.firstWhere((pokemon) {
             return speciesId.contains(pokemon.speciesId) ||
                 pokemon.speciesId.contains(speciesId);
-          })
+          }, orElse: () => pokemonIdMap['bidoof']!)
         : pokemonIdMap[speciesId]!);
   }
 }

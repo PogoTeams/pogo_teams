@@ -326,8 +326,10 @@ class Pokemon {
         fastMoves.firstWhere((move) => move.moveId == fastMoveId);
 
     selectedChargedMoves = [
-      chargedMoves.firstWhere((move) => move.moveId == chargedMoveIds[0]),
-      chargedMoves.firstWhere((move) => move.moveId == chargedMoveIds[1]),
+      chargedMoves.firstWhere((move) => move.moveId == chargedMoveIds[0],
+          orElse: () => chargedMoves[0]),
+      chargedMoves.firstWhere((move) => move.moveId == chargedMoveIds[1],
+          orElse: () => chargedMoves[1]),
     ];
   }
 
@@ -344,15 +346,18 @@ class Pokemon {
 
   // Determine the most meta-relevant fast move and return it
   Move getMetaFastMove(String fastId) {
-    final Move? fast = fastMoves.firstWhere((move) => move.moveId == fastId);
+    final Move? fast = fastMoves.firstWhere((move) => move.moveId == fastId,
+        orElse: () => fastMoves[0]);
 
     return fast!;
   }
 
   // Determine the most meta-relevant charged moves and return it
   List<Move> getMetaChargedMoves(String chargeId1, String chargeId2) {
-    final c1 = chargedMoves.firstWhere((move) => move.moveId == chargeId1);
-    final c2 = chargedMoves.firstWhere((move) => move.moveId == chargeId2);
+    final c1 = chargedMoves.firstWhere((move) => move.moveId == chargeId1,
+        orElse: () => chargedMoves[0]);
+    final c2 = chargedMoves.firstWhere((move) => move.moveId == chargeId2,
+        orElse: () => chargedMoves[1]);
 
     return [c1, c2];
   }

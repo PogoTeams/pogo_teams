@@ -46,7 +46,8 @@ class _RankingsState extends State<Rankings> {
     if (newCup == null) return;
 
     setState(() {
-      cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == newCup);
+      cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == newCup,
+          orElse: () => globals.gamemaster.cups[0]);
       _filterCategory(_selectedCategory);
     });
   }
