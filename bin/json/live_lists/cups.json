@@ -1,0 +1,9 @@
+[
+	{
+        "cupId": "great_league",
+		"name": "Great League",
+		"cp": 1500,
+        "partySize": 3,
+		"live": true
+	}
+]

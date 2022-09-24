@@ -314,7 +314,8 @@ class Pokemon {
     }
 
     for (int i = 0; i < globals.typeCount; ++i) {
-      offenseCoverage.add(max(fast[i], c1[i], c2[i]));
+      offenseCoverage
+          .add([fast[i], c1[i], c2[i]].reduce((v1, v2) => (v1 > v2 ? v1 : v2)));
     }
 
     return offenseCoverage;

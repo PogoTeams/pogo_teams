@@ -1,0 +1,16 @@
+class Globals {
+  // The number of Pokemon types in the game
+  static const int typeCount = 18;
+
+  // The most possible damage a type can have against another
+  // ex. Scrafty (dark / fighting) : fairy would have 1.6^2 = 2.56 damage
+  static const double maxEffectiveDamage = 2.56;
+
+  static const int maxPokemonLevel = 50;
+
+  // The max number of turns in a pvp battle
+  // maxTurns = 4m * 60s * 2 (turns per second)
+  static const maxPvpTurns = 480;
+
+  static const maxPokemonEnergy = 100;
+}

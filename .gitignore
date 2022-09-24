@@ -102,6 +102,7 @@ unlinked_spec.ds
 
 # macOS
 **/macos/Flutter/GeneratedPluginRegistrant.swift
+.DS_Store
 
 # Coverage
 coverage/
@@ -116,4 +117,7 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
-assets/.DS_Store
+
+# pogo_teams_cli files
+bin/json/history/*
+bin/json/*.json
