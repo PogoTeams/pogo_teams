@@ -20,7 +20,7 @@ up to 55, where each index is 1/2 of a level.
 -------------------------------------------------------------------------------
 */
 
-class StatsModule {
+class Stats {
   static const int ivSpreadMax = 250;
   static const num pvpDamageBonusMultiplier = 1.3;
   static const num shadowAtkMultiplier = 1.2;
@@ -38,8 +38,8 @@ class StatsModule {
   }
 
   static int calculateMaxHp(BaseStats stats, IVs ivs) {
-    return max(10,
-        ((stats.hp + ivs.hp) * StatsModule.getCpMultiplier(ivs.level)).floor());
+    return max(
+        10, ((stats.hp + ivs.hp) * Stats.getCpMultiplier(ivs.level)).floor());
   }
 
   static int calculateIVStatProduct(BaseStats baseStats, IVs ivs) {
@@ -52,12 +52,12 @@ class StatsModule {
 
   static List<IVs> generateIVSpreads(BaseStats baseStats, int cpCap) {
     // IV combinations are inserted, sorted by IV-stat product
-    List<Stats> ivCombinations = [];
+    List<PokemonStats> ivCombinations = [];
 
     for (int hpIV = 15; hpIV >= 0; --hpIV) {
       for (int defIV = 15; defIV >= 0; --defIV) {
         for (int atkIV = 15; atkIV >= 0; --atkIV) {
-          Stats stats = Stats(
+          PokemonStats stats = PokemonStats(
             baseStats: baseStats,
             ivs: IVs(
               level: 1,
@@ -86,7 +86,7 @@ class StatsModule {
         .toList();
   }
 
-  static void setMaxLevel(Stats stats, int cpCap) {
+  static void setMaxLevel(PokemonStats stats, int cpCap) {
     do {
       stats.ivs.level += .5;
       stats.cp = calculateCP(stats.baseStats, stats.ivs);
@@ -110,13 +110,6 @@ class StatsModule {
 
     return cpMultipliers[getLevelIndex(level)];
   }
-
-  static Map<int, int> cpMinimums = {
-    500: 300,
-    1500: 1200,
-    2500: 2200,
-    9999: 2500,
-  };
 
   // The scales used in calculating the cp increase
   static List<double> powerUpScales = [

@@ -4,7 +4,7 @@ import 'dart:math';
 // Local
 import 'typing.dart';
 import 'pokemon.dart';
-import '../../../modules/types.dart';
+import '../modules/pokemon_types.dart';
 import '../../../modules/debug_cli.dart';
 import '../../../modules/stats.dart';
 
@@ -28,12 +28,13 @@ class Move {
 
   final String moveId;
   final String name;
-  final Type type;
+  final PokemonType type;
   final num power;
   final num energyDelta;
 
   num rating = 0;
   num damage = 0;
+  int usage = 0;
 
   bool isSameMove(Move other) {
     return moveId == other.moveId;
@@ -55,7 +56,7 @@ class Move {
                 (owner.effectiveAttack / opponent.effectiveDefense) *
                 stab *
                 effectiveness *
-                StatsModule.pvpDamageBonusMultiplier)
+                Stats.pvpDamageBonusMultiplier)
             .floor() +
         1;
   }
@@ -114,7 +115,7 @@ class FastMove extends Move {
     return FastMove(
       moveId: json['moveId'] as String,
       name: json['name'] as String,
-      type: TypeModule.typeMap[json['type'] as String]!,
+      type: PokemonTypes.typeMap[json['type'] as String]!,
       power: json['power'] as num,
       energyDelta: json['energyDelta'] as num,
       duration: json['duration'] as int,
@@ -124,7 +125,7 @@ class FastMove extends Move {
   static final FastMove none = FastMove(
     moveId: 'none',
     name: 'None',
-    type: Type.none,
+    type: PokemonType.none,
     power: 1,
     energyDelta: 12,
     duration: 4,
@@ -184,7 +185,7 @@ class ChargeMove extends Move {
     return ChargeMove(
       moveId: json['moveId'] as String,
       name: json['name'] as String,
-      type: TypeModule.typeMap[json['type'] as String]!,
+      type: PokemonTypes.typeMap[json['type'] as String]!,
       power: json['power'] as num,
       energyDelta: json['energyDelta'] as num,
       buffs:
@@ -195,7 +196,7 @@ class ChargeMove extends Move {
   static final ChargeMove none = ChargeMove(
     moveId: 'none',
     name: 'None',
-    type: Type.none,
+    type: PokemonType.none,
     power: 0,
     energyDelta: 0,
     buffs: null,

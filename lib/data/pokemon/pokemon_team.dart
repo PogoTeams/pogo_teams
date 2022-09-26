@@ -337,7 +337,7 @@ class LogPokemonTeam extends PokemonTeam {
 
   Map<String, dynamic> toJson() {
     return {
-      '_winLossKey': _winLossKey,
+      'winLossKey': _winLossKey,
       'pokemonTeam': _pokemonTeamToJson(),
       'locked': locked
     };

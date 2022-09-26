@@ -1,6 +1,6 @@
 // Local
 import '../modules/globals.dart';
-import '../modules/types.dart';
+import '../modules/pokemon_types.dart';
 
 /*
 -------------------------------------------------------------------------------
@@ -17,23 +17,22 @@ class PokemonTyping {
 
   factory PokemonTyping.fromJson(Map<String, dynamic> json) {
     return PokemonTyping(
-      typeA: TypeModule.typeMap[json['typeA'] as String]!,
+      typeA: PokemonTypes.typeMap[json['typeA'] as String]!,
       typeB: json.containsKey('typeB')
-          ? TypeModule.typeMap[json['typeB'] as String]!
+          ? PokemonTypes.typeMap[json['typeB'] as String]!
           : null,
     );
   }
 
-  final Type typeA;
-  final Type? typeB;
+  final PokemonType typeA;
+  final PokemonType? typeB;
 
   bool isMonoType() {
     return typeB == null;
   }
 
-  bool contains(Type type) {
-    return (type.typeId == typeA.typeId ||
-        typeB != null && type.typeId == typeB?.typeId);
+  bool contains(PokemonType type) {
+    return (typeA.isSameType(type) || typeB != null && typeB!.isSameType(type));
   }
 
   // Get defense effectiveness of all types on this typing
@@ -51,13 +50,13 @@ class PokemonTyping {
     return aEffectiveness;
   }
 
-  num getEffectivenessFromType(Type type) {
+  num getEffectivenessFromType(PokemonType type) {
     if (isMonoType()) {
-      return TypeModule.effectivenessMaster[typeA.typeId]![type.typeId]![1];
+      return PokemonTypes.effectivenessMaster[typeA.typeId]![type.typeId]![1];
     }
 
-    return TypeModule.effectivenessMaster[typeA.typeId]![type.typeId]![1] *
-        TypeModule.effectivenessMaster[typeB?.typeId]![type.typeId]![1];
+    return PokemonTypes.effectivenessMaster[typeA.typeId]![type.typeId]![1] *
+        PokemonTypes.effectivenessMaster[typeB?.typeId]![type.typeId]![1];
   }
 
   @override
@@ -74,12 +73,12 @@ class PokemonTyping {
 Manages all data cooresponding to a single type. This can be a type from a
 Pokemon's duo / mono typing or a Pokemon move.
 */
-class Type {
-  Type({required this.typeId}) {
-    effectivenessMap = TypeModule.getEffectivenessMap(typeId);
+class PokemonType {
+  PokemonType({required this.typeId}) {
+    effectivenessMap = PokemonTypes.getEffectivenessMap(typeId);
   }
 
-  static final Type none = Type(typeId: 'none');
+  static final PokemonType none = PokemonType(typeId: 'none');
 
   final String typeId;
 
@@ -88,11 +87,11 @@ class Type {
   // [1] : defensive
   late final Map<String, List<double>> effectivenessMap;
 
-  bool isSameType(Type other) {
+  bool isSameType(PokemonType other) {
     return typeId == other.typeId;
   }
 
-  bool isWeakTo(Type type) {
+  bool isWeakTo(PokemonType type) {
     return effectivenessMap[type.typeId]![1] > 1.0;
   }
 

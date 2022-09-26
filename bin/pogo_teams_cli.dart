@@ -1,8 +1,11 @@
+// Dart
+import 'dart:io';
+
 // Local
 import 'package:pogo_teams/mapping/niantic_snapshot.dart';
 import 'package:pogo_teams/mapping/cloud_writes.dart';
 import 'package:pogo_teams/cloud/cloud_push.dart';
-import 'package:pogo_teams/rankers/rankers.dart';
+import 'package:pogo_teams/ranker/ranker_main.dart';
 import 'package:pogo_teams/mapping/mapping_tools.dart';
 
 /*
@@ -35,7 +38,11 @@ void main(List<String> arguments) async {
       mapSnapshotToCloudWrites();
       break;
     case 'cloud-push':
-      cloudPush();
+      if (arguments.length > 1) {
+        cloudPush(arguments[1]);
+      } else {
+        stderr.writeln('cloud-push: no api key was specified');
+      }
       break;
     case 'alternate-forms':
       buildAlternateFormsList();
@@ -48,6 +55,16 @@ void main(List<String> arguments) async {
       break;
     case 'generate-rankings':
       generatePokemonRankings();
+      break;
+    case 'test-generate-rankings':
+      if (arguments.length > 3) {
+        int cp = int.tryParse(arguments[3]) ?? 1500;
+        generatePokemonRankingsTest(
+          arguments[1],
+          arguments[2],
+          cp,
+        );
+      }
       break;
   }
 }

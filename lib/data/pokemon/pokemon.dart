@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'typing.dart';
 import 'move.dart';
 import 'stats.dart';
-import '../../tools/logic.dart';
 import '../masters/cp_master.dart';
 import '../globals.dart' as globals;
 

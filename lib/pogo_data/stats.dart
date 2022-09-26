@@ -1,7 +1,7 @@
 import '../modules/globals.dart';
 
-class Stats {
-  Stats({
+class PokemonStats {
+  PokemonStats({
     required this.baseStats,
     required this.ivs,
   });

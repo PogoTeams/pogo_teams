@@ -4,6 +4,21 @@
 		"name": "Great League",
 		"cp": 1500,
         "partySize": 3,
-		"live": true
+		"live": true,
+		"exclude": [{
+			"filterType": "pokemonId",
+			"values": [
+				"ditto",
+				"smeargle",
+				"shedinja",
+				"nihilego"
+			]
+		},	{
+			"filterType": "tags",
+			"values": [
+				"mega"
+			]
+		}
+	]
 	}
 ]

@@ -2,8 +2,9 @@
 import '../pogo_data/move.dart';
 import '../pogo_data/pokemon.dart';
 import '../pogo_data/cup.dart';
+import 'cups.dart';
 
-class GameMaster {
+class Gamemaster {
   // The master list of ALL fast moves
   static late final List<FastMove> fastMoves;
 
@@ -19,7 +20,7 @@ class GameMaster {
   // The master list of ALL cups
   static late final List<Cup> cups;
 
-  static load(Map<String, dynamic> json) {
+  static void load(Map<String, dynamic> json) {
     fastMoves = List<Map<String, dynamic>>.from(json['fastMoves'])
         .map<FastMove>((moveJson) => FastMove.fromJson(moveJson))
         .toList();
@@ -28,9 +29,30 @@ class GameMaster {
         .toList();
     var jsonList = List<Map<String, dynamic>>.from(json['pokemon']);
     for (var pokemonJson in jsonList) {
+      // Standard Pokemon entries
       Pokemon pokemon = Pokemon.fromJson(pokemonJson);
       pokemonList.add(pokemon);
       pokemonMap[pokemon.pokemonId] = pokemon;
+
+      // Shadow entries
+      if (pokemonJson.containsKey('shadow')) {
+        Pokemon shadowPokemon = Pokemon.fromJson(pokemonJson, isShadow: true);
+        pokemonList.add(shadowPokemon);
+        pokemonMap[shadowPokemon.pokemonId] = shadowPokemon;
+      }
+
+      // Temporary evolution entries
+      if (pokemonJson.containsKey('tempEvolutions')) {
+        List<dynamic> tempEvolutions = pokemonJson['tempEvolutions'];
+        for (var overrideJson in tempEvolutions) {
+          Pokemon tempEvoPokemon = Pokemon.tempEvolutionFromJson(
+            pokemonJson,
+            overrideJson,
+          );
+          pokemonList.add(tempEvoPokemon);
+          pokemonMap[tempEvoPokemon.pokemonId] = tempEvoPokemon;
+        }
+      }
     }
     cups = List<Map<String, dynamic>>.from(json['cups'])
         .map<Cup>((cupJson) => Cup.fromJson(cupJson))
@@ -50,6 +72,8 @@ class GameMaster {
   static List<Pokemon> getCupFilteredPokemonList(Cup cup) {
     return pokemonList
         .where((Pokemon pokemon) =>
+            cup.pokemonIsAllowed(pokemon) &&
+            !Cups.isBanned(pokemon, cup.cp) &&
             pokemon.released &&
             pokemon.fastMoves.isNotEmpty &&
             pokemon.chargeMoves.isNotEmpty)

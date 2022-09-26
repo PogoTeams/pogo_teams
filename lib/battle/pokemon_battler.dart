@@ -1,6 +1,6 @@
 // Local
 import '../pogo_data/pokemon.dart';
-import '../rankers/ranking_data.dart';
+import 'battle_result.dart';
 import '../modules/globals.dart';
 import '../modules/debug_cli.dart';
 
@@ -13,29 +13,6 @@ enum BattleOutcome {
 
 class PokemonBattler {
   static const List<int> shieldScenarios = [0, 1, 2];
-
-  static const Map<int, List<String>> cupBans = {
-    1500: [
-      'chansey',
-      'miltank',
-      'mewtwo',
-      'giratina_altered',
-      'groudon',
-      'kyogre',
-      'garchomp',
-      'latios',
-      'latias',
-      'palkia',
-      'dialga',
-      'heatran',
-      'regice',
-      'regirock'
-    ]
-  };
-
-  static bool isBanned(int cpCap, String pokemonId) {
-    return cupBans[cpCap]!.contains(pokemonId);
-  }
 
   static void resetPokemon(
     BattlePokemon self,
@@ -51,41 +28,45 @@ class PokemonBattler {
     BattlePokemon self,
     BattlePokemon opponent, {
     int turn = 1,
-    List<BattleTurnSnapshot>? timeline,
+    bool makeTimeline = false,
   }) {
-    return _bestSelfRating(_allBattleCombinations(
-      self,
-      opponent,
-      turn,
-      timeline ?? [],
-    ))!;
+    return _closestMatchup(_allBattleCombinations(
+          self,
+          opponent,
+          turn,
+          makeTimeline ? [] : null,
+        )) ??
+        BattleResult(
+          self: self,
+          opponent: opponent,
+          timeline: [],
+        );
   }
 
-  static BattleResult _battle(
+  static List<BattleResult> _battle(
     BattlePokemon self,
     BattlePokemon opponent,
     int turn,
-    List<BattleTurnSnapshot> timeline,
+    List<BattleTurnSnapshot>? timeline,
   ) {
     if (_battleComplete(self, opponent, turn)) {
-      return BattleResult(
-        self: self,
-        opponent: opponent,
-        timeline: timeline,
-      );
+      return [
+        BattleResult(
+          self: self,
+          opponent: opponent,
+          timeline: timeline,
+        )
+      ];
     }
 
-    bool chargeMoveUsed = false;
-    List<BattleResult> battleResults = [];
-
-    while (!chargeMoveUsed && !_battleComplete(self, opponent, turn)) {
-      self.fastMoveCooldown -= 1;
-      opponent.fastMoveCooldown -= 1;
+    while (!_battleComplete(self, opponent, turn)) {
+      self.cooldown -= 1;
+      opponent.cooldown -= 1;
 
       if (_chargeMoveSequenceBoth(self, opponent)) {
         _chargeMoveSequenceTieBreak(self, opponent);
 
-        timeline.add(BattleTurnSnapshot(
+        timeline?.add(BattleTurnSnapshot(
           turn: turn,
           self: self,
           opponent: opponent,
@@ -94,37 +75,28 @@ class PokemonBattler {
               '${opponent.name} atk : ${opponent.effectiveAttack}',
         ));
 
-        battleResults.add(battle(
-          self,
-          opponent,
-          turn: ++turn,
-          timeline: timeline,
-        ));
-
-        chargeMoveUsed = true;
+        return _allBattleCombinations(self, opponent, turn + 1, timeline);
       } else {
-        if (_chargeMoveSequenceReady(self, opponent.fastMoveCooldown)) {
+        if (_chargeMoveSequenceReady(self, opponent.cooldown)) {
           _chargeMoveSequence(self, opponent);
 
-          timeline.add(BattleTurnSnapshot(
+          timeline?.add(BattleTurnSnapshot(
             turn: turn,
             self: self,
             opponent: opponent,
             description: '${self.name} used ${self.nextDecidedChargeMove.name}',
           ));
 
-          battleResults.add(battle(
+          return _selfBattleCombinations(
             self,
             opponent,
-            turn: ++turn,
-            timeline: timeline,
-          ));
-
-          chargeMoveUsed = true;
-        } else if (_chargeMoveSequenceReady(opponent, self.fastMoveCooldown)) {
+            turn + 1,
+            timeline,
+          );
+        } else if (_chargeMoveSequenceReady(opponent, self.cooldown)) {
           _chargeMoveSequence(opponent, self);
 
-          timeline.add(BattleTurnSnapshot(
+          timeline?.add(BattleTurnSnapshot(
             turn: turn,
             self: self,
             opponent: opponent,
@@ -132,18 +104,16 @@ class PokemonBattler {
                 '${opponent.name} used ${opponent.nextDecidedChargeMove.name}',
           ));
 
-          battleResults.add(battle(
+          return _opponentBattleCombinations(
             self,
             opponent,
-            turn: ++turn,
-            timeline: timeline,
-          ));
-
-          chargeMoveUsed = true;
+            turn + 1,
+            timeline,
+          );
         } else {
           _fastMoveSequence(self, opponent);
 
-          timeline.add(BattleTurnSnapshot(
+          timeline?.add(BattleTurnSnapshot(
             turn: turn,
             self: self,
             opponent: opponent,
@@ -155,45 +125,23 @@ class PokemonBattler {
       }
     }
 
-    return _bestSelfRating(battleResults) ??
-        BattleResult(
-          self: self,
-          opponent: opponent,
-          timeline: timeline,
-        );
-  }
-
-  static BattleResult? _bestSelfRating(List<BattleResult> results) {
-    if (results.isEmpty) return null;
-    BattleResult closestMatchup = results.first;
-
-    for (BattleResult result in results) {
-      if (result.opponent.rating < result.opponent.rating) {
-        closestMatchup = result;
-      }
-    }
-
-    return closestMatchup;
-  }
-
-  static bool _battleComplete(
-    BattlePokemon self,
-    BattlePokemon opponent,
-    int turn,
-  ) {
-    return self.currentHp <= 0 ||
-        opponent.currentHp <= 0 ||
-        turn > Globals.maxPvpTurns;
+    return [
+      BattleResult(
+        self: self,
+        opponent: opponent,
+        timeline: timeline,
+      )
+    ];
   }
 
   static bool _chargeMoveSequenceBoth(
     BattlePokemon self,
     BattlePokemon opponent,
   ) {
-    return self.fastMoveCooldown == 0 &&
-        opponent.fastMoveCooldown == 0 &&
-        _chargeMoveSequenceReady(self, opponent.fastMoveCooldown) &&
-        _chargeMoveSequenceReady(opponent, self.fastMoveCooldown);
+    return self.cooldown == 0 &&
+        opponent.cooldown == 0 &&
+        _chargeMoveSequenceReady(self, opponent.cooldown) &&
+        _chargeMoveSequenceReady(opponent, self.cooldown);
   }
 
   static bool _chargeMoveSequenceReady(
@@ -251,24 +199,73 @@ class PokemonBattler {
     BattlePokemon self,
     BattlePokemon opponent,
   ) {
-    if (self.fastMoveCooldown == 0) {
+    if (self.cooldown == 0) {
       self.applyFastMoveDamage(opponent);
       self.resetCooldown();
     }
-    if (opponent.fastMoveCooldown == 0) {
+    if (opponent.cooldown == 0) {
       opponent.applyFastMoveDamage(self);
       opponent.resetCooldown();
     }
+  }
+
+  static BattleResult? _closestMatchup(List<BattleResult?> results) {
+    results = results.whereType<BattleResult>().toList();
+
+    results = results as List<BattleResult>;
+
+    BattleResult? selfClosestWin;
+    BattleResult? opponentClosestWin;
+
+    List<BattleResult> wins =
+        results.where((result) => result.outcome == BattleOutcome.win).toList();
+    List<BattleResult> losses = results
+        .where((result) => result.outcome == BattleOutcome.loss)
+        .toList();
+
+    if (wins.isNotEmpty) {
+      selfClosestWin = wins.reduce((rating1, rating2) =>
+          (rating1.ratingDifference > rating2.ratingDifference
+              ? rating1
+              : rating2));
+    }
+
+    if (losses.isNotEmpty) {
+      opponentClosestWin = losses.reduce((rating1, rating2) =>
+          (rating1.ratingDifference > rating2.ratingDifference
+              ? rating1
+              : rating2));
+    }
+
+    if (selfClosestWin == null) {
+      return opponentClosestWin;
+    } else if (opponentClosestWin == null) {
+      return selfClosestWin;
+    }
+
+    return selfClosestWin.self.rating > opponentClosestWin.opponent.rating
+        ? selfClosestWin
+        : opponentClosestWin;
+  }
+
+  static bool _battleComplete(
+    BattlePokemon self,
+    BattlePokemon opponent,
+    int turn,
+  ) {
+    return self.currentHp == 0 ||
+        opponent.currentHp == 0 ||
+        turn > Globals.maxPvpTurns;
   }
 
   static List<BattleResult> _allBattleCombinations(
     BattlePokemon self,
     BattlePokemon opponent,
     int turn,
-    List<BattleTurnSnapshot> timeline,
+    List<BattleTurnSnapshot>? timeline,
   ) {
-    List<BattleResult?> results = [
-      _battle(
+    List<BattleResult> results = [
+      ..._battle(
         BattlePokemon.from(
           self,
           nextDecidedChargeMove: self.selectedChargeMoves.first,
@@ -278,9 +275,9 @@ class PokemonBattler {
           nextDecidedChargeMove: opponent.selectedChargeMoves.first,
         ),
         turn,
-        List<BattleTurnSnapshot>.from(timeline),
+        timeline == null ? null : List<BattleTurnSnapshot>.from(timeline),
       ),
-      _battle(
+      ..._battle(
         BattlePokemon.from(
           self,
           nextDecidedChargeMove: self.selectedChargeMoves.last,
@@ -290,9 +287,9 @@ class PokemonBattler {
           nextDecidedChargeMove: opponent.selectedChargeMoves.last,
         ),
         turn,
-        List<BattleTurnSnapshot>.from(timeline),
+        timeline == null ? null : List<BattleTurnSnapshot>.from(timeline),
       ),
-      _battle(
+      ..._battle(
         BattlePokemon.from(
           self,
           nextDecidedChargeMove: self.selectedChargeMoves.first,
@@ -302,9 +299,9 @@ class PokemonBattler {
           nextDecidedChargeMove: opponent.selectedChargeMoves.last,
         ),
         turn,
-        List<BattleTurnSnapshot>.from(timeline),
+        timeline == null ? null : List<BattleTurnSnapshot>.from(timeline),
       ),
-      _battle(
+      ..._battle(
         BattlePokemon.from(
           self,
           nextDecidedChargeMove: self.selectedChargeMoves.last,
@@ -314,144 +311,83 @@ class PokemonBattler {
           nextDecidedChargeMove: opponent.selectedChargeMoves.first,
         ),
         turn,
-        List<BattleTurnSnapshot>.from(timeline),
+        timeline == null ? null : List<BattleTurnSnapshot>.from(timeline),
       ),
     ];
 
-    /*
-    if (self.selectedFastMove.duration < opponent.selectedFastMove.duration) {
-      results.addAll(_selfMoveAlignmentPriorityCombinations(
-          self, opponent, turn, timeline));
-    } else if (opponent.selectedFastMove.duration <
-        self.selectedFastMove.duration) {
-      results.addAll(_opponentMoveAlignmentPriorityCombinations(
-          self, opponent, turn, timeline));
-    }
-    */
-
-    return results.whereType<BattleResult>().toList();
+    return results;
   }
 
-  static List<BattleResult?> _selfMoveAlignmentPriorityCombinations(
+  static List<BattleResult> _selfBattleCombinations(
     BattlePokemon self,
     BattlePokemon opponent,
     int turn,
-    List<BattleTurnSnapshot> timeline,
-  ) {
+    List<BattleTurnSnapshot>? timeline, {
+    bool prioritizeMoveAlignment = false,
+  }) {
     return [
-      _battle(
+      ..._battle(
         BattlePokemon.from(
           self,
           nextDecidedChargeMove: self.selectedChargeMoves.first,
-          prioritizeMoveAlignment: true,
+          prioritizeMoveAlignment: prioritizeMoveAlignment,
         ),
         BattlePokemon.from(
           opponent,
-          nextDecidedChargeMove: opponent.selectedChargeMoves.first,
+          nextDecidedChargeMove: opponent.nextDecidedChargeMove,
         ),
         turn,
-        List<BattleTurnSnapshot>.from(timeline),
+        timeline == null ? null : List<BattleTurnSnapshot>.from(timeline),
       ),
-      _battle(
+      ..._battle(
         BattlePokemon.from(
           self,
           nextDecidedChargeMove: self.selectedChargeMoves.last,
-          prioritizeMoveAlignment: true,
+          prioritizeMoveAlignment: prioritizeMoveAlignment,
         ),
         BattlePokemon.from(
           opponent,
-          nextDecidedChargeMove: opponent.selectedChargeMoves.last,
+          nextDecidedChargeMove: opponent.nextDecidedChargeMove,
         ),
         turn,
-        List<BattleTurnSnapshot>.from(timeline),
-      ),
-      _battle(
-        BattlePokemon.from(
-          self,
-          nextDecidedChargeMove: self.selectedChargeMoves.first,
-          prioritizeMoveAlignment: true,
-        ),
-        BattlePokemon.from(
-          opponent,
-          nextDecidedChargeMove: opponent.selectedChargeMoves.last,
-        ),
-        turn,
-        List<BattleTurnSnapshot>.from(timeline),
-      ),
-      _battle(
-        BattlePokemon.from(
-          self,
-          nextDecidedChargeMove: self.selectedChargeMoves.last,
-          prioritizeMoveAlignment: true,
-        ),
-        BattlePokemon.from(
-          opponent,
-          nextDecidedChargeMove: opponent.selectedChargeMoves.first,
-        ),
-        turn,
-        List<BattleTurnSnapshot>.from(timeline),
+        timeline == null ? null : List<BattleTurnSnapshot>.from(timeline),
       ),
     ];
   }
 
-  static List<BattleResult?> _opponentMoveAlignmentPriorityCombinations(
+  static List<BattleResult> _opponentBattleCombinations(
     BattlePokemon self,
     BattlePokemon opponent,
     int turn,
-    List<BattleTurnSnapshot> timeline,
-  ) {
+    List<BattleTurnSnapshot>? timeline, {
+    bool prioritizeMoveAlignment = false,
+  }) {
     return [
-      _battle(
+      ..._battle(
         BattlePokemon.from(
           self,
-          nextDecidedChargeMove: self.selectedChargeMoves.first,
+          nextDecidedChargeMove: self.nextDecidedChargeMove,
         ),
         BattlePokemon.from(
           opponent,
           nextDecidedChargeMove: opponent.selectedChargeMoves.first,
-          prioritizeMoveAlignment: true,
+          prioritizeMoveAlignment: prioritizeMoveAlignment,
         ),
         turn,
-        List<BattleTurnSnapshot>.from(timeline),
+        timeline == null ? null : List<BattleTurnSnapshot>.from(timeline),
       ),
-      _battle(
+      ..._battle(
         BattlePokemon.from(
           self,
-          nextDecidedChargeMove: self.selectedChargeMoves.last,
+          nextDecidedChargeMove: self.nextDecidedChargeMove,
         ),
         BattlePokemon.from(
           opponent,
           nextDecidedChargeMove: opponent.selectedChargeMoves.last,
-          prioritizeMoveAlignment: true,
+          prioritizeMoveAlignment: prioritizeMoveAlignment,
         ),
         turn,
-        List<BattleTurnSnapshot>.from(timeline),
-      ),
-      _battle(
-        BattlePokemon.from(
-          self,
-          nextDecidedChargeMove: self.selectedChargeMoves.first,
-        ),
-        BattlePokemon.from(
-          opponent,
-          nextDecidedChargeMove: opponent.selectedChargeMoves.last,
-          prioritizeMoveAlignment: true,
-        ),
-        turn,
-        List<BattleTurnSnapshot>.from(timeline),
-      ),
-      _battle(
-        BattlePokemon.from(
-          self,
-          nextDecidedChargeMove: self.selectedChargeMoves.last,
-        ),
-        BattlePokemon.from(
-          opponent,
-          nextDecidedChargeMove: opponent.selectedChargeMoves.first,
-          prioritizeMoveAlignment: true,
-        ),
-        turn,
-        List<BattleTurnSnapshot>.from(timeline),
+        timeline == null ? null : List<BattleTurnSnapshot>.from(timeline),
       ),
     ];
   }
@@ -545,14 +481,14 @@ class BattleTurnSnapshot {
     DebugCLI.printMulti(self.name, [
       'hp             : ${self.currentHp} / ${self.maxHp}',
       'energy         : ${self.energy}',
-      'cooldown       : ${self.fastMoveCooldown}',
+      'cooldown       : ${self.cooldown}',
       '-' * (1 + DebugCLI.debugHeaderWidth),
       'next charge    : ${self.nextDecidedChargeMove.name}',
     ]);
     DebugCLI.printMulti(opponent.name, [
       'hp             : ${opponent.currentHp} / ${opponent.maxHp}',
       'energy         : ${opponent.energy}',
-      'cooldown       : ${opponent.fastMoveCooldown}',
+      'cooldown       : ${opponent.cooldown}',
       '-' * (1 + DebugCLI.debugHeaderWidth),
       'next charge    : ${opponent.nextDecidedChargeMove.name}',
     ]);

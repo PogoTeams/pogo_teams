@@ -13,4 +13,7 @@ class Globals {
   static const maxPvpTurns = 480;
 
   static const maxPokemonEnergy = 100;
+
+  static const pokemonRatingMagnitude = 1000;
+  static const winShieldMultiplier = 100;
 }

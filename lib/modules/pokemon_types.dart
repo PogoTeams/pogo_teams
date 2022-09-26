@@ -3,7 +3,7 @@ import '../pogo_data/typing.dart';
 import '../pogo_data/pokemon.dart';
 import '../modules/globals.dart';
 
-class TypeModule {
+class PokemonTypes {
   // type effectiveness damage scales
   static const double superEffective = 1.6;
   static const double neutral = 1.0;
@@ -15,30 +15,30 @@ class TypeModule {
   static const double duoImmune = 0.152587890625;
 
   // The master list of ALL type objects
-  static final List<Type> typeList = [
-    Type(typeId: 'normal'),
-    Type(typeId: 'fire'),
-    Type(typeId: 'water'),
-    Type(typeId: 'grass'),
-    Type(typeId: 'electric'),
-    Type(typeId: 'ice'),
-    Type(typeId: 'fighting'),
-    Type(typeId: 'poison'),
-    Type(typeId: 'ground'),
-    Type(typeId: 'flying'),
-    Type(typeId: 'psychic'),
-    Type(typeId: 'bug'),
-    Type(typeId: 'rock'),
-    Type(typeId: 'ghost'),
-    Type(typeId: 'dragon'),
-    Type(typeId: 'dark'),
-    Type(typeId: 'steel'),
-    Type(typeId: 'fairy'),
-    Type(typeId: 'none'),
+  static final List<PokemonType> typeList = [
+    PokemonType(typeId: 'normal'),
+    PokemonType(typeId: 'fire'),
+    PokemonType(typeId: 'water'),
+    PokemonType(typeId: 'grass'),
+    PokemonType(typeId: 'electric'),
+    PokemonType(typeId: 'ice'),
+    PokemonType(typeId: 'fighting'),
+    PokemonType(typeId: 'poison'),
+    PokemonType(typeId: 'ground'),
+    PokemonType(typeId: 'flying'),
+    PokemonType(typeId: 'psychic'),
+    PokemonType(typeId: 'bug'),
+    PokemonType(typeId: 'rock'),
+    PokemonType(typeId: 'ghost'),
+    PokemonType(typeId: 'dragon'),
+    PokemonType(typeId: 'dark'),
+    PokemonType(typeId: 'steel'),
+    PokemonType(typeId: 'fairy'),
+    PokemonType(typeId: 'none'),
   ];
 
   // A master map of ALL type objects
-  static final Map<String, Type> typeMap = {
+  static final Map<String, PokemonType> typeMap = {
     'normal': typeList[0],
     'fire': typeList[1],
     'water': typeList[2],

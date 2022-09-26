@@ -9,7 +9,6 @@ import '../tools/json_tools.dart';
 
 // firestore api
 const String host = 'firestore.googleapis.com';
-const String apiKey = 'AIzaSyB_NsHsIaCKozXv4vX7zPCRXZDzFhgfri0';
 const String commitRequestPath =
     'v1/projects/pogo-teams-host/databases/(default)/documents:commit';
 const String cloudDbName = 'pogo-teams-host';
@@ -18,7 +17,7 @@ const String cloudDbName = 'pogo-teams-host';
 // https://firebase.google.com/docs/firestore/quotas#writes_and_transactions
 const int segmentSize = 500;
 
-void cloudPush() async {
+void cloudPush(String apiKey) async {
   List<dynamic>? cloudWrites =
       await JsonTools.loadJson('bin/json/cloud-writes');
   if (cloudWrites == null) return;

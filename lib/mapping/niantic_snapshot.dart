@@ -424,15 +424,15 @@ void _mapPokemon(Map<String, dynamic> pokemonSrc, String templateId) {
       pokemonEntry['stats'].containsKey('def') &&
       pokemonEntry['stats'].containsKey('hp')) {
     BaseStats stats = BaseStats.fromJson(pokemonEntry['stats']);
-    pokemonEntry['littleCupIVs'] = StatsModule.generateIVSpreads(
+    pokemonEntry['littleCupIVs'] = Stats.generateIVSpreads(
       stats,
       500,
     ).first.toJson();
-    pokemonEntry['greatLeagueIVs'] = StatsModule.generateIVSpreads(
+    pokemonEntry['greatLeagueIVs'] = Stats.generateIVSpreads(
       stats,
       1500,
     ).first.toJson();
-    pokemonEntry['ultraLeagueIVs'] = StatsModule.generateIVSpreads(
+    pokemonEntry['ultraLeagueIVs'] = Stats.generateIVSpreads(
       stats,
       2500,
     ).first.toJson();
