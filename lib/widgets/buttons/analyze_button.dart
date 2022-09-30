@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import 'gradient_button.dart';
-import '../../configs/size_config.dart';
+import '../../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -27,19 +27,19 @@ class AnalyzeButton extends StatelessWidget {
     // Analyze button
     return isEmpty
         ? SizedBox(
-            height: SizeConfig.blockSizeVertical * 8.5,
+            height: Sizing.blockSizeVertical * 8.5,
           )
         : GradientButton(
             child: Text(
               'Analyze',
               style: TextStyle(
-                fontSize: SizeConfig.h1,
+                fontSize: Sizing.h1,
                 color: Colors.white,
               ),
             ),
             onPressed: onPressed,
-            width: SizeConfig.screenWidth * .85,
-            height: SizeConfig.blockSizeVertical * 8.5,
+            width: Sizing.screenWidth * .85,
+            height: Sizing.blockSizeVertical * 8.5,
           );
   }
 }

@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../data/pokemon/pokemon.dart';
+import '../pogo_data/pokemon.dart';
 import 'nodes/pokemon_node.dart';
-import '../configs/size_config.dart';
+import '../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -51,8 +51,8 @@ class PokemonList extends StatelessWidget {
                 onLongPress: () {},
                 child: Padding(
                   padding: EdgeInsets.only(
-                    top: SizeConfig.blockSizeVertical * .5,
-                    bottom: SizeConfig.blockSizeVertical * .5,
+                    top: Sizing.blockSizeVertical * .5,
+                    bottom: Sizing.blockSizeVertical * .5,
                   ),
                   child: PokemonNode.small(
                     pokemon: pokemon[index],
@@ -87,7 +87,7 @@ class PokemonColumn extends StatelessWidget {
           .map(
             (pokemon) => Padding(
               padding: EdgeInsets.only(
-                bottom: SizeConfig.blockSizeHorizontal * 2.0,
+                bottom: Sizing.blockSizeHorizontal * 2.0,
               ),
               child: PokemonNode.small(
                 pokemon: pokemon,

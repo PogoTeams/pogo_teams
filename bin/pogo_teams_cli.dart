@@ -14,7 +14,7 @@ niantic-snapshot -> data/niantic-snapshot.json
 Maps a Niantic data source (niantic.json) to a snapshot of all fields used by
 Pogo Teams (snapshot.json).
 
-cloud-writes -> data/cloud-writes.json
+snapshot-cloud-writes / rankings-cloudwrites -> data/cloud-writes.json
 Maps the snapshot to the firestore commit operation's 'writes' field
 (cloud-writes.json).
 
@@ -34,8 +34,17 @@ void main(List<String> arguments) async {
     case 'niantic-snapshot':
       mapNianticToSnapshot();
       break;
-    case 'cloud-writes':
-      mapSnapshotToCloudWrites();
+    case 'snapshot-cloud-writes':
+      CloudWrites.mapSnapshotDiffToCloudWrites();
+      break;
+    case 'cups-cloud-writes':
+      CloudWrites.mapCupsToCloudWrites();
+      break;
+    case 'rankings-cloud-writes':
+      CloudWrites.mapRankingsToCloudWrites();
+      break;
+    case 'cloud-writes-all':
+      CloudWrites.mapAllCloudWrites();
       break;
     case 'cloud-push':
       if (arguments.length > 1) {

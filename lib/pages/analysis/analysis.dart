@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'user_team_analysis.dart';
 import 'opponent_team_analysis.dart';
 import 'logs_analysis.dart';
-import '../../data/pokemon/pokemon.dart';
-import '../../data/pokemon/pokemon_team.dart';
-import '../../data/masters/type_master.dart';
-import '../../data/pokemon/typing.dart';
+import '../../pogo_data/pokemon.dart';
+import '../../pogo_data/pokemon_team.dart';
+import '../../pogo_data/pokemon_typing.dart';
+import '../../modules/data/pokemon_types.dart';
 import '../../tools/pair.dart';
 
 /*
@@ -41,9 +41,9 @@ class Analysis extends StatefulWidget {
 
 class _AnalysisState extends State<Analysis> {
   // The list of expansion panels
-  List<Pair<Type, double>> defenseThreats = [];
-  List<Pair<Type, double>> offenseCoverage = [];
-  List<Pair<Type, double>> netEffectiveness = [];
+  List<Pair<PokemonType, double>> defenseThreats = [];
+  List<Pair<PokemonType, double>> offenseCoverage = [];
+  List<Pair<PokemonType, double>> netEffectiveness = [];
 
   final ScrollController _scrollController = ScrollController();
 
@@ -54,10 +54,10 @@ class _AnalysisState extends State<Analysis> {
   ) {
     // Get coverage lists
     final defense =
-        TypeMaster.getDefenseCoverage(effectiveness, includedTypesKeys);
+        PokemonTypes.getDefenseCoverage(effectiveness, includedTypesKeys);
 
     final offense =
-        TypeMaster.getOffenseCoverage(pokemonTeam, includedTypesKeys);
+        PokemonTypes.getOffenseCoverage(pokemonTeam, includedTypesKeys);
 
     // Sort the coveraages from high to low
     defense.sort((prev, curr) => ((curr.b - prev.b) * 1000).toInt());
@@ -82,7 +82,7 @@ class _AnalysisState extends State<Analysis> {
         offense.where((pair) => pair.b > pokemonTeam.length).toList();
 
     // Get an overall effectiveness for the bar graph display
-    netEffectiveness = TypeMaster.getMovesWeightedEffectiveness(
+    netEffectiveness = PokemonTypes.getMovesWeightedEffectiveness(
       defense,
       offense,
       includedTypesKeys,
@@ -92,7 +92,7 @@ class _AnalysisState extends State<Analysis> {
     // TBH, this is convoluted, but hey it works...
     // The big complication is the net coverage of all logged opponents also
     // uses this abstraction.
-    final double teamLength = pokemonTeam.length * TypeMaster.notEffective;
+    final double teamLength = pokemonTeam.length * PokemonTypes.notEffective;
     void _scaleEffectiveness(typeData) => typeData.b *= teamLength;
     netEffectiveness.forEach(_scaleEffectiveness);
   }
@@ -106,10 +106,12 @@ class _AnalysisState extends State<Analysis> {
     double loggedPokemonCount = 0;
 
     // Generate the coverage lists, gien the included typing for a given cup
-    defenseThreats = TypeMaster.generateTypeValuePairedList(includedTypesKeys);
-    offenseCoverage = TypeMaster.generateTypeValuePairedList(includedTypesKeys);
+    defenseThreats =
+        PokemonTypes.generateTypeValuePairedList(includedTypesKeys);
+    offenseCoverage =
+        PokemonTypes.generateTypeValuePairedList(includedTypesKeys);
     netEffectiveness =
-        TypeMaster.generateTypeValuePairedList(includedTypesKeys);
+        PokemonTypes.generateTypeValuePairedList(includedTypesKeys);
 
     // Foreach callback
     // Get the effectiveness of a single log, and accumulate it to the coverage
@@ -119,12 +121,12 @@ class _AnalysisState extends State<Analysis> {
 
       // Get coverage lists
       final defense =
-          TypeMaster.getDefenseCoverage(log.effectiveness, includedTypesKeys);
+          PokemonTypes.getDefenseCoverage(log.effectiveness, includedTypesKeys);
       final offense =
-          TypeMaster.getOffenseCoverage(pokemonTeam, includedTypesKeys);
+          PokemonTypes.getOffenseCoverage(pokemonTeam, includedTypesKeys);
 
-      List<Pair<Type, double>> logEffectiveness =
-          TypeMaster.getMovesWeightedEffectiveness(
+      List<Pair<PokemonType, double>> logEffectiveness =
+          PokemonTypes.getMovesWeightedEffectiveness(
         defense,
         offense,
         includedTypesKeys,
@@ -174,7 +176,7 @@ class _AnalysisState extends State<Analysis> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> includedTypesKeys = widget.team.cup.includedTypesKeys;
+    List<String> includedTypesKeys = widget.team.cup.includedTypeKeys;
 
     // Analysis will be on all logged opponent teams
     if (widget.opponentTeams != null) {

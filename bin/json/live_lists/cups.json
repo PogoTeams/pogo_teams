@@ -1,24 +1,46 @@
 [
 	{
-        "cupId": "great_league",
+      "cupId": "great_league",
 		"name": "Great League",
 		"cp": 1500,
-        "partySize": 3,
+      "partySize": 3,
 		"live": true,
 		"exclude": [{
+			"filterType": "tags",
+			"values": ["mega"]
+		}, {
 			"filterType": "pokemonId",
 			"values": [
-				"ditto",
-				"smeargle",
-				"shedinja",
-				"nihilego"
+				"giratina_altered",
+				"cobalion",
+				"terrakion",
+				"virizion"
 			]
-		},	{
+		}],
+		"uiColor": "0xFF2196F3"
+	},
+	{
+      "cupId": "ultra_league",
+		"name": "Ultra League",
+		"cp": 2500,
+      "partySize": 3,
+		"live": true,
+		"exclude": [{
 			"filterType": "tags",
-			"values": [
-				"mega"
-			]
-		}
-	]
+			"values": ["mega"]
+		}],
+		"uiColor": "0xFFC8B603"
+	},
+	{
+      "cupId": "master_league",
+		"name": "Master League",
+		"cp": 9999,
+      "partySize": 3,
+		"live": true,
+		"exclude": [{
+			"filterType": "tags",
+			"values": ["mega"]
+		}],
+		"uiColor": "0xFF9C27B0"
 	}
 ]

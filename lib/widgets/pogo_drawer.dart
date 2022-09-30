@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Local Imports
-import '../configs/size_config.dart';
-import '../data/globals.dart' as globals;
+import '../modules/data/globals.dart';
+import '../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -40,11 +40,11 @@ class PogoDrawer extends StatelessWidget {
 
   Widget _buildDrawerHeader() {
     return SizedBox(
-      height: SizeConfig.blockSizeVertical * 30.0,
+      height: Sizing.blockSizeVertical * 30.0,
       child: DrawerHeader(
         child: Image.asset(
           'assets/pogo_teams_icon.png',
-          scale: SizeConfig.blockSizeHorizontal * .5,
+          scale: Sizing.blockSizeHorizontal * .5,
         ),
       ),
     );
@@ -55,7 +55,7 @@ class PogoDrawer extends StatelessWidget {
     return Drawer(
       child: Container(
         padding: EdgeInsets.only(
-          bottom: SizeConfig.blockSizeVertical * 4.0,
+          bottom: Sizing.blockSizeVertical * 4.0,
         ),
         decoration: _buildGradientDecoration(),
         child: Column(
@@ -73,14 +73,14 @@ class PogoDrawer extends StatelessWidget {
                       children: [
                         Text(
                           'Teams',
-                          style: TextStyle(fontSize: SizeConfig.h1),
+                          style: TextStyle(fontSize: Sizing.h1),
                         ),
                         SizedBox(
-                          width: SizeConfig.blockSizeHorizontal * 3.0,
+                          width: Sizing.blockSizeHorizontal * 3.0,
                         ),
                         Image.asset(
                           'assets/pokeball_icon.png',
-                          width: SizeConfig.h2 * 1.2,
+                          width: Sizing.h2 * 1.2,
                         ),
                       ],
                     ),
@@ -97,14 +97,14 @@ class PogoDrawer extends StatelessWidget {
                       children: [
                         Text(
                           'Rankings',
-                          style: TextStyle(fontSize: SizeConfig.h1),
+                          style: TextStyle(fontSize: Sizing.h1),
                         ),
                         SizedBox(
-                          width: SizeConfig.blockSizeHorizontal * 3.0,
+                          width: Sizing.blockSizeHorizontal * 3.0,
                         ),
                         Icon(
                           Icons.bar_chart,
-                          size: SizeConfig.h2 * 1.5,
+                          size: Sizing.h2 * 1.5,
                         ),
                       ],
                     ),
@@ -119,7 +119,7 @@ class PogoDrawer extends StatelessWidget {
 
             // Spacer
             SizedBox(
-              height: SizeConfig.blockSizeVertical * 2.0,
+              height: Sizing.blockSizeVertical * 2.0,
             ),
 
             Row(
@@ -127,16 +127,16 @@ class PogoDrawer extends StatelessWidget {
               children: [
                 // Current version
                 Text(
-                  globals.version,
+                  Globals.version,
                   style: TextStyle(
-                    fontSize: SizeConfig.h2,
+                    fontSize: Sizing.h2,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
 
                 // GitHub link
                 SizedBox(
-                  width: SizeConfig.blockSizeHorizontal * 10.0,
+                  width: Sizing.blockSizeHorizontal * 10.0,
                   child: IconButton(
                     padding: EdgeInsets.zero,
                     onPressed: _launchGitHubUrl,

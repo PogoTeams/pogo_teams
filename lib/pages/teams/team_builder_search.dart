@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../configs/size_config.dart';
-import '../../data/pokemon/pokemon.dart';
-import '../../data/cup.dart';
+import '../../modules/ui/sizing.dart';
+import '../../pogo_data/pokemon.dart';
+import '../../pogo_data/cup.dart';
+import '../../pogo_data/pokemon_team.dart';
 import '../../widgets/pokemon_list.dart';
 import '../../widgets/buttons/exit_button.dart';
 import '../../widgets/pogo_text_field.dart';
@@ -13,8 +14,7 @@ import '../../widgets/dropdowns/team_size_dropdown.dart';
 import '../../widgets/dropdowns/win_loss_dropdown.dart';
 import '../../widgets/buttons/filter_button.dart';
 import '../../widgets/nodes/team_node.dart';
-import '../../data/pokemon/pokemon_team.dart';
-import '../../data/globals.dart' as globals;
+import '../../modules/data/gamemaster.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -41,7 +41,7 @@ class TeamBuilderSearch extends StatefulWidget {
 }
 
 class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
-  late Cup _cup = Cup.from(widget.cup);
+  late Cup _cup = widget.cup;
   late final PokemonTeam _builderTeam;
 
   // The current index of the team the user is editing
@@ -74,8 +74,8 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
         bool isMatch = false;
 
         for (int i = 0; i < termsLen && !isMatch; ++i) {
-          isMatch = pokemon.speciesName.toLowerCase().startsWith(terms[i]) ||
-              pokemon.typing.containsKey(terms[i]);
+          isMatch = pokemon.name.toLowerCase().startsWith(terms[i]) ||
+              pokemon.typing.containsTypeId(terms[i]);
         }
 
         return isMatch;
@@ -97,7 +97,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
       emptyTransparent: true,
       footer: Padding(
         padding: EdgeInsets.only(
-          bottom: SizeConfig.blockSizeVertical * 2.0,
+          bottom: Sizing.blockSizeVertical * 2.0,
         ),
         child: _buildTeamNodeFooter(),
       ),
@@ -115,7 +115,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
             (_builderTeam as LogPokemonTeam).setWinLossKey(winLossKey);
           });
         },
-        width: SizeConfig.screenWidth,
+        width: Sizing.screenWidth,
       );
     }
 
@@ -126,7 +126,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
         CupDropdown(
           cup: _cup,
           onCupChanged: _onCupChanged,
-          width: SizeConfig.screenWidth * .65,
+          width: Sizing.screenWidth * .65,
         ),
 
         // Dropdown to select team size
@@ -155,7 +155,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   // One to discard the changes, and another to confirm
   Widget _buildFloatingActionButtons() {
     return SizedBox(
-      width: SizeConfig.screenWidth * .87,
+      width: Sizing.screenWidth * .87,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -221,9 +221,9 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     // Dex is a special case where all Pokemon are in the list
     // Otherwise get the list from the ratings category
     if ('dex' == _selectedCategory) {
-      pokemon = globals.gamemaster.pokemon;
+      pokemon = Gamemaster.pokemonList;
     } else {
-      pokemon = _cup.getRankedPokemonList(_selectedCategory);
+      pokemon = Gamemaster.getRankedPokemonList(_cup, _selectedCategory);
     }
 
     _filterPokemonList();
@@ -248,7 +248,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     _builderIndex = widget.focusIndex;
 
     // Get the selected cup and list of Pokemon based on the category
-    pokemon = widget.cup.getRankedPokemonList(_selectedCategory);
+    pokemon = Gamemaster.getRankedPokemonList(widget.cup, _selectedCategory);
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);
@@ -273,8 +273,8 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
         bottom: false,
         child: Padding(
           padding: EdgeInsets.only(
-            left: SizeConfig.blockSizeHorizontal * 2.0,
-            right: SizeConfig.blockSizeHorizontal * 2.0,
+            left: Sizing.blockSizeHorizontal * 2.0,
+            right: Sizing.blockSizeHorizontal * 2.0,
           ),
           child: Column(
             children: [
@@ -282,7 +282,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
 
               // Spacer
               SizedBox(
-                height: SizeConfig.blockSizeVertical * 1.0,
+                height: Sizing.blockSizeVertical * 1.0,
               ),
 
               Row(
@@ -291,7 +291,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
                   // User input text field
                   PogoTextField(
                     controller: _searchController,
-                    width: SizeConfig.screenWidth * .8,
+                    width: Sizing.screenWidth * .8,
                     onClear: () => setState(() {
                       _searchController.clear();
                     }),
@@ -301,7 +301,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
                   FilterButton(
                     onSelected: _filterCategory,
                     selectedCategory: _selectedCategory,
-                    size: SizeConfig.blockSizeHorizontal * 12.0,
+                    size: Sizing.blockSizeHorizontal * 12.0,
                     dex: true,
                   ),
                 ],
@@ -309,7 +309,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
 
               // Spacer
               SizedBox(
-                height: SizeConfig.blockSizeVertical * 1.0,
+                height: Sizing.blockSizeVertical * 1.0,
               ),
 
               _buildPokemonList(),

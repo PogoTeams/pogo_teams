@@ -1,7 +1,7 @@
 // Local
 import 'pokemon_battler.dart';
 import '../pogo_data/pokemon.dart';
-import '../modules/debug_cli.dart';
+import '../modules/data/debug_cli.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -28,15 +28,15 @@ class BattleResult {
       selfRating = 1;
       opponentRating = 1;
     }
-    self.rating = selfRating;
-    opponent.rating = opponentRating;
+    self.currentRating = selfRating;
+    opponent.currentRating = opponentRating;
   }
 
   Map<String, dynamic> toJson() {
     return {
       'opponent': {
         'pokemonId': opponent.pokemonId,
-        'rating': opponent.rating,
+        'rating': opponent.currentRating,
         'selectedFastMove': opponent.selectedFastMove.moveId,
         'selectedChargeMoves': [
           opponent.selectedChargeMoves.first.moveId,
@@ -44,7 +44,7 @@ class BattleResult {
         ],
       },
       'outcome': battleOutcomeString,
-      'rating': self.rating,
+      'rating': self.currentRating,
       'selectedFastMove': self.selectedFastMove.moveId,
       'selectedChargeMoves': [
         self.selectedChargeMoves.first.moveId,
@@ -59,7 +59,7 @@ class BattleResult {
   List<BattleTurnSnapshot>? timeline;
 
   num get ratingDifference {
-    return self.rating - opponent.rating;
+    return self.currentRating - opponent.currentRating;
   }
 
   String get battleOutcomeString {

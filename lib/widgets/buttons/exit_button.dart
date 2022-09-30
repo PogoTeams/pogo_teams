@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../configs/size_config.dart';
+import '../../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -28,12 +28,12 @@ class ExitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     // Block size from MediaQuery
     return Container(
-      height: SizeConfig.blockSizeHorizontal * 9.0,
-      width: SizeConfig.blockSizeHorizontal * 9.0,
+      height: Sizing.blockSizeHorizontal * 9.0,
+      width: Sizing.blockSizeHorizontal * 9.0,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: SizeConfig.blockSizeHorizontal * 0.7,
+          width: Sizing.blockSizeHorizontal * 0.7,
         ),
         shape: BoxShape.circle,
       ),
@@ -41,7 +41,7 @@ class ExitButton extends StatelessWidget {
         heroTag: key,
         child: Icon(
           icon.icon,
-          size: SizeConfig.blockSizeHorizontal * 5.0,
+          size: Sizing.blockSizeHorizontal * 5.0,
         ),
         foregroundColor: Colors.white,
         backgroundColor: backgroundColor,

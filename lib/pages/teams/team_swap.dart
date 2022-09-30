@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../configs/size_config.dart';
-import '../../data/pokemon/pokemon.dart';
+import '../../modules/ui/sizing.dart';
+import '../../pogo_data/pokemon.dart';
 import '../../widgets/buttons/exit_button.dart';
 import '../../widgets/buttons/pokemon_action_button.dart';
 import '../../widgets/nodes/pokemon_node.dart';
-import '../../data/pokemon/pokemon_team.dart';
+import '../../pogo_data/pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -49,7 +49,7 @@ class _TeamSwapState extends State<TeamSwap> {
       label: 'Swap Out',
       icon: Icon(
         Icons.swap_horiz_rounded,
-        size: SizeConfig.blockSizeHorizontal * 5.0,
+        size: Sizing.blockSizeHorizontal * 5.0,
         color: Colors.white,
       ),
       onPressed: _onSwap,
@@ -68,9 +68,9 @@ class _TeamSwapState extends State<TeamSwap> {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(
-          top: SizeConfig.blockSizeVertical * 1.0,
-          left: SizeConfig.blockSizeHorizontal * 2.0,
-          right: SizeConfig.blockSizeHorizontal * 2.0,
+          top: Sizing.blockSizeVertical * 1.0,
+          left: Sizing.blockSizeHorizontal * 2.0,
+          right: Sizing.blockSizeHorizontal * 2.0,
         ),
         child: ListView(
           children: [
@@ -78,26 +78,26 @@ class _TeamSwapState extends State<TeamSwap> {
             PokemonNode.small(pokemon: _swap),
 
             SizedBox(
-              height: SizeConfig.blockSizeVertical * 2.0,
+              height: Sizing.blockSizeVertical * 2.0,
             ),
 
             Center(
               child: Text(
                 'Team Swap',
                 style: TextStyle(
-                  fontSize: SizeConfig.h2,
+                  fontSize: Sizing.h2,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: SizeConfig.blockSizeHorizontal * .5,
+                  letterSpacing: Sizing.blockSizeHorizontal * .5,
                 ),
               ),
             ),
 
             // Horizontal divider
             Divider(
-              height: SizeConfig.blockSizeVertical * 5.0,
-              thickness: SizeConfig.blockSizeHorizontal * 1.0,
-              indent: SizeConfig.blockSizeHorizontal * 5.0,
-              endIndent: SizeConfig.blockSizeHorizontal * 5.0,
+              height: Sizing.blockSizeVertical * 5.0,
+              thickness: Sizing.blockSizeHorizontal * 1.0,
+              indent: Sizing.blockSizeHorizontal * 5.0,
+              endIndent: Sizing.blockSizeHorizontal * 5.0,
             ),
 
             // List of the current selected team
@@ -107,8 +107,8 @@ class _TeamSwapState extends State<TeamSwap> {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: EdgeInsets.only(
-                    top: SizeConfig.blockSizeVertical * .5,
-                    bottom: SizeConfig.blockSizeVertical * .5,
+                    top: Sizing.blockSizeVertical * .5,
+                    bottom: Sizing.blockSizeVertical * .5,
                   ),
                   child: PokemonNode.large(
                     pokemon: _pokemonTeam[index],
@@ -120,7 +120,7 @@ class _TeamSwapState extends State<TeamSwap> {
             ),
 
             SizedBox(
-              height: SizeConfig.blockSizeVertical * 5.0,
+              height: Sizing.blockSizeVertical * 5.0,
             ),
           ],
         ),
@@ -128,7 +128,7 @@ class _TeamSwapState extends State<TeamSwap> {
 
       // Exit to Team Builder button
       floatingActionButton: SizedBox(
-        width: SizeConfig.screenWidth * .87,
+        width: Sizing.screenWidth * .87,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

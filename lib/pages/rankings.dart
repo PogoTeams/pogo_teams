@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import '../configs/size_config.dart';
-import '../data/pokemon/pokemon.dart';
-import '../data/cup.dart';
+import '../modules/ui/sizing.dart';
+import '../pogo_data/pokemon.dart';
+import '../pogo_data/cup.dart';
 import '../widgets/pokemon_list.dart';
 import '../widgets/pogo_text_field.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
 import '../widgets/buttons/filter_button.dart';
-import '../data/globals.dart' as globals;
+import '../modules/data/gamemaster.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -46,8 +46,8 @@ class _RankingsState extends State<Rankings> {
     if (newCup == null) return;
 
     setState(() {
-      cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == newCup,
-          orElse: () => globals.gamemaster.cups[0]);
+      cup = Gamemaster.cups.firstWhere((cup) => cup.cupId == newCup,
+          orElse: () => Gamemaster.cups.first);
       _filterCategory(_selectedCategory);
     });
   }
@@ -57,7 +57,7 @@ class _RankingsState extends State<Rankings> {
   void _filterCategory(dynamic rankingsCategory) {
     _selectedCategory = rankingsCategory;
 
-    pokemon = cup.getRankedPokemonList(_selectedCategory);
+    pokemon = Gamemaster.getRankedPokemonList(cup, rankingsCategory);
 
     _filterPokemonList();
   }
@@ -78,8 +78,8 @@ class _RankingsState extends State<Rankings> {
         bool isMatch = false;
 
         for (int i = 0; i < termsLen && !isMatch; ++i) {
-          isMatch = pokemon.speciesName.toLowerCase().startsWith(terms[i]) ||
-              pokemon.typing.containsKey(terms[i]);
+          isMatch = pokemon.name.toLowerCase().startsWith(terms[i]) ||
+              pokemon.typing.containsTypeId(terms[i]);
         }
 
         return isMatch;
@@ -93,8 +93,8 @@ class _RankingsState extends State<Rankings> {
   Widget _buildDropdowns() {
     return Padding(
       padding: EdgeInsets.only(
-        left: SizeConfig.blockSizeHorizontal * 1.0,
-        right: SizeConfig.blockSizeHorizontal * 1.0,
+        left: Sizing.blockSizeHorizontal * 1.0,
+        right: Sizing.blockSizeHorizontal * 1.0,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,14 +103,14 @@ class _RankingsState extends State<Rankings> {
           CupDropdown(
             cup: cup,
             onCupChanged: _onCupChanged,
-            width: SizeConfig.screenWidth * .7,
+            width: Sizing.screenWidth * .7,
           ),
 
           // Category filter dropdown
           FilterButton(
             onSelected: _filterCategory,
             selectedCategory: _selectedCategory,
-            size: SizeConfig.blockSizeHorizontal * 12.0,
+            size: Sizing.blockSizeHorizontal * 12.0,
           ),
         ],
       ),
@@ -122,8 +122,8 @@ class _RankingsState extends State<Rankings> {
   void initState() {
     super.initState();
 
-    cup = globals.gamemaster.cups[0];
-    pokemon = cup.getRankedPokemonList(_selectedCategory);
+    cup = Gamemaster.cups.first;
+    pokemon = Gamemaster.getRankedPokemonList(cup, _selectedCategory);
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);
@@ -145,7 +145,7 @@ class _RankingsState extends State<Rankings> {
 
     return Padding(
       padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeVertical * 2.0,
+        top: Sizing.blockSizeVertical * 2.0,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,7 +155,7 @@ class _RankingsState extends State<Rankings> {
 
           // Spacer
           SizedBox(
-            height: SizeConfig.blockSizeVertical * 2.0,
+            height: Sizing.blockSizeVertical * 2.0,
           ),
 
           // User text input
@@ -168,7 +168,7 @@ class _RankingsState extends State<Rankings> {
 
           // Spacer
           SizedBox(
-            height: SizeConfig.blockSizeVertical * 2.0,
+            height: Sizing.blockSizeVertical * 2.0,
           ),
 
           // Build list

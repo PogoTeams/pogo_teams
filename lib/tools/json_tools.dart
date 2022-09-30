@@ -23,19 +23,12 @@ class JsonTools {
     return jsonDecode(await File(filename).readAsString());
   }
 
-  static Future<void> writeJson(dynamic contents, String filename,
-      {String? copyFilename}) async {
+  static Future<void> writeJson(dynamic contents, String filename) async {
     if (!filename.endsWith('.json')) {
       filename += '.json';
     }
     File writeFile = await File(filename).create();
     JsonEncoder encoder = const JsonEncoder.withIndent('  ');
     writeFile = await writeFile.writeAsString(encoder.convert(contents));
-    if (copyFilename != null) {
-      if (!copyFilename.endsWith('.json')) {
-        copyFilename += '.json';
-      }
-      await writeFile.copy(copyFilename);
-    }
   }
 }

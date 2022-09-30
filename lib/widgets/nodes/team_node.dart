@@ -1,12 +1,13 @@
 // Flutter Imports
 import 'package:flutter/material.dart';
 
-import '../../configs/size_config.dart';
-import '../../data/cup.dart';
-import '../../data/pokemon/pokemon.dart';
-import '../../data/pokemon/pokemon_team.dart';
 // Local Imports
 import 'pokemon_node.dart';
+import '../../pogo_data/cup.dart';
+import '../../pogo_data/pokemon.dart';
+import '../../pogo_data/pokemon_team.dart';
+import '../../modules/ui/sizing.dart';
+import '../../modules/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -50,24 +51,24 @@ class TeamNode extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(
-        left: SizeConfig.blockSizeHorizontal * 2.0,
-        right: SizeConfig.blockSizeHorizontal * 2.0,
+        left: Sizing.blockSizeHorizontal * 2.0,
+        right: Sizing.blockSizeHorizontal * 2.0,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            cup.title,
+            cup.name,
             style: TextStyle(
-              fontSize: SizeConfig.h2,
+              fontSize: Sizing.h2,
               fontStyle: FontStyle.italic,
             ),
           ),
           Text(
             'Win Rate : ${(team as UserPokemonTeam).getWinRate()} %',
             style: TextStyle(
-              fontSize: SizeConfig.h3,
+              fontSize: Sizing.h3,
               fontStyle: FontStyle.italic,
             ),
           ),
@@ -88,8 +89,8 @@ class TeamNode extends StatelessWidget {
 
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisSpacing: SizeConfig.blockSizeHorizontal * 3.0,
-        mainAxisSpacing: SizeConfig.blockSizeHorizontal * 3.0,
+        crossAxisSpacing: Sizing.blockSizeHorizontal * 3.0,
+        mainAxisSpacing: Sizing.blockSizeHorizontal * 3.0,
         crossAxisCount: 3,
       ),
       shrinkWrap: true,
@@ -106,8 +107,8 @@ class TeamNode extends StatelessWidget {
   Widget _buildFocusNodes(List<Pokemon?> pokemonTeam) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisSpacing: SizeConfig.blockSizeHorizontal * 1.0,
-        mainAxisSpacing: SizeConfig.blockSizeHorizontal * 1.0,
+        crossAxisSpacing: Sizing.blockSizeHorizontal * 1.0,
+        mainAxisSpacing: Sizing.blockSizeHorizontal * 1.0,
         crossAxisCount: 3,
       ),
       shrinkWrap: true,
@@ -132,7 +133,7 @@ class TeamNode extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          width: SizeConfig.blockSizeHorizontal * 1.0,
+          width: Sizing.blockSizeHorizontal * 1.0,
           color: _color,
         ),
         borderRadius: BorderRadius.circular(25),
@@ -151,17 +152,17 @@ class TeamNode extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeVertical * 1.0,
-        bottom: SizeConfig.blockSizeVertical * 1.0,
+        top: Sizing.blockSizeVertical * 1.0,
+        bottom: Sizing.blockSizeVertical * 1.0,
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: cup.cupColor,
+          color: PogoColors.getCupColor(cup.cupId),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomRight,
             colors: [
-              cup.cupColor,
+              PogoColors.getCupColor(cup.cupId),
               const Color(0xBF29F19C),
             ],
             tileMode: TileMode.clamp,
@@ -173,9 +174,9 @@ class TeamNode extends StatelessWidget {
         child: Padding(
           padding: padding ??
               EdgeInsets.only(
-                top: SizeConfig.blockSizeVertical * 1.0,
-                left: SizeConfig.blockSizeHorizontal * 3.0,
-                right: SizeConfig.blockSizeHorizontal * 3.0,
+                top: Sizing.blockSizeVertical * 1.0,
+                left: Sizing.blockSizeHorizontal * 3.0,
+                right: Sizing.blockSizeHorizontal * 3.0,
               ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,7 +187,7 @@ class TeamNode extends StatelessWidget {
               // A gridview of the Pokemon in this team
               Padding(
                 padding: EdgeInsets.only(
-                  top: SizeConfig.blockSizeVertical,
+                  top: Sizing.blockSizeVertical,
                 ),
                 child: _buildPokemonNodes(),
               ),

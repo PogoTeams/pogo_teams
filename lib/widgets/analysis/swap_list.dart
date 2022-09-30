@@ -2,11 +2,12 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../data/pokemon/typing.dart';
-import '../../data/pokemon/pokemon_team.dart';
-import '../../data/pokemon/pokemon.dart';
+import '../../pogo_data/pokemon_team.dart';
+import '../../pogo_data/pokemon.dart';
+import '../../pogo_data/pokemon_typing.dart';
 import '../nodes/pokemon_node.dart';
-import '../../configs/size_config.dart';
+import '../../modules/ui/sizing.dart';
+import '../../modules/data/gamemaster.dart';
 import '../buttons/pokemon_action_button.dart';
 
 /*
@@ -29,7 +30,7 @@ class SwapList extends StatelessWidget {
   final Function(Pokemon) onSwap;
   final Function(Pokemon) onAdd;
   final UserPokemonTeam team;
-  final List<Type> types;
+  final List<PokemonType> types;
 
   // Either 1 or 2 footer buttons will display for a Pokemon's node.
   // If there is free space in the Pokemon team, render add and swap buttons.
@@ -40,23 +41,23 @@ class SwapList extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           PokemonActionButton(
-            width: SizeConfig.screenWidth * .35,
+            width: Sizing.screenWidth * .35,
             pokemon: pokemon,
             label: 'Add To Team',
             icon: Icon(
               Icons.add,
-              size: SizeConfig.blockSizeHorizontal * 5.0,
+              size: Sizing.blockSizeHorizontal * 5.0,
               color: Colors.white,
             ),
             onPressed: onAdd,
           ),
           PokemonActionButton(
-            width: SizeConfig.screenWidth * .35,
+            width: Sizing.screenWidth * .35,
             pokemon: pokemon,
             label: 'Team Swap',
             icon: Icon(
               Icons.swap_horiz_rounded,
-              size: SizeConfig.blockSizeHorizontal * 5.0,
+              size: Sizing.blockSizeHorizontal * 5.0,
               color: Colors.white,
             ),
             onPressed: onSwap,
@@ -70,7 +71,7 @@ class SwapList extends StatelessWidget {
       label: 'Team Swap',
       icon: Icon(
         Icons.swap_horiz_rounded,
-        size: SizeConfig.blockSizeHorizontal * 5.0,
+        size: Sizing.blockSizeHorizontal * 5.0,
         color: Colors.white,
       ),
       onPressed: onSwap,
@@ -79,16 +80,20 @@ class SwapList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Pokemon> counters =
-        team.cup.getFilteredRankedPokemonList(types, 'overall', limit: 20);
+    List<Pokemon> counters = Gamemaster.getFilteredRankedPokemonList(
+      team.cup,
+      types,
+      'overall',
+      limit: 20,
+    );
 
     return ListView.builder(
       shrinkWrap: true,
       itemCount: counters.length,
       itemBuilder: (context, index) => Padding(
         padding: EdgeInsets.only(
-          top: SizeConfig.blockSizeVertical * .5,
-          bottom: SizeConfig.blockSizeVertical * .5,
+          top: Sizing.blockSizeVertical * .5,
+          bottom: Sizing.blockSizeVertical * .5,
         ),
         child: PokemonNode.large(
           pokemon: counters[index],

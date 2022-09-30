@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../configs/size_config.dart';
+import '../../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -46,7 +46,7 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
             child: Text(
               size.toString(),
               style: TextStyle(
-                fontSize: SizeConfig.h2,
+                fontSize: Sizing.h2,
                 color: size == widget.size ? Colors.yellow : Colors.white,
               ),
             ),
@@ -57,9 +57,9 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
 
     return Container(
       alignment: Alignment.center,
-      width: SizeConfig.screenWidth * .2,
+      width: Sizing.screenWidth * .2,
       padding: EdgeInsets.only(
-        right: SizeConfig.blockSizeHorizontal * 2.0,
+        right: Sizing.blockSizeHorizontal * 2.0,
       ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -73,7 +73,7 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
         ),
         border: Border.all(
           color: Colors.white,
-          width: SizeConfig.blockSizeHorizontal * .4,
+          width: Sizing.blockSizeHorizontal * .4,
         ),
         borderRadius: BorderRadius.circular(100.0),
       ),
@@ -85,7 +85,7 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
           value: widget.size,
           icon: Icon(
             Icons.arrow_drop_down_circle,
-            size: SizeConfig.blockSizeVertical * 3.0,
+            size: Sizing.blockSizeVertical * 3.0,
           ),
           style: DefaultTextStyle.of(context).style,
           onChanged: widget.onTeamSizeChanged,

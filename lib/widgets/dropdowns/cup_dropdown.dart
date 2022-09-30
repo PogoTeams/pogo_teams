@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../data/cup.dart';
-import '../../configs/size_config.dart';
-import '../../data/globals.dart' as globals;
+import '../../pogo_data/cup.dart';
+import '../../modules/ui/sizing.dart';
+import '../../modules/ui/pogo_colors.dart';
+import '../../modules/data/gamemaster.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -33,10 +34,10 @@ class CupDropdown extends StatefulWidget {
 class _CupDropdownState extends State<CupDropdown>
     with AutomaticKeepAliveClientMixin {
   // List of pvp cups
-  final List<Cup> cups = globals.gamemaster.cups;
+  final List<Cup> cups = Gamemaster.cups;
 
   // List of pvp cup names
-  late final List<String> cupNames = cups.map((cup) => cup.title).toList();
+  late final List<String> cupNames = cups.map((cup) => cup.name).toList();
 
   // List of dropdown menu items
   late final cupOptions = cupNames.map<DropdownMenuItem<String>>(
@@ -47,7 +48,7 @@ class _CupDropdownState extends State<CupDropdown>
           child: Text(
             cupName,
             style: TextStyle(
-              fontSize: SizeConfig.h2,
+              fontSize: Sizing.h2,
             ),
           ),
         ),
@@ -68,18 +69,21 @@ class _CupDropdownState extends State<CupDropdown>
       alignment: Alignment.center,
       width: widget.width,
       padding: EdgeInsets.only(
-        right: SizeConfig.blockSizeHorizontal * 2.0,
+        right: Sizing.blockSizeHorizontal * 2.0,
       ),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: SizeConfig.blockSizeHorizontal * .4,
+          width: Sizing.blockSizeHorizontal * .4,
         ),
         borderRadius: BorderRadius.circular(100.0),
         gradient: LinearGradient(
           begin: Alignment.bottomCenter,
           end: Alignment.centerRight,
-          colors: [_selectedCup.cupColor, Colors.transparent],
+          colors: [
+            PogoColors.getCupColor(_selectedCup.cupId),
+            Colors.transparent,
+          ],
           tileMode: TileMode.clamp,
         ),
       ),
@@ -88,10 +92,10 @@ class _CupDropdownState extends State<CupDropdown>
       child: DropdownButtonHideUnderline(
         child: DropdownButton(
           isExpanded: true,
-          value: _selectedCup.title,
+          value: _selectedCup.name,
           icon: Icon(
             Icons.arrow_drop_down_circle,
-            size: SizeConfig.blockSizeVertical * 3.0,
+            size: Sizing.blockSizeVertical * 3.0,
           ),
           style: DefaultTextStyle.of(context).style,
           onChanged: widget.onCupChanged,

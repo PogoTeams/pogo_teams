@@ -1,4 +1,4 @@
-import '../modules/globals.dart';
+import '../modules/data/globals.dart';
 
 class PokemonStats {
   PokemonStats({

@@ -4,14 +4,17 @@ import 'package:flutter/material.dart';
 // Local Imports
 import 'empty_node.dart';
 import 'move_node.dart';
-import '../../configs/size_config.dart';
-import '../../data/pokemon/pokemon.dart';
-import '../../data/cup.dart';
+import '../../pogo_data/pokemon.dart';
+import '../../pogo_data/cup.dart';
 import '../pvp_stats.dart';
 import '../dropdowns/move_dropdowns.dart';
 import '../traits_icons.dart';
 import '../colored_container.dart';
 import '../formatted_pokemon_name.dart';
+import '../../modules/data/stats.dart';
+import '../../modules/ui/sizing.dart';
+import '../../modules/ui/pogo_colors.dart';
+import '../../modules/ui/pogo_icons.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -29,8 +32,8 @@ class PokemonNode extends StatelessWidget {
     this.emptyTransparent = false,
     this.padding,
   }) : super(key: key) {
-    width = SizeConfig.blockSizeHorizontal * 25.0;
-    height = SizeConfig.blockSizeHorizontal * 25.0;
+    width = Sizing.blockSizeHorizontal * 25.0;
+    height = Sizing.blockSizeHorizontal * 25.0;
     cup = null;
     dropdowns = false;
     rating = false;
@@ -52,7 +55,7 @@ class PokemonNode extends StatelessWidget {
     this.rating = false,
   }) : super(key: key) {
     width = double.infinity;
-    height = SizeConfig.blockSizeVertical * 15.0;
+    height = Sizing.blockSizeVertical * 15.0;
 
     body = _SmallNodeBody(
       pokemon: pokemon!,
@@ -74,7 +77,7 @@ class PokemonNode extends StatelessWidget {
     this.padding,
   }) : super(key: key) {
     width = double.infinity;
-    height = SizeConfig.blockSizeVertical * 22.0;
+    height = Sizing.blockSizeVertical * 22.0;
     dropdowns = false;
     rating = false;
 
@@ -117,10 +120,10 @@ class PokemonNode extends StatelessWidget {
           : ColoredContainer(
               padding: padding ??
                   EdgeInsets.only(
-                    top: SizeConfig.blockSizeVertical * .5,
-                    left: SizeConfig.blockSizeHorizontal * 2.0,
-                    right: SizeConfig.blockSizeHorizontal * 2.0,
-                    bottom: SizeConfig.blockSizeVertical * .5,
+                    top: Sizing.blockSizeVertical * .5,
+                    left: Sizing.blockSizeHorizontal * 2.0,
+                    right: Sizing.blockSizeHorizontal * 2.0,
+                    bottom: Sizing.blockSizeVertical * .5,
                   ),
               pokemon: pokemon!,
               child: onPressed == null
@@ -149,15 +152,15 @@ class _SquareNodeBody extends StatelessWidget {
       children: [
         // Pokemon name
         FormattedPokemonName(
-          name: pokemon.speciesName,
+          name: pokemon.name,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: SizeConfig.h3,
+            fontSize: Sizing.h3,
             fontWeight: FontWeight.bold,
             fontFamily: DefaultTextStyle.of(context).style.fontFamily,
           ),
           suffixStyle: TextStyle(
-            fontSize: SizeConfig.p,
+            fontSize: Sizing.p,
             fontFamily: DefaultTextStyle.of(context).style.fontFamily,
           ),
         ),
@@ -165,7 +168,7 @@ class _SquareNodeBody extends StatelessWidget {
         // A line divider
         Divider(
           color: Colors.white,
-          thickness: SizeConfig.blockSizeHorizontal * 0.2,
+          thickness: Sizing.blockSizeHorizontal * 0.2,
         ),
 
         TraitsIcons(
@@ -173,7 +176,8 @@ class _SquareNodeBody extends StatelessWidget {
           scale: .7,
         ),
 
-        MoveDots(moveColors: pokemon.getMoveColors()),
+        MoveDots(
+            moveColors: PogoColors.getPokemonMovesetColors(pokemon.moveset)),
       ],
     );
   }
@@ -203,18 +207,18 @@ class _SmallNodeBody extends StatelessWidget {
           // Pokemon cup - specific rating
           // Used for the ratings pages
           Text(
-            pokemon.getRatingString(),
+            pokemon.ratingString,
             style: TextStyle(
-              fontSize: SizeConfig.h1,
+              fontSize: Sizing.h1,
               fontWeight: FontWeight.bold,
             ),
           ),
 
           // Pokemon name
           Text(
-            pokemon.speciesName,
+            pokemon.name,
             style: TextStyle(
-              fontSize: SizeConfig.h1,
+              fontSize: Sizing.h1,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -225,9 +229,9 @@ class _SmallNodeBody extends StatelessWidget {
           // Typing icon(s)
           Container(
             alignment: Alignment.topRight,
-            height: SizeConfig.blockSizeHorizontal * 8.0,
+            height: Sizing.blockSizeHorizontal * 8.0,
             child: Row(
-              children: pokemon.getTypeIcons(),
+              children: PogoIcons.getPokemonTypingIcons(pokemon.typing),
             ),
           ),
         ],
@@ -238,9 +242,9 @@ class _SmallNodeBody extends StatelessWidget {
       children: [
         // Pokemon name
         Text(
-          pokemon.speciesName,
+          pokemon.name,
           style: TextStyle(
-            fontSize: SizeConfig.h1,
+            fontSize: Sizing.h1,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -251,9 +255,9 @@ class _SmallNodeBody extends StatelessWidget {
         // Typing icon(s)
         Container(
           alignment: Alignment.topRight,
-          height: SizeConfig.blockSizeHorizontal * 8.0,
+          height: Sizing.blockSizeHorizontal * 8.0,
           child: Row(
-            children: pokemon.getTypeIcons(),
+            children: PogoIcons.getPokemonTypingIcons(pokemon.typing),
           ),
         ),
       ],
@@ -264,10 +268,10 @@ class _SmallNodeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeVertical * .5,
-        left: SizeConfig.blockSizeHorizontal * 2.0,
-        right: SizeConfig.blockSizeHorizontal * 2.0,
-        bottom: SizeConfig.blockSizeVertical * 1.5,
+        top: Sizing.blockSizeVertical * .5,
+        left: Sizing.blockSizeHorizontal * 2.0,
+        right: Sizing.blockSizeHorizontal * 2.0,
+        bottom: Sizing.blockSizeVertical * 1.5,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -277,7 +281,7 @@ class _SmallNodeBody extends StatelessWidget {
           // A line divider
           Divider(
             color: Colors.white,
-            thickness: SizeConfig.blockSizeHorizontal * 0.2,
+            thickness: Sizing.blockSizeHorizontal * 0.2,
           ),
 
           // The dropdowns for the Pokemon's moves
@@ -315,9 +319,9 @@ class _LargeNodeBody extends StatelessWidget {
       children: [
         // Pokemon name
         Text(
-          pokemon.speciesName,
+          pokemon.name,
           style: TextStyle(
-            fontSize: SizeConfig.h1,
+            fontSize: Sizing.h1,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -329,15 +333,16 @@ class _LargeNodeBody extends StatelessWidget {
         cup == null
             ? Container()
             : PvpStats(
-                perfectStats: pokemon.getPerfectPvpStats(cup.cp),
+                cp: Stats.calculateCP(pokemon.stats, pokemon.getIvs(cup.cp)),
+                ivs: pokemon.getIvs(cup.cp),
               ),
 
         // Typing icon(s)
         Container(
           alignment: Alignment.topRight,
-          height: SizeConfig.blockSizeHorizontal * 8.0,
+          height: Sizing.blockSizeHorizontal * 8.0,
           child: Row(
-            children: pokemon.getTypeIcons(),
+            children: PogoIcons.getPokemonTypingIcons(pokemon.typing),
           ),
         ),
       ],
@@ -348,10 +353,10 @@ class _LargeNodeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeVertical * .5,
-        left: SizeConfig.blockSizeHorizontal * 2.0,
-        right: SizeConfig.blockSizeHorizontal * 2.0,
-        bottom: SizeConfig.blockSizeVertical * .2,
+        top: Sizing.blockSizeVertical * .5,
+        left: Sizing.blockSizeHorizontal * 2.0,
+        right: Sizing.blockSizeHorizontal * 2.0,
+        bottom: Sizing.blockSizeVertical * .2,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -362,7 +367,7 @@ class _LargeNodeBody extends StatelessWidget {
           // A line divider
           Divider(
             color: Colors.white,
-            thickness: SizeConfig.blockSizeHorizontal * 0.2,
+            thickness: Sizing.blockSizeHorizontal * 0.2,
           ),
 
           // The dropdowns for the Pokemon's moves

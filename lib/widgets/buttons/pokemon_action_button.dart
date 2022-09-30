@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../configs/size_config.dart';
-import '../../data/pokemon/pokemon.dart';
+import '../../modules/ui/sizing.dart';
+import '../../pogo_data/pokemon.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -32,17 +32,17 @@ class PokemonActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeVertical * 1.0,
-        bottom: SizeConfig.blockSizeVertical * .5,
+        top: Sizing.blockSizeVertical * 1.0,
+        bottom: Sizing.blockSizeVertical * .5,
       ),
       child: MaterialButton(
         onPressed: () => onPressed(pokemon),
         child: Container(
-          height: SizeConfig.blockSizeVertical * 4.0,
+          height: Sizing.blockSizeVertical * 4.0,
           width: width,
           decoration: BoxDecoration(
             borderRadius:
-                BorderRadius.circular(SizeConfig.blockSizeHorizontal * 2.5),
+                BorderRadius.circular(Sizing.blockSizeHorizontal * 2.5),
             color: Colors.black54,
           ),
           child: Row(
@@ -52,7 +52,7 @@ class PokemonActionButton extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: SizeConfig.h3,
+                  fontSize: Sizing.h3,
                   color: Colors.white,
                 ),
               ),

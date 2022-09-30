@@ -51,6 +51,18 @@ class Cup {
     return true;
   }
 
+  List<String> get includedTypeKeys {
+    if (includeFilters == null) return [];
+
+    for (CupFilter filter in includeFilters!) {
+      if (filter.filterType == FilterType.type) {
+        return filter.values as List<String>;
+      }
+    }
+
+    return [];
+  }
+
   final String cupId;
   final String name;
   final int cp;
@@ -117,7 +129,7 @@ class CupFilter {
         return values.contains(pokemon.pokemonId);
       case FilterType.type:
         return values.contains(pokemon.typing.typeA.typeId) ||
-            (!pokemon.typing.isMonoType() &&
+            (!pokemon.typing.isMonoType &&
                 values.contains(pokemon.typing.typeB!.typeId));
       case FilterType.tags:
         return pokemon.tags == null

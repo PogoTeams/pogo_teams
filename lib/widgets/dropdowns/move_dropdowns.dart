@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../data/pokemon/move.dart';
-import '../../data/pokemon/pokemon.dart';
-import '../../configs/size_config.dart';
+import '../../pogo_data/move.dart';
+import '../../pogo_data/pokemon.dart';
+import '../../modules/ui/sizing.dart';
+import '../../modules/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -29,8 +30,8 @@ class MoveDropdowns extends StatefulWidget {
   final VoidCallback? onChanged;
 
   // Lists of the moves a Pokemon can learn
-  late final List<String> fastMoveNames = pokemon.getFastMoveIds();
-  late final List<String> chargedMoveNames = pokemon.getChargedMoveIds();
+  late final List<String> fastMoveNames = pokemon.fastMoveIds;
+  late final List<String> chargedMoveNames = pokemon.chargeMoveIds;
 
   @override
   _MoveDropdownsState createState() => _MoveDropdownsState();
@@ -60,14 +61,14 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
   // Upon initial build, update, or dropdown onChanged callback
   // Filter the left and right charged move lists for the dropdowns
   void _updateChargedMoveOptions() {
-    chargedMoveNamesL = widget.pokemon.chargedMoves
+    chargedMoveNamesL = widget.pokemon.chargeMoves
         .where(
-            (move) => !move.isSameMove(widget.pokemon.selectedChargedMoves[1]))
+            (move) => !move.isSameMove(widget.pokemon.selectedChargeMoves[1]))
         .toList();
 
-    chargedMoveNamesR = widget.pokemon.chargedMoves
+    chargedMoveNamesR = widget.pokemon.chargeMoves
         .where(
-            (move) => !move.isSameMove(widget.pokemon.selectedChargedMoves[0]))
+            (move) => !move.isSameMove(widget.pokemon.selectedChargeMoves[0]))
         .toList();
 
     chargedMoveOptionsL = _generateDropdownItems(chargedMoveNamesL);
@@ -87,7 +88,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
               widget.pokemon.getFormattedMoveName(move),
               style: TextStyle(
                 fontFamily: DefaultTextStyle.of(context).style.fontFamily,
-                fontSize: SizeConfig.p,
+                fontSize: Sizing.p,
               ),
             ),
           ),
@@ -121,18 +122,23 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
           options: fastMoveOptions,
           onChanged: (Move? newFastMove) {
             setState(() {
-              widget.pokemon.updateSelectedFastMove(newFastMove);
+              if (newFastMove != null) {
+                widget.pokemon.selectedFastMove = newFastMove as FastMove;
+              }
               if (widget.onChanged != null) widget.onChanged!();
             });
           },
         ),
         MoveDropdown(
           label: 'C H A R G E  1',
-          move: widget.pokemon.selectedChargedMoves[0],
+          move: widget.pokemon.selectedChargeMoves[0],
           options: chargedMoveOptionsL,
           onChanged: (Move? newChargedMove) {
             setState(() {
-              widget.pokemon.updateSelectedChargedMove(0, newChargedMove);
+              if (newChargedMove != null) {
+                widget.pokemon.selectedChargeMoves.first =
+                    newChargedMove as ChargeMove;
+              }
               _updateChargedMoveOptions();
               if (widget.onChanged != null) widget.onChanged!();
             });
@@ -140,11 +146,14 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
         ),
         MoveDropdown(
           label: 'C H A R G E  2',
-          move: widget.pokemon.selectedChargedMoves[1],
+          move: widget.pokemon.selectedChargeMoves[1],
           options: chargedMoveOptionsR,
           onChanged: (Move? newChargedMove) {
             setState(() {
-              widget.pokemon.updateSelectedChargedMove(1, newChargedMove);
+              if (newChargedMove != null) {
+                widget.pokemon.selectedChargeMoves.last =
+                    newChargedMove as ChargeMove;
+              }
               _updateChargedMoveOptions();
               if (widget.onChanged != null) widget.onChanged!();
             });
@@ -180,7 +189,7 @@ class MoveDropdown extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: SizeConfig.p,
+            fontSize: Sizing.p,
             fontWeight: FontWeight.w600,
             fontStyle: FontStyle.italic,
           ),
@@ -193,9 +202,9 @@ class MoveDropdown extends StatelessWidget {
               isExpanded: true,
               value: move,
               icon: const Icon(Icons.arrow_drop_down_circle),
-              iconSize: SizeConfig.blockSizeHorizontal * 4.0,
+              iconSize: Sizing.blockSizeHorizontal * 4.0,
               style: TextStyle(
-                fontSize: SizeConfig.p,
+                fontSize: Sizing.p,
                 fontFamily: DefaultTextStyle.of(context).style.fontFamily,
               ),
               items: options,
@@ -203,20 +212,20 @@ class MoveDropdown extends StatelessWidget {
             ),
           ),
           padding: EdgeInsets.only(
-            right: SizeConfig.blockSizeVertical * .7,
+            right: Sizing.blockSizeVertical * .7,
           ),
           margin: EdgeInsets.only(
-            top: SizeConfig.blockSizeVertical * .7,
+            top: Sizing.blockSizeVertical * .7,
           ),
-          width: SizeConfig.screenWidth * .28,
-          height: SizeConfig.blockSizeVertical * 3.5,
+          width: Sizing.screenWidth * .28,
+          height: Sizing.blockSizeVertical * 3.5,
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.white,
               width: 1.5,
             ),
             borderRadius: BorderRadius.circular(100),
-            color: move.type.typeColor,
+            color: PogoColors.getPokemonTypeColor(move.type.typeId),
           ),
         ),
       ],

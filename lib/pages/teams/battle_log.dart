@@ -7,8 +7,8 @@ import 'team_builder_search.dart';
 import '../../../widgets/nodes/team_node.dart';
 import '../../../widgets/buttons/gradient_button.dart';
 import '../../../widgets/nodes/win_loss_node.dart';
-import '../../../configs/size_config.dart';
-import '../../../data/pokemon/pokemon_team.dart';
+import '../../modules/ui/sizing.dart';
+import '../../pogo_data/pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -52,20 +52,20 @@ class _BattleLogState extends State<BattleLog> {
           Text(
             'Battle Log',
             style: TextStyle(
-              fontSize: SizeConfig.h2,
+              fontSize: Sizing.h2,
               fontStyle: FontStyle.italic,
             ),
           ),
 
           // Spacer
           SizedBox(
-            width: SizeConfig.blockSizeHorizontal * 3.0,
+            width: Sizing.blockSizeHorizontal * 3.0,
           ),
 
           // Page icon
           Icon(
             Icons.query_stats,
-            size: SizeConfig.h2 * 1.5,
+            size: Sizing.h2 * 1.5,
           ),
         ],
       ),
@@ -75,9 +75,9 @@ class _BattleLogState extends State<BattleLog> {
   Widget _buildScaffoldBody() {
     return Padding(
       padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeVertical * 1.0,
-        left: SizeConfig.blockSizeHorizontal * 2.0,
-        right: SizeConfig.blockSizeHorizontal * 2.0,
+        top: Sizing.blockSizeVertical * 1.0,
+        left: Sizing.blockSizeHorizontal * 2.0,
+        right: Sizing.blockSizeHorizontal * 2.0,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,21 +87,21 @@ class _BattleLogState extends State<BattleLog> {
 
           // Spacer
           SizedBox(
-            height: SizeConfig.blockSizeVertical * 2.0,
+            height: Sizing.blockSizeVertical * 2.0,
           ),
 
           Text(
             '- Opponent Teams -',
             style: TextStyle(
-              fontSize: SizeConfig.h1,
+              fontSize: Sizing.h1,
               fontWeight: FontWeight.bold,
-              letterSpacing: SizeConfig.blockSizeHorizontal * .7,
+              letterSpacing: Sizing.blockSizeHorizontal * .7,
             ),
           ),
 
           // Spacer
           SizedBox(
-            height: SizeConfig.blockSizeVertical * 2.0,
+            height: Sizing.blockSizeVertical * 2.0,
           ),
 
           // Logged opponent teams
@@ -122,10 +122,10 @@ class _BattleLogState extends State<BattleLog> {
       emptyTransparent: true,
       collapsible: true,
       padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeHorizontal * 2.0,
-        left: SizeConfig.blockSizeHorizontal * 3.0,
-        right: SizeConfig.blockSizeHorizontal * 3.0,
-        bottom: SizeConfig.blockSizeVertical * 2.0,
+        top: Sizing.blockSizeHorizontal * 2.0,
+        left: Sizing.blockSizeHorizontal * 3.0,
+        right: Sizing.blockSizeHorizontal * 3.0,
+        bottom: Sizing.blockSizeVertical * 2.0,
       ),
     );
   }
@@ -151,7 +151,7 @@ class _BattleLogState extends State<BattleLog> {
                   footer: _buildTeamNodeFooter(index),
                 ),
                 SizedBox(
-                  height: SizeConfig.blockSizeVertical * 10.0,
+                  height: Sizing.blockSizeVertical * 10.0,
                 ),
               ],
             );
@@ -173,7 +173,7 @@ class _BattleLogState extends State<BattleLog> {
   // The icon buttons at the footer of each TeamNode
   Widget _buildTeamNodeFooter(int teamIndex) {
     // Size of the footer icons
-    final double iconSize = SizeConfig.blockSizeHorizontal * 6.0;
+    final double iconSize = Sizing.blockSizeHorizontal * 6.0;
 
     // Provider retrieve
     final log = _team.logs[teamIndex];
@@ -190,7 +190,7 @@ class _BattleLogState extends State<BattleLog> {
                 icon: const Icon(Icons.clear),
                 tooltip: 'Remove Team',
                 iconSize: iconSize,
-                splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
+                splashRadius: Sizing.blockSizeHorizontal * 5.0,
               ),
 
         // Analyze team
@@ -199,7 +199,7 @@ class _BattleLogState extends State<BattleLog> {
           icon: const Icon(Icons.analytics),
           tooltip: 'Analyze Team',
           iconSize: iconSize,
-          splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
         ),
 
         // Edit team
@@ -208,7 +208,7 @@ class _BattleLogState extends State<BattleLog> {
           icon: const Icon(Icons.build_circle),
           tooltip: 'Edit Team',
           iconSize: iconSize,
-          splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
         ),
 
         // Lock team
@@ -217,7 +217,7 @@ class _BattleLogState extends State<BattleLog> {
           icon: Icon(lockIcon),
           tooltip: 'Unlock Team',
           iconSize: iconSize,
-          splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
         ),
 
         // Win, tie, loss indicator
@@ -239,20 +239,20 @@ class _BattleLogState extends State<BattleLog> {
             Text(
               'Log Opponent Team',
               style: TextStyle(
-                fontSize: SizeConfig.h2,
+                fontSize: Sizing.h2,
               ),
             ),
             SizedBox(
-              width: SizeConfig.blockSizeHorizontal * 5.0,
+              width: Sizing.blockSizeHorizontal * 5.0,
             ),
             Icon(
               Icons.add,
-              size: SizeConfig.blockSizeHorizontal * 7.0,
+              size: Sizing.blockSizeHorizontal * 7.0,
             ),
           ],
         ),
-        width: SizeConfig.screenWidth * .85,
-        height: SizeConfig.blockSizeVertical * 8.5,
+        width: Sizing.screenWidth * .85,
+        height: Sizing.blockSizeVertical * 8.5,
       );
     }
 
@@ -268,20 +268,20 @@ class _BattleLogState extends State<BattleLog> {
               Text(
                 'Analyze',
                 style: TextStyle(
-                  fontSize: SizeConfig.h2,
+                  fontSize: Sizing.h2,
                 ),
               ),
               SizedBox(
-                width: SizeConfig.blockSizeHorizontal * 4.0,
+                width: Sizing.blockSizeHorizontal * 4.0,
               ),
               Icon(
                 Icons.analytics,
-                size: SizeConfig.blockSizeHorizontal * 7.0,
+                size: Sizing.blockSizeHorizontal * 7.0,
               ),
             ],
           ),
-          width: SizeConfig.screenWidth * .44,
-          height: SizeConfig.blockSizeVertical * 8.5,
+          width: Sizing.screenWidth * .44,
+          height: Sizing.blockSizeVertical * 8.5,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(50),
             topRight: Radius.circular(20),
@@ -299,20 +299,20 @@ class _BattleLogState extends State<BattleLog> {
               Text(
                 'Log',
                 style: TextStyle(
-                  fontSize: SizeConfig.h2,
+                  fontSize: Sizing.h2,
                 ),
               ),
               SizedBox(
-                width: SizeConfig.blockSizeHorizontal * 4.0,
+                width: Sizing.blockSizeHorizontal * 4.0,
               ),
               Icon(
                 Icons.add,
-                size: SizeConfig.blockSizeHorizontal * 7.0,
+                size: Sizing.blockSizeHorizontal * 7.0,
               ),
             ],
           ),
-          width: SizeConfig.screenWidth * .44,
-          height: SizeConfig.blockSizeVertical * 8.5,
+          width: Sizing.screenWidth * .44,
+          height: Sizing.blockSizeVertical * 8.5,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(50),

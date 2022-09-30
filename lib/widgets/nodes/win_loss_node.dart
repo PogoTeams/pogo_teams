@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../configs/size_config.dart';
+import '../../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -48,15 +48,15 @@ class WinLossNode extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        top: SizeConfig.blockSizeVertical * .5,
-        bottom: SizeConfig.blockSizeVertical * .5,
+        top: Sizing.blockSizeVertical * .5,
+        bottom: Sizing.blockSizeVertical * .5,
       ),
       alignment: Alignment.center,
-      width: SizeConfig.blockSizeHorizontal * 15.0,
+      width: Sizing.blockSizeHorizontal * 15.0,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: SizeConfig.blockSizeHorizontal * .4,
+          width: Sizing.blockSizeHorizontal * .4,
         ),
         borderRadius: BorderRadius.circular(100),
         color: _getColor(),
@@ -67,7 +67,7 @@ class WinLossNode extends StatelessWidget {
         winLossKey,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: SizeConfig.h3,
+          fontSize: Sizing.h3,
         ),
       ),
     );

@@ -2,7 +2,7 @@
 import 'package:hive/hive.dart';
 
 // Local Imports
-import 'pokemon/pokemon_team.dart';
+import 'pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

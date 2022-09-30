@@ -8,10 +8,10 @@ import '../analysis/analysis.dart';
 import 'battle_log.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
-import '../../configs/size_config.dart';
-import '../../data/user_teams.dart';
-import '../../data/pokemon/pokemon.dart';
-import '../../data/pokemon/pokemon_team.dart';
+import '../../modules/ui/sizing.dart';
+import '../../pogo_data/user_teams.dart';
+import '../../pogo_data/pokemon.dart';
+import '../../pogo_data/pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -61,7 +61,7 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
 
               // Spacer to give last node in the list more scroll room
               SizedBox(
-                height: SizeConfig.blockSizeVertical * 10.0,
+                height: Sizing.blockSizeVertical * 10.0,
               ),
             ],
           );
@@ -83,7 +83,7 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
   // The icon buttons at the footer of each TeamNode
   Widget _buildTeamNodeFooter(int teamIndex) {
     // Size of the footer icons
-    final double iconSize = SizeConfig.blockSizeHorizontal * 6.0;
+    final double iconSize = Sizing.blockSizeHorizontal * 6.0;
 
     final IconData lockIcon =
         _teams[teamIndex].locked ? Icons.lock : Icons.lock_open;
@@ -99,7 +99,7 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
                 icon: const Icon(Icons.clear),
                 tooltip: 'Remove Team',
                 iconSize: iconSize,
-                splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
+                splashRadius: Sizing.blockSizeHorizontal * 5.0,
               ),
 
         // Analyze team
@@ -108,7 +108,7 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
           icon: const Icon(Icons.analytics),
           tooltip: 'Analyze Team',
           iconSize: iconSize,
-          splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
         ),
 
         // Log team
@@ -117,7 +117,7 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
           icon: const Icon(Icons.query_stats),
           tooltip: 'Log Team',
           iconSize: iconSize,
-          splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
         ),
 
         // Edit team
@@ -126,7 +126,7 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
           icon: const Icon(Icons.build_circle),
           tooltip: 'Edit Team',
           iconSize: iconSize,
-          splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
         ),
 
         IconButton(
@@ -134,7 +134,7 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
           icon: Icon(lockIcon),
           tooltip: 'Unlock Team',
           iconSize: iconSize,
-          splashRadius: SizeConfig.blockSizeHorizontal * 5.0,
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
         )
       ],
     );
@@ -262,20 +262,20 @@ class _TeamsBuilderState extends State<TeamsBuilder> {
             Text(
               'Add Team',
               style: TextStyle(
-                fontSize: SizeConfig.h2,
+                fontSize: Sizing.h2,
               ),
             ),
             SizedBox(
-              width: SizeConfig.blockSizeHorizontal * 5.0,
+              width: Sizing.blockSizeHorizontal * 5.0,
             ),
             Icon(
               Icons.add,
-              size: SizeConfig.blockSizeHorizontal * 7.0,
+              size: Sizing.blockSizeHorizontal * 7.0,
             ),
           ],
         ),
-        width: SizeConfig.screenWidth * .85,
-        height: SizeConfig.blockSizeVertical * 8.5,
+        width: Sizing.screenWidth * .85,
+        height: Sizing.blockSizeVertical * 8.5,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

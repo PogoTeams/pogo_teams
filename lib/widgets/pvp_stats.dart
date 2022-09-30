@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import '../configs/size_config.dart';
+import '../pogo_data/pokemon_stats.dart';
+import '../modules/ui/sizing.dart';
+
 /*
 -------------------------------------------------------------------- @PogoTeams
 A display of a Pokemon's max CP and perfect IVs, given the cup in question.
@@ -14,10 +16,12 @@ A display of a Pokemon's max CP and perfect IVs, given the cup in question.
 class PvpStats extends StatelessWidget {
   const PvpStats({
     Key? key,
-    required this.perfectStats,
+    required this.cp,
+    required this.ivs,
   }) : super(key: key);
 
-  final List<num> perfectStats;
+  final int cp;
+  final IVs ivs;
 
   @override
   Widget build(BuildContext context) {
@@ -25,24 +29,20 @@ class PvpStats extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Text(
-          'CP ' + perfectStats[4].toString(),
+          'CP $cp',
           style: TextStyle(
-            letterSpacing: SizeConfig.blockSizeHorizontal * .7,
-            fontSize: SizeConfig.p,
+            letterSpacing: Sizing.blockSizeHorizontal * .7,
+            fontSize: Sizing.p,
             fontStyle: FontStyle.italic,
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
         ),
         Text(
-          perfectStats[1].toString() +
-              ' | ' +
-              perfectStats[2].toString() +
-              ' | ' +
-              perfectStats[3].toString(),
+          '${ivs.atk} | ${ivs.def} | ${ivs.hp}',
           style: TextStyle(
-            letterSpacing: SizeConfig.blockSizeHorizontal * .7,
-            fontSize: SizeConfig.h3,
+            letterSpacing: Sizing.blockSizeHorizontal * .7,
+            fontSize: Sizing.h3,
             fontStyle: FontStyle.italic,
           ),
           textAlign: TextAlign.center,

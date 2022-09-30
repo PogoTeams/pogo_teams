@@ -4,9 +4,9 @@ import '../pogo_data/pokemon.dart';
 import '../pogo_data/cup.dart';
 import '../battle/pokemon_battler.dart';
 import '../battle/battle_result.dart';
-import '../modules/gamemaster.dart';
-import '../modules/cups.dart';
-import '../modules/debug_cli.dart';
+import '../modules/data/gamemaster.dart';
+import '../modules/data/cups.dart';
+import '../modules/data/debug_cli.dart';
 
 class PokemonRanker {
   static RankingData rank(

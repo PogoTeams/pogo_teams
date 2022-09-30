@@ -1,19 +1,11 @@
-// Local Imports
+// Local
+import '../../pogo_data/pokemon_typing.dart';
+import '../../pogo_data/pokemon.dart';
 import '../../tools/pair.dart';
-import '../pokemon/typing.dart';
-import '../pokemon/pokemon.dart';
 import '../../tools/logic.dart';
-import '../globals.dart' as globals;
+import 'globals.dart';
 
-/*
--------------------------------------------------------------------- @PogoTeams
-All type effectiveness relationships are handled here. The effectivenessMaster
-map contains these numeric relationships, effectively scaling all type on type
-offense / defense scenerios that can occur.
--------------------------------------------------------------------------------
-*/
-
-class TypeMaster {
+class PokemonTypes {
   // type effectiveness damage scales
   static const double superEffective = 1.6;
   static const double neutral = 1.0;
@@ -24,52 +16,31 @@ class TypeMaster {
   static const double duoSuperEffective = 2.56;
   static const double duoImmune = 0.152587890625;
 
-// The master list of ALL type keys
-  static final List<String> typeKeysList = [
-    'normal',
-    'fire',
-    'water',
-    'grass',
-    'electric',
-    'ice',
-    'fighting',
-    'poison',
-    'ground',
-    'flying',
-    'psychic',
-    'bug',
-    'rock',
-    'ghost',
-    'dragon',
-    'dark',
-    'steel',
-    'fairy',
-  ];
-
   // The master list of ALL type objects
-  static final List<Type> typeList = [
-    Type(typeKey: 'normal'),
-    Type(typeKey: 'fire'),
-    Type(typeKey: 'water'),
-    Type(typeKey: 'grass'),
-    Type(typeKey: 'electric'),
-    Type(typeKey: 'ice'),
-    Type(typeKey: 'fighting'),
-    Type(typeKey: 'poison'),
-    Type(typeKey: 'ground'),
-    Type(typeKey: 'flying'),
-    Type(typeKey: 'psychic'),
-    Type(typeKey: 'bug'),
-    Type(typeKey: 'rock'),
-    Type(typeKey: 'ghost'),
-    Type(typeKey: 'dragon'),
-    Type(typeKey: 'dark'),
-    Type(typeKey: 'steel'),
-    Type(typeKey: 'fairy'),
+  static final List<PokemonType> typeList = [
+    PokemonType(typeId: 'normal'),
+    PokemonType(typeId: 'fire'),
+    PokemonType(typeId: 'water'),
+    PokemonType(typeId: 'grass'),
+    PokemonType(typeId: 'electric'),
+    PokemonType(typeId: 'ice'),
+    PokemonType(typeId: 'fighting'),
+    PokemonType(typeId: 'poison'),
+    PokemonType(typeId: 'ground'),
+    PokemonType(typeId: 'flying'),
+    PokemonType(typeId: 'psychic'),
+    PokemonType(typeId: 'bug'),
+    PokemonType(typeId: 'rock'),
+    PokemonType(typeId: 'ghost'),
+    PokemonType(typeId: 'dragon'),
+    PokemonType(typeId: 'dark'),
+    PokemonType(typeId: 'steel'),
+    PokemonType(typeId: 'fairy'),
+    PokemonType(typeId: 'none'),
   ];
 
   // A master map of ALL type objects
-  static late final Map<String, Type> typeMap = {
+  static final Map<String, PokemonType> typeMap = {
     'normal': typeList[0],
     'fire': typeList[1],
     'water': typeList[2],
@@ -88,10 +59,11 @@ class TypeMaster {
     'dark': typeList[15],
     'steel': typeList[16],
     'fairy': typeList[17],
+    'none': typeList[18],
   };
 
   // A map of all type keys to their respective index
-  static late final Map<String, int> typeIndexMap = {
+  static final Map<String, int> typeIndexMap = {
     'normal': 0,
     'fire': 1,
     'water': 2,
@@ -112,23 +84,26 @@ class TypeMaster {
     'fairy': 17,
   };
 
-  // Get the map of type effectiveness cooresponding to the typeKey
-  static Map<String, List<double>> getEffectivenessMap(String typeKey) {
-    return effectivenessMaster[typeKey] as Map<String, List<double>>;
-  }
+  // Get the map of type effectiveness cooresponding to the typeId
+  static Map<String, List<double>> getEffectivenessMap(String typeId) =>
+      effectivenessMaster[typeId] as Map<String, List<double>>;
 
   // Get a list of the provided pokemon team's net effectiveness
+  // [0] : offensive
+  // [1] : defensive
   static List<double> getNetEffectiveness(List<Pokemon> team) {
     List<double> netEffectiveness = List.generate(
-      globals.typeCount,
+      Globals.typeCount,
       (index) => 0.0,
     );
 
-    // Accumulate team defensive type effectiveness for all types
-    for (int i = 0; i < team.length; ++i) {
-      final List<double> effectiveness = team[i].getDefenseEffectiveness();
+    final int teamLen = team.length;
 
-      for (int k = 0; k < globals.typeCount; ++k) {
+    // Accumulate team defensive type effectiveness for all types
+    for (int i = 0; i < teamLen; ++i) {
+      final List<double> effectiveness = team[i].defenseEffectiveness;
+
+      for (int k = 0; k < Globals.typeCount; ++k) {
         netEffectiveness[k] += effectiveness[k];
       }
     }
@@ -137,8 +112,9 @@ class TypeMaster {
   }
 
   // Generate a list that pairs a value to all included types
-  static List<Pair<Type, double>> generateTypeValuePairedList(
-      List<String> includedTypesKeys) {
+  static List<Pair<PokemonType, double>> generateTypeValuePairedList(
+    List<String> includedTypesKeys,
+  ) {
     return includedTypesKeys
         .map(
           (typeKey) => Pair(
@@ -151,11 +127,11 @@ class TypeMaster {
 
   // Get a list of types given the effectiveness and types to include
   // Used in analyzing team type coverages
-  static List<Pair<Type, double>> getDefenseCoverage(
+  static List<Pair<PokemonType, double>> getDefenseCoverage(
     List<double> effectiveness,
     List<String> includedTypesKeys,
   ) {
-    List<Pair<Type, double>> effectivenessList = [];
+    List<Pair<PokemonType, double>> effectivenessList = [];
 
     for (int i = 0; i < includedTypesKeys.length; ++i) {
       effectivenessList.add(
@@ -170,15 +146,15 @@ class TypeMaster {
   }
 
   // Get a list of offense coverage given a team's moveset
-  static List<Pair<Type, double>> getOffenseCoverage(
+  static List<Pair<PokemonType, double>> getOffenseCoverage(
     List<Pokemon> team,
     List<String> includedTypesKeys,
   ) {
-    List<Pair<Type, double>> offenseCoverage =
+    List<Pair<PokemonType, double>> offenseCoverage =
         generateTypeValuePairedList(includedTypesKeys);
 
     for (int i = 0; i < team.length; ++i) {
-      final List<double> movesetEffectiveness = team[i].getOffenseCoverage();
+      final List<double> movesetEffectiveness = team[i].offenseCoverage;
 
       for (int k = 0; k < includedTypesKeys.length; ++k) {
         offenseCoverage[k].b +=
@@ -191,12 +167,12 @@ class TypeMaster {
 
   // Get the effectiveness given the defense effectiveness and offense coverage
   // Used to display a net effectiveness graph on a team analysis page
-  static List<Pair<Type, double>> getMovesWeightedEffectiveness(
-    List<Pair<Type, double>> defense,
-    List<Pair<Type, double>> offense,
+  static List<Pair<PokemonType, double>> getMovesWeightedEffectiveness(
+    List<Pair<PokemonType, double>> defense,
+    List<Pair<PokemonType, double>> offense,
     List<String> includedTypesKeys,
   ) {
-    List<Pair<Type, double>> movesWeightedEffectiveness =
+    List<Pair<PokemonType, double>> movesWeightedEffectiveness =
         generateTypeValuePairedList(includedTypesKeys);
 
     for (int i = 0; i < movesWeightedEffectiveness.length; ++i) {
@@ -209,17 +185,17 @@ class TypeMaster {
 
   // Given a list of type, return the top n counters to those types
   // This is used in determining the Pokemon threats / counters in analysis
-  static List<Type> getCounterTypes(
-      List<Type> types, List<String> includedTypesKeys,
+  static List<PokemonType> getCounterTypes(
+      List<PokemonType> types, List<String> includedTypesKeys,
       {int typesCount = 5}) {
     if (typesCount > includedTypesKeys.length ||
-        typesCount > globals.typeCount ||
+        typesCount > Globals.typeCount ||
         typesCount < 1) {
       typesCount = includedTypesKeys.length;
     }
 
     // Build a list of length equal to the included type keys
-    List<Pair<Type, double>> netTypeEffectiveness = List.generate(
+    List<Pair<PokemonType, double>> netTypeEffectiveness = List.generate(
       includedTypesKeys.length,
       (index) => Pair(
         a: typeList[typeIndexMap[includedTypesKeys[index]]!],
@@ -227,11 +203,11 @@ class TypeMaster {
       ),
     );
 
-    List<Type> counters = [];
+    List<PokemonType> counters = [];
 
     // Accumulate only the included types
     for (int i = 0; i < types.length; ++i) {
-      final List<double> effectiveness = types[i].getDefenseEffectiveness();
+      final List<double> effectiveness = types[i].defenseEffectiveness;
 
       for (int i = 0; i < includedTypesKeys.length; ++i) {
         netTypeEffectiveness[i].b +=
@@ -615,5 +591,6 @@ class TypeMaster {
       'steel': [notEffective, superEffective],
       'fairy': [neutral, neutral]
     },
+    'none': {},
   };
 }

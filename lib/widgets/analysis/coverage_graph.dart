@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../../tools/pair.dart';
-import '../../data/pokemon/typing.dart';
-import '../../configs/size_config.dart';
+import '../../pogo_data/pokemon_typing.dart';
+import '../../modules/ui/sizing.dart';
+import '../../modules/ui/pogo_icons.dart';
+import '../../modules/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -23,7 +25,7 @@ class CoverageGraph extends StatelessWidget {
     required this.netEffectiveness,
   }) : super(key: key);
 
-  final List<Pair<Type, double>> netEffectiveness;
+  final List<Pair<PokemonType, double>> netEffectiveness;
 
   @override
   Widget build(BuildContext context) {
@@ -33,24 +35,24 @@ class CoverageGraph extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              width: SizeConfig.blockSizeHorizontal * 7.0,
+              width: Sizing.blockSizeHorizontal * 7.0,
             ),
             Text(
               'Poor',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: SizeConfig.h2,
+                fontSize: Sizing.h2,
                 fontStyle: FontStyle.italic,
               ),
             ),
             SizedBox(
-              width: SizeConfig.screenWidth * .61,
+              width: Sizing.screenWidth * .61,
             ),
             Text(
               'Excellent',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: SizeConfig.h2,
+                fontSize: Sizing.h2,
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -60,7 +62,7 @@ class CoverageGraph extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              width: SizeConfig.blockSizeHorizontal * 7.0,
+              width: Sizing.blockSizeHorizontal * 7.0,
             ),
             Container(
               decoration: BoxDecoration(
@@ -72,13 +74,13 @@ class CoverageGraph extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
-              width: SizeConfig.screenWidth * .84,
-              height: SizeConfig.blockSizeVertical * .6,
+              width: Sizing.screenWidth * .84,
+              height: Sizing.blockSizeVertical * .6,
             ),
           ],
         ),
         SizedBox(
-          height: SizeConfig.blockSizeVertical * 1.0,
+          height: Sizing.blockSizeVertical * 1.0,
         ),
         ListView(
           shrinkWrap: true,
@@ -100,7 +102,7 @@ class GraphRow extends StatelessWidget {
     required this.typeData,
   }) : super(key: key);
 
-  final Pair<Type, double> typeData;
+  final Pair<PokemonType, double> typeData;
 
   @override
   Widget build(BuildContext context) {
@@ -112,19 +114,19 @@ class GraphRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal),
+          padding: EdgeInsets.only(right: Sizing.blockSizeHorizontal),
           child: SizedBox(
-            width: SizeConfig.blockSizeHorizontal * 6.0,
-            child: typeData.a.getIcon(),
+            width: Sizing.blockSizeHorizontal * 6.0,
+            child: PogoIcons.getPokemonTypeIcon(typeData.a.typeId),
           ),
         ),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: typeData.a.typeColor,
+            color: PogoColors.getPokemonTypeColor(typeData.a.typeId),
           ),
-          width: SizeConfig.screenWidth * .52 * barLength,
-          height: SizeConfig.blockSizeVertical * 1.7,
+          width: Sizing.screenWidth * .52 * barLength,
+          height: Sizing.blockSizeVertical * 1.7,
         ),
       ],
     );

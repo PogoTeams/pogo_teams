@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../configs/size_config.dart';
+import '../../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -28,7 +28,7 @@ class FilterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _size = size ?? SizeConfig.blockSizeHorizontal * 14.0;
+    final _size = size ?? Sizing.blockSizeHorizontal * 14.0;
 
     return Container(
       height: _size,
@@ -37,7 +37,7 @@ class FilterButton extends StatelessWidget {
         color: Colors.teal,
         border: Border.all(
           color: Colors.white,
-          width: SizeConfig.blockSizeHorizontal * .7,
+          width: Sizing.blockSizeHorizontal * .7,
         ),
         shape: BoxShape.circle,
       ),

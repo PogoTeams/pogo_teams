@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../../tools/pair.dart';
-import '../../data/pokemon/typing.dart';
-import '../../configs/size_config.dart';
+import '../../pogo_data/pokemon_typing.dart';
+import '../../modules/ui/sizing.dart';
+import '../../modules/ui/pogo_icons.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -21,8 +22,8 @@ class CoverageGrids extends StatelessWidget {
     required this.includedTypesKeys,
   }) : super(key: key);
 
-  final List<Pair<Type, double>> defenseThreats;
-  final List<Pair<Type, double>> offenseCoverage;
+  final List<Pair<PokemonType, double>> defenseThreats;
+  final List<Pair<PokemonType, double>> offenseCoverage;
   final List<String> includedTypesKeys;
 
   @override
@@ -37,7 +38,7 @@ class CoverageGrids extends StatelessWidget {
       children: [
         SizedBox(
           child: Container(
-            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
+            padding: EdgeInsets.all(Sizing.blockSizeHorizontal * 2.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               gradient: LinearGradient(
@@ -58,8 +59,8 @@ class CoverageGrids extends StatelessWidget {
                       'DEFENSE THREATS',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        letterSpacing: SizeConfig.blockSizeHorizontal * .8,
-                        fontSize: SizeConfig.h3,
+                        letterSpacing: Sizing.blockSizeHorizontal * .8,
+                        fontSize: Sizing.h3,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -67,8 +68,8 @@ class CoverageGrids extends StatelessWidget {
                       '${defenseThreats.length} / ${includedTypesKeys.length}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        letterSpacing: SizeConfig.blockSizeHorizontal * .8,
-                        fontSize: SizeConfig.h3,
+                        letterSpacing: Sizing.blockSizeHorizontal * .8,
+                        fontSize: Sizing.h3,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
@@ -77,18 +78,20 @@ class CoverageGrids extends StatelessWidget {
 
                 // Spacer
                 SizedBox(
-                  height: SizeConfig.blockSizeVertical * 2.5,
+                  height: Sizing.blockSizeVertical * 2.5,
                 ),
 
                 // Threat type Icons
                 GridView.count(
                   shrinkWrap: true,
-                  crossAxisSpacing: SizeConfig.blockSizeHorizontal * .1,
-                  mainAxisSpacing: SizeConfig.blockSizeVertical * .5,
+                  crossAxisSpacing: Sizing.blockSizeHorizontal * .1,
+                  mainAxisSpacing: Sizing.blockSizeVertical * .5,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: crossAxisCount,
-                  children:
-                      defenseThreats.map((pair) => pair.a.getIcon()).toList(),
+                  children: defenseThreats
+                      .map(
+                          (pair) => PogoIcons.getPokemonTypeIcon(pair.a.typeId))
+                      .toList(),
                 ),
               ],
             ),
@@ -97,13 +100,13 @@ class CoverageGrids extends StatelessWidget {
 
         // Spacer
         SizedBox(
-          height: SizeConfig.blockSizeVertical * 2.5,
+          height: Sizing.blockSizeVertical * 2.5,
         ),
 
         // List of coverage
         SizedBox(
           child: Container(
-            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.0),
+            padding: EdgeInsets.all(Sizing.blockSizeHorizontal * 2.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               gradient: LinearGradient(
@@ -123,8 +126,8 @@ class CoverageGrids extends StatelessWidget {
                     Text(
                       'OFFENSE COVERAGE',
                       style: TextStyle(
-                        letterSpacing: SizeConfig.blockSizeHorizontal * .8,
-                        fontSize: SizeConfig.h3,
+                        letterSpacing: Sizing.blockSizeHorizontal * .8,
+                        fontSize: Sizing.h3,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -132,8 +135,8 @@ class CoverageGrids extends StatelessWidget {
                       '${offenseCoverage.length} / ${includedTypesKeys.length}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        letterSpacing: SizeConfig.blockSizeHorizontal * .8,
-                        fontSize: SizeConfig.h3,
+                        letterSpacing: Sizing.blockSizeHorizontal * .8,
+                        fontSize: Sizing.h3,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
@@ -142,18 +145,20 @@ class CoverageGrids extends StatelessWidget {
 
                 // Spacer
                 SizedBox(
-                  height: SizeConfig.blockSizeVertical * 2.5,
+                  height: Sizing.blockSizeVertical * 2.5,
                 ),
 
                 // Coverage type Icons
                 GridView.count(
                   shrinkWrap: true,
-                  crossAxisSpacing: SizeConfig.blockSizeHorizontal * .1,
-                  mainAxisSpacing: SizeConfig.blockSizeVertical * .5,
+                  crossAxisSpacing: Sizing.blockSizeHorizontal * .1,
+                  mainAxisSpacing: Sizing.blockSizeVertical * .5,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: crossAxisCount,
-                  children:
-                      offenseCoverage.map((pair) => pair.a.getIcon()).toList(),
+                  children: offenseCoverage
+                      .map(
+                          (pair) => PogoIcons.getPokemonTypeIcon(pair.a.typeId))
+                      .toList(),
                 ),
               ],
             ),

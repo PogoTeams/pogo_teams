@@ -2,8 +2,8 @@
 import 'dart:math';
 
 // Local
-import '../pogo_data/stats.dart';
-import '../modules/globals.dart';
+import '../../pogo_data/pokemon_stats.dart';
+import 'globals.dart';
 
 /*
 ----------------------------- C P - F O R M U L A -----------------------------
@@ -40,6 +40,17 @@ class Stats {
   static int calculateMaxHp(BaseStats stats, IVs ivs) {
     return max(
         10, ((stats.hp + ivs.hp) * Stats.getCpMultiplier(ivs.level)).floor());
+  }
+
+  static int calculateMinEncounterCp(BaseStats stats, int minLevel) {
+    return calculateCP(
+        stats,
+        IVs(
+          level: minLevel,
+          atk: 10,
+          def: 10,
+          hp: 10,
+        ));
   }
 
   static int calculateIVStatProduct(BaseStats baseStats, IVs ivs) {
@@ -110,6 +121,22 @@ class Stats {
 
     return cpMultipliers[getLevelIndex(level)];
   }
+
+  static double getBuffMultiplier(int buffStage) {
+    return _buffMultipliers[buffStage];
+  }
+
+  static const List<double> _buffMultipliers = [
+    .5,
+    .5714286,
+    .6666667,
+    .8,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    2.0
+  ];
 
   // The scales used in calculating the cp increase
   static List<double> powerUpScales = [

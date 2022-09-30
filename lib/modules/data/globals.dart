@@ -1,4 +1,11 @@
 class Globals {
+  // The current app version
+  // Displayed at the footer of the app's drawer
+  static const String version = 'v1.0.0';
+
+  // The earliest timestamp (used for initial app start up)
+  static const String earliestTimestamp = '2021-01-01 00:00:00.00';
+
   // The number of Pokemon types in the game
   static const int typeCount = 18;
 

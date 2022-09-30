@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 // Local Imports
 import 'team_builder_search.dart';
 import '../analysis/analysis.dart';
-import '../../configs/size_config.dart';
+import '../../modules/ui/sizing.dart';
 import '../../widgets/nodes/pokemon_node.dart';
 import '../../widgets/dropdowns/cup_dropdown.dart';
 import '../../widgets/dropdowns/team_size_dropdown.dart';
 import '../../widgets/buttons/gradient_button.dart';
-import '../../data/pokemon/pokemon_team.dart';
-import '../../data/pokemon/pokemon.dart';
-import '../../data/cup.dart';
+import '../../pogo_data/pokemon_team.dart';
+import '../../pogo_data/pokemon.dart';
+import '../../pogo_data/cup.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -118,20 +118,20 @@ class _TeamEditState extends State<TeamEdit> {
           Text(
             'Team Edit',
             style: TextStyle(
-              fontSize: SizeConfig.h2,
+              fontSize: Sizing.h2,
               fontStyle: FontStyle.italic,
             ),
           ),
 
           // Spacer
           SizedBox(
-            width: SizeConfig.blockSizeHorizontal * 3.0,
+            width: Sizing.blockSizeHorizontal * 3.0,
           ),
 
           // Page icon
           Icon(
             Icons.build_circle,
-            size: SizeConfig.h2 * 1.5,
+            size: Sizing.h2 * 1.5,
           ),
         ],
       ),
@@ -144,7 +144,7 @@ class _TeamEditState extends State<TeamEdit> {
     if (pokemon == null) return null;
 
     // Size of the footer icons
-    final double iconSize = SizeConfig.blockSizeHorizontal * 6.0;
+    final double iconSize = Sizing.blockSizeHorizontal * 6.0;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,7 +174,7 @@ class _TeamEditState extends State<TeamEdit> {
         CupDropdown(
           cup: cup,
           onCupChanged: _onCupChanged,
-          width: SizeConfig.screenWidth * .7,
+          width: Sizing.screenWidth * .7,
         ),
 
         // Dropdown to select team size
@@ -194,8 +194,8 @@ class _TeamEditState extends State<TeamEdit> {
         pokemonTeam.length,
         (index) => Padding(
           padding: EdgeInsets.only(
-            top: SizeConfig.blockSizeVertical * 1.1,
-            bottom: SizeConfig.blockSizeVertical * 1.1,
+            top: Sizing.blockSizeVertical * 1.1,
+            bottom: Sizing.blockSizeVertical * 1.1,
           ),
           child: (index == pokemonTeam.length - 1)
               ? Column(
@@ -209,15 +209,15 @@ class _TeamEditState extends State<TeamEdit> {
                       cup: _builderTeam.cup,
                       footer: _buildNodeFooter(pokemonTeam[index], index),
                       padding: EdgeInsets.only(
-                        top: SizeConfig.blockSizeVertical * .7,
-                        left: SizeConfig.blockSizeHorizontal * 2.0,
-                        right: SizeConfig.blockSizeHorizontal * 2.0,
+                        top: Sizing.blockSizeVertical * .7,
+                        left: Sizing.blockSizeHorizontal * 2.0,
+                        right: Sizing.blockSizeHorizontal * 2.0,
                       ),
                     ),
 
                     // Spacer to give last node in the list more scroll room
                     SizedBox(
-                      height: SizeConfig.blockSizeVertical * 10.0,
+                      height: Sizing.blockSizeVertical * 10.0,
                     ),
                   ],
                 )
@@ -230,9 +230,9 @@ class _TeamEditState extends State<TeamEdit> {
                   cup: _builderTeam.cup,
                   footer: _buildNodeFooter(pokemonTeam[index], index),
                   padding: EdgeInsets.only(
-                    top: SizeConfig.blockSizeVertical * .7,
-                    left: SizeConfig.blockSizeHorizontal * 2.0,
-                    right: SizeConfig.blockSizeHorizontal * 2.0,
+                    top: Sizing.blockSizeVertical * .7,
+                    left: Sizing.blockSizeHorizontal * 2.0,
+                    right: Sizing.blockSizeHorizontal * 2.0,
                   ),
                 ),
         ),
@@ -249,9 +249,9 @@ class _TeamEditState extends State<TeamEdit> {
       appBar: _buildAppBar(),
       body: Padding(
         padding: EdgeInsets.only(
-          top: SizeConfig.blockSizeVertical * 2.0,
-          left: SizeConfig.blockSizeHorizontal * 2.0,
-          right: SizeConfig.blockSizeHorizontal * 2.0,
+          top: Sizing.blockSizeVertical * 2.0,
+          left: Sizing.blockSizeHorizontal * 2.0,
+          right: Sizing.blockSizeHorizontal * 2.0,
         ),
         child: ListView(
           children: [
@@ -260,7 +260,7 @@ class _TeamEditState extends State<TeamEdit> {
 
             // Spacer
             SizedBox(
-              height: SizeConfig.blockSizeVertical * 1.0,
+              height: Sizing.blockSizeVertical * 1.0,
             ),
 
             // The list of team nodes
@@ -268,7 +268,7 @@ class _TeamEditState extends State<TeamEdit> {
 
             // Spacer
             SizedBox(
-              height: SizeConfig.blockSizeVertical * 2.0,
+              height: Sizing.blockSizeVertical * 2.0,
             ),
           ],
         ),
@@ -283,20 +283,20 @@ class _TeamEditState extends State<TeamEdit> {
                   Text(
                     'Analyze Team',
                     style: TextStyle(
-                      fontSize: SizeConfig.h2,
+                      fontSize: Sizing.h2,
                     ),
                   ),
                   SizedBox(
-                    width: SizeConfig.blockSizeHorizontal * 5.0,
+                    width: Sizing.blockSizeHorizontal * 5.0,
                   ),
                   Icon(
                     Icons.analytics,
-                    size: SizeConfig.blockSizeHorizontal * 7.0,
+                    size: Sizing.blockSizeHorizontal * 7.0,
                   ),
                 ],
               ),
-              width: SizeConfig.screenWidth * .85,
-              height: SizeConfig.blockSizeVertical * 8.5,
+              width: Sizing.screenWidth * .85,
+              height: Sizing.blockSizeVertical * 8.5,
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

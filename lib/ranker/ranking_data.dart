@@ -1,9 +1,10 @@
 // Local
 import '../pogo_data/pokemon.dart';
 import '../pogo_data/move.dart';
+import '../pogo_data/ratings.dart';
 import '../battle/pokemon_battler.dart';
 import '../battle/battle_result.dart';
-import '../modules/globals.dart';
+import '../modules/data/globals.dart';
 
 class RankingData {
   RankingData({required this.pokemon});
@@ -56,20 +57,18 @@ class RankingData {
   }
 
   void addLeadResult(BattleResult result) {
-    int leadRating = ((result.self.rating + _shieldRating(result, [2, 2])) *
-            Globals.pokemonRatingMagnitude)
-        .floor();
+    int leadRating =
+        ((result.self.currentRating + _shieldRating(result, [2, 2])) *
+                Globals.pokemonRatingMagnitude)
+            .floor();
 
-    if (result.outcome == BattleOutcome.win) {}
-
-    ratings.overall += leadRating;
     ratings.lead += leadRating;
     //keyLeads.update(result);
     ++leadBattleCount;
   }
 
   void addSwitchResult(BattleResult result, List<int> shieldScenario) {
-    int switchRating = ((result.self.rating *
+    int switchRating = ((result.self.currentRating *
                     .5 *
                     result.self.getOffenseEffectivenessFromTyping(
                         result.opponent.typing) /
@@ -79,9 +78,6 @@ class RankingData {
             Globals.pokemonRatingMagnitude)
         .floor();
 
-    if (result.outcome == BattleOutcome.win) {}
-
-    ratings.overall += switchRating;
     ratings.switchRating += switchRating;
     //keySwitches.update(result);
     ++switchBattleCount;
@@ -89,11 +85,10 @@ class RankingData {
 
   void addCloserResult(BattleResult result, List<int> shieldScenario) {
     int closerRating =
-        ((result.self.rating + _shieldRating(result, shieldScenario)) *
+        ((result.self.currentRating + _shieldRating(result, shieldScenario)) *
                 Globals.pokemonRatingMagnitude)
             .floor();
 
-    ratings.overall += closerRating;
     ratings.closer += closerRating;
     //keyClosers.update(result);
     ++closerBattleCount;
@@ -111,11 +106,12 @@ class RankingData {
 
   void averageRatings() {
     if (leadBattleCount != 0) {
-      ratings.lead = (ratings.lead / leadBattleCount).floor();
+      ratings.lead = (.25 * ratings.lead / leadBattleCount).floor();
     }
 
     if (switchBattleCount != 0) {
-      ratings.switchRating = (ratings.switchRating / switchBattleCount).floor();
+      ratings.switchRating =
+          (.5 * ratings.switchRating / switchBattleCount).floor();
     }
 
     if (closerBattleCount != 0) {
@@ -124,22 +120,6 @@ class RankingData {
 
     ratings.overall =
         ((ratings.lead + ratings.switchRating + ratings.closer) / 3).floor();
-  }
-}
-
-class Ratings {
-  int overall = 0;
-  int lead = 0;
-  int switchRating = 0;
-  int closer = 0;
-
-  Map<String, int> toJson() {
-    return {
-      'overall': overall,
-      'lead': lead,
-      'switch': switchRating,
-      'closer': closer,
-    };
   }
 }
 
@@ -159,10 +139,13 @@ class KeyMatchups {
   void update(BattleResult result) {
     if (result.outcome == BattleOutcome.win) {
       shelfResult(winShelf, result,
-          (r1, r2) => (r2.self.rating > r1.self.rating ? -1 : 1));
+          (r1, r2) => (r2.self.currentRating > r1.self.currentRating ? -1 : 1));
     } else if (result.outcome == BattleOutcome.loss) {
-      shelfResult(lossShelf, result,
-          (r1, r2) => (r2.opponent.rating > r1.opponent.rating ? -1 : 1));
+      shelfResult(
+          lossShelf,
+          result,
+          (r1, r2) =>
+              (r2.opponent.currentRating > r1.opponent.currentRating ? -1 : 1));
     }
   }
 

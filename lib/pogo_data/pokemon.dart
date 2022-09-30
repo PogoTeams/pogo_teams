@@ -2,13 +2,19 @@
 import 'dart:math';
 
 // Local
-import 'typing.dart';
+import 'pokemon_typing.dart';
 import 'move.dart';
-import 'stats.dart';
-import '../modules/stats.dart';
-import '../modules/pokemon_types.dart';
-import '../modules/gamemaster.dart';
-import '../modules/globals.dart';
+import 'ratings.dart';
+import 'pokemon_stats.dart';
+import '../modules/data/stats.dart';
+import '../modules/data/pokemon_types.dart';
+import '../modules/data/gamemaster.dart';
+import '../modules/data/globals.dart';
+
+/*
+-------------------------------------------------------------------- @PogoTeams
+-------------------------------------------------------------------------------
+*/
 
 class Pokemon {
   Pokemon({
@@ -28,15 +34,21 @@ class Pokemon {
     required this.evolutions,
     required this.tempEvolutions,
     required this.released,
+    required this.minLevel,
     required this.tags,
     required this.littleCupIVs,
     required this.greatLeagueIVs,
     required this.ultraLeagueIVs,
-  });
+    FastMove? selectedFastMove,
+    List<ChargeMove>? selectedChargeMoves,
+    this.currentRating = 0,
+  })  : selectedFastMove = selectedFastMove ?? FastMove.none,
+        selectedChargeMoves =
+            selectedChargeMoves ?? List<ChargeMove>.filled(2, ChargeMove.none);
 
   factory Pokemon.fromJson(
     Map<String, dynamic> json, {
-    bool isShadow = false,
+    bool shadowForm = false,
   }) {
     List<String> moveIds;
 
@@ -56,8 +68,6 @@ class Pokemon {
       chargeMoves = Gamemaster.chargeMoves
           .where((ChargeMove move) => moveIds.contains(move.moveId))
           .toList();
-    } else {
-      chargeMoves = [];
     }
 
     List<String>? eliteFastMoveIds;
@@ -76,7 +86,9 @@ class Pokemon {
           .toList());
     }
 
-    if (json.containsKey('shadow') && json['shadow']['released'] && !isShadow) {
+    if (json.containsKey('shadow') &&
+        json['shadow']['released'] &&
+        !shadowForm) {
       String purifiedChargeMove =
           json['shadow']['purifiedChargeMove'] as String;
       chargeMoves.add(Gamemaster.chargeMoves
@@ -88,13 +100,13 @@ class Pokemon {
       tags = List<String>.from(json['tags']);
     }
 
-    if (isShadow) {
+    if (shadowForm) {
       tags.add('shadow');
     }
 
     return Pokemon(
       dex: json['dex'] as int,
-      pokemonId: (isShadow ? json['shadow']['pokemonId'] : json['pokemonId'])
+      pokemonId: (shadowForm ? json['shadow']['pokemonId'] : json['pokemonId'])
           as String,
       name: json['name'] as String,
       typing: PokemonTyping.fromJson(json['typing']),
@@ -123,7 +135,8 @@ class Pokemon {
               .toList()
           : null,
       released:
-          (isShadow ? json['shadow']['released'] : json['released']) as bool,
+          (shadowForm ? json['shadow']['released'] : json['released']) as bool,
+      minLevel: json.containsKey('minLevel') ? json['minLevel'] as int : null,
       tags: tags.isEmpty ? null : tags,
       littleCupIVs: json.containsKey('littlecupsivs')
           ? IVs.fromJson(json['littlecupsivs'])
@@ -210,6 +223,7 @@ class Pokemon {
       evolutions: null,
       tempEvolutions: null,
       released: overridesJson['released'] as bool,
+      minLevel: null,
       tags: tags,
       littleCupIVs: overridesJson.containsKey('littlecupsivs')
           ? IVs.fromJson(overridesJson['littlecupsivs'])
@@ -220,6 +234,36 @@ class Pokemon {
       ultraLeagueIVs: overridesJson.containsKey('ultraLeagueIVs')
           ? IVs.fromJson(overridesJson['ultraLeagueIVs'])
           : null,
+    );
+  }
+
+  static Pokemon from(Pokemon other) {
+    return Pokemon(
+      dex: other.dex,
+      pokemonId: other.pokemonId,
+      name: other.name,
+      typing: other.typing,
+      stats: other.stats,
+      fastMoves: other.fastMoves,
+      chargeMoves: other.chargeMoves,
+      eliteFastMoveIds:
+          other.eliteFastMoveIds != null ? other.eliteFastMoveIds! : null,
+      eliteChargeMoveIds:
+          other.eliteChargeMoveIds != null ? other.eliteChargeMoveIds! : null,
+      thirdMoveCost: other.thirdMoveCost,
+      shadow: other.shadow,
+      form: other.form,
+      familyId: other.familyId,
+      evolutions: other.evolutions,
+      tempEvolutions: other.tempEvolutions,
+      released: other.released,
+      minLevel: other.minLevel,
+      tags: other.tags,
+      littleCupIVs: other.littleCupIVs,
+      greatLeagueIVs: other.greatLeagueIVs,
+      ultraLeagueIVs: other.ultraLeagueIVs,
+      selectedFastMove: other.selectedFastMove,
+      selectedChargeMoves: other.selectedChargeMoves,
     );
   }
 
@@ -239,13 +283,20 @@ class Pokemon {
   final List<Evolution>? evolutions;
   final List<TempEvolution>? tempEvolutions;
   final bool released;
+  final int? minLevel;
   final List<String>? tags;
   final IVs? littleCupIVs;
   final IVs? greatLeagueIVs;
   final IVs? ultraLeagueIVs;
 
+  FastMove selectedFastMove;
+  List<ChargeMove> selectedChargeMoves;
+  num currentRating;
+
   // Form a string that describes this Pokemon's typing
   String get typeString => typing.toString();
+
+  String get ratingString => currentRating.toString();
 
   num get statsProduct => stats.atk * stats.def * stats.hp;
 
@@ -256,21 +307,99 @@ class Pokemon {
   List<String> get fastMoveNames =>
       fastMoves.map((FastMove move) => move.name).toList();
 
+  // Get a list of all fast move ids
+  List<String> get fastMoveIds =>
+      fastMoves.map((FastMove move) => move.moveId).toList();
+
   // Get a list of all charge move names
   List<String> get chargeMoveNames =>
       chargeMoves.map<String>((ChargeMove move) => move.name).toList();
 
+  // Get a list of all charge move ids
+  List<String> get chargeMoveIds =>
+      chargeMoves.map<String>((ChargeMove move) => move.moveId).toList();
+
   bool get isShadow => tags?.contains('shadow') ?? false;
   bool get isMega => tags?.contains('mega') ?? false;
+  bool get isMonoType => typing.isMonoType;
 
-  // Get the total attack, defense and hp stats
-  // stat total = base stat + iv stat
-  List<num> getStatTotals(List<num> ivs) {
-    return [
-      stats.atk + ivs[1],
-      stats.def + ivs[2],
-      stats.hp + ivs[3],
-    ];
+  List<Move> get moveset => [selectedFastMove, ...selectedChargeMoves];
+
+  // Go through the moveset typing, accumulate the best type effectiveness
+  List<double> get offenseCoverage {
+    List<double> offenseCoverage = [];
+    final fast = selectedFastMove.type.offenseEffectiveness;
+    final c1 = selectedChargeMoves.first.type.offenseEffectiveness;
+    List<double> c2;
+
+    if ((selectedChargeMoves.last.isNone)) {
+      c2 = List.filled(Globals.typeCount, 0.0);
+    } else {
+      c2 = selectedChargeMoves.last.type.offenseEffectiveness;
+    }
+
+    for (int i = 0; i < Globals.typeCount; ++i) {
+      offenseCoverage
+          .add([fast[i], c1[i], c2[i]].reduce((v1, v2) => (v1 > v2 ? v1 : v2)));
+    }
+
+    return offenseCoverage;
+  }
+
+  double getOffenseEffectivenessFromTyping(PokemonTyping typing) {
+    List<double> coverage = offenseCoverage;
+    if (typing.isMonoType) {
+      return coverage[PokemonTypes.typeIndexMap[typing.typeA.typeId]!];
+    }
+
+    return coverage[PokemonTypes.typeIndexMap[typing.typeA.typeId]!] *
+        coverage[PokemonTypes.typeIndexMap[typing.typeB?.typeId]!];
+  }
+
+  // If the move is an elite move, slap a * on there to make it special
+  String getFormattedMoveName(Move move) {
+    if (isEliteMove(move)) {
+      return '${move.name}*';
+    }
+    return move.name;
+  }
+
+  bool isEliteMove(Move move) {
+    if (move is FastMove) {
+      return eliteFastMoveIds?.contains(move.moveId) ?? false;
+    }
+    return eliteChargeMoveIds?.contains(move.moveId) ?? false;
+  }
+
+  // True if one of the specified types exists in this Pokemon's typing
+  bool hasType(List<PokemonType> types) {
+    return typing.containsType(types);
+  }
+
+  // True if this Pokemon's selected moveset contains one of the types
+  bool hasSelectedMovesetType(List<PokemonType> types) {
+    for (PokemonType type in types) {
+      if (type.isSameType(selectedFastMove.type) ||
+          type.isSameType(selectedChargeMoves.first.type) ||
+          type.isSameType(selectedChargeMoves.last.type)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  IVs getIvs(int cpCap) {
+    switch (cpCap) {
+      case 500:
+        return littleCupIVs!;
+      case 1500:
+        return greatLeagueIVs!;
+      case 2500:
+        return ultraLeagueIVs!;
+      default:
+        return IVs.max();
+    }
   }
 }
 
@@ -373,19 +502,19 @@ class BattlePokemon extends Pokemon {
     required pokemonId,
     required name,
     required typing,
-    required baseStats,
+    required stats,
     required fastMoves,
     required chargeMoves,
-    required eliteFastMoves,
-    required eliteChargeMoves,
+    required eliteFastMoveIds,
+    required eliteChargeMoveIds,
     required thirdMoveCost,
     required shadow,
-    required isShadow,
     required form,
     required familyId,
     required evolutions,
     required tempEvolutions,
     required released,
+    required minLevel,
     required tags,
     required littleCupIVs,
     required greatLeagueIVs,
@@ -395,11 +524,11 @@ class BattlePokemon extends Pokemon {
           pokemonId: pokemonId,
           name: name,
           typing: typing,
-          stats: baseStats,
+          stats: stats,
           fastMoves: fastMoves,
           chargeMoves: chargeMoves,
-          eliteFastMoveIds: eliteFastMoves,
-          eliteChargeMoveIds: eliteChargeMoves,
+          eliteFastMoveIds: eliteFastMoveIds,
+          eliteChargeMoveIds: eliteChargeMoveIds,
           thirdMoveCost: thirdMoveCost,
           shadow: shadow,
           form: form,
@@ -407,6 +536,7 @@ class BattlePokemon extends Pokemon {
           evolutions: evolutions,
           tempEvolutions: tempEvolutions,
           released: released,
+          minLevel: minLevel,
           tags: tags,
           littleCupIVs: littleCupIVs,
           greatLeagueIVs: greatLeagueIVs,
@@ -419,25 +549,25 @@ class BattlePokemon extends Pokemon {
       pokemonId: other.pokemonId,
       name: other.name,
       typing: other.typing,
-      baseStats: other.stats,
+      stats: other.stats,
       fastMoves: List<FastMove>.from(other.fastMoves)
           .map((move) => FastMove.from(move))
           .toList(),
       chargeMoves: List<ChargeMove>.from(other.chargeMoves)
           .map((move) => ChargeMove.from(move))
           .toList(),
-      eliteFastMoves:
+      eliteFastMoveIds:
           other.eliteFastMoveIds != null ? other.eliteFastMoveIds! : null,
-      eliteChargeMoves:
+      eliteChargeMoveIds:
           other.eliteChargeMoveIds != null ? other.eliteChargeMoveIds! : null,
       thirdMoveCost: other.thirdMoveCost,
       shadow: other.shadow,
-      isShadow: other.isShadow,
       form: other.form,
       familyId: other.familyId,
       evolutions: other.evolutions,
       tempEvolutions: other.tempEvolutions,
       released: other.released,
+      minLevel: other.minLevel,
       tags: other.tags,
       littleCupIVs: other.littleCupIVs,
       greatLeagueIVs: other.greatLeagueIVs,
@@ -455,21 +585,21 @@ class BattlePokemon extends Pokemon {
       pokemonId: other.pokemonId,
       name: other.name,
       typing: other.typing,
-      baseStats: other.stats,
+      stats: other.stats,
       fastMoves: other.fastMoves,
       chargeMoves: other.chargeMoves,
-      eliteFastMoves:
+      eliteFastMoveIds:
           other.eliteFastMoveIds != null ? other.eliteFastMoveIds! : null,
-      eliteChargeMoves:
+      eliteChargeMoveIds:
           other.eliteChargeMoveIds != null ? other.eliteChargeMoveIds! : null,
       thirdMoveCost: other.thirdMoveCost,
       shadow: other.shadow,
-      isShadow: other.isShadow,
       form: other.form,
       familyId: other.familyId,
       evolutions: other.evolutions,
       tempEvolutions: other.tempEvolutions,
       released: other.released,
+      minLevel: other.minLevel,
       tags: other.tags,
       littleCupIVs: other.littleCupIVs,
       greatLeagueIVs: other.greatLeagueIVs,
@@ -489,6 +619,9 @@ class BattlePokemon extends Pokemon {
     copy.selectedFastMove = other.selectedFastMove;
     copy.selectedChargeMoves = other.selectedChargeMoves;
 
+    copy._atkBuffStage = other._atkBuffStage;
+    copy._defBuffStage = other._defBuffStage;
+
     if (nextDecidedChargeMove != null) {
       copy.nextDecidedChargeMove = nextDecidedChargeMove;
     }
@@ -497,10 +630,6 @@ class BattlePokemon extends Pokemon {
 
     return copy;
   }
-
-  FastMove selectedFastMove = FastMove.none;
-  List<ChargeMove> selectedChargeMoves = List.filled(2, ChargeMove.none);
-  ChargeMove nextDecidedChargeMove = ChargeMove.none;
 
   late final num maxHp;
   IVs ivs = IVs.empty();
@@ -511,8 +640,11 @@ class BattlePokemon extends Pokemon {
   num energy = 0;
   num chargeTDO = 0;
   num chargeEnergyDelta = 0;
-  num rating = 0;
   bool prioritizeMoveAlignment = false;
+  ChargeMove nextDecidedChargeMove = ChargeMove.none;
+
+  int _atkBuffStage = 4;
+  int _defBuffStage = 4;
 
   // The damage output per energy spent in a battle
   num get chargeDPE =>
@@ -521,35 +653,26 @@ class BattlePokemon extends Pokemon {
   num get currentHpRatio => currentHp / maxHp;
   num get damageRecievedRatio => (maxHp - currentHp) / maxHp;
 
-  // Go through the moveset typing, accumulate the best type effectiveness
-  List<double> get offenseCoverage {
-    List<double> offenseCoverage = [];
-    final fast = selectedFastMove.type.getOffenseEffectiveness();
-    final c1 = selectedChargeMoves.first.type.getOffenseEffectiveness();
-    List<double> c2;
-
-    if ((selectedChargeMoves.last.isNone())) {
-      c2 = List.filled(Globals.typeCount, 0.0);
+  // Attack buff
+  num get atkBuff => Stats.getBuffMultiplier(_atkBuffStage);
+  void updateAtkBuff(int buff) {
+    _atkBuffStage += buff;
+    if (buff > 0) {
+      _atkBuffStage = min(8, _atkBuffStage);
     } else {
-      c2 = selectedChargeMoves.last.type.getOffenseEffectiveness();
+      _atkBuffStage = max(0, _atkBuffStage);
     }
-
-    for (int i = 0; i < Globals.typeCount; ++i) {
-      offenseCoverage
-          .add([fast[i], c1[i], c2[i]].reduce((v1, v2) => (v1 > v2 ? v1 : v2)));
-    }
-
-    return offenseCoverage;
   }
 
-  double getOffenseEffectivenessFromTyping(PokemonTyping typing) {
-    List<double> coverage = offenseCoverage;
-    if (typing.isMonoType()) {
-      return coverage[PokemonTypes.typeIndexMap[typing.typeA.typeId]!];
+  // Defense buff
+  num get defBuff => Stats.getBuffMultiplier(_defBuffStage);
+  void updateDefBuff(int buff) {
+    _defBuffStage += buff;
+    if (buff > 0) {
+      _defBuffStage = min(8, _defBuffStage);
+    } else {
+      _defBuffStage = max(0, _defBuffStage);
     }
-
-    return coverage[PokemonTypes.typeIndexMap[typing.typeA.typeId]!] *
-        coverage[PokemonTypes.typeIndexMap[typing.typeB?.typeId]!];
   }
 
   bool get hasShield {
@@ -573,6 +696,25 @@ class BattlePokemon extends Pokemon {
       chargeTDO += opponent.recieveDamage(nextDecidedChargeMove.damage);
       chargeEnergyDelta += nextDecidedChargeMove.energyDelta;
     }
+
+    if (nextDecidedChargeMove.buffs != null) {
+      applyChargeMoveBuff(nextDecidedChargeMove, opponent);
+    }
+  }
+
+  void applyChargeMoveBuff(ChargeMove chargeMove, BattlePokemon opponent) {
+    if (chargeMove.buffs!.selfAttack != null) {
+      updateAtkBuff(chargeMove.buffs!.selfAttack!);
+    }
+    if (chargeMove.buffs!.selfDefense != null) {
+      updateDefBuff(chargeMove.buffs!.selfDefense!);
+    }
+    if (chargeMove.buffs!.opponentAttack != null) {
+      opponent.updateAtkBuff(chargeMove.buffs!.opponentAttack!);
+    }
+    if (chargeMove.buffs!.opponentDefense != null) {
+      opponent.updateDefBuff(chargeMove.buffs!.opponentDefense!);
+    }
   }
 
   num recieveDamage(num damage) {
@@ -587,17 +729,7 @@ class BattlePokemon extends Pokemon {
 
   // Given a cp cap, give the Pokemon the ideal stats and moveset
   void initialize(int cpCap) {
-    switch (cpCap) {
-      case 500:
-        ivs = littleCupIVs!;
-        break;
-      case 1500:
-        ivs = greatLeagueIVs!;
-        break;
-      case 2500:
-        ivs = ultraLeagueIVs!;
-        break;
-    }
+    ivs = getIvs(cpCap);
 
     // Calculate maxCp
     cp = Stats.calculateCP(stats, ivs);
@@ -644,7 +776,7 @@ class BattlePokemon extends Pokemon {
 
     if (ratingsSum > 0) {
       for (var move in chargeMoves) {
-        move.initializeEffectiveDamage(this, opponent);
+        move.calculateEffectiveDamage(this, opponent);
 
         // Normalize move rating
         move.rating = ((move.rating / ratingsSum) * 100).round();
@@ -658,7 +790,7 @@ class BattlePokemon extends Pokemon {
     num baseline = Move.calculateCycleDpt(FastMove.none, highestRated);
 
     for (var move in fastMoves) {
-      move.initializeEffectiveDamage(this, opponent);
+      move.calculateEffectiveDamage(this, opponent);
 
       num cycleDpt = Move.calculateCycleDpt(move, highestRated);
       cycleDpt = max(cycleDpt - baseline, .1);
@@ -692,14 +824,14 @@ class BattlePokemon extends Pokemon {
   // Go through the moveset typing, accumulate the best type effectiveness
   List<double> getOffenseCoverage() {
     List<double> offenseCoverage = [];
-    final fast = selectedFastMove.type.getOffenseEffectiveness();
-    final c1 = selectedChargeMoves[0].type.getOffenseEffectiveness();
+    final fast = selectedFastMove.type.offenseEffectiveness;
+    final c1 = selectedChargeMoves[0].type.offenseEffectiveness;
     List<double> c2;
 
-    if ((selectedChargeMoves[1].moveId == 'NONE')) {
+    if ((selectedChargeMoves.last.isNone)) {
       c2 = List.filled(Globals.typeCount, 0.0);
     } else {
-      c2 = selectedChargeMoves[1].type.getOffenseEffectiveness();
+      c2 = selectedChargeMoves[1].type.offenseEffectiveness;
     }
 
     for (int i = 0; i < Globals.typeCount; ++i) {
@@ -721,14 +853,115 @@ class BattlePokemon extends Pokemon {
   }
 
   num get effectiveAttack {
-    return (stats.atk + ivs.atk) *
+    return atkBuff *
+        (stats.atk + ivs.atk) *
         Stats.getCpMultiplier(ivs.level) *
         (isShadow ? Stats.shadowAtkMultiplier : 1);
   }
 
   num get effectiveDefense {
-    return (stats.def + ivs.def) *
+    return defBuff *
+        (stats.def + ivs.def) *
         Stats.getCpMultiplier(ivs.level) *
         (isShadow ? Stats.shadowDefMultiplier : 1);
   }
+}
+
+class RankedPokemon extends Pokemon {
+  RankedPokemon({
+    required dex,
+    required pokemonId,
+    required name,
+    required typing,
+    required baseStats,
+    required fastMoves,
+    required chargeMoves,
+    required eliteFastMoveIds,
+    required eliteChargeMoveIds,
+    required thirdMoveCost,
+    required shadow,
+    required form,
+    required familyId,
+    required evolutions,
+    required tempEvolutions,
+    required released,
+    required minLevel,
+    required tags,
+    required littleCupIVs,
+    required greatLeagueIVs,
+    required ultraLeagueIVs,
+    required this.ivs,
+    required this.ratings,
+    required selectedFastMove,
+    required selectedChargeMoves,
+  })  : cp = Stats.calculateCP(baseStats, ivs),
+        super(
+          dex: dex,
+          pokemonId: pokemonId,
+          name: name,
+          typing: typing,
+          stats: baseStats,
+          fastMoves: fastMoves,
+          chargeMoves: chargeMoves,
+          eliteFastMoveIds: eliteFastMoveIds,
+          eliteChargeMoveIds: eliteChargeMoveIds,
+          thirdMoveCost: thirdMoveCost,
+          shadow: shadow,
+          form: form,
+          familyId: familyId,
+          evolutions: evolutions,
+          tempEvolutions: tempEvolutions,
+          released: released,
+          minLevel: minLevel,
+          tags: tags,
+          littleCupIVs: littleCupIVs,
+          greatLeagueIVs: greatLeagueIVs,
+          ultraLeagueIVs: ultraLeagueIVs,
+          currentRating: ratings.overall,
+        ) {
+    this.selectedFastMove = selectedFastMove;
+    this.selectedChargeMoves = selectedChargeMoves;
+  }
+
+  static RankedPokemon fromPokemon(
+    Pokemon other,
+    IVs ivs,
+    Ratings ratings,
+    FastMove selectedFastMove,
+    List<ChargeMove> selectedChargeMoves,
+  ) {
+    return RankedPokemon(
+      dex: other.dex,
+      pokemonId: other.pokemonId,
+      name: other.name,
+      typing: other.typing,
+      baseStats: other.stats,
+      fastMoves: other.fastMoves,
+      chargeMoves: other.chargeMoves,
+      eliteFastMoveIds:
+          other.eliteFastMoveIds != null ? other.eliteFastMoveIds! : null,
+      eliteChargeMoveIds:
+          other.eliteChargeMoveIds != null ? other.eliteChargeMoveIds! : null,
+      thirdMoveCost: other.thirdMoveCost,
+      shadow: other.shadow,
+      form: other.form,
+      familyId: other.familyId,
+      evolutions: other.evolutions,
+      tempEvolutions: other.tempEvolutions,
+      released: other.released,
+      minLevel: other.minLevel,
+      tags: other.tags,
+      littleCupIVs: other.littleCupIVs,
+      greatLeagueIVs: other.greatLeagueIVs,
+      ultraLeagueIVs: other.ultraLeagueIVs,
+      ivs: ivs,
+      ratings: ratings,
+      selectedFastMove: selectedFastMove,
+      selectedChargeMoves: selectedChargeMoves,
+    );
+  }
+
+  final IVs ivs;
+  final int cp;
+  final Ratings ratings;
 }

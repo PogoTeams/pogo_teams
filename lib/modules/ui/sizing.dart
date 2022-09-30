@@ -8,7 +8,7 @@ upon the initial app build.
 -------------------------------------------------------------------------------
 */
 
-class SizeConfig {
+class Sizing {
   static late MediaQueryData _mediaQueryData;
   static late double screenWidth;
   static late double screenHeight;

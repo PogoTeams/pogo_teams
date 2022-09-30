@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'coverage_graph.dart';
 import 'coverage_grids.dart';
 import '../../tools/pair.dart';
-import '../../data/pokemon/typing.dart';
-import '../../configs/size_config.dart';
+import '../../pogo_data/pokemon_typing.dart';
+import '../../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -24,9 +24,9 @@ class TypeCoverage extends StatelessWidget {
     required this.includedTypesKeys,
   }) : super(key: key);
 
-  final List<Pair<Type, double>> netEffectiveness;
-  final List<Pair<Type, double>> defenseThreats;
-  final List<Pair<Type, double>> offenseCoverage;
+  final List<Pair<PokemonType, double>> netEffectiveness;
+  final List<Pair<PokemonType, double>> defenseThreats;
+  final List<Pair<PokemonType, double>> offenseCoverage;
   final List<String> includedTypesKeys;
 
   @override
@@ -42,7 +42,7 @@ class TypeCoverage extends StatelessWidget {
 
         // Spacer
         SizedBox(
-          height: SizeConfig.blockSizeVertical * 2.5,
+          height: Sizing.blockSizeVertical * 2.5,
         ),
 
         CoverageGraph(netEffectiveness: netEffectiveness),

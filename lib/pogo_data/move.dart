@@ -2,11 +2,11 @@
 import 'dart:math';
 
 // Local
-import 'typing.dart';
+import 'pokemon_typing.dart';
 import 'pokemon.dart';
-import '../modules/pokemon_types.dart';
-import '../../../modules/debug_cli.dart';
-import '../../../modules/stats.dart';
+import '../modules/data/pokemon_types.dart';
+import '../modules/data/debug_cli.dart';
+import '../modules/data/stats.dart';
 
 /*
 ------------------------- D A M A G E - F O R M U L A -------------------------
@@ -40,7 +40,7 @@ class Move {
     return moveId == other.moveId;
   }
 
-  void initializeEffectiveDamage(BattlePokemon owner, BattlePokemon opponent) {
+  void calculateEffectiveDamage(BattlePokemon owner, BattlePokemon opponent) {
     num stab = 1;
 
     // Stab
@@ -61,9 +61,7 @@ class Move {
         1;
   }
 
-  bool isNone() {
-    return moveId == 'none';
-  }
+  bool get isNone => moveId == 'none';
 
   // Calculate cycle damage per turn given a fast move paired with
   // the given charge move
@@ -231,18 +229,18 @@ class MoveBuffs {
   factory MoveBuffs.fromJson(Map<String, dynamic> json) {
     return MoveBuffs(
       chance: json['chance'] as num,
-      selfAttack: json['selfAttack'] as num?,
-      selfDefense: json['selfDefense'] as num?,
-      opponentAttack: json['opponentAttack'] as num?,
-      opponentDefense: json['opponentDefense'] as num?,
+      selfAttack: json['selfAttack'] as int?,
+      selfDefense: json['selfDefense'] as int?,
+      opponentAttack: json['opponentAttack'] as int?,
+      opponentDefense: json['opponentDefense'] as int?,
     );
   }
 
   final num chance;
-  final num? selfAttack;
-  final num? selfDefense;
-  final num? opponentAttack;
-  final num? opponentDefense;
+  final int? selfAttack;
+  final int? selfDefense;
+  final int? opponentAttack;
+  final int? opponentDefense;
 
   // Calculate a multiplier based on :
   // - Opponent buff

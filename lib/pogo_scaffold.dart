@@ -12,13 +12,13 @@ import 'package:http/retry.dart';
 
 // Local Imports
 import 'tools/pair.dart';
-import 'data/user_teams.dart';
+import 'pogo_data/user_teams.dart';
 import 'pages/teams/teams_builder.dart';
 import 'pages/rankings.dart';
-import 'configs/size_config.dart';
+import 'modules/ui/sizing.dart';
 import 'widgets/pogo_drawer.dart';
-import 'data/masters/gamemaster.dart';
-import 'data/globals.dart' as globals;
+import 'modules/data/gamemaster.dart';
+import 'modules/data/globals.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -90,11 +90,11 @@ class _PogoScaffoldState extends State<PogoScaffold>
   late final Map<String, Widget> _icons = {
     'Teams': Image.asset(
       'assets/pokeball_icon.png',
-      width: SizeConfig.h2 * 1.2,
+      width: Sizing.h2 * 1.2,
     ),
     'Rankings': Icon(
       Icons.bar_chart,
-      size: SizeConfig.h2 * 1.5,
+      size: Sizing.h2 * 1.5,
     ),
   };
 
@@ -118,8 +118,8 @@ class _PogoScaffoldState extends State<PogoScaffold>
       ),
       body: Padding(
         padding: EdgeInsets.only(
-          left: SizeConfig.blockSizeHorizontal * 2.0,
-          right: SizeConfig.blockSizeHorizontal * 2.0,
+          left: Sizing.blockSizeHorizontal * 2.0,
+          right: Sizing.blockSizeHorizontal * 2.0,
         ),
         child: _pages[_navKey],
       ),
@@ -136,14 +136,14 @@ class _PogoScaffoldState extends State<PogoScaffold>
           Text(
             _navKey,
             style: TextStyle(
-              fontSize: SizeConfig.h2,
+              fontSize: Sizing.h2,
               fontStyle: FontStyle.italic,
             ),
           ),
 
           // Spacer
           SizedBox(
-            width: SizeConfig.blockSizeHorizontal * 2.0,
+            width: Sizing.blockSizeHorizontal * 2.0,
           ),
 
           // Page icon
@@ -167,62 +167,25 @@ class _PogoScaffoldState extends State<PogoScaffold>
     // Pokemon GO local db data
     // This is a "cache" of the latest data model from the server
     final Box gmBox = await Hive.openBox('gamemaster');
-    final Box rankingsBox = await Hive.openBox('rankings');
 
     String prefix = ''; // For indicating testing
 
-    // TRUE FOR TESTING ONLY
-    if (widget.testing) {
-      globals.pathPrefix = '/test/';
-      prefix = '[ TEST ]  ';
-    }
-
     // Implicitly invoke an app update via HTTPS
     if (widget.forceUpdate) {
-      await gmBox.put('timestamp', globals.earliestTimestamp);
+      await gmBox.put('timestamp', Globals.earliestTimestamp);
     }
 
     String message = prefix + 'Loading...'; // Message above progress bar
     final client = RetryClient(Client());
     dynamic gmJson;
 
-    try {
-      // If an update is available
-      // make an http request for the new gamemaster
-      if (await _updateAvailable(gmBox, client)) {
-        message = prefix + 'Updating Pogo Teams...';
-        yield Pair(a: message, b: .8);
-
-        update = true;
-        // Retrieve gamemaster
-        String response = await client.read(
-            Uri.https(globals.url, '${globals.pathPrefix}gamemaster.json'));
-
-        // If request was successful, load in the new gamemaster,
-        gmJson = jsonDecode(response);
-      }
-      // No new update available, attempt to load locally
-      // Upon db failure, an http request will be made
-      else {
-        yield Pair(a: message, b: .8);
-        gmJson = await _loadCachedGamemaster(gmBox, client, httpAttempt: true);
-      }
-    }
-    // If HTTP request or json decoding fails
-    catch (error) {
-      message = prefix + 'No Network Connection...';
-      update = false;
-      yield Pair(a: message, b: .8);
-      gmJson = await _loadCachedGamemaster(gmBox, client);
-    }
+    yield Pair(a: message, b: .8);
+    gmJson = await _loadCachedGamemaster(gmBox);
 
     yield Pair(a: message, b: .9);
 
     // Setup the gamemaster instance
     await gmBox.put('gamemaster', gmJson);
-    globals.gamemaster = await GameMaster.generateGameMaster(
-        gmJson, client, rankingsBox,
-        update: update);
 
     client.close();
     await gmBox.close();
@@ -237,14 +200,11 @@ class _PogoScaffoldState extends State<PogoScaffold>
   Future<bool> _updateAvailable(Box box, Client client) async {
     bool updateAvailable = false;
 
+    /*
     // Retrieve local timestamp
     final String timestampString =
-        box.get('timestamp') ?? globals.earliestTimestamp;
+        box.get('timestamp') ?? Globals.earliestTimestamp;
     DateTime localTimeStamp = DateTime.parse(timestampString);
-
-    // Retrieve server timestamp
-    String response = await client
-        .read(Uri.https(globals.url, '${globals.pathPrefix}timestamp.txt'));
 
     // If request is successful, compare timestamps to determine update
     final latestTimestamp = DateTime.tryParse(response);
@@ -257,6 +217,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
     // Store the timestamp in the local db
     await box.put('timestamp', localTimeStamp.toString());
+    */
 
     return updateAvailable;
   }
@@ -264,23 +225,8 @@ class _PogoScaffoldState extends State<PogoScaffold>
   // Attempt to load gm from the local db
   // If the db fails and httpAttempt is true, attempt a new http request
   // As a last resort, load the gm and rankings from assets
-  dynamic _loadCachedGamemaster(Box box, Client client,
-      {bool httpAttempt = false}) async {
+  dynamic _loadCachedGamemaster(Box box) async {
     dynamic gmJson = box.get('gamemaster');
-
-    if (gmJson == null && httpAttempt) {
-      try {
-        // Retrieve gamemaster
-        String response = await client.read(
-            Uri.https(globals.url, '${globals.pathPrefix}gamemaster.json'));
-
-        // If request was successful, load in the new gamemaster,
-        gmJson = jsonDecode(response);
-      } catch (error) {
-        gmJson = await _loadFromAssets();
-      }
-    }
-
     gmJson ??= await _loadFromAssets();
     return gmJson;
   }
@@ -307,7 +253,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
   @override
   Widget build(BuildContext context) {
     // Initialize media queries
-    SizeConfig().init(context);
+    Sizing().init(context);
 
     if (_loaded) return _buildPogoScaffold();
 
@@ -333,9 +279,9 @@ class _PogoScaffoldState extends State<PogoScaffold>
         return Scaffold(
           body: Padding(
             padding: EdgeInsets.only(
-              left: SizeConfig.blockSizeHorizontal * 2.0,
-              right: SizeConfig.blockSizeHorizontal * 2.0,
-              bottom: SizeConfig.blockSizeVertical * 10.0,
+              left: Sizing.blockSizeHorizontal * 2.0,
+              right: Sizing.blockSizeHorizontal * 2.0,
+              bottom: Sizing.blockSizeVertical * 10.0,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -344,13 +290,13 @@ class _PogoScaffoldState extends State<PogoScaffold>
                 Text(
                   snapshot.data!.a,
                   style: TextStyle(
-                    fontSize: SizeConfig.h2,
+                    fontSize: Sizing.h2,
                   ),
                 ),
 
                 // Spacer
                 SizedBox(
-                  height: SizeConfig.blockSizeVertical * 2.0,
+                  height: Sizing.blockSizeVertical * 2.0,
                 ),
 
                 // Progress bar
@@ -358,7 +304,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 80.0,
+                      width: Sizing.blockSizeHorizontal * 80.0,
                       child: AnimatedBuilder(
                         animation: _progressBarAnimController,
                         builder: (context, child) => LinearProgressIndicator(
@@ -372,7 +318,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
                     ),
                     Image.asset(
                       'assets/pokeball_icon.png',
-                      width: SizeConfig.blockSizeHorizontal * 5.0,
+                      width: Sizing.blockSizeHorizontal * 5.0,
                     ),
                   ],
                 ),

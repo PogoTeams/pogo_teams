@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../data/pokemon/pokemon.dart';
-import '../configs/size_config.dart';
+import '../pogo_data/pokemon.dart';
+import '../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -30,7 +30,7 @@ class TraitsIcons extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          pokemon.isXs ? XlIcon(scale: scale) : Container(),
+          //pokemon.isXL ? XlIcon(scale: scale) : Container(),
           pokemon.isShadow ? ShadowIcon(scale: scale) : Container(),
         ],
       ),
@@ -54,17 +54,17 @@ class XlIcon extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: SizedBox(
-        height: SizeConfig.blockSizeVertical * 3.0 * scale,
+        height: Sizing.blockSizeVertical * 3.0 * scale,
         child: Padding(
           padding: EdgeInsets.only(
-            left: SizeConfig.blockSizeHorizontal * 2.5 * scale,
-            right: SizeConfig.blockSizeHorizontal * 2.5 * scale,
+            left: Sizing.blockSizeHorizontal * 2.5 * scale,
+            right: Sizing.blockSizeHorizontal * 2.5 * scale,
           ),
           child: Center(
             child: Text(
               'X L',
               style: TextStyle(
-                fontSize: SizeConfig.h3 * scale,
+                fontSize: Sizing.h3 * scale,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -88,7 +88,7 @@ class ShadowIcon extends StatelessWidget {
     return Icon(
       Icons.local_fire_department_rounded,
       color: Colors.purple[900]!,
-      size: SizeConfig.blockSizeHorizontal * 6.0 * scale,
+      size: Sizing.blockSizeHorizontal * 6.0 * scale,
     );
   }
 }

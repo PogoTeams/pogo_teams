@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../configs/size_config.dart';
+import '../../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -40,7 +40,7 @@ class _WinLossDropdownState extends State<WinLossDropdown>
           child: Text(
             optionString,
             style: TextStyle(
-              fontSize: SizeConfig.h2,
+              fontSize: Sizing.h2,
             ),
           ),
         ),
@@ -82,14 +82,14 @@ class _WinLossDropdownState extends State<WinLossDropdown>
     return Container(
       alignment: Alignment.center,
       width: widget.width,
-      height: SizeConfig.blockSizeVertical * 5.0,
+      height: Sizing.blockSizeVertical * 5.0,
       padding: EdgeInsets.only(
-        right: SizeConfig.blockSizeHorizontal * 2.0,
+        right: Sizing.blockSizeHorizontal * 2.0,
       ),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: SizeConfig.blockSizeHorizontal * .4,
+          width: Sizing.blockSizeHorizontal * .4,
         ),
         borderRadius: BorderRadius.circular(100.0),
         color: _getColor(),

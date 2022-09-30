@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../data/pokemon/pokemon.dart';
-import '../../data/pokemon/move.dart';
-import '../../configs/size_config.dart';
+import '../../pogo_data/pokemon.dart';
+import '../../pogo_data/move.dart';
+import '../../modules/ui/sizing.dart';
+import '../../modules/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -27,8 +28,8 @@ class MoveNodes extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         MoveNode(move: pokemon.selectedFastMove),
-        MoveNode(move: pokemon.selectedChargedMoves[0]),
-        MoveNode(move: pokemon.selectedChargedMoves[1]),
+        MoveNode(move: pokemon.selectedChargeMoves[0]),
+        MoveNode(move: pokemon.selectedChargeMoves[1]),
       ],
     );
   }
@@ -50,21 +51,21 @@ class MoveNode extends StatelessWidget {
         move.name,
         style: TextStyle(
           fontFamily: DefaultTextStyle.of(context).style.fontFamily,
-          fontSize: SizeConfig.h3,
+          fontSize: Sizing.h3,
         ),
       ),
       margin: EdgeInsets.only(
-        top: SizeConfig.blockSizeVertical * .7,
+        top: Sizing.blockSizeVertical * .7,
       ),
-      width: SizeConfig.blockSizeHorizontal * 28.0,
-      height: SizeConfig.blockSizeVertical * 3.5,
+      width: Sizing.blockSizeHorizontal * 28.0,
+      height: Sizing.blockSizeVertical * 3.5,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
           width: 1.5,
         ),
         borderRadius: BorderRadius.circular(100.0),
-        color: move.type.typeColor,
+        color: PogoColors.getPokemonTypeColor(move.type.typeId),
       ),
     );
   }
@@ -88,13 +89,13 @@ class MoveDots extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.white,
-                  width: SizeConfig.blockSizeHorizontal * 0.3,
+                  width: Sizing.blockSizeHorizontal * 0.3,
                 ),
                 color: color,
                 borderRadius: BorderRadius.circular(100),
               ),
-              height: SizeConfig.blockSizeHorizontal * 4.0,
-              width: SizeConfig.blockSizeHorizontal * 5.0,
+              height: Sizing.blockSizeHorizontal * 4.0,
+              width: Sizing.blockSizeHorizontal * 5.0,
             ),
           )
           .toList(),

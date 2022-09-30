@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../configs/size_config.dart';
+import '../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -27,7 +27,7 @@ class PogoTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      height: SizeConfig.blockSizeVertical * 5.5,
+      height: Sizing.blockSizeVertical * 5.5,
       child: TextField(
         controller: controller,
 
@@ -58,7 +58,7 @@ class PogoTextField extends StatelessWidget {
               : IconButton(
                   onPressed: onClear,
                   icon: const Icon(Icons.clear),
-                  iconSize: SizeConfig.blockSizeHorizontal * 5.0,
+                  iconSize: Sizing.blockSizeHorizontal * 5.0,
                   color: Colors.white,
                 ),
         ),

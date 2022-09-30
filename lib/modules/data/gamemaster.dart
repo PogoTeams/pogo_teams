@@ -1,7 +1,11 @@
 // Local
-import '../pogo_data/move.dart';
-import '../pogo_data/pokemon.dart';
-import '../pogo_data/cup.dart';
+import 'package:pogo_teams/modules/ui/pogo_colors.dart';
+
+import '../../pogo_data/move.dart';
+import '../../pogo_data/pokemon.dart';
+import '../../pogo_data/pokemon_typing.dart';
+import '../../pogo_data/cup.dart';
+import 'stats.dart';
 import 'cups.dart';
 
 class Gamemaster {
@@ -36,7 +40,7 @@ class Gamemaster {
 
       // Shadow entries
       if (pokemonJson.containsKey('shadow')) {
-        Pokemon shadowPokemon = Pokemon.fromJson(pokemonJson, isShadow: true);
+        Pokemon shadowPokemon = Pokemon.fromJson(pokemonJson, shadowForm: true);
         pokemonList.add(shadowPokemon);
         pokemonMap[shadowPokemon.pokemonId] = shadowPokemon;
       }
@@ -54,9 +58,14 @@ class Gamemaster {
         }
       }
     }
+
     cups = List<Map<String, dynamic>>.from(json['cups'])
         .map<Cup>((cupJson) => Cup.fromJson(cupJson))
         .toList();
+
+    for (var cupEntry in json['cups']) {
+      PogoColors.addCupColor(cupEntry['cupId'], cupEntry['cupColorHex']);
+    }
   }
 
   static Pokemon getPokemonById(String pokemonId) {
@@ -74,9 +83,46 @@ class Gamemaster {
         .where((Pokemon pokemon) =>
             cup.pokemonIsAllowed(pokemon) &&
             !Cups.isBanned(pokemon, cup.cp) &&
+            (pokemon.minLevel != null
+                ? Stats.calculateMinEncounterCp(
+                      pokemon.stats,
+                      pokemon.minLevel!,
+                    ) <=
+                    cup.cp
+                : true) &&
             pokemon.released &&
             pokemon.fastMoves.isNotEmpty &&
             pokemon.chargeMoves.isNotEmpty)
         .toList();
+  }
+
+  static List<Pokemon> getRankedPokemonList(Cup cup, String rankingsCategory) {
+    return pokemonList;
+  }
+
+  // Get a list of Pokemon that contain one of the specified types
+  // The rankings category
+  // The list length will be up to the limit
+  static List<Pokemon> getFilteredRankedPokemonList(
+    Cup cup,
+    List<PokemonType> types,
+    String rankingsCategory, {
+    int limit = 20,
+  }) {
+    List<Pokemon> rankedList = getRankedPokemonList(cup, rankingsCategory);
+
+    // Filter the list to Pokemon that have one of the types in their typing
+    // or their selected moveset
+    rankedList = rankedList
+        .where((pokemon) =>
+            pokemon.hasType(types) || pokemon.hasSelectedMovesetType(types))
+        .toList();
+
+    // There weren't enough Pokemon in this cup to satisfy the filtered limit
+    if (rankedList.length < limit) {
+      return rankedList;
+    }
+
+    return rankedList.getRange(0, limit).toList();
   }
 }

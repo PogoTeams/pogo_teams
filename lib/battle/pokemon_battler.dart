@@ -1,8 +1,8 @@
 // Local
 import '../pogo_data/pokemon.dart';
 import 'battle_result.dart';
-import '../modules/globals.dart';
-import '../modules/debug_cli.dart';
+import '../modules/data/globals.dart';
+import '../modules/data/debug_cli.dart';
 
 enum BattleOutcome {
   win,
@@ -148,7 +148,7 @@ class PokemonBattler {
     BattlePokemon pokemon,
     int opponentCooldown,
   ) {
-    return !pokemon.nextDecidedChargeMove.isNone() &&
+    return !pokemon.nextDecidedChargeMove.isNone &&
         pokemon.energy + pokemon.nextDecidedChargeMove.energyDelta >= 0 &&
         (pokemon.prioritizeMoveAlignment ? opponentCooldown == 0 : true);
   }
@@ -243,7 +243,8 @@ class PokemonBattler {
       return selfClosestWin;
     }
 
-    return selfClosestWin.self.rating > opponentClosestWin.opponent.rating
+    return selfClosestWin.self.currentRating >
+            opponentClosestWin.opponent.currentRating
         ? selfClosestWin
         : opponentClosestWin;
   }
@@ -444,11 +445,11 @@ class PokemonBattler {
     DebugCLI.printHeader('Outcome');
     DebugCLI.printMulti(results.self.name, [
       selfOutcome,
-      'score : ${results.self.rating}',
+      'score : ${results.self.currentRating}',
     ]);
     DebugCLI.printMulti(results.opponent.name, [
       opponentOutcome,
-      'score : ${results.opponent.rating}',
+      'score : ${results.opponent.currentRating}',
     ]);
     DebugCLI.printFooter();
   }

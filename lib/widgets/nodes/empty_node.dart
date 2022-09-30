@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../configs/size_config.dart';
+import '../../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -29,7 +29,7 @@ class EmptyNode extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           color: emptyTransparent ? Colors.transparent : Colors.white54,
-          width: SizeConfig.blockSizeHorizontal * 0.5,
+          width: Sizing.blockSizeHorizontal * 0.5,
         ),
         borderRadius: BorderRadius.circular(20),
       ),
@@ -42,7 +42,7 @@ class EmptyNode extends StatelessWidget {
             : Icon(
                 Icons.add,
                 color: Colors.white54,
-                size: SizeConfig.blockSizeHorizontal * 15.0,
+                size: Sizing.blockSizeHorizontal * 15.0,
               ),
       ),
     );

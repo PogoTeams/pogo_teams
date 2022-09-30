@@ -2,10 +2,11 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import 'pokemon.dart';
-import '../cup.dart';
-import '../masters/type_master.dart';
-import '../globals.dart' as globals;
+import '../pogo_data/pokemon.dart';
+import '../pogo_data/cup.dart';
+import '../modules/data/pokemon_types.dart';
+import '../modules/data/gamemaster.dart';
+import '../modules/data/globals.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -31,7 +32,7 @@ class PokemonTeam {
 
   // A list of this pokemon team's net effectiveness
   List<double> effectiveness = List.generate(
-    globals.typeCount,
+    Globals.typeCount,
     (index) => 0.0,
   );
 
@@ -133,7 +134,7 @@ class PokemonTeam {
   // Update the type effectiveness of this Pokemon team
   // Called whenever the team is changed
   void _updateEffectiveness() {
-    effectiveness = TypeMaster.getNetEffectiveness(getPokemonTeam());
+    effectiveness = PokemonTypes.getNetEffectiveness(getPokemonTeam());
   }
 
   // Toggle a lock on this team
@@ -147,12 +148,14 @@ class PokemonTeam {
   void _pokemonTeamFromJson(List<dynamic> teamJson) {
     setTeamSize(teamJson.length);
 
+    /*
     for (int i = 0; i < teamJson.length; ++i) {
       pokemonTeam[i] = Pokemon.fromStateJson(
         teamJson[i]['pokemon_$i'],
         globals.gamemaster.pokemonIdMap,
       );
     }
+    */
 
     _updateEffectiveness();
   }
@@ -161,6 +164,7 @@ class PokemonTeam {
   List<Map<String, dynamic>> _pokemonTeamToJson() {
     List<Map<String, dynamic>> teamJson = List.empty(growable: true);
 
+    /*
     for (int i = 0; i < pokemonTeam.length; ++i) {
       if (pokemonTeam[i] == null) {
         teamJson.add({'pokemon_$i': null});
@@ -168,6 +172,7 @@ class PokemonTeam {
         teamJson.add({'pokemon_$i': pokemonTeam[i]!.toStateJson()});
       }
     }
+    */
 
     return teamJson;
   }
@@ -182,7 +187,7 @@ class UserPokemonTeam extends PokemonTeam {
   static UserPokemonTeam builderCopy(UserPokemonTeam other) {
     final copy = UserPokemonTeam(save: () => {});
     copy.locked = other.locked;
-    copy.cup = Cup.from(other.cup);
+    copy.cup = other.cup;
     copy.logs = List.from(other.logs);
     copy.setTeamSize(other.pokemonTeam.length);
     copy.setPokemonTeam(other.pokemonTeam);
@@ -200,16 +205,16 @@ class UserPokemonTeam extends PokemonTeam {
 
   // The selected PVP cup for this team
   // Defaults to Great League
-  Cup cup = globals.gamemaster.cups[0];
+  Cup cup = Gamemaster.cups[0];
 
   // A list of logged opponent teams on this team
   // The user can report wins, ties, and losses given this list
   List<LogPokemonTeam> logs = List.empty(growable: true);
 
   // Switch to a different cup with the specified cupTitle
-  void setCup(String cupTitle) {
-    cup = globals.gamemaster.cups.firstWhere((cup) => cup.title == cupTitle,
-        orElse: () => globals.gamemaster.cups[0]);
+  void setCup(String cupId) {
+    cup = Gamemaster.cups.firstWhere((cup) => cup.cupId == cupId,
+        orElse: () => Gamemaster.cups.first);
 
     save();
   }
@@ -271,7 +276,7 @@ class UserPokemonTeam extends PokemonTeam {
     return {
       'pokemonTeam': _pokemonTeamToJson(),
       'locked': locked,
-      'cup': cup.title,
+      'cup': cup.cupId,
       'logs': _logsToJson()
     };
   }

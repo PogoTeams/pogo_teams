@@ -121,3 +121,4 @@ app.*.symbols
 # pogo_teams_cli files
 bin/json/history/*
 bin/json/*.json
+bin/api-key.txt
