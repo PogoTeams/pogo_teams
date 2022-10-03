@@ -57,7 +57,10 @@ void main(List<String> arguments) async {
       buildAlternateFormsList();
       break;
     case 'pvpoke-released':
-      buildPvpokeReleasedList();
+      buildPvpokeReleasedIdsList();
+      break;
+    case 'snapshot-released':
+      buildSnapshotReleasedIdsList();
       break;
     case 'validate-snapshot':
       validateSnapshot();

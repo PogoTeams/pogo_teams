@@ -36,7 +36,7 @@ class PogoColors {
   static Color get defaultTypeColor => Colors.black;
   static Color get defaultCupColor => Colors.cyan;
 
-  static const Map<String, Color> _cupColors = {};
+  static final Map<String, Color> _cupColors = {};
 
   static Color getPokemonTypeColor(String typeId) =>
       _typeColors[typeId] ?? defaultTypeColor;
@@ -60,6 +60,6 @@ class PogoColors {
       _cupColors[cupId] ?? defaultCupColor;
 
   static void addCupColor(String cupId, String cupColorHex) {
-    _cupColors[cupId] = Color(int.parse(cupColorHex, radix: 16));
+    _cupColors[cupId] = Color(int.parse(cupColorHex));
   }
 }

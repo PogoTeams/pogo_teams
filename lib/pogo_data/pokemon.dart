@@ -34,7 +34,6 @@ class Pokemon {
     required this.evolutions,
     required this.tempEvolutions,
     required this.released,
-    required this.minLevel,
     required this.tags,
     required this.littleCupIVs,
     required this.greatLeagueIVs,
@@ -136,7 +135,6 @@ class Pokemon {
           : null,
       released:
           (shadowForm ? json['shadow']['released'] : json['released']) as bool,
-      minLevel: json.containsKey('minLevel') ? json['minLevel'] as int : null,
       tags: tags.isEmpty ? null : tags,
       littleCupIVs: json.containsKey('littlecupsivs')
           ? IVs.fromJson(json['littlecupsivs'])
@@ -223,7 +221,6 @@ class Pokemon {
       evolutions: null,
       tempEvolutions: null,
       released: overridesJson['released'] as bool,
-      minLevel: null,
       tags: tags,
       littleCupIVs: overridesJson.containsKey('littlecupsivs')
           ? IVs.fromJson(overridesJson['littlecupsivs'])
@@ -257,7 +254,6 @@ class Pokemon {
       evolutions: other.evolutions,
       tempEvolutions: other.tempEvolutions,
       released: other.released,
-      minLevel: other.minLevel,
       tags: other.tags,
       littleCupIVs: other.littleCupIVs,
       greatLeagueIVs: other.greatLeagueIVs,
@@ -283,7 +279,6 @@ class Pokemon {
   final List<Evolution>? evolutions;
   final List<TempEvolution>? tempEvolutions;
   final bool released;
-  final int? minLevel;
   final List<String>? tags;
   final IVs? littleCupIVs;
   final IVs? greatLeagueIVs;
@@ -514,7 +509,6 @@ class BattlePokemon extends Pokemon {
     required evolutions,
     required tempEvolutions,
     required released,
-    required minLevel,
     required tags,
     required littleCupIVs,
     required greatLeagueIVs,
@@ -536,7 +530,6 @@ class BattlePokemon extends Pokemon {
           evolutions: evolutions,
           tempEvolutions: tempEvolutions,
           released: released,
-          minLevel: minLevel,
           tags: tags,
           littleCupIVs: littleCupIVs,
           greatLeagueIVs: greatLeagueIVs,
@@ -567,7 +560,6 @@ class BattlePokemon extends Pokemon {
       evolutions: other.evolutions,
       tempEvolutions: other.tempEvolutions,
       released: other.released,
-      minLevel: other.minLevel,
       tags: other.tags,
       littleCupIVs: other.littleCupIVs,
       greatLeagueIVs: other.greatLeagueIVs,
@@ -599,7 +591,6 @@ class BattlePokemon extends Pokemon {
       evolutions: other.evolutions,
       tempEvolutions: other.tempEvolutions,
       released: other.released,
-      minLevel: other.minLevel,
       tags: other.tags,
       littleCupIVs: other.littleCupIVs,
       greatLeagueIVs: other.greatLeagueIVs,
@@ -885,7 +876,6 @@ class RankedPokemon extends Pokemon {
     required evolutions,
     required tempEvolutions,
     required released,
-    required minLevel,
     required tags,
     required littleCupIVs,
     required greatLeagueIVs,
@@ -912,7 +902,6 @@ class RankedPokemon extends Pokemon {
           evolutions: evolutions,
           tempEvolutions: tempEvolutions,
           released: released,
-          minLevel: minLevel,
           tags: tags,
           littleCupIVs: littleCupIVs,
           greatLeagueIVs: greatLeagueIVs,
@@ -949,7 +938,6 @@ class RankedPokemon extends Pokemon {
       evolutions: other.evolutions,
       tempEvolutions: other.tempEvolutions,
       released: other.released,
-      minLevel: other.minLevel,
       tags: other.tags,
       littleCupIVs: other.littleCupIVs,
       greatLeagueIVs: other.greatLeagueIVs,

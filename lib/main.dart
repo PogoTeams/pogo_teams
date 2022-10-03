@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package Imports
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 // Local Imports
+import 'firebase_options.dart';
 import 'pogo_teams_app.dart';
+import 'modules/data/data_access.dart';
 
 // ----------------------------------------------------------------- @PogoTeams
 
@@ -16,8 +18,11 @@ void main() async {
   // Restrict view orientation to portrait only
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  // Initialize the database for user data persistance
-  await Hive.initFlutter();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await DataAccess.loadGamemaster();
 
   runApp(const PogoTeamsApp());
 }

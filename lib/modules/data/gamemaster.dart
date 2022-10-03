@@ -1,12 +1,8 @@
 // Local
-import 'package:pogo_teams/modules/ui/pogo_colors.dart';
-
+import 'cups.dart';
 import '../../pogo_data/move.dart';
 import '../../pogo_data/pokemon.dart';
-import '../../pogo_data/pokemon_typing.dart';
 import '../../pogo_data/cup.dart';
-import 'stats.dart';
-import 'cups.dart';
 
 class Gamemaster {
   // The master list of ALL fast moves
@@ -24,58 +20,66 @@ class Gamemaster {
   // The master list of ALL cups
   static late final List<Cup> cups;
 
-  static void load(Map<String, dynamic> json) {
-    fastMoves = List<Map<String, dynamic>>.from(json['fastMoves'])
+  static void loadFromJson(Map<String, dynamic> json) {
+    loadFastMoves(List<Map<String, dynamic>>.from(json['fastMoves']));
+    loadChargeMoves(List<Map<String, dynamic>>.from(json['chargeMoves']));
+    loadPokemon(List<Map<String, dynamic>>.from(json['pokemon']));
+    loadCups(List<Map<String, dynamic>>.from(json['cups']));
+  }
+
+  static void loadFastMoves(List<Map<String, dynamic>> fastMovesJson) {
+    fastMoves = List<Map<String, dynamic>>.from(fastMovesJson)
         .map<FastMove>((moveJson) => FastMove.fromJson(moveJson))
         .toList();
-    chargeMoves = List<Map<String, dynamic>>.from(json['chargeMoves'])
+  }
+
+  static void loadChargeMoves(List<Map<String, dynamic>> chargeMovesJson) {
+    chargeMoves = List<Map<String, dynamic>>.from(chargeMovesJson)
         .map<ChargeMove>((moveJson) => ChargeMove.fromJson(moveJson))
         .toList();
-    var jsonList = List<Map<String, dynamic>>.from(json['pokemon']);
-    for (var pokemonJson in jsonList) {
-      // Standard Pokemon entries
-      Pokemon pokemon = Pokemon.fromJson(pokemonJson);
-      pokemonList.add(pokemon);
-      pokemonMap[pokemon.pokemonId] = pokemon;
+  }
 
-      // Shadow entries
-      if (pokemonJson.containsKey('shadow')) {
-        Pokemon shadowPokemon = Pokemon.fromJson(pokemonJson, shadowForm: true);
-        pokemonList.add(shadowPokemon);
-        pokemonMap[shadowPokemon.pokemonId] = shadowPokemon;
-      }
+  static void loadPokemon(List<Map<String, dynamic>> pokemonJson) {
+    for (var pokemonEntry in pokemonJson) {
+      _processPokemonEntry(pokemonEntry);
+    }
+  }
 
-      // Temporary evolution entries
-      if (pokemonJson.containsKey('tempEvolutions')) {
-        List<dynamic> tempEvolutions = pokemonJson['tempEvolutions'];
-        for (var overrideJson in tempEvolutions) {
-          Pokemon tempEvoPokemon = Pokemon.tempEvolutionFromJson(
-            pokemonJson,
-            overrideJson,
-          );
-          pokemonList.add(tempEvoPokemon);
-          pokemonMap[tempEvoPokemon.pokemonId] = tempEvoPokemon;
-        }
-      }
+  static void _processPokemonEntry(Map<String, dynamic> pokemonEntry) {
+    // Standard Pokemon entries
+    Pokemon pokemon = Pokemon.fromJson(pokemonEntry);
+    pokemonList.add(pokemon);
+    pokemonMap[pokemon.pokemonId] = pokemon;
+
+    // Shadow entries
+    if (pokemonEntry.containsKey('shadow')) {
+      Pokemon shadowPokemon = Pokemon.fromJson(pokemonEntry, shadowForm: true);
+      pokemonList.add(shadowPokemon);
+      pokemonMap[shadowPokemon.pokemonId] = shadowPokemon;
     }
 
-    cups = List<Map<String, dynamic>>.from(json['cups'])
+    // Temporary evolution entries
+    if (pokemonEntry.containsKey('tempEvolutions')) {
+      List<dynamic> tempEvolutions = pokemonEntry['tempEvolutions'];
+      for (var overrideJson in tempEvolutions) {
+        Pokemon tempEvoPokemon = Pokemon.tempEvolutionFromJson(
+          pokemonEntry,
+          overrideJson,
+        );
+        pokemonList.add(tempEvoPokemon);
+        pokemonMap[tempEvoPokemon.pokemonId] = tempEvoPokemon;
+      }
+    }
+  }
+
+  static void loadCups(List<Map<String, dynamic>> cupsJson) {
+    cups = List<Map<String, dynamic>>.from(cupsJson)
         .map<Cup>((cupJson) => Cup.fromJson(cupJson))
         .toList();
-
-    for (var cupEntry in json['cups']) {
-      PogoColors.addCupColor(cupEntry['cupId'], cupEntry['cupColorHex']);
-    }
   }
 
   static Pokemon getPokemonById(String pokemonId) {
     return pokemonMap[pokemonId]!;
-  }
-
-  static void debugDisplayFastMoveRatings() {
-    for (var fastMove in fastMoves) {
-      fastMove.debugPrint();
-    }
   }
 
   static List<Pokemon> getCupFilteredPokemonList(Cup cup) {
@@ -83,46 +87,15 @@ class Gamemaster {
         .where((Pokemon pokemon) =>
             cup.pokemonIsAllowed(pokemon) &&
             !Cups.isBanned(pokemon, cup.cp) &&
-            (pokemon.minLevel != null
-                ? Stats.calculateMinEncounterCp(
-                      pokemon.stats,
-                      pokemon.minLevel!,
-                    ) <=
-                    cup.cp
-                : true) &&
             pokemon.released &&
             pokemon.fastMoves.isNotEmpty &&
             pokemon.chargeMoves.isNotEmpty)
         .toList();
   }
 
-  static List<Pokemon> getRankedPokemonList(Cup cup, String rankingsCategory) {
-    return pokemonList;
-  }
-
-  // Get a list of Pokemon that contain one of the specified types
-  // The rankings category
-  // The list length will be up to the limit
-  static List<Pokemon> getFilteredRankedPokemonList(
-    Cup cup,
-    List<PokemonType> types,
-    String rankingsCategory, {
-    int limit = 20,
-  }) {
-    List<Pokemon> rankedList = getRankedPokemonList(cup, rankingsCategory);
-
-    // Filter the list to Pokemon that have one of the types in their typing
-    // or their selected moveset
-    rankedList = rankedList
-        .where((pokemon) =>
-            pokemon.hasType(types) || pokemon.hasSelectedMovesetType(types))
-        .toList();
-
-    // There weren't enough Pokemon in this cup to satisfy the filtered limit
-    if (rankedList.length < limit) {
-      return rankedList;
+  static void debugDisplayFastMoveRatings() {
+    for (var fastMove in fastMoves) {
+      fastMove.debugPrint();
     }
-
-    return rankedList.getRange(0, limit).toList();
   }
 }

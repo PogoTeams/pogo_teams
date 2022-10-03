@@ -1,5 +1,6 @@
 // Flutter Imports
 import 'package:flutter/material.dart';
+import 'package:pogo_teams/modules/data/data_access.dart';
 
 // Local Imports
 import '../../modules/ui/sizing.dart';
@@ -215,7 +216,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
 
   // Callback for the FilterButton
   // Sets the ranking list associated with rankingsCategory
-  void _filterCategory(dynamic rankingsCategory) {
+  void _filterCategory(dynamic rankingsCategory) async {
     _selectedCategory = rankingsCategory;
 
     // Dex is a special case where all Pokemon are in the list
@@ -223,7 +224,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     if ('dex' == _selectedCategory) {
       pokemon = Gamemaster.pokemonList;
     } else {
-      pokemon = Gamemaster.getRankedPokemonList(_cup, _selectedCategory);
+      pokemon = await DataAccess.getRankedPokemonList(_cup, _selectedCategory);
     }
 
     _filterPokemonList();
@@ -231,7 +232,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
 
   // Setup the input controller
   @override
-  void initState() {
+  void initState() async {
     super.initState();
 
     // Building a user team
@@ -248,7 +249,8 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     _builderIndex = widget.focusIndex;
 
     // Get the selected cup and list of Pokemon based on the category
-    pokemon = Gamemaster.getRankedPokemonList(widget.cup, _selectedCategory);
+    pokemon =
+        await DataAccess.getRankedPokemonList(widget.cup, _selectedCategory);
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);

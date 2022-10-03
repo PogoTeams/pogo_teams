@@ -1,4 +1,4 @@
-import '../pogo_data/pokemon.dart';
+import 'pokemon.dart';
 
 class Cup {
   Cup({

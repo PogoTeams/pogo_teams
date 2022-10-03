@@ -8,7 +8,7 @@ import '../../widgets/nodes/pokemon_node.dart';
 import '../../pogo_data/pokemon.dart';
 import '../../pogo_data/pokemon_typing.dart';
 import '../../pogo_data/pokemon_team.dart';
-import '../../modules/data/gamemaster.dart';
+import '../../modules/data/data_access.dart';
 import '../../modules/ui/sizing.dart';
 import '../../tools/pair.dart';
 
@@ -86,10 +86,11 @@ class OpponentTeamAnalysis extends StatelessWidget {
   }
 
   // Build a list of counters to the logged opponent teams
-  Widget _buildCountersList(List<Pair<PokemonType, double>> defenseThreats) {
+  Future<Widget> _buildCountersList(
+      List<Pair<PokemonType, double>> defenseThreats) async {
     final counterTypes = defenseThreats.map((typeData) => typeData.a).toList();
 
-    List<Pokemon> counters = Gamemaster.getFilteredRankedPokemonList(
+    List<Pokemon> counters = await DataAccess.getFilteredRankedPokemonList(
       team.cup,
       counterTypes,
       'overall',
@@ -156,7 +157,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
             ),
 
             // A list of top counters to the logged opponent teams
-            _buildCountersList(defenseThreats),
+            //_buildCountersList(defenseThreats),
           ],
         ),
       ),

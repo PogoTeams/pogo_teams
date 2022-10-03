@@ -5,8 +5,8 @@ import 'dart:math';
 import 'pokemon_typing.dart';
 import 'pokemon.dart';
 import '../modules/data/pokemon_types.dart';
-import '../modules/data/debug_cli.dart';
 import '../modules/data/stats.dart';
+import '../modules/data/debug_cli.dart';
 
 /*
 ------------------------- D A M A G E - F O R M U L A -------------------------

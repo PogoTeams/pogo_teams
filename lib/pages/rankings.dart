@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
+import '../modules/data/data_access.dart';
 import '../modules/ui/sizing.dart';
 import '../pogo_data/pokemon.dart';
 import '../pogo_data/cup.dart';
@@ -42,11 +43,11 @@ class _RankingsState extends State<Rankings> {
 
   String _selectedCategory = 'overall';
 
-  void _onCupChanged(String? newCup) {
-    if (newCup == null) return;
+  void _onCupChanged(String? newCupId) {
+    if (newCupId == null) return;
 
     setState(() {
-      cup = Gamemaster.cups.firstWhere((cup) => cup.cupId == newCup,
+      cup = Gamemaster.cups.firstWhere((cup) => cup.cupId == newCupId,
           orElse: () => Gamemaster.cups.first);
       _filterCategory(_selectedCategory);
     });
@@ -54,10 +55,10 @@ class _RankingsState extends State<Rankings> {
 
   // Callback for the FilterButton
   // Sets the ranking list associated with rankingsCategory
-  void _filterCategory(dynamic rankingsCategory) {
+  void _filterCategory(dynamic rankingsCategory) async {
     _selectedCategory = rankingsCategory;
 
-    pokemon = Gamemaster.getRankedPokemonList(cup, rankingsCategory);
+    pokemon = await DataAccess.getRankedPokemonList(cup, rankingsCategory);
 
     _filterPokemonList();
   }
@@ -123,7 +124,8 @@ class _RankingsState extends State<Rankings> {
     super.initState();
 
     cup = Gamemaster.cups.first;
-    pokemon = Gamemaster.getRankedPokemonList(cup, _selectedCategory);
+
+    _filterCategory('overall');
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);

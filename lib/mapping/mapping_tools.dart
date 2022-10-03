@@ -3,6 +3,7 @@ import 'dart:io';
 
 // Local
 import '../tools/json_tools.dart';
+import '../modules/data/gamemaster.dart';
 
 void buildAlternateFormsList() async {
   final List<dynamic>? nianticGamemaster =
@@ -29,20 +30,38 @@ void buildAlternateFormsList() async {
   stdout.writeln();
 }
 
-void buildPvpokeReleasedList() async {
+void buildPvpokeReleasedIdsList() async {
   List<dynamic>? pvpokePokemon =
       await JsonTools.loadJson('bin/json/pvpoke-pokemon');
   if (pvpokePokemon == null) return;
+
   List<dynamic> pvpokeReleasedPokemonIds = [];
-  void checkReleased(pokemon) {
+
+  for (var pokemon in pvpokePokemon) {
     dynamic released = pokemon['released'] ?? false;
     if (released.runtimeType == String && released == 'true' || released) {
       pvpokeReleasedPokemonIds.add(pokemon['speciesId']);
     }
   }
 
-  pvpokePokemon.forEach(checkReleased);
-
   await JsonTools.writeJson(
       pvpokeReleasedPokemonIds, 'bin/json/pvpoke-released');
+}
+
+void buildSnapshotReleasedIdsList() async {
+  Map<String, dynamic>? snapshot =
+      await JsonTools.loadJson('bin/json/niantic-snapshot');
+  if (snapshot == null) return;
+
+  Gamemaster.loadFromJson(snapshot);
+
+  List<String> snapshotReleasedIds = [];
+
+  for (var pokemon in Gamemaster.pokemonList) {
+    if (pokemon.released) {
+      snapshotReleasedIds.add(pokemon.pokemonId);
+    }
+  }
+  await JsonTools.writeJson(
+      snapshotReleasedIds, 'bin/json/released-pokemon-ids');
 }

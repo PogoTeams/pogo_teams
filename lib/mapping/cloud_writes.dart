@@ -78,15 +78,14 @@ class CloudWrites {
         .toList();
 
     for (String id in cupIds) {
-      Map<String, dynamic>? rankingsJson =
+      List<dynamic>? rankingsJson =
           await JsonTools.loadJson('bin/json/rankings/$id');
       if (rankingsJson != null) {
-        List<dynamic> rankingsList = rankingsJson['rankings'];
-        for (var rankingsEntry in rankingsList) {
+        for (var rankingsEntry in rankingsJson) {
           cloudWrites.add(<String, dynamic>{
             'update': {
               'name':
-                  'projects/pogo-teams-host/databases/(default)/documents/rankings/${rankingsEntry['pokemonId']}',
+                  'projects/pogo-teams-host/databases/(default)/documents/cups/$id/rankings/${rankingsEntry['pokemonId']}',
               'fields': _mapFields(rankingsEntry),
             }
           });

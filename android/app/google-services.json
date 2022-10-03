@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "651397027693",
+    "project_id": "pogo-teams-host",
+    "storage_bucket": "pogo-teams-host.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651397027693:android:e676cd1007623e47212c64",
+        "android_client_info": {
+          "package_name": "com.pogoteams"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "651397027693-6nk9vo8hmjaoh9i7esa32da2llttqrid.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY2H7NwYqg_0WzhJUHqpFm9fuf9F0-Ayw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "651397027693-6nk9vo8hmjaoh9i7esa32da2llttqrid.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "651397027693-649b4052jfrovmlcuk0ms6site64vpmu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.pogoteamsGamemasterPush"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

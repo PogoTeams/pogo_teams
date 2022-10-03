@@ -16,7 +16,7 @@ void generatePokemonRankings() async {
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  Gamemaster.load(snapshot);
+  Gamemaster.loadFromJson(snapshot);
 
   Stopwatch stopwatch = Stopwatch();
   stopwatch.start();
@@ -95,7 +95,7 @@ void generatePokemonRankingsTest(
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  Gamemaster.load(snapshot);
+  Gamemaster.loadFromJson(snapshot);
 
   PokemonRanker.rankTesting(selfId, opponentId, cp);
 }

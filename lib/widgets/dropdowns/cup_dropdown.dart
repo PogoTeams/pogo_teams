@@ -36,17 +36,14 @@ class _CupDropdownState extends State<CupDropdown>
   // List of pvp cups
   final List<Cup> cups = Gamemaster.cups;
 
-  // List of pvp cup names
-  late final List<String> cupNames = cups.map((cup) => cup.name).toList();
-
   // List of dropdown menu items
-  late final cupOptions = cupNames.map<DropdownMenuItem<String>>(
-    (String cupName) {
+  late final cupOptions = Gamemaster.cups.map<DropdownMenuItem<String>>(
+    (Cup cup) {
       return DropdownMenuItem(
-        value: cupName,
+        value: cup.cupId,
         child: Center(
           child: Text(
-            cupName,
+            cup.name,
             style: TextStyle(
               fontSize: Sizing.h2,
             ),
@@ -92,7 +89,7 @@ class _CupDropdownState extends State<CupDropdown>
       child: DropdownButtonHideUnderline(
         child: DropdownButton(
           isExpanded: true,
-          value: _selectedCup.name,
+          value: _selectedCup.cupId,
           icon: Icon(
             Icons.arrow_drop_down_circle,
             size: Sizing.blockSizeVertical * 3.0,

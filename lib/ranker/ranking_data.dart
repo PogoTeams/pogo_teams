@@ -27,7 +27,7 @@ class RankingData {
 
   final BattlePokemon pokemon;
 
-  Ratings ratings = Ratings();
+  Ratings ratings = Ratings.empty();
   //KeyMatchups keyLeads = KeyMatchups();
   //KeyMatchups keySwitches = KeyMatchups();
   //KeyMatchups keyClosers = KeyMatchups();

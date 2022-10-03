@@ -17,7 +17,6 @@ import 'pages/teams/teams_builder.dart';
 import 'pages/rankings.dart';
 import 'modules/ui/sizing.dart';
 import 'widgets/pogo_drawer.dart';
-import 'modules/data/gamemaster.dart';
 import 'modules/data/globals.dart';
 
 /*
@@ -166,6 +165,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
     // Pokemon GO local db data
     // This is a "cache" of the latest data model from the server
+    /*
     final Box gmBox = await Hive.openBox('gamemaster');
 
     String prefix = ''; // For indicating testing
@@ -195,6 +195,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
     // Just an asthetic for allowing the loading progress indicator to fill
     await Future.delayed(const Duration(seconds: 2));
+    */
   }
 
   Future<bool> _updateAvailable(Box box, Client client) async {

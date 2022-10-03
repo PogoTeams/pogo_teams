@@ -22,7 +22,8 @@
             "virizion"
           ]
         }
-      ]
+      ],
+      "uiColor": "0xFF2196F3"
     },
     {
       "cupId": "ultra_league",
@@ -37,7 +38,8 @@
             "mega"
           ]
         }
-      ]
+      ],
+      "uiColor": "0xFFC8B603"
     },
     {
       "cupId": "master_league",
@@ -52,7 +54,8 @@
             "mega"
           ]
         }
-      ]
+      ],
+      "uiColor": "0xFF9C27B0"
     }
   ],
   "fastMoves": [
@@ -2155,6 +2158,17 @@
         "chance": 1.0,
         "selfDefense": 1,
         "opponentDefense": -1
+      }
+    },
+    {
+      "moveId": "meteor_beam",
+      "name": "Meteor Beam",
+      "type": "rock",
+      "power": 120.0,
+      "energyDelta": -60,
+      "buffs": {
+        "chance": 1.0,
+        "selfAttack": 1
       }
     }
   ],
@@ -12779,7 +12793,6 @@
       "form": "articuno_normal",
       "familyId": "family_articuno",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.5,
         "atk": 0,
@@ -12896,7 +12909,6 @@
       "form": "zapdos_normal",
       "familyId": "family_zapdos",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 2,
@@ -13012,7 +13024,6 @@
       "form": "moltres_normal",
       "familyId": "family_moltres",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 7,
@@ -13319,7 +13330,6 @@
       "form": "mewtwo_normal",
       "familyId": "family_mewtwo",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 4.5,
         "atk": 15,
@@ -13379,7 +13389,6 @@
       "form": "mewtwo_a",
       "familyId": "family_mewtwo",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 6,
@@ -13461,7 +13470,6 @@
       "form": "mew_normal",
       "familyId": "family_mew",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -18835,7 +18843,6 @@
       "form": "raikou_normal",
       "familyId": "family_raikou",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 8,
@@ -18893,7 +18900,6 @@
       "form": "entei_normal",
       "familyId": "family_entei",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 5,
@@ -18954,7 +18960,6 @@
       "form": "suicune_normal",
       "familyId": "family_suicune",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.5,
         "atk": 2,
@@ -19199,7 +19204,6 @@
       "form": "lugia_normal",
       "familyId": "family_lugia",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 0,
@@ -19259,7 +19263,6 @@
       "form": "lugia_s",
       "familyId": "family_lugia",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 0,
@@ -19322,7 +19325,6 @@
       "form": "ho_oh_normal",
       "familyId": "family_ho_oh",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 6,
@@ -19385,7 +19387,6 @@
       "form": "ho_oh_s",
       "familyId": "family_ho_oh",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 6,
@@ -19439,7 +19440,6 @@
       "form": "celebi_normal",
       "familyId": "family_celebi",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -26712,7 +26712,6 @@
       "form": "regirock_normal",
       "familyId": "family_regirock",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.5,
         "atk": 0,
@@ -26764,7 +26763,6 @@
       "form": "regice_normal",
       "familyId": "family_regice",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.5,
         "atk": 0,
@@ -26816,7 +26814,6 @@
       "form": "registeel_normal",
       "familyId": "family_registeel",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 8.0,
         "atk": 1,
@@ -26893,7 +26890,6 @@
         }
       ],
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 4,
@@ -26969,7 +26965,6 @@
         }
       ],
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 8,
@@ -27017,7 +27012,6 @@
       "form": "kyogre_normal",
       "familyId": "family_kyogre",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -27068,7 +27062,6 @@
       "form": "groudon_normal",
       "familyId": "family_groudon",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -27120,7 +27113,6 @@
       "form": "rayquaza_normal",
       "familyId": "family_rayquaza",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 5,
@@ -27169,7 +27161,6 @@
       "form": "jirachi_normal",
       "familyId": "family_jirachi",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -27217,7 +27208,6 @@
       "form": "deoxys_normal",
       "familyId": "family_deoxys",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 2,
@@ -27265,7 +27255,6 @@
       "form": "deoxys_attack",
       "familyId": "family_deoxys",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 7.0,
         "atk": 12,
@@ -27313,7 +27302,6 @@
       "form": "deoxys_defense",
       "familyId": "family_deoxys",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 8.5,
         "atk": 3,
@@ -27361,7 +27349,6 @@
       "form": "deoxys_speed",
       "familyId": "family_deoxys",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 6.5,
         "atk": 8,
@@ -33384,7 +33371,6 @@
       "form": "uxie_normal",
       "familyId": "family_uxie",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 7.5,
         "atk": 5,
@@ -33432,7 +33418,6 @@
       "form": "mesprit_normal",
       "familyId": "family_mesprit",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.5,
         "atk": 0,
@@ -33480,7 +33465,6 @@
       "form": "azelf_normal",
       "familyId": "family_azelf",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -33529,7 +33513,6 @@
       "form": "dialga_normal",
       "familyId": "family_dialga",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -33579,7 +33562,6 @@
       "form": "palkia_normal",
       "familyId": "family_palkia",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -33629,7 +33611,6 @@
       "form": "heatran_normal",
       "familyId": "family_heatran",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 12,
@@ -33677,7 +33658,6 @@
       "form": "regigigas_normal",
       "familyId": "family_regigigas",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 4.5,
         "atk": 4,
@@ -33774,7 +33754,6 @@
       "form": "giratina_altered",
       "familyId": "family_giratina",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -33823,7 +33802,6 @@
       "form": "giratina_origin",
       "familyId": "family_giratina",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 0,
@@ -33874,7 +33852,6 @@
       "form": "cresselia_normal",
       "familyId": "family_cresselia",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 7.0,
         "atk": 0,
@@ -33922,7 +33899,6 @@
       "form": "phione_normal",
       "familyId": "family_phione",
       "released": false,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 9.0,
         "atk": 4,
@@ -33970,7 +33946,6 @@
       "form": "manaphy_normal",
       "familyId": "family_manaphy",
       "released": false,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -34021,7 +33996,6 @@
       "form": "darkrai_normal",
       "familyId": "family_darkrai",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 12,
@@ -34118,7 +34092,6 @@
       "form": "shaymin_land",
       "familyId": "family_shaymin",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -34168,7 +34141,6 @@
       "form": "shaymin_sky",
       "familyId": "family_shaymin",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 0,
@@ -36727,6 +36699,9 @@
         "solar_beam",
         "super_power",
         "heavy_slam"
+      ],
+      "eliteChargeMoves": [
+        "meteor_beam"
       ],
       "thirdMoveCost": {
         "stardust": 50000,
@@ -43520,7 +43495,6 @@
       "form": "cobalion_normal",
       "familyId": "family_cobalion",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 6.5,
         "atk": 0,
@@ -43573,7 +43547,6 @@
       "form": "terrakion_normal",
       "familyId": "family_terrakion",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 0,
@@ -43626,7 +43599,6 @@
       "form": "virizion_normal",
       "familyId": "family_virizion",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 6.5,
         "atk": 0,
@@ -43723,7 +43695,6 @@
       "form": "tornadus_incarnate",
       "familyId": "family_tornadus",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -43772,7 +43743,6 @@
       "form": "tornadus_therian",
       "familyId": "family_tornadus",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -43871,7 +43841,6 @@
       "form": "thundurus_incarnate",
       "familyId": "family_thundurus",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -43921,7 +43890,6 @@
       "form": "thundurus_therian",
       "familyId": "family_thundurus",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 0,
@@ -43971,7 +43939,6 @@
       "form": "reshiram_normal",
       "familyId": "family_reshiram",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -44021,7 +43988,6 @@
       "form": "zekrom_normal",
       "familyId": "family_zekrom",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -44120,7 +44086,6 @@
       "form": "landorus_incarnate",
       "familyId": "family_landorus",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 0,
@@ -44170,7 +44135,6 @@
       "form": "landorus_therian",
       "familyId": "family_landorus",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -44219,7 +44183,6 @@
       "form": "kyurem_normal",
       "familyId": "family_kyurem",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 0,
@@ -44269,7 +44232,6 @@
       "form": "kyurem_black",
       "familyId": "family_kyurem",
       "released": false,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 4.5,
         "atk": 0,
@@ -44319,7 +44281,6 @@
       "form": "kyurem_white",
       "familyId": "family_kyurem",
       "released": false,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 4.5,
         "atk": 0,
@@ -44369,7 +44330,6 @@
       "form": "keldeo_normal",
       "familyId": "family_keldeo",
       "released": false,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 0,
@@ -44517,7 +44477,6 @@
       "form": "meloetta_normal",
       "familyId": "family_meloetta",
       "released": false,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -44664,7 +44623,6 @@
       "form": "genesect_normal",
       "familyId": "family_genesect",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -44716,7 +44674,6 @@
       "form": "genesect_burn",
       "familyId": "family_genesect",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -44768,7 +44725,6 @@
       "form": "genesect_chill",
       "familyId": "family_genesect",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -44820,7 +44776,6 @@
       "form": "genesect_douse",
       "familyId": "family_genesect",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -44872,7 +44827,6 @@
       "form": "genesect_shock",
       "familyId": "family_genesect",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -49506,7 +49460,6 @@
       "form": "xerneas_normal",
       "familyId": "family_xerneas",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 11,
@@ -49558,7 +49511,6 @@
       "form": "yveltal_normal",
       "familyId": "family_yveltal",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 11,
@@ -49604,8 +49556,7 @@
       },
       "form": "zygarde_normal",
       "familyId": "family_zygarde",
-      "released": false,
-      "minLevel": 15
+      "released": false
     },
     {
       "dex": 719,
@@ -49636,7 +49587,6 @@
       "form": "diancie_normal",
       "familyId": "family_diancie",
       "released": false,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 7.0,
         "atk": 2,
@@ -49733,7 +49683,6 @@
       "form": "hoopa_confined",
       "familyId": "family_hoopa",
       "released": false,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -49782,7 +49731,6 @@
       "form": "hoopa_unbound",
       "familyId": "family_hoopa",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -51581,7 +51529,7 @@
         "bite"
       ],
       "chargeMoves": [
-        "muddy_water",
+        "brine",
         "gunk_shot",
         "sludge_wave"
       ],
@@ -51597,7 +51545,7 @@
           "candyCost": 50
         }
       ],
-      "released": false,
+      "released": true,
       "littleCupIVs": {
         "level": 21.0,
         "atk": 0,
@@ -51635,7 +51583,7 @@
         "bite"
       ],
       "chargeMoves": [
-        "muddy_water",
+        "brine",
         "gunk_shot",
         "sludge_wave"
       ],
@@ -51645,7 +51593,7 @@
       },
       "form": "toxapex_normal",
       "familyId": "family_mareanie",
-      "released": false,
+      "released": true,
       "littleCupIVs": {
         "level": 12.0,
         "atk": 0,
@@ -54760,7 +54708,6 @@
       "form": "tapu_koko_normal",
       "familyId": "family_tapu_koko",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 3,
@@ -54810,7 +54757,6 @@
       "form": "tapu_lele_normal",
       "familyId": "family_tapu_lele",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 2,
@@ -54860,7 +54806,6 @@
       "form": "tapu_bulu_normal",
       "familyId": "family_tapu_bulu",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 8,
@@ -54910,7 +54855,6 @@
       "form": "tapu_fini_normal",
       "familyId": "family_tapu_fini",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 7.0,
         "atk": 0,
@@ -54955,7 +54899,6 @@
       "form": "cosmog_normal",
       "familyId": "family_cosmog",
       "released": false,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 50.0,
         "atk": 15,
@@ -55000,7 +54943,6 @@
       "form": "cosmoem_normal",
       "familyId": "family_cosmog",
       "released": false,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 27.5,
         "atk": 0,
@@ -55050,7 +54992,6 @@
       "form": "solgaleo_normal",
       "familyId": "family_cosmog",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -55100,7 +55041,6 @@
       "form": "lunala_normal",
       "familyId": "family_cosmog",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -55151,7 +55091,6 @@
       "form": "nihilego_normal",
       "familyId": "family_nihilego",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -55201,7 +55140,6 @@
       "form": "buzzwole_normal",
       "familyId": "family_buzzwole",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 7,
@@ -55251,7 +55189,6 @@
       "form": "pheromosa_normal",
       "familyId": "family_pheromosa",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.5,
         "atk": 8,
@@ -55300,7 +55237,6 @@
       "form": "xurkitree_normal",
       "familyId": "family_xurkitree",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -55334,10 +55270,14 @@
         "hp": 219
       },
       "fastMoves": [
-        "struggle"
+        "air_slash",
+        "smack_down"
       ],
       "chargeMoves": [
-        "struggle"
+        "iron_head",
+        "body_slam",
+        "heavy_slam",
+        "bulldoze"
       ],
       "thirdMoveCost": {
         "stardust": 100000,
@@ -55346,7 +55286,6 @@
       "form": "celesteela_normal",
       "familyId": "family_celesteela",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 6.5,
         "atk": 0,
@@ -55380,10 +55319,14 @@
         "hp": 139
       },
       "fastMoves": [
-        "struggle"
+        "air_slash",
+        "razor_leaf"
       ],
       "chargeMoves": [
-        "struggle"
+        "leaf_blade",
+        "x_scissor",
+        "night_slash",
+        "aerial_ace"
       ],
       "thirdMoveCost": {
         "stardust": 100000,
@@ -55392,7 +55335,6 @@
       "form": "kartana_normal",
       "familyId": "family_kartana",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 0,
@@ -55438,7 +55380,6 @@
       "form": "guzzlord_normal",
       "familyId": "family_guzzlord",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 7.0,
         "atk": 0,
@@ -55483,7 +55424,6 @@
       "form": "necrozma_normal",
       "familyId": "family_necrozma",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 0,
@@ -55529,7 +55469,6 @@
       "form": "necrozma_dawn_wings",
       "familyId": "family_necrozma",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -55575,7 +55514,6 @@
       "form": "necrozma_dusk_mane",
       "familyId": "family_necrozma",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -55621,7 +55559,6 @@
       "form": "necrozma_ultra",
       "familyId": "family_necrozma",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 4.5,
         "atk": 0,
@@ -55667,7 +55604,6 @@
       "form": "magearna_normal",
       "familyId": "family_magearna",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 0,
@@ -55758,7 +55694,6 @@
       "form": "marshadow_normal",
       "familyId": "family_marshadow",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 14,
@@ -55809,7 +55744,6 @@
         }
       ],
       "released": false,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 12.0,
         "atk": 0,
@@ -55855,7 +55789,6 @@
       "form": "naganadel_normal",
       "familyId": "family_poipole",
       "released": false,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 4,
@@ -55901,7 +55834,6 @@
       "form": "stakataka_normal",
       "familyId": "family_stakataka",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -55947,7 +55879,6 @@
       "form": "blacephalon_normal",
       "familyId": "family_blacephalon",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 6.0,
         "atk": 0,
@@ -55992,7 +55923,6 @@
       "form": "zeraora_normal",
       "familyId": "family_zeraora",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 8,
@@ -60683,7 +60613,6 @@
       "form": "zacian_normal",
       "familyId": "family_zacian",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 6,
@@ -60735,7 +60664,6 @@
       "form": "zacian_crowned_sword",
       "familyId": "family_zacian",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 4.0,
         "atk": 3,
@@ -60786,7 +60714,6 @@
       "form": "zacian_hero",
       "familyId": "family_zacian",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 6,
@@ -60838,7 +60765,6 @@
       "form": "zamazenta_normal",
       "familyId": "family_zamazenta",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 6,
@@ -60890,7 +60816,6 @@
       "form": "zamazenta_crowned_shield",
       "familyId": "family_zamazenta",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 0,
@@ -60941,7 +60866,6 @@
       "form": "zamazenta_hero",
       "familyId": "family_zamazenta",
       "released": true,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 6,
@@ -60990,7 +60914,6 @@
       "form": "eternatus_normal",
       "familyId": "family_eternatus",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 4.5,
         "atk": 1,
@@ -61040,7 +60963,6 @@
       "form": "eternatus_eternamax",
       "familyId": "family_eternatus",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 2.5,
         "atk": 15,
@@ -61295,7 +61217,6 @@
       "form": "zarude_normal",
       "familyId": "family_zarude",
       "released": true,
-      "minLevel": 15,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 8,
@@ -61343,7 +61264,6 @@
       "form": "regieleki_normal",
       "familyId": "family_regieleki",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 7.0,
         "atk": 0,
@@ -61390,7 +61310,6 @@
       "form": "regidrago_normal",
       "familyId": "family_regidrago",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 6.5,
         "atk": 0,
@@ -61438,7 +61357,6 @@
       "form": "glastrier_normal",
       "familyId": "family_glastrier",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.0,
         "atk": 3,
@@ -61486,7 +61404,6 @@
       "form": "spectrier_normal",
       "familyId": "family_spectrier",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 5.5,
         "atk": 11,
@@ -61535,7 +61452,6 @@
       "form": "calyrex_normal",
       "familyId": "family_calyrex",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 8.5,
         "atk": 0,
@@ -61585,7 +61501,6 @@
       "form": "calyrex_ice_rider",
       "familyId": "family_calyrex",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 4.5,
         "atk": 11,
@@ -61635,7 +61550,6 @@
       "form": "calyrex_shadow_rider",
       "familyId": "family_calyrex",
       "released": false,
-      "minLevel": 20,
       "littleCupIVs": {
         "level": 4.5,
         "atk": 0,

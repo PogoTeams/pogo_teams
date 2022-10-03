@@ -28,12 +28,15 @@ class TypeFilteredPokemonList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Pokemon> counters = Gamemaster.getFilteredRankedPokemonList(
+    List<Pokemon> counters = [];
+    /*
+    Gamemaster.getFilteredRankedPokemonList(
       cup,
       types,
       'overall',
       limit: 50,
     );
+    */
 
     return Column(
       children: counters

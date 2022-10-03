@@ -2,10 +2,10 @@
 import 'dart:io';
 
 // Local
+import 'snapshot_diff.dart';
 import '../pogo_data/pokemon_stats.dart';
 import '../modules/data/stats.dart';
 import '../tools/json_tools.dart';
-import 'snapshot_diff.dart';
 
 // pattern matching for mapping from Niantic's data source
 final RegExp _fastMoveRegex = RegExp(r'COMBAT_.*MOVE_(.*)_FAST');
@@ -28,7 +28,6 @@ const List<String> _ignoredFormPhrases = [
 List<String> _processedPokemonIds = [];
 List<String> _processedPokemonForms = [];
 List<String> _releasedPokemonIds = [];
-late final Map<String, int> _minLevelExclusives;
 
 List<dynamic> _fastMovesOutput = [];
 List<dynamic> _chargeMovesOutput = [];
@@ -44,10 +43,6 @@ void mapNianticToSnapshot() async {
       await JsonTools.loadJson('bin/json/live_lists/released-pokemon-ids');
   if (result == null) return;
   _releasedPokemonIds = List<String>.from(result);
-
-  result = await JsonTools.loadJson('bin/json/live_lists/min-level-exclusives');
-  if (result == null) return;
-  _minLevelExclusives = Map<String, int>.from(result);
 
   for (var entry in nianticGamemaster) {
     _processGamemasterEntry(entry);
@@ -84,7 +79,7 @@ void mapNianticToSnapshot() async {
 }
 
 void _processGamemasterEntry(dynamic entry) {
-  if (entry.containsTypeId('templateId')) {
+  if (entry.containsKey('templateId')) {
     String templateId = entry['templateId'] as String;
 
     // MOVES ------------------------------------------------------------------
@@ -323,11 +318,11 @@ void _mapPokemon(Map<String, dynamic> pokemonSrc, String templateId) {
 
   if (pokemonSrc.containsKey('thirdMove')) {
     Map<String, int> thirdMoveCost = {};
-    if (pokemonSrc['thirdMove'].containsTypeId('stardustToUnlock')) {
+    if (pokemonSrc['thirdMove'].containsKey('stardustToUnlock')) {
       thirdMoveCost['stardust'] =
           pokemonSrc['thirdMove']['stardustToUnlock'] as int;
     }
-    if (pokemonSrc['thirdMove'].containsTypeId('candyToUnlock')) {
+    if (pokemonSrc['thirdMove'].containsKey('candyToUnlock')) {
       thirdMoveCost['candy'] = pokemonSrc['thirdMove']['candyToUnlock'] as int;
     }
     pokemonEntry['thirdMoveCost'] = thirdMoveCost;
@@ -356,19 +351,19 @@ void _mapPokemon(Map<String, dynamic> pokemonSrc, String templateId) {
   if (pokemonSrc.containsKey('evolutionBranch')) {
     List<dynamic> evoSrc = pokemonSrc['evolutionBranch'];
     List<dynamic> evolutions = evoSrc.map((evolution) {
-      if (evolution.containsTypeId('evolution')) {
+      if (evolution.containsKey('evolution')) {
         Map<String, dynamic> evoEntry = {};
         evoEntry['pokemonId'] =
             (evolution['evolution'] as String).toLowerCase();
         evoEntry['candyCost'] = evolution['candyCost'] as int;
-        if (evolution.containsTypeId('form')) {
+        if (evolution.containsKey('form')) {
           String evoForm = (evolution['form'] as String).toLowerCase();
           // normal formal evolution doesn't need specification
           if (!evoForm.contains('_normal')) {
             evoEntry['form'] = evoForm;
           }
         }
-        if (evolution.containsTypeId('obPurificationEvolutionCandyCost')) {
+        if (evolution.containsKey('obPurificationEvolutionCandyCost')) {
           evoEntry['purifiedEvolutionCost'] =
               evolution['obPurificationEvolutionCandyCost'] as int;
         }
@@ -384,7 +379,7 @@ void _mapPokemon(Map<String, dynamic> pokemonSrc, String templateId) {
   if (pokemonSrc.containsKey('tempEvoOverrides')) {
     List<dynamic> evoOverrideSrc = pokemonSrc['tempEvoOverrides'];
     List<dynamic> tempEvolutions = evoOverrideSrc.map((override) {
-      if (override.containsTypeId('tempEvoId')) {
+      if (override.containsKey('tempEvoId')) {
         Map<String, dynamic> overrideEntry = {
           'pokemonId': pokemonEntry['pokemonId'] +
               '_' +
@@ -398,7 +393,7 @@ void _mapPokemon(Map<String, dynamic> pokemonSrc, String templateId) {
         overrideEntry['typing'] = {
           'typeA': _getType(override['typeOverride1'])
         };
-        if (override.containsTypeId('typeOverride2')) {
+        if (override.containsKey('typeOverride2')) {
           overrideEntry['typing']['typeB'] =
               _getType(override['typeOverride2']);
         }
@@ -420,14 +415,11 @@ void _mapPokemon(Map<String, dynamic> pokemonSrc, String templateId) {
     }
   }
   pokemonEntry['released'] = _isReleased(pokemonEntry['pokemonId']);
-  if (_minLevelExclusives.containsKey(pokemonEntry['pokemonId'])) {
-    pokemonEntry['minLevel'] = _minLevelExclusives[pokemonEntry['pokemonId']];
-  }
 
   if (pokemonEntry.containsKey('stats') &&
-      pokemonEntry['stats'].containsTypeId('atk') &&
-      pokemonEntry['stats'].containsTypeId('def') &&
-      pokemonEntry['stats'].containsTypeId('hp')) {
+      pokemonEntry['stats'].containsKey('atk') &&
+      pokemonEntry['stats'].containsKey('def') &&
+      pokemonEntry['stats'].containsKey('hp')) {
     BaseStats stats = BaseStats.fromJson(pokemonEntry['stats']);
     pokemonEntry['littleCupIVs'] = Stats.generateIVSpreads(
       stats,

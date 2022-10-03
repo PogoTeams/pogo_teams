@@ -57,44 +57,23 @@ class FilterButton extends StatelessWidget {
               ),
             ),
             PopupMenuItem<String>(
-              value: 'leads',
+              value: 'lead',
               child: PopupItem(
                 category: 'leads',
                 selectedCategory: selectedCategory,
               ),
             ),
             PopupMenuItem<String>(
-              value: 'attackers',
-              child: PopupItem(
-                category: 'attackers',
-                selectedCategory: selectedCategory,
-              ),
-            ),
-            PopupMenuItem<String>(
-              value: 'closers',
-              child: PopupItem(
-                category: 'closers',
-                selectedCategory: selectedCategory,
-              ),
-            ),
-            PopupMenuItem<String>(
-              value: 'chargers',
-              child: PopupItem(
-                category: 'chargers',
-                selectedCategory: selectedCategory,
-              ),
-            ),
-            PopupMenuItem<String>(
-              value: 'consistency',
-              child: PopupItem(
-                category: 'consistency',
-                selectedCategory: selectedCategory,
-              ),
-            ),
-            PopupMenuItem<String>(
-              value: 'switches',
+              value: 'switch',
               child: PopupItem(
                 category: 'switches',
+                selectedCategory: selectedCategory,
+              ),
+            ),
+            PopupMenuItem<String>(
+              value: 'closer',
+              child: PopupItem(
+                category: 'closers',
                 selectedCategory: selectedCategory,
               ),
             ),

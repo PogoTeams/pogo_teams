@@ -80,12 +80,15 @@ class SwapList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Pokemon> counters = Gamemaster.getFilteredRankedPokemonList(
+    List<Pokemon> counters = [];
+    /*
+    Gamemaster.getFilteredRankedPokemonList(
       team.cup,
       types,
       'overall',
       limit: 20,
     );
+    */
 
     return ListView.builder(
       shrinkWrap: true,
