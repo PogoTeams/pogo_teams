@@ -4,9 +4,8 @@ import 'dart:io';
 // Local
 import 'package:pogo_teams/mapping/niantic_snapshot.dart';
 import 'package:pogo_teams/mapping/cloud_writes.dart';
-import 'package:pogo_teams/cloud/cloud_push.dart';
-import 'package:pogo_teams/ranker/ranker_main.dart';
 import 'package:pogo_teams/mapping/mapping_tools.dart';
+import 'package:pogo_teams/ranker/ranker_main.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -48,7 +47,7 @@ void main(List<String> arguments) async {
       break;
     case 'cloud-push':
       if (arguments.length > 1) {
-        cloudPush(arguments[1]);
+        CloudWrites.cloudPush(arguments[1]);
       } else {
         stderr.writeln('cloud-push: no api key was specified');
       }

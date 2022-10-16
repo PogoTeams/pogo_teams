@@ -1,12 +1,13 @@
 // Flutter Imports
 import 'package:flutter/material.dart';
-import 'package:pogo_teams/modules/data/data_access.dart';
+import 'package:pogo_teams/modules/data/pogo_data.dart';
 
 // Local Imports
+import '../../modules/data/gamemaster.dart';
 import '../../modules/ui/sizing.dart';
-import '../../pogo_data/pokemon.dart';
-import '../../pogo_data/cup.dart';
-import '../../pogo_data/pokemon_team.dart';
+import '../../game_objects/pokemon.dart';
+import '../../game_objects/cup.dart';
+import '../../game_objects/pokemon_team.dart';
 import '../../widgets/pokemon_list.dart';
 import '../../widgets/buttons/exit_button.dart';
 import '../../widgets/pogo_text_field.dart';
@@ -15,7 +16,6 @@ import '../../widgets/dropdowns/team_size_dropdown.dart';
 import '../../widgets/dropdowns/win_loss_dropdown.dart';
 import '../../widgets/buttons/filter_button.dart';
 import '../../widgets/nodes/team_node.dart';
-import '../../modules/data/gamemaster.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -224,7 +224,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     if ('dex' == _selectedCategory) {
       pokemon = Gamemaster.pokemonList;
     } else {
-      pokemon = await DataAccess.getRankedPokemonList(_cup, _selectedCategory);
+      pokemon = await PogoData.getRankedPokemonList(_cup, _selectedCategory);
     }
 
     _filterPokemonList();
@@ -250,7 +250,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
 
     // Get the selected cup and list of Pokemon based on the category
     pokemon =
-        await DataAccess.getRankedPokemonList(widget.cup, _selectedCategory);
+        await PogoData.getRankedPokemonList(widget.cup, _selectedCategory);
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);

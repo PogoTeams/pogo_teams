@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local
-import '../../pogo_data/pokemon_typing.dart';
-import '../../pogo_data/move.dart';
+import '../../game_objects/pokemon_typing.dart';
+import '../../game_objects/move.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

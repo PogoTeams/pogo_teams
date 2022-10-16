@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import '../pogo_data/pokemon_stats.dart';
+import '../game_objects/pokemon_stats.dart';
 import '../modules/ui/sizing.dart';
 
 /*

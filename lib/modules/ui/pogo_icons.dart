@@ -1,6 +1,6 @@
 // Flutter Imports
 import 'package:flutter/material.dart';
-import 'package:pogo_teams/pogo_data/pokemon_typing.dart';
+import 'package:pogo_teams/game_objects/pokemon_typing.dart';
 
 class PogoIcons {
   // Get a type icon for this type, if size is not specified, the default size

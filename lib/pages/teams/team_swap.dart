@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../../modules/ui/sizing.dart';
-import '../../pogo_data/pokemon.dart';
+import '../../game_objects/pokemon.dart';
 import '../../widgets/buttons/exit_button.dart';
 import '../../widgets/buttons/pokemon_action_button.dart';
 import '../../widgets/nodes/pokemon_node.dart';
-import '../../pogo_data/pokemon_team.dart';
+import '../../game_objects/pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

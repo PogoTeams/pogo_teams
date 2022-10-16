@@ -1,6 +1,6 @@
 // Local
 import 'pokemon_battler.dart';
-import '../pogo_data/pokemon.dart';
+import '../game_objects/pokemon.dart';
 import '../modules/data/debug_cli.dart';
 
 /*

@@ -49,40 +49,36 @@ class Pokemon {
     Map<String, dynamic> json, {
     bool shadowForm = false,
   }) {
-    List<String> moveIds;
-
     List<FastMove> fastMoves = [];
     if (json.containsKey('fastMoves')) {
-      moveIds = List<String>.from(json['fastMoves']);
-      fastMoves = Gamemaster.fastMoves
-          .where((FastMove move) => moveIds.contains(move.moveId))
-          .toList();
+      for (String moveId in List<String>.from(json['fastMoves'])) {
+        fastMoves.add(Gamemaster.getFastMoveById(moveId));
+      }
     } else {
       fastMoves = [];
     }
 
     List<ChargeMove> chargeMoves = [];
     if (json.containsKey('chargeMoves')) {
-      moveIds = List<String>.from(json['chargeMoves']);
-      chargeMoves = Gamemaster.chargeMoves
-          .where((ChargeMove move) => moveIds.contains(move.moveId))
-          .toList();
+      for (String moveId in List<String>.from(json['chargeMoves'])) {
+        chargeMoves.add(Gamemaster.getChargeMoveById(moveId));
+      }
     }
 
     List<String>? eliteFastMoveIds;
     if (json.containsKey('eliteFastMoves')) {
       eliteFastMoveIds = List<String>.from(json['eliteFastMoves']);
-      fastMoves.addAll(Gamemaster.fastMoves
-          .where((FastMove move) => eliteFastMoveIds!.contains(move.moveId))
-          .toList());
+      for (String moveId in List<String>.from(json['eliteFastMoves'])) {
+        fastMoves.add(Gamemaster.getFastMoveById(moveId));
+      }
     }
 
     List<String>? eliteChargeMoveIds;
     if (json.containsKey('eliteChargeMoves')) {
       eliteChargeMoveIds = List<String>.from(json['eliteChargeMoves']);
-      chargeMoves.addAll(Gamemaster.chargeMoves
-          .where((ChargeMove move) => eliteChargeMoveIds!.contains(move.moveId))
-          .toList());
+      for (String moveId in List<String>.from(json['eliteChargeMoves'])) {
+        chargeMoves.add(Gamemaster.getChargeMoveById(moveId));
+      }
     }
 
     if (json.containsKey('shadow') &&
@@ -90,8 +86,7 @@ class Pokemon {
         !shadowForm) {
       String purifiedChargeMove =
           json['shadow']['purifiedChargeMove'] as String;
-      chargeMoves.add(Gamemaster.chargeMoves
-          .firstWhere((move) => move.moveId == purifiedChargeMove));
+      chargeMoves.add(Gamemaster.getChargeMoveById(purifiedChargeMove));
     }
 
     List<String> tags = [];
@@ -152,42 +147,36 @@ class Pokemon {
     Map<String, dynamic> json,
     Map<String, dynamic> overridesJson,
   ) {
-    List<String> moveIds;
-
     List<FastMove> fastMoves = [];
     if (json.containsKey('fastMoves')) {
-      moveIds = List<String>.from(json['fastMoves']);
-      fastMoves = Gamemaster.fastMoves
-          .where((FastMove move) => moveIds.contains(move.moveId))
-          .toList();
+      for (String moveId in List<String>.from(json['fastMoves'])) {
+        fastMoves.add(Gamemaster.getFastMoveById(moveId));
+      }
     } else {
       fastMoves = [];
     }
 
     List<ChargeMove> chargeMoves = [];
     if (json.containsKey('chargeMoves')) {
-      moveIds = List<String>.from(json['chargeMoves']);
-      chargeMoves = Gamemaster.chargeMoves
-          .where((ChargeMove move) => moveIds.contains(move.moveId))
-          .toList();
-    } else {
-      chargeMoves = [];
+      for (String moveId in List<String>.from(json['chargeMoves'])) {
+        chargeMoves.add(Gamemaster.getChargeMoveById(moveId));
+      }
     }
 
     List<String>? eliteFastMoveIds;
     if (json.containsKey('eliteFastMoves')) {
       eliteFastMoveIds = List<String>.from(json['eliteFastMoves']);
-      fastMoves.addAll(Gamemaster.fastMoves
-          .where((FastMove move) => eliteFastMoveIds!.contains(move.moveId))
-          .toList());
+      for (String moveId in List<String>.from(json['eliteFastMoves'])) {
+        fastMoves.add(Gamemaster.getFastMoveById(moveId));
+      }
     }
 
     List<String>? eliteChargeMoveIds;
     if (json.containsKey('eliteChargeMoves')) {
       eliteChargeMoveIds = List<String>.from(json['eliteChargeMoves']);
-      chargeMoves.addAll(Gamemaster.chargeMoves
-          .where((ChargeMove move) => eliteChargeMoveIds!.contains(move.moveId))
-          .toList());
+      for (String moveId in List<String>.from(json['eliteChargeMoves'])) {
+        chargeMoves.add(Gamemaster.getChargeMoveById(moveId));
+      }
     }
 
     List<String> tags = [];

@@ -4,8 +4,8 @@ import 'dart:math';
 // Local
 import 'pokemon_ranker.dart';
 import 'ranking_data.dart';
-import '../pogo_data/pokemon.dart';
-import '../pogo_data/cup.dart';
+import '../game_objects/pokemon.dart';
+import '../game_objects/cup.dart';
 import '../tools/json_tools.dart';
 import '../modules/data/gamemaster.dart';
 import '../modules/data/debug_cli.dart';
@@ -51,6 +51,8 @@ void generatePokemonRankings() async {
       }
     }
 
+    rankings.sort((r1, r2) => r2.ratings.overall - r1.ratings.overall);
+
     writeRankings(
       rankings,
       bestOverallRating,
@@ -74,7 +76,6 @@ void writeRankings(
   int bestCloserRating,
   String cupId,
 ) {
-  rankings.sort((r1, r2) => r2.ratings.overall - r1.ratings.overall);
   for (RankingData r in rankings) {
     r.ratings.overall = (r.ratings.overall / bestOverallRating * 10000).floor();
     r.ratings.lead = (r.ratings.lead / bestLeadRating * 10000).floor();

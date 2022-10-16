@@ -1,6 +1,6 @@
 // Local
-import '../../pogo_data/pokemon_typing.dart';
-import '../../pogo_data/pokemon.dart';
+import '../../game_objects/pokemon_typing.dart';
+import '../../game_objects/pokemon.dart';
 import '../../tools/pair.dart';
 import '../../tools/logic.dart';
 import 'globals.dart';

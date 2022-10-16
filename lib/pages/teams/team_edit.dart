@@ -9,9 +9,9 @@ import '../../widgets/nodes/pokemon_node.dart';
 import '../../widgets/dropdowns/cup_dropdown.dart';
 import '../../widgets/dropdowns/team_size_dropdown.dart';
 import '../../widgets/buttons/gradient_button.dart';
-import '../../pogo_data/pokemon_team.dart';
-import '../../pogo_data/pokemon.dart';
-import '../../pogo_data/cup.dart';
+import '../../game_objects/pokemon_team.dart';
+import '../../game_objects/pokemon.dart';
+import '../../game_objects/cup.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

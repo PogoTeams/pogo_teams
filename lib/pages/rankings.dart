@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import '../modules/data/data_access.dart';
+import '../modules/data/pogo_data.dart';
 import '../modules/ui/sizing.dart';
-import '../pogo_data/pokemon.dart';
-import '../pogo_data/cup.dart';
+import '../game_objects/pokemon.dart';
+import '../game_objects/cup.dart';
 import '../widgets/pokemon_list.dart';
 import '../widgets/pogo_text_field.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
 import '../widgets/buttons/filter_button.dart';
-import '../modules/data/gamemaster.dart';
+import '../modules/data/Gamemaster.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -58,7 +58,7 @@ class _RankingsState extends State<Rankings> {
   void _filterCategory(dynamic rankingsCategory) async {
     _selectedCategory = rankingsCategory;
 
-    pokemon = await DataAccess.getRankedPokemonList(cup, rankingsCategory);
+    pokemon = await PogoData.getRankedPokemonList(cup, rankingsCategory);
 
     _filterPokemonList();
   }

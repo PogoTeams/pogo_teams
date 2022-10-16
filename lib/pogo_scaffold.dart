@@ -12,7 +12,7 @@ import 'package:http/retry.dart';
 
 // Local Imports
 import 'tools/pair.dart';
-import 'pogo_data/user_teams.dart';
+import 'game_objects/user_teams.dart';
 import 'pages/teams/teams_builder.dart';
 import 'pages/rankings.dart';
 import 'modules/ui/sizing.dart';

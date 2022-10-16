@@ -1,5 +1,5 @@
 // Local
-import '../pogo_data/pokemon.dart';
+import '../game_objects/pokemon.dart';
 import 'battle_result.dart';
 import '../modules/data/globals.dart';
 import '../modules/data/debug_cli.dart';

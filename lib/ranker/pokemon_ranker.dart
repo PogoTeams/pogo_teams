@@ -1,7 +1,7 @@
 // Local
 import 'ranking_data.dart';
-import '../pogo_data/pokemon.dart';
-import '../pogo_data/cup.dart';
+import '../game_objects/pokemon.dart';
+import '../game_objects/cup.dart';
 import '../battle/pokemon_battler.dart';
 import '../battle/battle_result.dart';
 import '../modules/data/gamemaster.dart';

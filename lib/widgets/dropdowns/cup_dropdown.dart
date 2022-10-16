@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_data/cup.dart';
+import '../../game_objects/cup.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/ui/pogo_colors.dart';
 import '../../modules/data/gamemaster.dart';

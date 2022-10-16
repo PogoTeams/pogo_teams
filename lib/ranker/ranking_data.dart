@@ -1,7 +1,7 @@
 // Local
-import '../pogo_data/pokemon.dart';
-import '../pogo_data/move.dart';
-import '../pogo_data/ratings.dart';
+import '../game_objects/pokemon.dart';
+import '../game_objects/move.dart';
+import '../game_objects/ratings.dart';
 import '../battle/pokemon_battler.dart';
 import '../battle/battle_result.dart';
 import '../modules/data/globals.dart';

@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pogo_data/pokemon.dart';
-import '../pogo_data/cup.dart';
+import 'pokemon.dart';
+import 'cup.dart';
 import '../modules/data/pokemon_types.dart';
 import '../modules/data/gamemaster.dart';
 import '../modules/data/globals.dart';

@@ -1,4 +1,4 @@
-import '../../pogo_data/pokemon.dart';
+import '../../game_objects/pokemon.dart';
 
 class Cups {
   static const Map<int, int> cpMinimums = {

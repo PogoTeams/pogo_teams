@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_data/move.dart';
-import '../../pogo_data/pokemon.dart';
+import '../../game_objects/move.dart';
+import '../../game_objects/pokemon.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/ui/pogo_colors.dart';
 

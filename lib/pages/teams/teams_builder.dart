@@ -9,9 +9,9 @@ import 'battle_log.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../modules/ui/sizing.dart';
-import '../../pogo_data/user_teams.dart';
-import '../../pogo_data/pokemon.dart';
-import '../../pogo_data/pokemon_team.dart';
+import '../../game_objects/user_teams.dart';
+import '../../game_objects/pokemon.dart';
+import '../../game_objects/pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_data/pokemon_typing.dart';
-import '../../pogo_data/pokemon.dart';
-import '../../pogo_data/cup.dart';
+import '../../game_objects/pokemon_typing.dart';
+import '../../game_objects/pokemon.dart';
+import '../../game_objects/cup.dart';
 import '../nodes/pokemon_node.dart';
 import '../../modules/ui/sizing.dart';
-import '../../modules/data/gamemaster.dart';
+import '../../modules/data/pogo_data.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

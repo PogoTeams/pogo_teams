@@ -1,11 +1,24 @@
 // Dart
 import 'dart:io';
+import 'dart:convert';
+import 'dart:math';
+import 'package:http/http.dart' as http;
 
 // Local
 import '../tools/json_tools.dart';
 
 class CloudWrites {
-  static final List<dynamic> cloudWrites = [];
+  // firestore api
+  static const String host = 'firestore.googleapis.com';
+  static const String commitRequestPath =
+      'v1/projects/pogo-teams-host/databases/(default)/documents:commit';
+  static const String cloudDbName = 'pogo-teams-host';
+
+  // max number of writes that can be passed to a commit operation
+  // https://firebase.google.com/docs/firestore/quotas#writes_and_transactions
+  static const int segmentSize = 500;
+
+  static List<dynamic> cloudWrites = [];
 
   static Future<void> mapSnapshotDiffToCloudWrites(
       {bool writeJson = true}) async {
@@ -47,6 +60,16 @@ class CloudWrites {
       });
     }
 
+    if (snapshotFastMoves.isNotEmpty) {
+      _addVersionTimestamp('pogo', 'fastMoves');
+    }
+    if (snapshotChargeMoves.isNotEmpty) {
+      _addVersionTimestamp('pogo', 'chargeMoves');
+    }
+    if (snapshotPokemon.isNotEmpty) {
+      _addVersionTimestamp('pogo', 'pokemon');
+    }
+
     if (writeJson) _writeCloudWritesJson();
   }
 
@@ -64,6 +87,8 @@ class CloudWrites {
         }
       });
     }
+
+    _addVersionTimestamp('pogo', 'cups');
 
     if (writeJson) _writeCloudWritesJson();
   }
@@ -90,6 +115,8 @@ class CloudWrites {
             }
           });
         }
+
+        _addVersionTimestamp('rankings', id);
       }
     }
 
@@ -192,4 +219,80 @@ class CloudWrites {
         .toList();
   }
   */
+
+  static void cloudPush(String apiKey) async {
+    List<dynamic>? results = await JsonTools.loadJson('bin/json/cloud-writes');
+    if (results == null) return;
+
+    cloudWrites = results;
+
+    stdout.writeln(
+        'you are about to write ${cloudWrites.length} documents to cloud db : $cloudDbName');
+    stdout.write('enter "commit" to commit the transaction\n> ');
+    if ('commit' == stdin.readLineSync()) {
+      int startIndex = 0;
+      int endIndex = 0;
+      int segmentCount = 1;
+      List<dynamic> segment;
+
+      Uri url = Uri.https(
+        host,
+        commitRequestPath,
+        {'key': apiKey},
+      );
+
+      bool success = true;
+      while (startIndex < cloudWrites.length - 1) {
+        endIndex = min(startIndex + segmentSize, cloudWrites.length);
+        segment = cloudWrites.getRange(startIndex, endIndex).toList();
+        String requestBody = jsonEncode(<String, dynamic>{'writes': segment});
+        http.Response response = await http.post(url, body: requestBody);
+
+        stdout.writeln();
+        stdout.writeln('cloud-push ${'-' * 20}');
+        stdout.writeln('write count : ${segment.length}');
+        stdout.writeln('write range : ($startIndex, ${endIndex - 1})');
+        stdout.writeln('segment $segmentCount status : ${response.statusCode}');
+        if (response.statusCode != 200) {
+          success = false;
+          stdout.writeln('cloud-error: ${response.body}');
+        }
+        stdout.writeln('-' * 31);
+        stdout.writeln();
+
+        startIndex += segmentSize;
+        ++segmentCount;
+      }
+
+      if (success) {
+        Map<String, dynamic>? snapshot =
+            await JsonTools.loadJson('bin/json/niantic-snapshot');
+        if (snapshot != null) {
+          await JsonTools.writeJson(
+              snapshot, 'bin/json/latest_snapshot/niantic-snapshot');
+          stdout.writeln();
+          stdout.writeln('cloud-push successful ${'-' * 9}');
+          stdout.writeln('niantic-snapshot written to "latest" directory');
+          stdout.writeln();
+        }
+      }
+    } else {
+      stdout.writeln('nothing was written to cloud db : $cloudDbName');
+    }
+  }
+
+  static void _addVersionTimestamp(String documentName, String fieldName) {
+    cloudWrites.add(<String, dynamic>{
+      'updateMask': {
+        'fieldPaths': [fieldName],
+      },
+      'update': {
+        'name':
+            'projects/pogo-teams-host/databases/(default)/documents/versionTimestamps/$documentName',
+        'fields': {
+          fieldName: {'stringValue': DateTime.now().toUtc().toString()}
+        }
+      }
+    });
+  }
 }

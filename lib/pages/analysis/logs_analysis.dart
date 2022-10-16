@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 // Local Imports
 import '../../widgets/analysis/type_coverage.dart';
 import '../../widgets/pokemon_list.dart';
-import '../../pogo_data/pokemon.dart';
-import '../../pogo_data/pokemon_team.dart';
-import '../../pogo_data/pokemon_typing.dart';
-import '../../modules/data/data_access.dart';
+import '../../game_objects/pokemon.dart';
+import '../../game_objects/pokemon_team.dart';
+import '../../game_objects/pokemon_typing.dart';
+import '../../modules/data/pogo_data.dart';
 import '../../modules/ui/sizing.dart';
 import '../../tools/pair.dart';
 
@@ -68,7 +68,7 @@ class LogsAnalysis extends StatelessWidget {
       List<Pair<PokemonType, double>> defenseThreats) async {
     final counterTypes = defenseThreats.map((typeData) => typeData.a).toList();
 
-    List<Pokemon> counters = await DataAccess.getFilteredRankedPokemonList(
+    List<Pokemon> counters = await PogoData.getFilteredRankedPokemonList(
       team.cup,
       counterTypes,
       'overall',

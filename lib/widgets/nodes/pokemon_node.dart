@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 // Local Imports
 import 'empty_node.dart';
 import 'move_node.dart';
-import '../../pogo_data/pokemon.dart';
-import '../../pogo_data/cup.dart';
+import '../../game_objects/pokemon.dart';
+import '../../game_objects/cup.dart';
 import '../pvp_stats.dart';
 import '../dropdowns/move_dropdowns.dart';
 import '../traits_icons.dart';

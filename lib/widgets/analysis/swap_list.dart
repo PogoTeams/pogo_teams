@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_data/pokemon_team.dart';
-import '../../pogo_data/pokemon.dart';
-import '../../pogo_data/pokemon_typing.dart';
+import '../../game_objects/pokemon_team.dart';
+import '../../game_objects/pokemon.dart';
+import '../../game_objects/pokemon_typing.dart';
 import '../nodes/pokemon_node.dart';
 import '../../modules/ui/sizing.dart';
-import '../../modules/data/gamemaster.dart';
+import '../../modules/data/pogo_data.dart';
 import '../buttons/pokemon_action_button.dart';
 
 /*

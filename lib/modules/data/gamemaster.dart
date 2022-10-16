@@ -1,15 +1,15 @@
 // Local
 import 'cups.dart';
-import '../../pogo_data/move.dart';
-import '../../pogo_data/pokemon.dart';
-import '../../pogo_data/cup.dart';
+import '../../game_objects/move.dart';
+import '../../game_objects/pokemon.dart';
+import '../../game_objects/cup.dart';
 
 class Gamemaster {
-  // The master list of ALL fast moves
-  static late final List<FastMove> fastMoves;
+  // a map of ALL fast moves to their moveId
+  static final Map<String, FastMove> _fastMoveMap = {};
 
-  // The master list of ALL charge moves
-  static late final List<ChargeMove> chargeMoves;
+  // a map of ALL charge moves to their moveId
+  static final Map<String, ChargeMove> _chargeMoveMap = {};
 
   // The master list of ALL pokemon
   static final List<Pokemon> pokemonList = [];
@@ -28,15 +28,17 @@ class Gamemaster {
   }
 
   static void loadFastMoves(List<Map<String, dynamic>> fastMovesJson) {
-    fastMoves = List<Map<String, dynamic>>.from(fastMovesJson)
-        .map<FastMove>((moveJson) => FastMove.fromJson(moveJson))
-        .toList();
+    for (var moveJson in List<Map<String, dynamic>>.from(fastMovesJson)) {
+      FastMove fastMove = FastMove.fromJson(moveJson);
+      _fastMoveMap[fastMove.moveId] = fastMove;
+    }
   }
 
   static void loadChargeMoves(List<Map<String, dynamic>> chargeMovesJson) {
-    chargeMoves = List<Map<String, dynamic>>.from(chargeMovesJson)
-        .map<ChargeMove>((moveJson) => ChargeMove.fromJson(moveJson))
-        .toList();
+    for (var moveJson in List<Map<String, dynamic>>.from(chargeMovesJson)) {
+      ChargeMove chargeMove = ChargeMove.fromJson(moveJson);
+      _chargeMoveMap[chargeMove.moveId] = chargeMove;
+    }
   }
 
   static void loadPokemon(List<Map<String, dynamic>> pokemonJson) {
@@ -78,9 +80,13 @@ class Gamemaster {
         .toList();
   }
 
-  static Pokemon getPokemonById(String pokemonId) {
-    return pokemonMap[pokemonId]!;
-  }
+  static Pokemon getPokemonById(String pokemonId) => pokemonMap[pokemonId]!;
+
+  static FastMove getFastMoveById(String moveId) =>
+      _fastMoveMap[moveId] ?? FastMove.none;
+
+  static ChargeMove getChargeMoveById(String moveId) =>
+      _chargeMoveMap[moveId] ?? ChargeMove.none;
 
   static List<Pokemon> getCupFilteredPokemonList(Cup cup) {
     return pokemonList
@@ -91,11 +97,5 @@ class Gamemaster {
             pokemon.fastMoves.isNotEmpty &&
             pokemon.chargeMoves.isNotEmpty)
         .toList();
-  }
-
-  static void debugDisplayFastMoveRatings() {
-    for (var fastMove in fastMoves) {
-      fastMove.debugPrint();
-    }
   }
 }

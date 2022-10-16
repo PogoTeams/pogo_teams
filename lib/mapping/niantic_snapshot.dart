@@ -3,7 +3,7 @@ import 'dart:io';
 
 // Local
 import 'snapshot_diff.dart';
-import '../pogo_data/pokemon_stats.dart';
+import '../game_objects/pokemon_stats.dart';
 import '../modules/data/stats.dart';
 import '../tools/json_tools.dart';
 

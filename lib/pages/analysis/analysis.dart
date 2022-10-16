@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'user_team_analysis.dart';
 import 'opponent_team_analysis.dart';
 import 'logs_analysis.dart';
-import '../../pogo_data/pokemon.dart';
-import '../../pogo_data/pokemon_team.dart';
-import '../../pogo_data/pokemon_typing.dart';
+import '../../game_objects/pokemon.dart';
+import '../../game_objects/pokemon_team.dart';
+import '../../game_objects/pokemon_typing.dart';
 import '../../modules/data/pokemon_types.dart';
 import '../../tools/pair.dart';
 
