@@ -1,5 +1,6 @@
 // Flutter Imports
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // Package Imports
 import 'package:url_launcher/url_launcher.dart';
@@ -17,12 +18,13 @@ accessible to the user by any screen that contains a scaffold app bar.
 */
 
 class PogoDrawer extends StatelessWidget {
-  const PogoDrawer({
+  PogoDrawer({
     Key? key,
     required this.onNavSelected,
   }) : super(key: key);
 
   final Function(PogoPages) onNavSelected;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void _launchGitHubUrl() async => await launchUrl(Uri(
         host: 'https://github.com',
@@ -69,26 +71,32 @@ class PogoDrawer extends StatelessWidget {
                   // Pogo Teams Logo
                   _buildDrawerHeader(),
 
-                  // Sign in option
-                  ListTile(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          PogoPages.account.displayName,
-                          style: TextStyle(fontSize: Sizing.h1),
+                  /* TODO an About page for these
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // Current version
+                      Text(
+                        Globals.version,
+                        style: TextStyle(
+                          fontSize: Sizing.h2,
+                          fontStyle: FontStyle.italic,
                         ),
-                        SizedBox(
-                          width: Sizing.blockSizeHorizontal * 3.0,
+                      ),
+
+                      // GitHub link
+                      SizedBox(
+                        width: Sizing.blockSizeHorizontal * 10.0,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: _launchGitHubUrl,
+                          icon:
+                              Image.asset('assets/GitHub-Mark-Light-64px.png'),
                         ),
-                        PogoPages.account.icon,
-                      ],
-                    ),
-                    onTap: () {
-                      onNavSelected(PogoPages.account);
-                      Navigator.pop(context);
-                    },
+                      ),
+                    ],
                   ),
+                  */
 
                   // Teams page option
                   ListTile(
@@ -140,28 +148,33 @@ class PogoDrawer extends StatelessWidget {
               height: Sizing.blockSizeVertical * 2.0,
             ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Current version
-                Text(
-                  Globals.version,
-                  style: TextStyle(
-                    fontSize: Sizing.h2,
-                    fontStyle: FontStyle.italic,
+            // Account
+            ListTile(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    PogoPages.account.displayName,
+                    style: TextStyle(fontSize: Sizing.h1),
                   ),
-                ),
+                  SizedBox(
+                    width: Sizing.blockSizeHorizontal * 3.0,
+                  ),
+                  PogoPages.account.icon,
+                ],
+              ),
+              onTap: () {
+                onNavSelected(PogoPages.account);
+                Navigator.pop(context);
+              },
+            ),
 
-                // GitHub link
-                SizedBox(
-                  width: Sizing.blockSizeHorizontal * 10.0,
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: _launchGitHubUrl,
-                    icon: Image.asset('assets/GitHub-Mark-Light-64px.png'),
-                  ),
-                ),
-              ],
+            Text(
+              _auth.currentUser?.email == null ? '' : _auth.currentUser!.email!,
+              style: TextStyle(
+                fontSize: Sizing.h2,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ],
         ),

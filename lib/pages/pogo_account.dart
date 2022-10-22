@@ -1,8 +1,13 @@
-// Package Imports
+// Flutter
 import 'package:flutter/material.dart';
+
+// Package Imports
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pogo_teams/modules/ui/sizing.dart';
-import 'package:pogo_teams/widgets/buttons/gradient_button.dart';
+
+// Local
+import '../modules/ui/sizing.dart';
+import '../widgets/buttons/gradient_button.dart';
+import '../tools/lowercase_text_formatter.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -23,54 +28,125 @@ class _PogoAccountState extends State<PogoAccount> {
   final TextEditingController _passwordController = TextEditingController();
   bool? _success;
   String _userEmail = '';
+  bool _passwordHidden = true;
+
+  bool get _userIsSignedIn {
+    return _auth.currentUser != null;
+  }
 
   void _register() async {
-    final User? user = (await _auth.createUserWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    ))
-        .user;
+    try {
+      final User? user = (await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      ))
+          .user;
 
-    if (user != null) {
-      setState(() {
-        _success = true;
-        _userEmail = user.email!;
-      });
-    } else {
-      setState(() {
-        _success = true;
-      });
+      if (user != null) {
+        setState(() {
+          _success = true;
+          _userEmail = user.email!;
+        });
+      } else {
+        setState(() {
+          _success = true;
+        });
+      }
+    } catch (e) {
+      if (e.runtimeType == FirebaseAuthException) {
+        switch ((e as FirebaseAuthException).code) {
+          case 'email-already-in-use':
+            break;
+          case 'invalid-email':
+            break;
+          case 'user-not-found':
+            break;
+          case 'weak-password':
+            break;
+        }
+      }
     }
   }
 
   void _signInWithEmailAndPassword() async {
-    final User? user = (await _auth.signInWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    ))
-        .user;
-
-    if (user != null) {
-      setState(() {
-        _success = true;
-        _userEmail = user.email!;
-      });
-    } else {
-      setState(() {
-        _success = false;
-      });
+    try {
+      final User? user = (await _auth.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      ))
+          .user;
+      if (user != null) {
+        setState(() {
+          _success = true;
+          _userEmail = user.email!;
+        });
+      } else {
+        setState(() {
+          _success = false;
+        });
+      }
+    } catch (e) {
+      if (e.runtimeType == FirebaseAuthException) {
+        switch ((e as FirebaseAuthException).code) {
+          case 'invalid-email':
+            break;
+          case 'user-disabled':
+            break;
+          case 'user-not-found':
+            break;
+          case 'wrong-password':
+            break;
+        }
+      }
     }
   }
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+  void _signOut() async {
+    await _auth.signOut();
+    setState(() {
+      _emailController.clear();
+      _passwordController.clear();
+      _userEmail = '';
+    });
   }
 
-  @override
-  Widget build(BuildContext context) {
+  void _resetPassword() async {
+    try {
+      /* TODO password reset
+      _auth.sendPasswordResetEmail(
+        email: _emailController.text,
+        actionCodeSettings: ActionCodeSettings(
+          url: 'https://pogo-teams-host.firebaseapp.com',
+          androidPackageName: 'com.pogoteams',
+          iOSBundleId: 'com.pogoteams',
+        ),
+      );
+      */
+    } catch (e) {
+      if (e.runtimeType == FirebaseAuthException) {
+        switch ((e as FirebaseAuthException).code) {
+          case 'auth/invalid-email':
+            break;
+          case 'auth/user-not-found':
+            break;
+        }
+      }
+    }
+  }
+
+  Widget _buildEmailPasswordWidget() {
+    if (_userIsSignedIn) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        alignment: Alignment.center,
+        child: GradientButton(
+          onPressed: _signOut,
+          child: const Text('Sign Out'),
+          width: Sizing.screenWidth * .85,
+          height: Sizing.blockSizeVertical * 8.5,
+        ),
+      );
+    }
     return Form(
       key: _formKey,
       child: Column(
@@ -85,55 +161,84 @@ class _PogoAccountState extends State<PogoAccount> {
               }
               return null;
             },
+            inputFormatters: [LowercaseTextFormatter()],
           ),
           TextFormField(
             controller: _passwordController,
-            decoration: const InputDecoration(labelText: 'Password'),
+            decoration: InputDecoration(
+              labelText: 'Password',
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _passwordHidden ? Icons.visibility : Icons.visibility_off,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _passwordHidden = !_passwordHidden;
+                  });
+                },
+              ),
+            ),
             validator: (String? value) {
               if (value == null || value.isEmpty) {
                 return 'Enter a password';
               }
               return null;
             },
+            obscureText: _passwordHidden,
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             alignment: Alignment.center,
-            child: GradientButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  _register();
-                }
-              },
-              child: const Text('Create Account'),
-              width: Sizing.screenWidth * .85,
-              height: Sizing.blockSizeVertical * 8.5,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GradientButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      _signInWithEmailAndPassword();
+                    }
+                  },
+                  child: const Text('Sign In'),
+                  width: Sizing.screenWidth * .4,
+                  height: Sizing.blockSizeVertical * 4.5,
+                ),
+                GradientButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      _register();
+                    }
+                  },
+                  child: const Text('Create Account'),
+                  width: Sizing.screenWidth * .4,
+                  height: Sizing.blockSizeVertical * 4.5,
+                ),
+              ],
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             alignment: Alignment.center,
             child: GradientButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  _signInWithEmailAndPassword();
-                }
-              },
-              child: const Text('Sign In'),
+              onPressed: _resetPassword,
+              child: const Text('Reset Password'),
               width: Sizing.screenWidth * .85,
-              height: Sizing.blockSizeVertical * 8.5,
+              height: Sizing.blockSizeVertical * 4.5,
             ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            child: Text(_success == null
-                ? ''
-                : _success!
-                    ? 'Successfully registered $_userEmail'
-                    : 'Registration failed'),
           ),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildEmailPasswordWidget();
   }
 }

@@ -7,27 +7,22 @@ import '../pages/teams/teams.dart';
 import '../pages/rankings.dart';
 import '../modules/ui/sizing.dart';
 
-enum PogoPages { account, teams, rankings }
+enum PogoPages { teams, rankings, account }
 
 extension PogoPagesExt on PogoPages {
   String get displayName {
     switch (this) {
-      case PogoPages.account:
-        return 'Account';
       case PogoPages.teams:
         return 'Teams';
       case PogoPages.rankings:
         return 'Rankings';
+      case PogoPages.account:
+        return 'Account';
     }
   }
 
   Widget get icon {
     switch (this) {
-      case PogoPages.account:
-        return Icon(
-          Icons.login,
-          size: Sizing.h2 * 1.5,
-        );
       case PogoPages.teams:
         return Image.asset(
           'assets/pokeball_icon.png',
@@ -38,17 +33,22 @@ extension PogoPagesExt on PogoPages {
           Icons.bar_chart,
           size: Sizing.h2 * 1.5,
         );
+      case PogoPages.account:
+        return Icon(
+          Icons.account_circle,
+          size: Sizing.h2 * 1.5,
+        );
     }
   }
 
   Widget get page {
     switch (this) {
-      case PogoPages.account:
-        return const PogoAccount();
       case PogoPages.teams:
         return const Teams();
       case PogoPages.rankings:
         return const Rankings();
+      case PogoPages.account:
+        return const PogoAccount();
     }
   }
 }
