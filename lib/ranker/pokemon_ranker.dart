@@ -79,9 +79,9 @@ class PokemonRanker {
     int cp,
   ) {
     BattlePokemon self =
-        BattlePokemon.fromPokemon(Gamemaster.getPokemonById(selfId));
+        BattlePokemon.fromPokemon(Gamemaster().getPokemonById(selfId));
     BattlePokemon opponent =
-        BattlePokemon.fromPokemon(Gamemaster.getPokemonById(opponentId));
+        BattlePokemon.fromPokemon(Gamemaster().getPokemonById(opponentId));
 
     self.initialize(cp);
     opponent.initialize(cp);

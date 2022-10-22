@@ -5,49 +5,54 @@ import '../../game_objects/pokemon.dart';
 import '../../game_objects/cup.dart';
 
 class Gamemaster {
+  static final Gamemaster _instance = Gamemaster._internal();
+  factory Gamemaster() => _instance;
+
+  Gamemaster._internal();
+
   // a map of ALL fast moves to their moveId
-  static final Map<String, FastMove> _fastMoveMap = {};
+  final Map<String, FastMove> _fastMoveMap = {};
 
   // a map of ALL charge moves to their moveId
-  static final Map<String, ChargeMove> _chargeMoveMap = {};
+  final Map<String, ChargeMove> _chargeMoveMap = {};
 
   // The master list of ALL pokemon
-  static final List<Pokemon> pokemonList = [];
+  final List<Pokemon> pokemonList = [];
 
   // A map of ALL pokemon to their speciesId
-  static final Map<String, Pokemon> pokemonMap = {};
+  final Map<String, Pokemon> pokemonMap = {};
 
   // The master list of ALL cups
-  static late final List<Cup> cups;
+  late final List<Cup> cups;
 
-  static void loadFromJson(Map<String, dynamic> json) {
+  void loadFromJson(Map<String, dynamic> json) {
     loadFastMoves(List<Map<String, dynamic>>.from(json['fastMoves']));
     loadChargeMoves(List<Map<String, dynamic>>.from(json['chargeMoves']));
     loadPokemon(List<Map<String, dynamic>>.from(json['pokemon']));
     loadCups(List<Map<String, dynamic>>.from(json['cups']));
   }
 
-  static void loadFastMoves(List<Map<String, dynamic>> fastMovesJson) {
+  void loadFastMoves(List<Map<String, dynamic>> fastMovesJson) {
     for (var moveJson in List<Map<String, dynamic>>.from(fastMovesJson)) {
       FastMove fastMove = FastMove.fromJson(moveJson);
       _fastMoveMap[fastMove.moveId] = fastMove;
     }
   }
 
-  static void loadChargeMoves(List<Map<String, dynamic>> chargeMovesJson) {
+  void loadChargeMoves(List<Map<String, dynamic>> chargeMovesJson) {
     for (var moveJson in List<Map<String, dynamic>>.from(chargeMovesJson)) {
       ChargeMove chargeMove = ChargeMove.fromJson(moveJson);
       _chargeMoveMap[chargeMove.moveId] = chargeMove;
     }
   }
 
-  static void loadPokemon(List<Map<String, dynamic>> pokemonJson) {
+  void loadPokemon(List<Map<String, dynamic>> pokemonJson) {
     for (var pokemonEntry in pokemonJson) {
       _processPokemonEntry(pokemonEntry);
     }
   }
 
-  static void _processPokemonEntry(Map<String, dynamic> pokemonEntry) {
+  void _processPokemonEntry(Map<String, dynamic> pokemonEntry) {
     // Standard Pokemon entries
     Pokemon pokemon = Pokemon.fromJson(pokemonEntry);
     pokemonList.add(pokemon);
@@ -74,21 +79,22 @@ class Gamemaster {
     }
   }
 
-  static void loadCups(List<Map<String, dynamic>> cupsJson) {
+  void loadCups(List<Map<String, dynamic>> cupsJson) {
     cups = List<Map<String, dynamic>>.from(cupsJson)
         .map<Cup>((cupJson) => Cup.fromJson(cupJson))
         .toList();
+    cups.sort((c1, c2) => c1.cp - c2.cp);
   }
 
-  static Pokemon getPokemonById(String pokemonId) => pokemonMap[pokemonId]!;
+  Pokemon getPokemonById(String pokemonId) => pokemonMap[pokemonId]!;
 
-  static FastMove getFastMoveById(String moveId) =>
+  FastMove getFastMoveById(String moveId) =>
       _fastMoveMap[moveId] ?? FastMove.none;
 
-  static ChargeMove getChargeMoveById(String moveId) =>
+  ChargeMove getChargeMoveById(String moveId) =>
       _chargeMoveMap[moveId] ?? ChargeMove.none;
 
-  static List<Pokemon> getCupFilteredPokemonList(Cup cup) {
+  List<Pokemon> getCupFilteredPokemonList(Cup cup) {
     return pokemonList
         .where((Pokemon pokemon) =>
             cup.pokemonIsAllowed(pokemon) &&

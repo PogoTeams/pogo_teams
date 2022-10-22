@@ -1,68 +1,28 @@
-// Dart Imports
-import 'dart:convert';
-
 // Flutter Imports
-import 'package:flutter/services.dart';
-
-// Package Imports
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:http/http.dart';
-import 'package:http/retry.dart';
 
 // Local Imports
+import 'enums/pogo_pages.dart';
+import 'pages/pogo_account.dart';
+import 'modules/data/pogo_data.dart';
 import 'tools/pair.dart';
 import 'game_objects/user_teams.dart';
-import 'pages/teams/teams_builder.dart';
+import 'pages/teams/teams.dart';
 import 'pages/rankings.dart';
 import 'modules/ui/sizing.dart';
 import 'widgets/pogo_drawer.dart';
-import 'modules/data/globals.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
 The top level scaffold for the app. Navigation via the scaffold's drawer, will
 apply changes to the body, and app bar title. Upon startup, this widget enters
 a loading phase, which animates a progress bar while the gamemaster and
-rankings data are loaded. The loading procedure is illustrated below.
-
--------------------------------------------------------------------------------
-
-The priority of this loading procedure is to update via HTTPS when necessary,
-otherwise restore state from the local db. As a last resort there is model data
-stored in the assets folder that can be retrieved, but this will only be
-updated with each version release to the app store, so it is more or less an
-additional fail safe. A simple timestamp is all that will trigger an update for
-all instances of the app, as long as the timestamp is different, the app will
-attempt to update.
-
-APP STARTUP CASES (for gamemaster and rankings data)
-* LOCAL RETRIEVE
-  - Attempt to read from local database
-    -- If db fails, and HTTPS hasn't already failed, attempt 3a)
-  - If db fails: read from assets
-
-1) No network connection or HTTPS request fails at any point : *
-
-2) The server timestamp is the same as the local one (no update) : *
-
-3) The server timestamp is different from the local one (update)
-  a) HTTP request for gamemaster.json
-    - If request fails : *
-  b) Decode response, generate gamemaster, save to local db
-
+rankings data are loaded. 
 -------------------------------------------------------------------------------
 */
 
 class PogoScaffold extends StatefulWidget {
-  const PogoScaffold({
-    Key? key,
-    required this.testing,
-    required this.forceUpdate,
-  }) : super(key: key);
-
-  final bool testing;
-  final bool forceUpdate;
+  const PogoScaffold({Key? key}) : super(key: key);
 
   @override
   _PogoScaffoldState createState() => _PogoScaffoldState();
@@ -76,29 +36,17 @@ class _PogoScaffoldState extends State<PogoScaffold>
   // User data
   final UserTeams _teams = UserTeams();
 
-  // Initialize all user data, called once after loading is done
-  void _initializeTeams() async => await _teams.init();
-
   // All pages that are accessible at the top level of the app
-  late final Map<String, Widget> _pages = {
-    'Teams': TeamsBuilder(teams: _teams),
-    'Rankings': const Rankings(),
+  /*
+  late final Map<PogoPages, Widget> _pages = {
+    PogoPages.account: const PogoSignIn(),
+    PogoPages.teams: TeamsBuilder(teams: _teams),
+    PogoPages.rankings: const Rankings(),
   };
-
-  // Icons cooresponding to the pages
-  late final Map<String, Widget> _icons = {
-    'Teams': Image.asset(
-      'assets/pokeball_icon.png',
-      width: Sizing.h2 * 1.2,
-    ),
-    'Rankings': Icon(
-      Icons.bar_chart,
-      size: Sizing.h2 * 1.5,
-    ),
-  };
+  */
 
   // Used to navigate between pages by key
-  String _navKey = 'Teams';
+  PogoPages _currentPage = PogoPages.account;
 
   // For animating the loading progress bar
   late final AnimationController _progressBarAnimController =
@@ -120,7 +68,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
           left: Sizing.blockSizeHorizontal * 2.0,
           right: Sizing.blockSizeHorizontal * 2.0,
         ),
-        child: _pages[_navKey],
+        child: _currentPage.page,
       ),
     );
   }
@@ -133,7 +81,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
         children: [
           // Page title
           Text(
-            _navKey,
+            _currentPage.displayName,
             style: TextStyle(
               fontSize: Sizing.h2,
               fontStyle: FontStyle.italic,
@@ -146,101 +94,17 @@ class _PogoScaffoldState extends State<PogoScaffold>
           ),
 
           // Page icon
-          _icons[_navKey]!,
+          _currentPage.icon,
         ],
       ),
     );
   }
 
   // Callback for navigating to a new page in the app
-  void _onNavSelected(String navKey) {
+  void _onNavSelected(PogoPages page) {
     setState(() {
-      _navKey = navKey;
+      _currentPage = page;
     });
-  }
-
-  // Load the gamemaster, and yield values to the progress indicator
-  Stream<Pair<String, double>> _loadGamemaster() async* {
-    bool update = false; // Flag for whether the local gamemaster an update
-
-    // Pokemon GO local db data
-    // This is a "cache" of the latest data model from the server
-    /*
-    final Box gmBox = await Hive.openBox('gamemaster');
-
-    String prefix = ''; // For indicating testing
-
-    // Implicitly invoke an app update via HTTPS
-    if (widget.forceUpdate) {
-      await gmBox.put('timestamp', Globals.earliestTimestamp);
-    }
-
-    String message = prefix + 'Loading...'; // Message above progress bar
-    final client = RetryClient(Client());
-    dynamic gmJson;
-
-    yield Pair(a: message, b: .8);
-    gmJson = await _loadCachedGamemaster(gmBox);
-
-    yield Pair(a: message, b: .9);
-
-    // Setup the gamemaster instance
-    await gmBox.put('gamemaster', gmJson);
-
-    client.close();
-    await gmBox.close();
-
-    yield Pair(a: message, b: 1.0);
-    _initializeTeams();
-
-    // Just an asthetic for allowing the loading progress indicator to fill
-    await Future.delayed(const Duration(seconds: 2));
-    */
-  }
-
-  Future<bool> _updateAvailable(Box box, Client client) async {
-    bool updateAvailable = false;
-
-    /*
-    // Retrieve local timestamp
-    final String timestampString =
-        box.get('timestamp') ?? Globals.earliestTimestamp;
-    DateTime localTimeStamp = DateTime.parse(timestampString);
-
-    // If request is successful, compare timestamps to determine update
-    final latestTimestamp = DateTime.tryParse(response);
-
-    if (latestTimestamp != null &&
-        !localTimeStamp.isAtSameMomentAs(latestTimestamp)) {
-      updateAvailable = true;
-      localTimeStamp = latestTimestamp;
-    }
-
-    // Store the timestamp in the local db
-    await box.put('timestamp', localTimeStamp.toString());
-    */
-
-    return updateAvailable;
-  }
-
-  // Attempt to load gm from the local db
-  // If the db fails and httpAttempt is true, attempt a new http request
-  // As a last resort, load the gm and rankings from assets
-  dynamic _loadCachedGamemaster(Box box) async {
-    dynamic gmJson = box.get('gamemaster');
-    gmJson ??= await _loadFromAssets();
-    return gmJson;
-  }
-
-  // Load the gm from local assets
-  // This is the final fail safe for loading gamemaster data
-  Future<Map<String, dynamic>> _loadFromAssets() async {
-    // Load the JSON string
-    final String gmString =
-        await rootBundle.loadString('assets/gamemaster.json');
-
-    // Decode to a map
-    return jsonDecode(gmString);
   }
 
   @override
@@ -260,7 +124,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
     // App loading procedure
     return StreamBuilder<Pair<String, double>>(
-      stream: _loadGamemaster(),
+      stream: PogoData.loadPogoData(),
       initialData: Pair(a: 'Loading...', b: 0.0),
       builder: (context, snapshot) {
         // App is finished loading
@@ -272,8 +136,10 @@ class _PogoScaffoldState extends State<PogoScaffold>
         }
         // Progress update
         if (snapshot.hasData) {
-          _progressBarAnimController.animateTo(snapshot.data!.b,
-              curve: Curves.easeInOut);
+          _progressBarAnimController.animateTo(
+            snapshot.data!.b,
+            curve: Curves.easeInOut,
+          );
         }
 
         // Rebuild progress bar

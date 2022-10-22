@@ -11,6 +11,7 @@ import '../../game_objects/pokemon_team.dart';
 import '../../modules/data/pogo_data.dart';
 import '../../modules/ui/sizing.dart';
 import '../../tools/pair.dart';
+import '../../enums/pokemon_filters.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -93,7 +94,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
     List<Pokemon> counters = await PogoData.getFilteredRankedPokemonList(
       team.cup,
       counterTypes,
-      'overall',
+      PokemonFilters.overall,
       limit: 50,
     );
 
@@ -157,7 +158,16 @@ class OpponentTeamAnalysis extends StatelessWidget {
             ),
 
             // A list of top counters to the logged opponent teams
-            //_buildCountersList(defenseThreats),
+            FutureBuilder(
+              future: _buildCountersList(defenseThreats),
+              builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!;
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
+            ),
           ],
         ),
       ),

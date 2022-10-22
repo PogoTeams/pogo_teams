@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import '../modules/data/pogo_data.dart';
 import '../modules/ui/sizing.dart';
 import '../game_objects/pokemon.dart';
 import '../game_objects/cup.dart';
@@ -12,7 +11,9 @@ import '../widgets/pokemon_list.dart';
 import '../widgets/pogo_text_field.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
 import '../widgets/buttons/filter_button.dart';
-import '../modules/data/Gamemaster.dart';
+import '../modules/data/pogo_data.dart';
+import '../modules/data/gamemaster.dart';
+import '../enums/pokemon_filters.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -41,21 +42,21 @@ class _RankingsState extends State<Rankings> {
   // A variable list of Pokemon based on search bar text input
   List<Pokemon> filteredPokemon = [];
 
-  String _selectedCategory = 'overall';
+  PokemonFilters _selectedCategory = PokemonFilters.overall;
 
   void _onCupChanged(String? newCupId) {
     if (newCupId == null) return;
 
     setState(() {
-      cup = Gamemaster.cups.firstWhere((cup) => cup.cupId == newCupId,
-          orElse: () => Gamemaster.cups.first);
+      cup = Gamemaster().cups.firstWhere((cup) => cup.cupId == newCupId,
+          orElse: () => Gamemaster().cups.first);
       _filterCategory(_selectedCategory);
     });
   }
 
   // Callback for the FilterButton
   // Sets the ranking list associated with rankingsCategory
-  void _filterCategory(dynamic rankingsCategory) async {
+  void _filterCategory(PokemonFilters rankingsCategory) async {
     _selectedCategory = rankingsCategory;
 
     pokemon = await PogoData.getRankedPokemonList(cup, rankingsCategory);
@@ -123,9 +124,9 @@ class _RankingsState extends State<Rankings> {
   void initState() {
     super.initState();
 
-    cup = Gamemaster.cups.first;
+    cup = Gamemaster().cups.first;
 
-    _filterCategory('overall');
+    _filterCategory(PokemonFilters.overall);
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);

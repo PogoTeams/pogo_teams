@@ -8,6 +8,8 @@ import 'package:firebase_core/firebase_core.dart';
 
 // Local
 import 'gamemaster.dart';
+import '../../enums/pokemon_filters.dart';
+import '../../tools/pair.dart';
 import '../../firebase_options.dart';
 import '../../game_objects/pokemon.dart';
 import '../../game_objects/pokemon_typing.dart';
@@ -15,9 +17,13 @@ import '../../game_objects/ratings.dart';
 import '../../game_objects/cup.dart';
 import '../ui/pogo_colors.dart';
 
+enum CacheType { pogoData, rankings }
+
 class PogoData {
   static late final Box localPogoData;
+  static late final Box localRankings;
   static late final FirebaseFirestore cloudPogoData;
+
   static Future<void> init() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -25,13 +31,12 @@ class PogoData {
 
     await Hive.initFlutter();
 
-    localPogoData = await Hive.openBox('pogoData');
+    localPogoData = await Hive.openBox('pogo');
+    localRankings = await Hive.openBox('rankings');
     cloudPogoData = FirebaseFirestore.instance;
-
-    await loadPogoData();
   }
 
-  static Future<void> loadPogoData() async {
+  static Stream<Pair<String, double>> loadPogoData() async* {
     final Box localVersionTimestampsBox =
         await Hive.openBox('versionTimestamps');
     Map<String, Map<String, dynamic>> localVersionTimestamps = {};
@@ -40,36 +45,47 @@ class PogoData {
     localVersionTimestamps['rankings'] = Map<String, dynamic>.from(
         localVersionTimestampsBox.get('rankings', defaultValue: {}));
 
-    await cloudPogoData
-        .collection('versionTimestamps')
-        .get()
-        .then((event) async {
-      for (var doc in event.docs) {
-        for (var timestampEntry in doc.data().entries) {
-          DateTime? localTimestamp;
-          if (localVersionTimestamps.containsKey(doc.id)) {
-            localTimestamp = DateTime.tryParse(
-                localVersionTimestamps[doc.id]![timestampEntry.key] ?? '');
-          }
+    yield Pair(a: 'loading...', b: .1);
 
-          DateTime cloudTimestamp = DateTime.parse(timestampEntry.value);
+    QuerySnapshot<Map<String, dynamic>> event =
+        await cloudPogoData.collection('versionTimestamps').get();
 
-          if (!localPogoData.containsKey(timestampEntry.key) ||
-              localTimestamp == null ||
-              localTimestamp != cloudTimestamp) {
-            localVersionTimestamps[doc.id]![timestampEntry.key] =
-                timestampEntry.value.toString();
-            _refreshCache(timestampEntry.key);
-          } else if (doc.id == 'pogo') {
-            _loadGamemasterCollection(
-              timestampEntry.key,
-              List<Map<String, dynamic>>.from(jsonDecode(
-                  localPogoData.get(timestampEntry.key, defaultValue: ''))),
-            );
-          }
+    double progress = 0;
+    for (var doc in event.docs) {
+      for (var timestampEntry in doc.data().entries) {
+        DateTime? localTimestamp;
+        if (localVersionTimestamps.containsKey(doc.id)) {
+          localTimestamp = DateTime.tryParse(
+              localVersionTimestamps[doc.id]![timestampEntry.key] ?? '');
         }
+
+        DateTime cloudTimestamp = DateTime.parse(timestampEntry.value);
+
+        if (!localPogoData.containsKey(timestampEntry.key) ||
+            localTimestamp == null ||
+            localTimestamp != cloudTimestamp) {
+          localVersionTimestamps[doc.id]![timestampEntry.key] =
+              timestampEntry.value.toString();
+          switch (doc.id) {
+            case 'pogo':
+              _refreshCache(timestampEntry.key, CacheType.pogoData);
+              break;
+            case 'rankings':
+              _refreshCache(timestampEntry.key, CacheType.rankings);
+              break;
+          }
+        } else if (doc.id == 'pogo') {
+          _loadGamemasterCollection(
+            timestampEntry.key,
+            List<Map<String, dynamic>>.from(jsonDecode(
+                localPogoData.get(timestampEntry.key, defaultValue: ''))),
+          );
+        }
+
+        progress += 1;
+        yield Pair(a: 'loading...', b: progress / event.docs.length);
       }
-    });
+    }
 
     for (var timestampEntry in localVersionTimestamps.entries) {
       await localVersionTimestampsBox.put(
@@ -80,29 +96,51 @@ class PogoData {
     localVersionTimestampsBox.close();
   }
 
-  static void _refreshCache(String collectionName) async {
-    await cloudPogoData.collection(collectionName).get().then((event) async {
-      final List<Map<String, dynamic>> json =
-          event.docs.map((doc) => doc.data()).toList();
-      await localPogoData.put(collectionName, jsonEncode(json));
-      _loadGamemasterCollection(collectionName, json);
-    });
+  static void _refreshCache(
+    String collectionName,
+    CacheType cache,
+  ) async {
+    switch (cache) {
+      case CacheType.pogoData:
+        await cloudPogoData
+            .collection(collectionName)
+            .get()
+            .then((event) async {
+          final List<Map<String, dynamic>> json =
+              event.docs.map((doc) => doc.data()).toList();
+          await localPogoData.put(collectionName, jsonEncode(json));
+          _loadGamemasterCollection(collectionName, json);
+        });
+        break;
+      case CacheType.rankings:
+        await cloudPogoData
+            .collection('cups')
+            .doc(collectionName)
+            .collection('rankings')
+            .get()
+            .then((event) async {
+          final List<Map<String, dynamic>> json =
+              event.docs.map((doc) => doc.data()).toList();
+          await localRankings.put(collectionName, jsonEncode(json));
+        });
+        break;
+    }
   }
 
   static void _loadGamemasterCollection(
       String collectionName, List<Map<String, dynamic>> json) {
     switch (collectionName) {
       case 'fastMoves':
-        Gamemaster.loadFastMoves(json);
+        Gamemaster().loadFastMoves(json);
         break;
       case 'chargeMoves':
-        Gamemaster.loadChargeMoves(json);
+        Gamemaster().loadChargeMoves(json);
         break;
       case 'pokemon':
-        Gamemaster.loadPokemon(json);
+        Gamemaster().loadPokemon(json);
         break;
       case 'cups':
-        Gamemaster.loadCups(json);
+        Gamemaster().loadCups(json);
         for (var cupEntry in json) {
           PogoColors.addCupColor(cupEntry['cupId'], cupEntry['uiColor']);
         }
@@ -112,40 +150,29 @@ class PogoData {
 
   static Future<List<RankedPokemon>> getRankedPokemonList(
     Cup cup,
-    String rankingsCategory,
+    PokemonFilters rankingsCategory,
   ) async {
     List<RankedPokemon> rankedPokemon = [];
-    await cloudPogoData
-        .collection('cups/${cup.cupId}/rankings')
-        .get()
-        .then((event) {
-      List<Map<String, dynamic>> rankingsJson =
-          event.docs.map((doc) => doc.data()).toList();
-      localPogoData.put('cups/${cup.cupId}/rankings', rankingsJson);
+    for (var json in List<Map<String, dynamic>>.from(
+        jsonDecode(await localRankings.get(cup.cupId)))) {
+      String fastMoveId = json['idealMoveset']['fastMove'] as String;
+      List<String> chargeMoveIds =
+          List<String>.from(json['idealMoveset']['chargeMoves']);
 
-      for (var json in rankingsJson) {
-        String? pokemonId = json['pokemonId'];
-        String fastMoveId = json['idealMoveset']['fastMove'] as String;
-        List<String> chargeMoveIds =
-            List<String>.from(json['idealMoveset']['chargeMoves']);
-
-        if (pokemonId != null && Gamemaster.pokemonMap.containsKey(pokemonId)) {
-          Pokemon pokemon = Gamemaster.pokemonMap[json['pokemonId']]!;
-          rankedPokemon.add(
-            RankedPokemon.fromPokemon(
-              pokemon,
-              pokemon.getIvs(cup.cp),
-              Ratings.fromJson(json['ratings']),
-              Gamemaster.getFastMoveById(fastMoveId),
-              [
-                Gamemaster.getChargeMoveById(chargeMoveIds.first),
-                Gamemaster.getChargeMoveById(chargeMoveIds.last),
-              ],
-            ),
-          );
-        }
-      }
-    });
+      Pokemon pokemon = Gamemaster().pokemonMap[json['pokemonId']]!;
+      rankedPokemon.add(
+        RankedPokemon.fromPokemon(
+          pokemon,
+          pokemon.getIvs(cup.cp),
+          Ratings.fromJson(json['ratings']),
+          Gamemaster().getFastMoveById(fastMoveId),
+          [
+            Gamemaster().getChargeMoveById(chargeMoveIds.first),
+            Gamemaster().getChargeMoveById(chargeMoveIds.last),
+          ],
+        ),
+      );
+    }
 
     sortRankedPokemonList(rankedPokemon, rankingsCategory);
     return rankedPokemon;
@@ -153,28 +180,30 @@ class PogoData {
 
   static void sortRankedPokemonList(
     List<RankedPokemon> list,
-    String rankingsCategory,
+    PokemonFilters rankingsCategory,
   ) {
     switch (rankingsCategory) {
-      case 'overall':
+      case PokemonFilters.overall:
         for (var rankedPokemon in list) {
           rankedPokemon.currentRating = rankedPokemon.ratings.overall;
         }
         break;
-      case 'lead':
+      case PokemonFilters.leads:
         for (var rankedPokemon in list) {
           rankedPokemon.currentRating = rankedPokemon.ratings.lead;
         }
         break;
-      case 'switch':
+      case PokemonFilters.switches:
         for (var rankedPokemon in list) {
           rankedPokemon.currentRating = rankedPokemon.ratings.switchRating;
         }
         break;
-      case 'closer':
+      case PokemonFilters.closers:
         for (var rankedPokemon in list) {
           rankedPokemon.currentRating = rankedPokemon.ratings.closer;
         }
+        break;
+      default:
         break;
     }
 
@@ -188,7 +217,7 @@ class PogoData {
   static Future<List<Pokemon>> getFilteredRankedPokemonList(
     Cup cup,
     List<PokemonType> types,
-    String rankingsCategory, {
+    PokemonFilters rankingsCategory, {
     int limit = 20,
   }) async {
     List<Pokemon> rankedList =

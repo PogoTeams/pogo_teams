@@ -1,5 +1,4 @@
 // Flutter Imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Local Imports
@@ -9,6 +8,7 @@ import '../../game_objects/cup.dart';
 import '../nodes/pokemon_node.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/data/pogo_data.dart';
+import '../../enums/pokemon_filters.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -28,29 +28,32 @@ class TypeFilteredPokemonList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Pokemon> counters = [];
-    /*
-    Gamemaster.getFilteredRankedPokemonList(
-      cup,
-      types,
-      'overall',
-      limit: 50,
-    );
-    */
-
-    return Column(
-      children: counters
-          .map(
-            (pokemon) => Padding(
-              padding: EdgeInsets.only(
-                bottom: Sizing.blockSizeHorizontal * 2.0,
-              ),
-              child: PokemonNode.small(
-                pokemon: pokemon,
-              ),
-            ),
-          )
-          .toList(),
-    );
+    return FutureBuilder(
+        future: PogoData.getFilteredRankedPokemonList(
+          cup,
+          types,
+          PokemonFilters.overall,
+          limit: 50,
+        ),
+        builder: (BuildContext context, AsyncSnapshot<List<Pokemon>> snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: snapshot.data!
+                  .map(
+                    (pokemon) => Padding(
+                      padding: EdgeInsets.only(
+                        bottom: Sizing.blockSizeHorizontal * 2.0,
+                      ),
+                      child: PokemonNode.small(
+                        pokemon: pokemon,
+                      ),
+                    ),
+                  )
+                  .toList(),
+            );
+          } else {
+            return const CircularProgressIndicator();
+          }
+        });
   }
 }

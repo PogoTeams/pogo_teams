@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Local Imports
+import '../enums/pogo_pages.dart';
 import '../modules/data/globals.dart';
 import '../modules/ui/sizing.dart';
 
@@ -21,10 +22,12 @@ class PogoDrawer extends StatelessWidget {
     required this.onNavSelected,
   }) : super(key: key);
 
-  final Function(String) onNavSelected;
+  final Function(PogoPages) onNavSelected;
 
-  void _launchGitHubUrl() async =>
-      await launch('https://github.com/PogoTeams/pogo_teams');
+  void _launchGitHubUrl() async => await launchUrl(Uri(
+        host: 'https://github.com',
+        path: 'PogoTeams/pogo_teams',
+      ));
 
   // The background gradient on the drawer
   BoxDecoration _buildGradientDecoration() {
@@ -66,26 +69,44 @@ class PogoDrawer extends StatelessWidget {
                   // Pogo Teams Logo
                   _buildDrawerHeader(),
 
+                  // Sign in option
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          PogoPages.account.displayName,
+                          style: TextStyle(fontSize: Sizing.h1),
+                        ),
+                        SizedBox(
+                          width: Sizing.blockSizeHorizontal * 3.0,
+                        ),
+                        PogoPages.account.icon,
+                      ],
+                    ),
+                    onTap: () {
+                      onNavSelected(PogoPages.account);
+                      Navigator.pop(context);
+                    },
+                  ),
+
                   // Teams page option
                   ListTile(
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          'Teams',
+                          PogoPages.teams.displayName,
                           style: TextStyle(fontSize: Sizing.h1),
                         ),
                         SizedBox(
                           width: Sizing.blockSizeHorizontal * 3.0,
                         ),
-                        Image.asset(
-                          'assets/pokeball_icon.png',
-                          width: Sizing.h2 * 1.2,
-                        ),
+                        PogoPages.teams.icon,
                       ],
                     ),
                     onTap: () {
-                      onNavSelected('Teams');
+                      onNavSelected(PogoPages.teams);
                       Navigator.pop(context);
                     },
                   ),
@@ -96,20 +117,17 @@ class PogoDrawer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          'Rankings',
+                          PogoPages.rankings.displayName,
                           style: TextStyle(fontSize: Sizing.h1),
                         ),
                         SizedBox(
                           width: Sizing.blockSizeHorizontal * 3.0,
                         ),
-                        Icon(
-                          Icons.bar_chart,
-                          size: Sizing.h2 * 1.5,
-                        ),
+                        PogoPages.rankings.icon,
                       ],
                     ),
                     onTap: () {
-                      onNavSelected('Rankings');
+                      onNavSelected(PogoPages.rankings);
                       Navigator.pop(context);
                     },
                   ),

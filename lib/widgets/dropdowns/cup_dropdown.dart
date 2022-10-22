@@ -34,10 +34,10 @@ class CupDropdown extends StatefulWidget {
 class _CupDropdownState extends State<CupDropdown>
     with AutomaticKeepAliveClientMixin {
   // List of pvp cups
-  final List<Cup> cups = Gamemaster.cups;
+  final List<Cup> cups = Gamemaster().cups;
 
   // List of dropdown menu items
-  late final cupOptions = Gamemaster.cups.map<DropdownMenuItem<String>>(
+  late final cupOptions = Gamemaster().cups.map<DropdownMenuItem<String>>(
     (Cup cup) {
       return DropdownMenuItem(
         value: cup.cupId,

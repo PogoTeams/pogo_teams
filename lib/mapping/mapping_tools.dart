@@ -53,11 +53,11 @@ void buildSnapshotReleasedIdsList() async {
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  Gamemaster.loadFromJson(snapshot);
+  Gamemaster().loadFromJson(snapshot);
 
   List<String> snapshotReleasedIds = [];
 
-  for (var pokemon in Gamemaster.pokemonList) {
+  for (var pokemon in Gamemaster().pokemonList) {
     if (pokemon.released) {
       snapshotReleasedIds.add(pokemon.pokemonId);
     }

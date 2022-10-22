@@ -25,20 +25,15 @@ containing the following functionality :
 -------------------------------------------------------------------------------
 */
 
-class TeamsBuilder extends StatefulWidget {
-  const TeamsBuilder({
-    Key? key,
-    required this.teams,
-  }) : super(key: key);
-
-  final UserTeams teams;
+class Teams extends StatefulWidget {
+  const Teams({Key? key}) : super(key: key);
 
   @override
-  _TeamsBuilderState createState() => _TeamsBuilderState();
+  _TeamsState createState() => _TeamsState();
 }
 
-class _TeamsBuilderState extends State<TeamsBuilder> {
-  late final UserTeams _teams = widget.teams;
+class _TeamsState extends State<Teams> {
+  final UserTeams _teams = UserTeams();
 
   // Build the list of TeamNodes, with the necessary callbacks
   Widget _buildTeamsList(BuildContext context) {

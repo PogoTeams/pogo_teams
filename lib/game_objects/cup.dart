@@ -7,6 +7,7 @@ class Cup {
     required this.cp,
     required this.partySize,
     required this.live,
+    required this.publisher,
     required this.includeFilters,
     required this.excludeFilters,
   });
@@ -18,6 +19,7 @@ class Cup {
       cp: json['cp'] as int,
       partySize: json['partySize'] as int,
       live: json['live'] as bool,
+      publisher: json['publisher'] as String?,
       includeFilters: json.containsKey('include')
           ? List<Map<String, dynamic>>.from(json['include'])
               .map((filterJson) => CupFilter.fromJson(filterJson))
@@ -68,6 +70,7 @@ class Cup {
   final int cp;
   final int partySize;
   final bool live;
+  final String? publisher;
   final List<CupFilter>? includeFilters;
   final List<CupFilter>? excludeFilters;
 }

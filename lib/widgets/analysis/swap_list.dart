@@ -9,6 +9,7 @@ import '../nodes/pokemon_node.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/data/pogo_data.dart';
 import '../buttons/pokemon_action_button.dart';
+import '../../enums/pokemon_filters.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -80,33 +81,36 @@ class SwapList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Pokemon> counters = [];
-    /*
-    Gamemaster.getFilteredRankedPokemonList(
-      team.cup,
-      types,
-      'overall',
-      limit: 20,
-    );
-    */
-
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: counters.length,
-      itemBuilder: (context, index) => Padding(
-        padding: EdgeInsets.only(
-          top: Sizing.blockSizeVertical * .5,
-          bottom: Sizing.blockSizeVertical * .5,
+    return FutureBuilder(
+        future: PogoData.getFilteredRankedPokemonList(
+          team.cup,
+          types,
+          PokemonFilters.overall,
+          limit: 20,
         ),
-        child: PokemonNode.large(
-          pokemon: counters[index],
-          footer: _buildFooter(
-            context,
-            counters[index],
-          ),
-        ),
-      ),
-      physics: const NeverScrollableScrollPhysics(),
-    );
+        builder: (BuildContext context, AsyncSnapshot<List<Pokemon>> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) => Padding(
+                padding: EdgeInsets.only(
+                  top: Sizing.blockSizeVertical * .5,
+                  bottom: Sizing.blockSizeVertical * .5,
+                ),
+                child: PokemonNode.large(
+                  pokemon: snapshot.data![index],
+                  footer: _buildFooter(
+                    context,
+                    snapshot.data![index],
+                  ),
+                ),
+              ),
+              physics: const NeverScrollableScrollPhysics(),
+            );
+          } else {
+            return const CircularProgressIndicator();
+          }
+        });
   }
 }

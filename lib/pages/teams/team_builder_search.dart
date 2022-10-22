@@ -16,6 +16,7 @@ import '../../widgets/dropdowns/team_size_dropdown.dart';
 import '../../widgets/dropdowns/win_loss_dropdown.dart';
 import '../../widgets/buttons/filter_button.dart';
 import '../../widgets/nodes/team_node.dart';
+import '../../enums/pokemon_filters.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -57,7 +58,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   // A variable list of Pokemon based on search bar text input
   List<Pokemon> filteredPokemon = [];
 
-  String _selectedCategory = 'overall';
+  PokemonFilters _selectedCategory = PokemonFilters.overall;
 
   // Generate a filtered list of Pokemon based off of the text field input.
   // List can filter by Pokemon name (speciesName) and types.
@@ -216,13 +217,13 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
 
   // Callback for the FilterButton
   // Sets the ranking list associated with rankingsCategory
-  void _filterCategory(dynamic rankingsCategory) async {
+  void _filterCategory(PokemonFilters rankingsCategory) async {
     _selectedCategory = rankingsCategory;
 
     // Dex is a special case where all Pokemon are in the list
     // Otherwise get the list from the ratings category
-    if ('dex' == _selectedCategory) {
-      pokemon = Gamemaster.pokemonList;
+    if (PokemonFilters.dex == _selectedCategory) {
+      pokemon = Gamemaster().pokemonList;
     } else {
       pokemon = await PogoData.getRankedPokemonList(_cup, _selectedCategory);
     }

@@ -10,6 +10,7 @@ import '../../game_objects/pokemon_typing.dart';
 import '../../modules/data/pogo_data.dart';
 import '../../modules/ui/sizing.dart';
 import '../../tools/pair.dart';
+import '../../enums/pokemon_filters.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -65,13 +66,14 @@ class LogsAnalysis extends StatelessWidget {
 
   // Build a list of counters to the logged opponent teams
   Future<Widget> _buildCountersList(
-      List<Pair<PokemonType, double>> defenseThreats) async {
+    List<Pair<PokemonType, double>> defenseThreats,
+  ) async {
     final counterTypes = defenseThreats.map((typeData) => typeData.a).toList();
 
     List<Pokemon> counters = await PogoData.getFilteredRankedPokemonList(
       team.cup,
       counterTypes,
-      'overall',
+      PokemonFilters.overall,
       limit: 50,
     );
 
@@ -124,7 +126,16 @@ class LogsAnalysis extends StatelessWidget {
             ),
 
             // A list of top counters to the logged opponent teams
-            //_buildCountersList(defenseThreats),
+            FutureBuilder(
+              future: _buildCountersList(defenseThreats),
+              builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!;
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
+            ),
           ],
         ),
       ),

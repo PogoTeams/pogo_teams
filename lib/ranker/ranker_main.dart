@@ -16,19 +16,19 @@ void generatePokemonRankings() async {
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  Gamemaster.loadFromJson(snapshot);
+  Gamemaster().loadFromJson(snapshot);
 
   Stopwatch stopwatch = Stopwatch();
   stopwatch.start();
 
-  for (Cup cup in Gamemaster.cups) {
+  for (Cup cup in Gamemaster().cups) {
     int bestOverallRating = 0;
     int bestLeadRating = 0;
     int bestSwitchRating = 0;
     int bestCloserRating = 0;
 
     List<RankingData> rankings = [];
-    List<Pokemon> cupPokemonList = Gamemaster.getCupFilteredPokemonList(cup);
+    List<Pokemon> cupPokemonList = Gamemaster().getCupFilteredPokemonList(cup);
 
     for (Pokemon pokemon in cupPokemonList) {
       BattlePokemon battlePokemon = BattlePokemon.fromPokemon(pokemon);
@@ -96,7 +96,7 @@ void generatePokemonRankingsTest(
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  Gamemaster.loadFromJson(snapshot);
+  Gamemaster().loadFromJson(snapshot);
 
   PokemonRanker.rankTesting(selfId, opponentId, cp);
 }

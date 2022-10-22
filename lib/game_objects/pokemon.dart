@@ -52,7 +52,7 @@ class Pokemon {
     List<FastMove> fastMoves = [];
     if (json.containsKey('fastMoves')) {
       for (String moveId in List<String>.from(json['fastMoves'])) {
-        fastMoves.add(Gamemaster.getFastMoveById(moveId));
+        fastMoves.add(Gamemaster().getFastMoveById(moveId));
       }
     } else {
       fastMoves = [];
@@ -61,7 +61,7 @@ class Pokemon {
     List<ChargeMove> chargeMoves = [];
     if (json.containsKey('chargeMoves')) {
       for (String moveId in List<String>.from(json['chargeMoves'])) {
-        chargeMoves.add(Gamemaster.getChargeMoveById(moveId));
+        chargeMoves.add(Gamemaster().getChargeMoveById(moveId));
       }
     }
 
@@ -69,7 +69,7 @@ class Pokemon {
     if (json.containsKey('eliteFastMoves')) {
       eliteFastMoveIds = List<String>.from(json['eliteFastMoves']);
       for (String moveId in List<String>.from(json['eliteFastMoves'])) {
-        fastMoves.add(Gamemaster.getFastMoveById(moveId));
+        fastMoves.add(Gamemaster().getFastMoveById(moveId));
       }
     }
 
@@ -77,7 +77,7 @@ class Pokemon {
     if (json.containsKey('eliteChargeMoves')) {
       eliteChargeMoveIds = List<String>.from(json['eliteChargeMoves']);
       for (String moveId in List<String>.from(json['eliteChargeMoves'])) {
-        chargeMoves.add(Gamemaster.getChargeMoveById(moveId));
+        chargeMoves.add(Gamemaster().getChargeMoveById(moveId));
       }
     }
 
@@ -86,7 +86,7 @@ class Pokemon {
         !shadowForm) {
       String purifiedChargeMove =
           json['shadow']['purifiedChargeMove'] as String;
-      chargeMoves.add(Gamemaster.getChargeMoveById(purifiedChargeMove));
+      chargeMoves.add(Gamemaster().getChargeMoveById(purifiedChargeMove));
     }
 
     List<String> tags = [];
@@ -150,7 +150,7 @@ class Pokemon {
     List<FastMove> fastMoves = [];
     if (json.containsKey('fastMoves')) {
       for (String moveId in List<String>.from(json['fastMoves'])) {
-        fastMoves.add(Gamemaster.getFastMoveById(moveId));
+        fastMoves.add(Gamemaster().getFastMoveById(moveId));
       }
     } else {
       fastMoves = [];
@@ -159,7 +159,7 @@ class Pokemon {
     List<ChargeMove> chargeMoves = [];
     if (json.containsKey('chargeMoves')) {
       for (String moveId in List<String>.from(json['chargeMoves'])) {
-        chargeMoves.add(Gamemaster.getChargeMoveById(moveId));
+        chargeMoves.add(Gamemaster().getChargeMoveById(moveId));
       }
     }
 
@@ -167,7 +167,7 @@ class Pokemon {
     if (json.containsKey('eliteFastMoves')) {
       eliteFastMoveIds = List<String>.from(json['eliteFastMoves']);
       for (String moveId in List<String>.from(json['eliteFastMoves'])) {
-        fastMoves.add(Gamemaster.getFastMoveById(moveId));
+        fastMoves.add(Gamemaster().getFastMoveById(moveId));
       }
     }
 
@@ -175,7 +175,7 @@ class Pokemon {
     if (json.containsKey('eliteChargeMoves')) {
       eliteChargeMoveIds = List<String>.from(json['eliteChargeMoves']);
       for (String moveId in List<String>.from(json['eliteChargeMoves'])) {
-        chargeMoves.add(Gamemaster.getChargeMoveById(moveId));
+        chargeMoves.add(Gamemaster().getChargeMoveById(moveId));
       }
     }
 

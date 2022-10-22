@@ -5,6 +5,7 @@
 		"cp": 1500,
       "partySize": 3,
 		"live": true,
+		"publisher": "niantic",
 		"exclude": [{
 			"filterType": "tags",
 			"values": ["mega"]
@@ -25,6 +26,7 @@
 		"cp": 2500,
       "partySize": 3,
 		"live": true,
+		"publisher": "niantic",
 		"exclude": [{
 			"filterType": "tags",
 			"values": ["mega"]
@@ -37,6 +39,7 @@
 		"cp": 9999,
       "partySize": 3,
 		"live": true,
+		"publisher": "niantic",
 		"exclude": [{
 			"filterType": "tags",
 			"values": ["mega"]

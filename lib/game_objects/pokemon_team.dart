@@ -205,7 +205,7 @@ class UserPokemonTeam extends PokemonTeam {
 
   // The selected PVP cup for this team
   // Defaults to Great League
-  Cup cup = Gamemaster.cups[0];
+  Cup cup = Gamemaster().cups[0];
 
   // A list of logged opponent teams on this team
   // The user can report wins, ties, and losses given this list
@@ -213,8 +213,8 @@ class UserPokemonTeam extends PokemonTeam {
 
   // Switch to a different cup with the specified cupTitle
   void setCup(String cupId) {
-    cup = Gamemaster.cups.firstWhere((cup) => cup.cupId == cupId,
-        orElse: () => Gamemaster.cups.first);
+    cup = Gamemaster().cups.firstWhere((cup) => cup.cupId == cupId,
+        orElse: () => Gamemaster().cups.first);
 
     save();
   }

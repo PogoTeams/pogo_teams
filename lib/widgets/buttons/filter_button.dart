@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../../modules/ui/sizing.dart';
+import '../../enums/pokemon_filters.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -21,8 +22,8 @@ class FilterButton extends StatelessWidget {
     this.dex = false,
   }) : super(key: key);
 
-  final void Function(dynamic) onSelected;
-  final String selectedCategory;
+  final void Function(PokemonFilters) onSelected;
+  final PokemonFilters selectedCategory;
   final double? size;
   final bool dex;
 
@@ -41,39 +42,39 @@ class FilterButton extends StatelessWidget {
         ),
         shape: BoxShape.circle,
       ),
-      child: PopupMenuButton<String>(
+      child: PopupMenuButton<PokemonFilters>(
         onSelected: onSelected,
         icon: const Icon(Icons.sort_sharp),
         iconSize: _size / 2,
 
         // Category options
         itemBuilder: (BuildContext context) {
-          final items = <PopupMenuEntry<String>>[
-            PopupMenuItem<String>(
-              value: 'overall',
+          final items = <PopupMenuEntry<PokemonFilters>>[
+            PopupMenuItem<PokemonFilters>(
+              value: PokemonFilters.overall,
               child: PopupItem(
-                category: 'overall',
+                category: PokemonFilters.overall,
                 selectedCategory: selectedCategory,
               ),
             ),
-            PopupMenuItem<String>(
-              value: 'lead',
+            PopupMenuItem<PokemonFilters>(
+              value: PokemonFilters.leads,
               child: PopupItem(
-                category: 'leads',
+                category: PokemonFilters.leads,
                 selectedCategory: selectedCategory,
               ),
             ),
-            PopupMenuItem<String>(
-              value: 'switch',
+            PopupMenuItem<PokemonFilters>(
+              value: PokemonFilters.switches,
               child: PopupItem(
-                category: 'switches',
+                category: PokemonFilters.switches,
                 selectedCategory: selectedCategory,
               ),
             ),
-            PopupMenuItem<String>(
-              value: 'closer',
+            PopupMenuItem<PokemonFilters>(
+              value: PokemonFilters.closers,
               child: PopupItem(
-                category: 'closers',
+                category: PokemonFilters.closers,
                 selectedCategory: selectedCategory,
               ),
             ),
@@ -81,13 +82,12 @@ class FilterButton extends StatelessWidget {
 
           // Optionally add dex
           // This option is excluded in the rankings page
-          // since PvPoke only ranks a subset of the dex
           if (dex) {
             items.add(
-              PopupMenuItem<String>(
-                value: 'dex',
+              PopupMenuItem<PokemonFilters>(
+                value: PokemonFilters.dex,
                 child: PopupItem(
-                  category: 'dex',
+                  category: PokemonFilters.dex,
                   selectedCategory: selectedCategory,
                 ),
               ),
@@ -108,13 +108,16 @@ class PopupItem extends StatelessWidget {
     required this.selectedCategory,
   }) : super(key: key);
 
-  final String category;
-  final String selectedCategory;
+  final PokemonFilters category;
+  final PokemonFilters selectedCategory;
 
   @override
   Widget build(BuildContext context) {
     return category == selectedCategory
-        ? Text(category, style: const TextStyle(color: Colors.yellow))
-        : Text(category);
+        ? Text(
+            category.displayName,
+            style: const TextStyle(color: Colors.yellow),
+          )
+        : Text(category.displayName);
   }
 }
