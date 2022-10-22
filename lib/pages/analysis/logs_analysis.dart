@@ -10,7 +10,7 @@ import '../../game_objects/pokemon_typing.dart';
 import '../../modules/data/pogo_data.dart';
 import '../../modules/ui/sizing.dart';
 import '../../tools/pair.dart';
-import '../../enums/pokemon_filters.dart';
+import '../../enums/rankings_categories.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -73,7 +73,7 @@ class LogsAnalysis extends StatelessWidget {
     List<Pokemon> counters = await PogoData.getFilteredRankedPokemonList(
       team.cup,
       counterTypes,
-      PokemonFilters.overall,
+      RankingsCategories.overall,
       limit: 50,
     );
 

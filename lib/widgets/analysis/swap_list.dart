@@ -9,7 +9,7 @@ import '../nodes/pokemon_node.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/data/pogo_data.dart';
 import '../buttons/pokemon_action_button.dart';
-import '../../enums/pokemon_filters.dart';
+import '../../enums/rankings_categories.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -85,7 +85,7 @@ class SwapList extends StatelessWidget {
         future: PogoData.getFilteredRankedPokemonList(
           team.cup,
           types,
-          PokemonFilters.overall,
+          RankingsCategories.overall,
           limit: 20,
         ),
         builder: (BuildContext context, AsyncSnapshot<List<Pokemon>> snapshot) {

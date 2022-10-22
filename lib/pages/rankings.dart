@@ -13,7 +13,7 @@ import '../widgets/dropdowns/cup_dropdown.dart';
 import '../widgets/buttons/filter_button.dart';
 import '../modules/data/pogo_data.dart';
 import '../modules/data/gamemaster.dart';
-import '../enums/pokemon_filters.dart';
+import '../enums/rankings_categories.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -42,7 +42,7 @@ class _RankingsState extends State<Rankings> {
   // A variable list of Pokemon based on search bar text input
   List<Pokemon> filteredPokemon = [];
 
-  PokemonFilters _selectedCategory = PokemonFilters.overall;
+  RankingsCategories _selectedCategory = RankingsCategories.overall;
 
   void _onCupChanged(String? newCupId) {
     if (newCupId == null) return;
@@ -56,7 +56,7 @@ class _RankingsState extends State<Rankings> {
 
   // Callback for the FilterButton
   // Sets the ranking list associated with rankingsCategory
-  void _filterCategory(PokemonFilters rankingsCategory) async {
+  void _filterCategory(RankingsCategories rankingsCategory) async {
     _selectedCategory = rankingsCategory;
 
     pokemon = await PogoData.getRankedPokemonList(cup, rankingsCategory);
@@ -126,7 +126,7 @@ class _RankingsState extends State<Rankings> {
 
     cup = Gamemaster().cups.first;
 
-    _filterCategory(PokemonFilters.overall);
+    _filterCategory(RankingsCategories.overall);
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);

@@ -8,7 +8,7 @@ import '../../game_objects/cup.dart';
 import '../nodes/pokemon_node.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/data/pogo_data.dart';
-import '../../enums/pokemon_filters.dart';
+import '../../enums/rankings_categories.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -32,7 +32,7 @@ class TypeFilteredPokemonList extends StatelessWidget {
         future: PogoData.getFilteredRankedPokemonList(
           cup,
           types,
-          PokemonFilters.overall,
+          RankingsCategories.overall,
           limit: 50,
         ),
         builder: (BuildContext context, AsyncSnapshot<List<Pokemon>> snapshot) {

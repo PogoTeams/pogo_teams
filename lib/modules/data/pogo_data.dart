@@ -8,7 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 // Local
 import 'gamemaster.dart';
-import '../../enums/pokemon_filters.dart';
+import '../../enums/rankings_categories.dart';
 import '../../tools/pair.dart';
 import '../../firebase_options.dart';
 import '../../game_objects/pokemon.dart';
@@ -150,7 +150,7 @@ class PogoData {
 
   static Future<List<RankedPokemon>> getRankedPokemonList(
     Cup cup,
-    PokemonFilters rankingsCategory,
+    RankingsCategories rankingsCategory,
   ) async {
     List<RankedPokemon> rankedPokemon = [];
     for (var json in List<Map<String, dynamic>>.from(
@@ -180,25 +180,25 @@ class PogoData {
 
   static void sortRankedPokemonList(
     List<RankedPokemon> list,
-    PokemonFilters rankingsCategory,
+    RankingsCategories rankingsCategory,
   ) {
     switch (rankingsCategory) {
-      case PokemonFilters.overall:
+      case RankingsCategories.overall:
         for (var rankedPokemon in list) {
           rankedPokemon.currentRating = rankedPokemon.ratings.overall;
         }
         break;
-      case PokemonFilters.leads:
+      case RankingsCategories.leads:
         for (var rankedPokemon in list) {
           rankedPokemon.currentRating = rankedPokemon.ratings.lead;
         }
         break;
-      case PokemonFilters.switches:
+      case RankingsCategories.switches:
         for (var rankedPokemon in list) {
           rankedPokemon.currentRating = rankedPokemon.ratings.switchRating;
         }
         break;
-      case PokemonFilters.closers:
+      case RankingsCategories.closers:
         for (var rankedPokemon in list) {
           rankedPokemon.currentRating = rankedPokemon.ratings.closer;
         }
@@ -217,7 +217,7 @@ class PogoData {
   static Future<List<Pokemon>> getFilteredRankedPokemonList(
     Cup cup,
     List<PokemonType> types,
-    PokemonFilters rankingsCategory, {
+    RankingsCategories rankingsCategory, {
     int limit = 20,
   }) async {
     List<Pokemon> rankedList =
