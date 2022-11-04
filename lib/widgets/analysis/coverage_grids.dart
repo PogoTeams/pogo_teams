@@ -58,20 +58,12 @@ class CoverageGrids extends StatelessWidget {
                     Text(
                       'DEFENSE THREATS',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        letterSpacing: Sizing.blockSizeHorizontal * .8,
-                        fontSize: Sizing.h3,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.headline5,
                     ),
                     Text(
                       '${defenseThreats.length} / ${includedTypesKeys.length}',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        letterSpacing: Sizing.blockSizeHorizontal * .8,
-                        fontSize: Sizing.h3,
-                        fontStyle: FontStyle.italic,
-                      ),
+                      style: Theme.of(context).textTheme.headline5,
                     ),
                   ],
                 ),
@@ -125,20 +117,12 @@ class CoverageGrids extends StatelessWidget {
                   children: [
                     Text(
                       'OFFENSE COVERAGE',
-                      style: TextStyle(
-                        letterSpacing: Sizing.blockSizeHorizontal * .8,
-                        fontSize: Sizing.h3,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.headline5,
                     ),
                     Text(
                       '${offenseCoverage.length} / ${includedTypesKeys.length}',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        letterSpacing: Sizing.blockSizeHorizontal * .8,
-                        fontSize: Sizing.h3,
-                        fontStyle: FontStyle.italic,
-                      ),
+                      style: Theme.of(context).textTheme.headline5,
                     ),
                   ],
                 ),

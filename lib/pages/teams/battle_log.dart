@@ -51,10 +51,9 @@ class _BattleLogState extends State<BattleLog> {
           // Page title
           Text(
             'Battle Log',
-            style: TextStyle(
-              fontSize: Sizing.h2,
-              fontStyle: FontStyle.italic,
-            ),
+            style: Theme.of(context).textTheme.headline5?.apply(
+                  fontStyle: FontStyle.italic,
+                ),
           ),
 
           // Spacer
@@ -65,7 +64,7 @@ class _BattleLogState extends State<BattleLog> {
           // Page icon
           Icon(
             Icons.query_stats,
-            size: Sizing.h2 * 1.5,
+            size: Sizing.icon3,
           ),
         ],
       ),
@@ -92,11 +91,7 @@ class _BattleLogState extends State<BattleLog> {
 
           Text(
             '- Opponent Teams -',
-            style: TextStyle(
-              fontSize: Sizing.h1,
-              fontWeight: FontWeight.bold,
-              letterSpacing: Sizing.blockSizeHorizontal * .7,
-            ),
+            style: Theme.of(context).textTheme.headline5,
           ),
 
           // Spacer
@@ -238,9 +233,7 @@ class _BattleLogState extends State<BattleLog> {
           children: [
             Text(
               'Log Opponent Team',
-              style: TextStyle(
-                fontSize: Sizing.h2,
-              ),
+              style: Theme.of(context).textTheme.headline5,
             ),
             SizedBox(
               width: Sizing.blockSizeHorizontal * 5.0,
@@ -267,9 +260,7 @@ class _BattleLogState extends State<BattleLog> {
             children: [
               Text(
                 'Analyze',
-                style: TextStyle(
-                  fontSize: Sizing.h2,
-                ),
+                style: Theme.of(context).textTheme.headline5,
               ),
               SizedBox(
                 width: Sizing.blockSizeHorizontal * 4.0,
@@ -298,9 +289,7 @@ class _BattleLogState extends State<BattleLog> {
             children: [
               Text(
                 'Log',
-                style: TextStyle(
-                  fontSize: Sizing.h2,
-                ),
+                style: Theme.of(context).textTheme.headline5,
               ),
               SizedBox(
                 width: Sizing.blockSizeHorizontal * 4.0,

@@ -63,10 +63,7 @@ class XlIcon extends StatelessWidget {
           child: Center(
             child: Text(
               'X L',
-              style: TextStyle(
-                fontSize: Sizing.h3 * scale,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.headline5,
             ),
           ),
         ),

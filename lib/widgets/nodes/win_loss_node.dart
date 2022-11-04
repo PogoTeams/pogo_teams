@@ -66,9 +66,7 @@ class WinLossNode extends StatelessWidget {
       child: Text(
         winLossKey,
         textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: Sizing.h3,
-        ),
+        style: Theme.of(context).textTheme.headline5,
       ),
     );
   }

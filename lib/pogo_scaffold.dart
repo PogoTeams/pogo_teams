@@ -2,13 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import 'enums/pogo_pages.dart';
-import 'pages/pogo_account.dart';
+import 'pages/pogo_pages.dart';
 import 'modules/data/pogo_data.dart';
 import 'tools/pair.dart';
 import 'game_objects/user_teams.dart';
-import 'pages/teams/teams.dart';
-import 'pages/rankings.dart';
 import 'modules/ui/sizing.dart';
 import 'widgets/pogo_drawer.dart';
 
@@ -32,18 +29,6 @@ class _PogoScaffoldState extends State<PogoScaffold>
     with SingleTickerProviderStateMixin {
   // Flag for when the app has finished the loading phase
   bool _loaded = false;
-
-  // User data
-  final UserTeams _teams = UserTeams();
-
-  // All pages that are accessible at the top level of the app
-  /*
-  late final Map<PogoPages, Widget> _pages = {
-    PogoPages.account: const PogoSignIn(),
-    PogoPages.teams: TeamsBuilder(teams: _teams),
-    PogoPages.rankings: const Rankings(),
-  };
-  */
 
   // Used to navigate between pages by key
   PogoPages _currentPage = PogoPages.account;
@@ -82,10 +67,9 @@ class _PogoScaffoldState extends State<PogoScaffold>
           // Page title
           Text(
             _currentPage.displayName,
-            style: TextStyle(
-              fontSize: Sizing.h2,
-              fontStyle: FontStyle.italic,
-            ),
+            style: Theme.of(context).textTheme.headline5?.apply(
+                  fontStyle: FontStyle.italic,
+                ),
           ),
 
           // Spacer
@@ -110,8 +94,6 @@ class _PogoScaffoldState extends State<PogoScaffold>
   @override
   void dispose() {
     _progressBarAnimController.dispose();
-    _teams.close();
-
     super.dispose();
   }
 
@@ -144,6 +126,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
         // Rebuild progress bar
         return Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
           body: Padding(
             padding: EdgeInsets.only(
               left: Sizing.blockSizeHorizontal * 2.0,
@@ -156,9 +139,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
                 // Loading message
                 Text(
                   snapshot.data!.a,
-                  style: TextStyle(
-                    fontSize: Sizing.h2,
-                  ),
+                  style: Theme.of(context).textTheme.headline5,
                 ),
 
                 // Spacer

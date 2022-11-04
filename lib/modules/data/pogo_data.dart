@@ -74,12 +74,6 @@ class PogoData {
               _refreshCache(timestampEntry.key, CacheType.rankings);
               break;
           }
-        } else if (doc.id == 'pogo') {
-          _loadGamemasterCollection(
-            timestampEntry.key,
-            List<Map<String, dynamic>>.from(jsonDecode(
-                localPogoData.get(timestampEntry.key, defaultValue: ''))),
-          );
         }
 
         progress += 1;
@@ -94,6 +88,8 @@ class PogoData {
       );
     }
     localVersionTimestampsBox.close();
+
+    _loadGamemasterCollections();
   }
 
   static void _refreshCache(
@@ -109,7 +105,6 @@ class PogoData {
           final List<Map<String, dynamic>> json =
               event.docs.map((doc) => doc.data()).toList();
           await localPogoData.put(collectionName, jsonEncode(json));
-          _loadGamemasterCollection(collectionName, json);
         });
         break;
       case CacheType.rankings:
@@ -127,24 +122,21 @@ class PogoData {
     }
   }
 
-  static void _loadGamemasterCollection(
-      String collectionName, List<Map<String, dynamic>> json) {
-    switch (collectionName) {
-      case 'fastMoves':
-        Gamemaster().loadFastMoves(json);
-        break;
-      case 'chargeMoves':
-        Gamemaster().loadChargeMoves(json);
-        break;
-      case 'pokemon':
-        Gamemaster().loadPokemon(json);
-        break;
-      case 'cups':
-        Gamemaster().loadCups(json);
-        for (var cupEntry in json) {
-          PogoColors.addCupColor(cupEntry['cupId'], cupEntry['uiColor']);
-        }
-        break;
+  static void _loadGamemasterCollections() {
+    Gamemaster().loadFastMoves(List<Map<String, dynamic>>.from(
+        jsonDecode(localPogoData.get('fastMoves', defaultValue: ''))));
+
+    Gamemaster().loadChargeMoves(List<Map<String, dynamic>>.from(
+        jsonDecode(localPogoData.get('chargeMoves', defaultValue: ''))));
+
+    Gamemaster().loadPokemon(List<Map<String, dynamic>>.from(
+        jsonDecode(localPogoData.get('pokemon', defaultValue: ''))));
+
+    final cupsJson = List<Map<String, dynamic>>.from(
+        jsonDecode(localPogoData.get('cups', defaultValue: '')));
+    Gamemaster().loadCups(cupsJson);
+    for (var cupEntry in cupsJson) {
+      PogoColors.addCupColor(cupEntry['cupId'], cupEntry['uiColor']);
     }
   }
 

@@ -44,9 +44,7 @@ class _CupDropdownState extends State<CupDropdown>
         child: Center(
           child: Text(
             cup.name,
-            style: TextStyle(
-              fontSize: Sizing.h2,
-            ),
+            style: Theme.of(context).textTheme.headline6,
           ),
         ),
       );
@@ -88,6 +86,7 @@ class _CupDropdownState extends State<CupDropdown>
       // Cup dropdown button
       child: DropdownButtonHideUnderline(
         child: DropdownButton(
+          borderRadius: BorderRadius.circular(5),
           isExpanded: true,
           value: _selectedCup.cupId,
           icon: Icon(

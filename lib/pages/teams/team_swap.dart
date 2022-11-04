@@ -84,11 +84,7 @@ class _TeamSwapState extends State<TeamSwap> {
             Center(
               child: Text(
                 'Team Swap',
-                style: TextStyle(
-                  fontSize: Sizing.h2,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: Sizing.blockSizeHorizontal * .5,
-                ),
+                style: Theme.of(context).textTheme.headline5,
               ),
             ),
 

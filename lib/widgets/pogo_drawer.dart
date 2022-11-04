@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Local Imports
-import '../enums/pogo_pages.dart';
+import '../pages/pogo_pages.dart';
 import '../modules/data/globals.dart';
 import '../modules/ui/sizing.dart';
 
@@ -105,7 +105,7 @@ class PogoDrawer extends StatelessWidget {
                       children: [
                         Text(
                           PogoPages.teams.displayName,
-                          style: TextStyle(fontSize: Sizing.h1),
+                          style: Theme.of(context).textTheme.headline5,
                         ),
                         SizedBox(
                           width: Sizing.blockSizeHorizontal * 3.0,
@@ -126,7 +126,7 @@ class PogoDrawer extends StatelessWidget {
                       children: [
                         Text(
                           PogoPages.rankings.displayName,
-                          style: TextStyle(fontSize: Sizing.h1),
+                          style: Theme.of(context).textTheme.headline5,
                         ),
                         SizedBox(
                           width: Sizing.blockSizeHorizontal * 3.0,
@@ -155,7 +155,7 @@ class PogoDrawer extends StatelessWidget {
                 children: [
                   Text(
                     PogoPages.account.displayName,
-                    style: TextStyle(fontSize: Sizing.h1),
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                   SizedBox(
                     width: Sizing.blockSizeHorizontal * 3.0,
@@ -171,10 +171,9 @@ class PogoDrawer extends StatelessWidget {
 
             Text(
               _auth.currentUser?.email == null ? '' : _auth.currentUser!.email!,
-              style: TextStyle(
-                fontSize: Sizing.h2,
-                fontStyle: FontStyle.italic,
-              ),
+              style: Theme.of(context).textTheme.headline5?.apply(
+                    fontStyle: FontStyle.italic,
+                  ),
             ),
           ],
         ),

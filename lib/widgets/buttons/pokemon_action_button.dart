@@ -51,10 +51,7 @@ class PokemonActionButton extends StatelessWidget {
               icon,
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: Sizing.h3,
-                  color: Colors.white,
-                ),
+                style: Theme.of(context).textTheme.headline5,
               ),
             ],
           ),

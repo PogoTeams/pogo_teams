@@ -30,21 +30,16 @@ class PvpStats extends StatelessWidget {
       children: [
         Text(
           'CP $cp',
-          style: TextStyle(
-            letterSpacing: Sizing.blockSizeHorizontal * .7,
-            fontSize: Sizing.p,
-            fontStyle: FontStyle.italic,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.headline5?.apply(
+                fontStyle: FontStyle.italic,
+              ),
           textAlign: TextAlign.center,
         ),
         Text(
           '${ivs.atk} | ${ivs.def} | ${ivs.hp}',
-          style: TextStyle(
-            letterSpacing: Sizing.blockSizeHorizontal * .7,
-            fontSize: Sizing.h3,
-            fontStyle: FontStyle.italic,
-          ),
+          style: Theme.of(context).textTheme.headline5?.apply(
+                fontStyle: FontStyle.italic,
+              ),
           textAlign: TextAlign.center,
         ),
       ],

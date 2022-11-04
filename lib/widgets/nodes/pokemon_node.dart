@@ -154,15 +154,8 @@ class _SquareNodeBody extends StatelessWidget {
         FormattedPokemonName(
           name: pokemon.name,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: Sizing.h3,
-            fontWeight: FontWeight.bold,
-            fontFamily: DefaultTextStyle.of(context).style.fontFamily,
-          ),
-          suffixStyle: TextStyle(
-            fontSize: Sizing.p,
-            fontFamily: DefaultTextStyle.of(context).style.fontFamily,
-          ),
+          style: Theme.of(context).textTheme.headline5,
+          suffixStyle: Theme.of(context).textTheme.bodyMedium,
         ),
 
         // A line divider
@@ -199,7 +192,7 @@ class _SmallNodeBody extends StatelessWidget {
 
   // Display the Pokemon's name perfect PVP ivs and typing icon(s)
   // If rating is true, place the rating in the upper left corner
-  Row _buildNodeHeader(Pokemon pokemon) {
+  Row _buildNodeHeader(BuildContext context, Pokemon pokemon) {
     if (rating) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -208,19 +201,13 @@ class _SmallNodeBody extends StatelessWidget {
           // Used for the ratings pages
           Text(
             pokemon.ratingString,
-            style: TextStyle(
-              fontSize: Sizing.h1,
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.headline5,
           ),
 
           // Pokemon name
           Text(
             pokemon.name,
-            style: TextStyle(
-              fontSize: Sizing.h1,
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.headline5,
           ),
 
           // Traits Icons
@@ -243,10 +230,7 @@ class _SmallNodeBody extends StatelessWidget {
         // Pokemon name
         Text(
           pokemon.name,
-          style: TextStyle(
-            fontSize: Sizing.h1,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.headline5,
         ),
 
         // Traits Icons
@@ -276,7 +260,7 @@ class _SmallNodeBody extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildNodeHeader(pokemon),
+          _buildNodeHeader(context, pokemon),
 
           // A line divider
           Divider(
@@ -313,17 +297,14 @@ class _LargeNodeBody extends StatelessWidget {
   final VoidCallback? onMoveChanged;
 
   // Display the Pokemon's name perfect PVP ivs and typing icon(s)
-  Row _buildNodeHeader(Pokemon pokemon, Cup? cup) {
+  Row _buildNodeHeader(BuildContext context, Pokemon pokemon, Cup? cup) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Pokemon name
         Text(
           pokemon.name,
-          style: TextStyle(
-            fontSize: Sizing.h1,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.headline5,
         ),
 
         // Traits Icons
@@ -362,7 +343,7 @@ class _LargeNodeBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           // Pokemon name, perfect IVs, and typing icons
-          _buildNodeHeader(pokemon, cup),
+          _buildNodeHeader(context, pokemon, cup),
 
           // A line divider
           Divider(

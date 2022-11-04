@@ -62,11 +62,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
       PanelStates(
         headerValue: Text(
           'Threats',
-          style: TextStyle(
-            letterSpacing: Sizing.blockSizeHorizontal * .8,
-            fontSize: Sizing.h1,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.headline5,
         ),
         expandedValue: SwapList(
           onSwap: _onSwap,
@@ -81,11 +77,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
       PanelStates(
         headerValue: Text(
           'Threat Counters',
-          style: TextStyle(
-            letterSpacing: Sizing.blockSizeHorizontal * .8,
-            fontSize: Sizing.h1,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.headline5,
         ),
         expandedValue: SwapList(
           onSwap: _onSwap,
@@ -163,10 +155,9 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
           // Page title
           Text(
             'Team Analysis',
-            style: TextStyle(
-              fontSize: Sizing.h2,
-              fontStyle: FontStyle.italic,
-            ),
+            style: Theme.of(context).textTheme.headline5?.apply(
+                  fontStyle: FontStyle.italic,
+                ),
           ),
 
           // Spacer
@@ -177,7 +168,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
           // Page icon
           Icon(
             Icons.analytics,
-            size: Sizing.h2 * 1.5,
+            size: Sizing.icon3,
           ),
         ],
       ),
@@ -279,11 +270,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
             Text(
               'PokemonType Coverage',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                letterSpacing: Sizing.blockSizeHorizontal * .8,
-                fontSize: Sizing.h1,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.headline5,
             ),
 
             // Spacer

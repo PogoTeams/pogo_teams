@@ -125,7 +125,7 @@ class _TeamsState extends State<Teams> {
         ),
 
         IconButton(
-          onPressed: () => _onLockPressed(teamIndex),
+          onPressed: () => _onLockTeam(teamIndex),
           icon: Icon(lockIcon),
           tooltip: 'Unlock Team',
           iconSize: iconSize,
@@ -199,7 +199,7 @@ class _TeamsState extends State<Teams> {
   }
 
   // On locking a team, the clear option is removed
-  void _onLockPressed(int teamIndex) {
+  void _onLockTeam(int teamIndex) {
     setState(() {
       _teams[teamIndex].toggleLock();
     });
@@ -256,9 +256,7 @@ class _TeamsState extends State<Teams> {
           children: [
             Text(
               'Add Team',
-              style: TextStyle(
-                fontSize: Sizing.h2,
-              ),
+              style: Theme.of(context).textTheme.headline6,
             ),
             SizedBox(
               width: Sizing.blockSizeHorizontal * 5.0,

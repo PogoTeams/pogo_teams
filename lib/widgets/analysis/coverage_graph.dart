@@ -40,10 +40,9 @@ class CoverageGraph extends StatelessWidget {
             Text(
               'Poor',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: Sizing.h2,
-                fontStyle: FontStyle.italic,
-              ),
+              style: Theme.of(context).textTheme.headline5?.apply(
+                    fontStyle: FontStyle.italic,
+                  ),
             ),
             SizedBox(
               width: Sizing.screenWidth * .61,
@@ -51,10 +50,9 @@ class CoverageGraph extends StatelessWidget {
             Text(
               'Excellent',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: Sizing.h2,
-                fontStyle: FontStyle.italic,
-              ),
+              style: Theme.of(context).textTheme.headline5?.apply(
+                    fontStyle: FontStyle.italic,
+                  ),
             ),
           ],
         ),

@@ -21,7 +21,7 @@ class FormattedPokemonName extends StatelessWidget {
   }) : super(key: key);
 
   final String name;
-  final TextStyle style;
+  final TextStyle? style;
   final TextAlign textAlign;
   final TextStyle? suffixStyle;
 

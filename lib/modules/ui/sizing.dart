@@ -14,11 +14,7 @@ class Sizing {
   static late double screenHeight;
   static late double blockSizeHorizontal;
   static late double blockSizeVertical;
-
-  static late double h1;
-  static late double h2;
-  static late double h3;
-  static late double p;
+  static late double icon3;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -37,10 +33,7 @@ class Sizing {
       blockSizeVertical = screenHeight / 100;
     }
 
-    h1 = blockSizeHorizontal * 4.0;
-    h2 = blockSizeHorizontal * 3.8;
-    h3 = blockSizeHorizontal * 2.8;
-    p = blockSizeHorizontal * 2.2;
+    icon3 = blockSizeHorizontal * 6;
   }
 
   // Calculate the screen diagonal and determine if the device is a tablet

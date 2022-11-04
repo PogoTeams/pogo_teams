@@ -235,11 +235,10 @@ class CloudWrites {
       int segmentCount = 1;
       List<dynamic> segment;
 
-      Uri url = Uri.https(
-        host,
-        commitRequestPath,
-        {'key': apiKey},
-      );
+      Uri url = Uri.https(host, commitRequestPath, <String, dynamic>{
+        'key': apiKey,
+        'auth': {'uid': 'sean'},
+      });
 
       bool success = true;
       while (startIndex < cloudWrites.length - 1) {

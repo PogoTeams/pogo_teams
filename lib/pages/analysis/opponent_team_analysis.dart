@@ -36,7 +36,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
   final List<Pair<PokemonType, double>> offenseCoverage;
   final List<Pair<PokemonType, double>> netEffectiveness;
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -44,10 +44,9 @@ class OpponentTeamAnalysis extends StatelessWidget {
           // Page title
           Text(
             'Opponent Team Analysis',
-            style: TextStyle(
-              fontSize: Sizing.h2,
-              fontStyle: FontStyle.italic,
-            ),
+            style: Theme.of(context).textTheme.headline5?.apply(
+                  fontStyle: FontStyle.italic,
+                ),
           ),
 
           // Spacer
@@ -58,7 +57,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
           // Page icon
           Icon(
             Icons.analytics,
-            size: Sizing.h2 * 1.5,
+            size: Sizing.icon3,
           ),
         ],
       ),
@@ -108,7 +107,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
+      appBar: _buildAppBar(context),
       body: Padding(
         padding: EdgeInsets.only(
           left: Sizing.blockSizeHorizontal * 2.0,
@@ -141,13 +140,11 @@ class OpponentTeamAnalysis extends StatelessWidget {
               height: Sizing.blockSizeVertical * 2.0,
             ),
 
-            Text('Top Counters',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: Sizing.h1,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: Sizing.blockSizeHorizontal * .7,
-                )),
+            Text(
+              'Top Counters',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline5,
+            ),
 
             Divider(
               height: Sizing.blockSizeVertical * 5.0,

@@ -53,10 +53,10 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   final TextEditingController _searchController = TextEditingController();
 
   // List of ALL Pokemon
-  List<Pokemon> pokemon = [];
+  List<Pokemon> _pokemon = [];
 
   // A variable list of Pokemon based on search bar text input
-  List<Pokemon> filteredPokemon = [];
+  List<Pokemon> _filteredPokemon = [];
 
   RankingsCategories _selectedCategory = RankingsCategories.overall;
 
@@ -84,7 +84,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
       }
 
       // Filter by the search terms
-      filteredPokemon = pokemon.where(filterPokemon).toList();
+      _filteredPokemon = _pokemon.where(filterPokemon).toList();
     });
   }
 
@@ -143,7 +143,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   // The list of Pokemon based on categories and search input
   Widget _buildPokemonList() {
     return PokemonList(
-      pokemon: filteredPokemon,
+      pokemon: _filteredPokemon,
       onPokemonSelected: (pokemon) {
         setState(() {
           _builderTeam.setPokemon(_builderIndex, pokemon);
@@ -223,9 +223,9 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     // Dex is a special case where all Pokemon are in the list
     // Otherwise get the list from the ratings category
     if (RankingsCategories.dex == _selectedCategory) {
-      pokemon = Gamemaster().pokemonList;
+      _pokemon = Gamemaster().pokemonList;
     } else {
-      pokemon = await PogoData.getRankedPokemonList(_cup, _selectedCategory);
+      _pokemon = await PogoData.getRankedPokemonList(_cup, _selectedCategory);
     }
 
     _filterPokemonList();
@@ -233,7 +233,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
 
   // Setup the input controller
   @override
-  void initState() async {
+  void initState() {
     super.initState();
 
     // Building a user team
@@ -249,9 +249,7 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
     // Set the starting index of the team edit
     _builderIndex = widget.focusIndex;
 
-    // Get the selected cup and list of Pokemon based on the category
-    pokemon =
-        await PogoData.getRankedPokemonList(widget.cup, _selectedCategory);
+    _filterCategory(RankingsCategories.overall);
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);
@@ -267,8 +265,8 @@ class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
   @override
   Widget build(BuildContext context) {
     //Display all Pokemon if there is no input
-    if (filteredPokemon.isEmpty && _searchController.text.isEmpty) {
-      filteredPokemon = pokemon;
+    if (_filteredPokemon.isEmpty && _searchController.text.isEmpty) {
+      _filteredPokemon = _pokemon;
     }
 
     return Scaffold(

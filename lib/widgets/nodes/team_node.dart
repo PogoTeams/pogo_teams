@@ -45,7 +45,7 @@ class TeamNode extends StatelessWidget {
   final bool collapsible;
   final EdgeInsets? padding;
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     // Only applicable to user Pokemon teams
     if (team.runtimeType != UserPokemonTeam) return Container();
 
@@ -60,17 +60,15 @@ class TeamNode extends StatelessWidget {
         children: [
           Text(
             cup.name,
-            style: TextStyle(
-              fontSize: Sizing.h2,
-              fontStyle: FontStyle.italic,
-            ),
+            style: Theme.of(context).textTheme.headline5?.apply(
+                  fontStyle: FontStyle.italic,
+                ),
           ),
           Text(
             'Win Rate : ${(team as UserPokemonTeam).getWinRate()} %',
-            style: TextStyle(
-              fontSize: Sizing.h3,
-              fontStyle: FontStyle.italic,
-            ),
+            style: Theme.of(context).textTheme.headline5?.apply(
+                  fontStyle: FontStyle.italic,
+                ),
           ),
         ],
       ),
@@ -182,7 +180,7 @@ class TeamNode extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Optional header build
-              buildHeader ? _buildHeader() : Container(),
+              buildHeader ? _buildHeader(context) : Container(),
 
               // A gridview of the Pokemon in this team
               Padding(

@@ -117,10 +117,9 @@ class _TeamEditState extends State<TeamEdit> {
           // Page title
           Text(
             'Team Edit',
-            style: TextStyle(
-              fontSize: Sizing.h2,
-              fontStyle: FontStyle.italic,
-            ),
+            style: Theme.of(context).textTheme.headline5?.apply(
+                  fontStyle: FontStyle.italic,
+                ),
           ),
 
           // Spacer
@@ -131,7 +130,7 @@ class _TeamEditState extends State<TeamEdit> {
           // Page icon
           Icon(
             Icons.build_circle,
-            size: Sizing.h2 * 1.5,
+            size: Sizing.icon3,
           ),
         ],
       ),
@@ -203,9 +202,7 @@ class _TeamEditState extends State<TeamEdit> {
                     PokemonNode.large(
                       pokemon: pokemonTeam[index],
                       onEmptyPressed: () => _onSearchPressed(index),
-                      onMoveChanged: () {
-                        _builderTeam.save();
-                      },
+                      onMoveChanged: () {},
                       cup: _builderTeam.cup,
                       footer: _buildNodeFooter(pokemonTeam[index], index),
                       padding: EdgeInsets.only(
@@ -224,9 +221,7 @@ class _TeamEditState extends State<TeamEdit> {
               : PokemonNode.large(
                   pokemon: pokemonTeam[index],
                   onEmptyPressed: () => _onSearchPressed(index),
-                  onMoveChanged: () {
-                    _builderTeam.save();
-                  },
+                  onMoveChanged: () {},
                   cup: _builderTeam.cup,
                   footer: _buildNodeFooter(pokemonTeam[index], index),
                   padding: EdgeInsets.only(
@@ -282,9 +277,7 @@ class _TeamEditState extends State<TeamEdit> {
                 children: [
                   Text(
                     'Analyze Team',
-                    style: TextStyle(
-                      fontSize: Sizing.h2,
-                    ),
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                   SizedBox(
                     width: Sizing.blockSizeHorizontal * 5.0,

@@ -39,9 +39,7 @@ class _WinLossDropdownState extends State<WinLossDropdown>
         child: Center(
           child: Text(
             optionString,
-            style: TextStyle(
-              fontSize: Sizing.h2,
-            ),
+            style: Theme.of(context).textTheme.headline5,
           ),
         ),
       );

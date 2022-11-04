@@ -53,7 +53,7 @@ class PogoColors {
   }
 
   static List<Color> getPokemonMovesetColors(List<Move> moveset) => moveset
-      .map((move) => _typeColors[move.moveId] ?? defaultTypeColor)
+      .map((move) => _typeColors[move.type.typeId] ?? defaultTypeColor)
       .toList();
 
   static Color getCupColor(String cupId) =>

@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pages/pogo_account.dart';
-import '../pages/teams/teams.dart';
-import '../pages/rankings.dart';
+import 'account/pogo_account.dart';
+import 'teams/teams.dart';
+import 'rankings.dart';
 import '../modules/ui/sizing.dart';
 
 enum PogoPages { teams, rankings, account }
@@ -24,19 +24,19 @@ extension PogoPagesExt on PogoPages {
   Widget get icon {
     switch (this) {
       case PogoPages.teams:
-        return Image.asset(
-          'assets/pokeball_icon.png',
-          width: Sizing.h2 * 1.2,
+        return Icon(
+          Icons.dangerous,
+          size: Sizing.icon3,
         );
       case PogoPages.rankings:
         return Icon(
           Icons.bar_chart,
-          size: Sizing.h2 * 1.5,
+          size: Sizing.icon3,
         );
       case PogoPages.account:
         return Icon(
           Icons.account_circle,
-          size: Sizing.h2 * 1.5,
+          size: Sizing.icon3,
         );
     }
   }

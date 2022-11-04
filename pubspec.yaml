@@ -43,6 +43,7 @@ dependencies:
   cloud_firestore: ^3.5.0
   firebase_auth: ^3.11.2
   firebase_dynamic_links: ^4.3.11
+  email_validator: '^2.1.16'
 
 dev_dependencies:
   flutter_test:
@@ -79,14 +80,6 @@ flutter:
   assets:
     - assets/
     - assets/white_type_icons/
-
-    - assets/rankings/gobattleleague/attackers/
-    - assets/rankings/gobattleleague/chargers/
-    - assets/rankings/gobattleleague/closers/
-    - assets/rankings/gobattleleague/consistency/
-    - assets/rankings/gobattleleague/leads/
-    - assets/rankings/gobattleleague/overall/
-    - assets/rankings/gobattleleague/switches/
 
   fonts:
     - family: Futura

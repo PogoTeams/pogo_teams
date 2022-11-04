@@ -32,10 +32,7 @@ class AnalyzeButton extends StatelessWidget {
         : GradientButton(
             child: Text(
               'Analyze',
-              style: TextStyle(
-                fontSize: Sizing.h1,
-                color: Colors.white,
-              ),
+              style: Theme.of(context).textTheme.headline5,
             ),
             onPressed: onPressed,
             width: Sizing.screenWidth * .85,

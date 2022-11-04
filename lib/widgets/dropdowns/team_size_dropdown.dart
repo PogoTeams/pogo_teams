@@ -45,10 +45,9 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
           child: Center(
             child: Text(
               size.toString(),
-              style: TextStyle(
-                fontSize: Sizing.h2,
-                color: size == widget.size ? Colors.yellow : Colors.white,
-              ),
+              style: Theme.of(context).textTheme.headline5?.apply(
+                    color: size == widget.size ? Colors.yellow : Colors.white,
+                  ),
             ),
           ),
         );

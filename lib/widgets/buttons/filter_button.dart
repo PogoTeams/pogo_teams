@@ -43,6 +43,7 @@ class FilterButton extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: PopupMenuButton<RankingsCategories>(
+        position: PopupMenuPosition.over,
         onSelected: onSelected,
         icon: const Icon(Icons.sort_sharp),
         iconSize: _size / 2,
