@@ -40,6 +40,14 @@ class PogoTeamsApp extends StatelessWidget {
       errorColor: Colors.deepOrange,
       hintColor: const Color.fromARGB(155, 2, 162, 249),
       disabledColor: Colors.white70,
+      snackBarTheme: const SnackBarThemeData(
+        backgroundColor: Colors.deepOrange,
+        actionTextColor: Colors.white,
+        contentTextStyle: TextStyle(
+          color: Colors.white,
+          fontFamily: 'Futura',
+        ),
+      ),
       dialogTheme: const DialogTheme(
         contentTextStyle: TextStyle(
           color: Colors.white,

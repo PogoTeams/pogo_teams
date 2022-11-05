@@ -164,10 +164,6 @@ class _PogoScaffoldState extends State<PogoScaffold>
                         ),
                       ),
                     ),
-                    Image.asset(
-                      'assets/pokeball_icon.png',
-                      width: Sizing.blockSizeHorizontal * 5.0,
-                    ),
                   ],
                 ),
               ],

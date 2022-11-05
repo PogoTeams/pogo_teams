@@ -26,8 +26,8 @@ node in the grid to put focus on that node for adding a Pokemon.
 -------------------------------------------------------------------------------
 */
 
-class TeamBuilderSearch extends StatefulWidget {
-  const TeamBuilderSearch({
+class TeamBuilder extends StatefulWidget {
+  const TeamBuilder({
     Key? key,
     required this.team,
     required this.cup,
@@ -39,10 +39,10 @@ class TeamBuilderSearch extends StatefulWidget {
   final int focusIndex;
 
   @override
-  _TeamBuilderSearchState createState() => _TeamBuilderSearchState();
+  _TeamBuilderState createState() => _TeamBuilderState();
 }
 
-class _TeamBuilderSearchState extends State<TeamBuilderSearch> {
+class _TeamBuilderState extends State<TeamBuilder> {
   late Cup _cup = widget.cup;
   late final PokemonTeam _builderTeam;
 

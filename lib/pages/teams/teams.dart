@@ -2,16 +2,17 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import 'team_edit.dart';
-import 'team_builder_search.dart';
-import '../analysis/analysis.dart';
 import 'battle_log.dart';
+import 'team_edit.dart';
+import 'team_builder.dart';
+import '../analysis/analysis.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../modules/ui/sizing.dart';
 import '../../game_objects/user_teams.dart';
 import '../../game_objects/pokemon.dart';
 import '../../game_objects/pokemon_team.dart';
+import '../../modules/data/pogo_data.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -206,10 +207,10 @@ class _TeamsState extends State<Teams> {
   }
 
   // Add a new empty team
-  void _onAddTeam() {
-    setState(() {
-      _teams.addTeam();
-    });
+  void _onAddTeam() async {
+    UserPokemonTeam newTeam = _teams.addTeam();
+    newTeam.id = await PogoData.createUserPokemonTeam(newTeam);
+    setState(() {});
   }
 
   // Navigate to the team build search page, with focus on the specified
@@ -220,7 +221,7 @@ class _TeamsState extends State<Teams> {
     final newTeam = await Navigator.push(
       context,
       MaterialPageRoute<PokemonTeam>(builder: (BuildContext context) {
-        return TeamBuilderSearch(
+        return TeamBuilder(
           team: team,
           cup: team.cup,
           focusIndex: nodeIndex,
@@ -231,6 +232,7 @@ class _TeamsState extends State<Teams> {
     if (newTeam != null) {
       setState(() {
         _teams[teamIndex].fromBuilderCopy(newTeam as UserPokemonTeam);
+        PogoData.updateUserPokemonTeam(newTeam);
       });
     }
   }

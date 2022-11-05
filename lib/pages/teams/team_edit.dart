@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import 'team_builder_search.dart';
+import 'team_builder.dart';
 import '../analysis/analysis.dart';
 import '../../modules/ui/sizing.dart';
 import '../../widgets/nodes/pokemon_node.dart';
@@ -71,7 +71,7 @@ class _TeamEditState extends State<TeamEdit> {
     final _newTeam = await Navigator.push(
       context,
       MaterialPageRoute<UserPokemonTeam>(builder: (BuildContext context) {
-        return TeamBuilderSearch(
+        return TeamBuilder(
           team: _builderTeam,
           cup: _builderTeam.cup,
           focusIndex: nodeIndex,

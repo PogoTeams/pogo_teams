@@ -1,6 +1,3 @@
-// Package Imports
-import 'package:hive/hive.dart';
-
 // Local Imports
 import 'pokemon_team.dart';
 
@@ -19,10 +16,10 @@ class UserTeams {
   UserPokemonTeam operator [](int index) => _builderTeams[index];
 
   // Add a new empty team
-  void addTeam() async {
-    final teamIndex = teamsCount;
+  UserPokemonTeam addTeam() {
     _builderTeams.add(UserPokemonTeam());
     ++teamsCount;
+    return _builderTeams.last;
   }
 
   // Remove a team at the specified index

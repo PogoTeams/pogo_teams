@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pogo_teams/pages/analysis/analysis.dart';
 
 // Local Imports
-import 'team_builder_search.dart';
+import 'team_builder.dart';
 import '../../../widgets/nodes/team_node.dart';
 import '../../../widgets/buttons/gradient_button.dart';
 import '../../../widgets/nodes/win_loss_node.dart';
@@ -345,7 +345,7 @@ class _BattleLogState extends State<BattleLog> {
     final newLog = await Navigator.push(
       context,
       MaterialPageRoute<LogPokemonTeam>(builder: (BuildContext context) {
-        return TeamBuilderSearch(
+        return TeamBuilder(
           team: log,
           cup: _team.cup,
           focusIndex: 0,
@@ -367,7 +367,7 @@ class _BattleLogState extends State<BattleLog> {
     final newLog = await Navigator.push(
       context,
       MaterialPageRoute<LogPokemonTeam>(builder: (BuildContext context) {
-        return TeamBuilderSearch(
+        return TeamBuilder(
           team: _team.logs.last,
           cup: _team.cup,
           focusIndex: 0,
@@ -391,7 +391,7 @@ class _BattleLogState extends State<BattleLog> {
     final newLog = await Navigator.push(
       context,
       MaterialPageRoute<LogPokemonTeam>(builder: (BuildContext context) {
-        return TeamBuilderSearch(
+        return TeamBuilder(
           team: log,
           cup: _team.cup,
           focusIndex: nodeIndex,

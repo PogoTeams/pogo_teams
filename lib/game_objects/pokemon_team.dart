@@ -19,6 +19,8 @@ the app.
 class PokemonTeam {
   PokemonTeam();
 
+  String? id;
+
   // The list of 3 pokemon references that make up the team
   List<Pokemon?> pokemonTeam = List.filled(3, null);
 
@@ -254,8 +256,7 @@ class UserPokemonTeam extends PokemonTeam {
     return {
       'pokemonTeam': _pokemonTeamToJson(),
       'locked': locked,
-      'cup': cup.cupId,
-      'logs': _logsToJson()
+      'cup': cup.cupId
     };
   }
 

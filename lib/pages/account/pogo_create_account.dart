@@ -39,6 +39,8 @@ class _PogoCreateAccountState extends State<PogoCreateAccount> {
   bool _passwordHidden = true;
   bool _passwordValid = false;
 
+  String? message;
+
   void _createAccount() async {
     if (_formKey.currentState == null || !_formKey.currentState!.validate()) {
       return;
@@ -52,20 +54,17 @@ class _PogoCreateAccountState extends State<PogoCreateAccount> {
 
       if (credential.user != null) {
         Navigator.pop(context);
+      } else {
+        message = 'An unexpected error occured: failed to create an account :(';
       }
     } catch (e) {
       if (e.runtimeType == FirebaseAuthException) {
-        switch ((e as FirebaseAuthException).code) {
-          case 'email-already-in-use':
-            _formKey.currentState!.validate();
-            break;
-          case 'invalid-email':
-            break;
-          case 'weak-password':
-            break;
-        }
+        final FirebaseAuthException authException = e as FirebaseAuthException;
+        message = authException.message ?? authException.code;
       }
     }
+
+    if (message != null) _showSnackbar(message!);
   }
 
   Widget _buildPasswordTextField(
@@ -121,6 +120,16 @@ class _PogoCreateAccountState extends State<PogoCreateAccount> {
             size: Sizing.icon3,
           ),
         ],
+      ),
+    );
+  }
+
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.fixed,
+        duration: const Duration(seconds: 15),
       ),
     );
   }

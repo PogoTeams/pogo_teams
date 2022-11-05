@@ -28,11 +28,11 @@ class _PogoAccountState extends State<PogoAccount> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   bool _passwordHidden = true;
-  User? _currentUser;
 
   bool get _userIsSignedIn {
-    return _currentUser != null;
+    return _auth.currentUser != null;
   }
 
   void _createAccount() async {
@@ -52,27 +52,25 @@ class _PogoAccountState extends State<PogoAccount> {
       return;
     }
 
+    String? message;
+
     try {
       final User? user = (await _auth.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       ))
           .user;
-      setState(() => _currentUser = user);
+      if (_auth.currentUser != null) {
+        message = 'Signed in as ${_auth.currentUser!.email}';
+      }
     } catch (e) {
       if (e.runtimeType == FirebaseAuthException) {
-        switch ((e as FirebaseAuthException).code) {
-          case 'invalid-email':
-            break;
-          case 'user-disabled':
-            break;
-          case 'user-not-found':
-            break;
-          case 'wrong-password':
-            break;
-        }
+        final FirebaseAuthException authException = e as FirebaseAuthException;
+        message = authException.message ?? authException.code;
       }
     }
+
+    if (message != null) _showSnackbar(message);
   }
 
   void _signOut() async {
@@ -130,6 +128,8 @@ class _PogoAccountState extends State<PogoAccount> {
   }
 
   void _sendPasswordResetEmail() async {
+    String? message;
+
     try {
       await _auth.sendPasswordResetEmail(
         email: _emailController.text,
@@ -140,37 +140,26 @@ class _PogoAccountState extends State<PogoAccount> {
         ),
       );
 
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: Text(
-              'Password reset email successfully sent to ${_emailController.text}.',
-            ),
-            actions: <Widget>[
-              TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: Theme.of(context).textTheme.labelLarge,
-                ),
-                child: const Text('Ok'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      message = '''A password reset email was sent to ${_emailController.text}\n
+      NOTE: The provided email must be already associated with a Pogo Teams account.''';
     } catch (e) {
       if (e.runtimeType == FirebaseAuthException) {
-        switch ((e as FirebaseAuthException).code) {
-          case 'auth/invalid-email':
-            break;
-          case 'auth/user-not-found':
-            break;
-        }
+        final FirebaseAuthException authException = e as FirebaseAuthException;
+        message = authException.message ?? authException.code;
       }
     }
+
+    if (message != null) _showSnackbar(message);
+  }
+
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.fixed,
+        duration: const Duration(seconds: 15),
+      ),
+    );
   }
 
   @override
@@ -293,12 +282,10 @@ class _PogoAccountState extends State<PogoAccount> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _currentUser?.email != null
-            ? Text(
-                _currentUser!.email!,
-                style: Theme.of(context).textTheme.headline5,
-              )
-            : Container(),
+        Text(
+          _auth.currentUser?.email ?? _auth.currentUser?.displayName ?? '',
+          style: Theme.of(context).textTheme.headline5,
+        ),
         Container(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           alignment: Alignment.center,

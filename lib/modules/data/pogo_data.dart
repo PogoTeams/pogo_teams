@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // Local
 import 'gamemaster.dart';
@@ -15,6 +16,7 @@ import '../../game_objects/pokemon.dart';
 import '../../game_objects/pokemon_typing.dart';
 import '../../game_objects/ratings.dart';
 import '../../game_objects/cup.dart';
+import '../../game_objects/pokemon_team.dart';
 import '../ui/pogo_colors.dart';
 
 enum CacheType { pogoData, rankings }
@@ -228,5 +230,32 @@ class PogoData {
     }
 
     return rankedList.getRange(0, limit).toList();
+  }
+
+  static Future<String> createUserPokemonTeam(UserPokemonTeam team) async {
+    String docId = '';
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      docId = (await cloudPogoData
+              .collection('users')
+              .doc(user.uid)
+              .collection('teams')
+              .add(team.toJson()))
+          .id;
+    }
+
+    return docId;
+  }
+
+  static void updateUserPokemonTeam(UserPokemonTeam team) {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null && team.id != null) {
+      cloudPogoData
+          .collection('users')
+          .doc(user.uid)
+          .collection('teams')
+          .doc(team.id)
+          .update(team.toJson());
+    }
   }
 }
