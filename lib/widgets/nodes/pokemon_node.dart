@@ -1,4 +1,4 @@
-// Flutter Imports
+// Flutter
 import 'package:flutter/material.dart';
 
 // Local Imports
@@ -314,8 +314,8 @@ class _LargeNodeBody extends StatelessWidget {
         cup == null
             ? Container()
             : PvpStats(
-                cp: Stats.calculateCP(pokemon.stats, pokemon.getIvs(cup.cp)),
-                ivs: pokemon.getIvs(cup.cp),
+                cp: Stats.calculateCP(pokemon.stats, pokemon.selectedIVs),
+                ivs: pokemon.selectedIVs,
               ),
 
         // Typing icon(s)

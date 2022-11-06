@@ -1,11 +1,8 @@
-// Flutter Imports
-import 'package:flutter/cupertino.dart';
+// Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 // Local Imports
 import '../game_objects/pokemon_stats.dart';
-import '../modules/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

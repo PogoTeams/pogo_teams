@@ -1,4 +1,4 @@
-// Flutter Imports
+// Flutter
 import 'package:flutter/material.dart';
 import 'package:pogo_teams/pages/account/pogo_account.dart';
 
@@ -29,6 +29,7 @@ class PogoTeamsApp extends StatelessWidget {
   ) {
     return ThemeData(
       colorScheme: const ColorScheme.dark(),
+      backgroundColor: const Color.fromARGB(255, 25, 25, 25),
       scaffoldBackgroundColor: const Color.fromARGB(255, 25, 25, 25),
       canvasColor: const Color.fromARGB(255, 25, 25, 25),
       cardColor: const Color.fromARGB(255, 25, 25, 25),

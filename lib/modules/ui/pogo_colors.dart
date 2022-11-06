@@ -1,4 +1,4 @@
-// Flutter Imports
+// Flutter
 import 'package:flutter/material.dart';
 
 // Local

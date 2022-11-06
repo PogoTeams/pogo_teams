@@ -1,7 +1,7 @@
 // Flutter
 import 'package:flutter/material.dart';
 
-// Package Imports
+// Packages
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 

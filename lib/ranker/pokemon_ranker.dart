@@ -20,7 +20,7 @@ class PokemonRanker {
       if (self.pokemonId != opponentPokemon.pokemonId) {
         BattlePokemon opponent = BattlePokemon.fromPokemon(opponentPokemon);
 
-        opponent.initialize(cup.cp);
+        opponent.initializeStats(cup.cp);
         self.selectMoveset((opponent));
         opponent.selectMoveset(self);
 
@@ -83,8 +83,8 @@ class PokemonRanker {
     BattlePokemon opponent =
         BattlePokemon.fromPokemon(Gamemaster().getPokemonById(opponentId));
 
-    self.initialize(cp);
-    opponent.initialize(cp);
+    self.initializeStats(cp);
+    opponent.initializeStats(cp);
     self.selectMoveset((opponent));
     opponent.selectMoveset(self);
 

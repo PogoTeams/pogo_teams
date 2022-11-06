@@ -1,7 +1,7 @@
 // Flutter
 import 'package:flutter/material.dart';
 
-// Package Imports
+// Packages
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pogo_teams/pages/account/pogo_create_account.dart';
 import 'package:email_validator/email_validator.dart';

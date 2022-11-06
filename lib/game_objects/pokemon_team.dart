@@ -1,8 +1,6 @@
 // Local Imports
 import 'pokemon.dart';
 import 'cup.dart';
-import 'ratings.dart';
-import 'pokemon_stats.dart';
 import '../modules/data/pokemon_types.dart';
 import '../modules/data/gamemaster.dart';
 import '../modules/data/globals.dart';
@@ -218,17 +216,28 @@ class UserPokemonTeam extends PokemonTeam {
 
   // The selected PVP cup for this team
   // Defaults to Great League
-  Cup cup = Gamemaster().cups.first;
+  Cup _cup = Gamemaster().cups.first;
+  Cup get cup => _cup;
+  set cup(Cup value) {
+    _cup = value;
+
+    // initialize IVs to recommendation whenever the team's cup is set
+    for (Pokemon? pokemon in pokemonTeam) {
+      if (pokemon != null) {
+        pokemon.initializeStats(cup.cp);
+      }
+    }
+  }
+
+  // Switch to a different cup with the specified cupTitle
+  void setCupById(String cupId) {
+    cup = Gamemaster().cups.firstWhere((cup) => cup.cupId == cupId,
+        orElse: () => Gamemaster().cups.first);
+  }
 
   // A list of logged opponent teams on this team
   // The user can report wins, ties, and losses given this list
   List<LogPokemonTeam> logs = List.empty(growable: true);
-
-  // Switch to a different cup with the specified cupTitle
-  void setCup(String cupId) {
-    cup = Gamemaster().cups.firstWhere((cup) => cup.cupId == cupId,
-        orElse: () => Gamemaster().cups.first);
-  }
 
   void addLog() {
     logs.add(LogPokemonTeam());
@@ -265,7 +274,7 @@ class UserPokemonTeam extends PokemonTeam {
     locked = json['locked'];
 
     final cupTitle = json['cup'] ?? 'Great League';
-    setCup(cupTitle);
+    setCupById(cupTitle);
 
     _logsFromJson(json['logs']);
   }

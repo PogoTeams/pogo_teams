@@ -1,11 +1,10 @@
-// Flutter Imports
+// Flutter
 import 'package:flutter/material.dart';
 
 // Local Imports
 import 'pages/pogo_pages.dart';
 import 'modules/data/pogo_data.dart';
 import 'tools/pair.dart';
-import 'game_objects/user_teams.dart';
 import 'modules/ui/sizing.dart';
 import 'widgets/pogo_drawer.dart';
 
@@ -107,7 +106,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
     // App loading procedure
     return StreamBuilder<Pair<String, double>>(
       stream: PogoData.loadPogoData(),
-      initialData: Pair(a: 'Loading...', b: 0.0),
+      initialData: Pair(a: 'loading...', b: 0.0),
       builder: (context, snapshot) {
         // App is finished loading
         if (snapshot.connectionState == ConnectionState.done) {
@@ -120,7 +119,8 @@ class _PogoScaffoldState extends State<PogoScaffold>
         if (snapshot.hasData) {
           _progressBarAnimController.animateTo(
             snapshot.data!.b,
-            curve: Curves.easeInOut,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInCirc,
           );
         }
 

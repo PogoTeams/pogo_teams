@@ -1,4 +1,4 @@
-// Flutter Imports
+// Flutter
 import 'package:flutter/material.dart';
 
 // Local Imports
@@ -44,7 +44,7 @@ class _TeamEditState extends State<TeamEdit> {
     if (newCup == null) return;
 
     setState(() {
-      _builderTeam.setCup(newCup);
+      _builderTeam.setCupById(newCup);
     });
 
     PogoData.updateUserPokemonTeam(_builderTeam, updateMask: ['cup']);

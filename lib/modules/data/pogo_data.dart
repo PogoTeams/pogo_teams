@@ -1,12 +1,11 @@
 // Dart
 import 'dart:convert';
 
-// Package
+// Packages
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pogo_teams/game_objects/user_teams.dart';
 
 // Local
 import 'gamemaster.dart';
@@ -18,6 +17,7 @@ import '../../game_objects/pokemon_typing.dart';
 import '../../game_objects/ratings.dart';
 import '../../game_objects/cup.dart';
 import '../../game_objects/pokemon_team.dart';
+import '../../game_objects/user_teams.dart';
 import '../ui/pogo_colors.dart';
 
 enum CacheType { pogoData, rankings }
@@ -48,12 +48,17 @@ class PogoData {
     localVersionTimestamps['rankings'] = Map<String, dynamic>.from(
         localVersionTimestampsBox.get('rankings', defaultValue: {}));
 
-    yield Pair(a: 'loading...', b: .1);
+    yield Pair(a: 'loading...', b: .5);
 
     QuerySnapshot<Map<String, dynamic>> event =
         await cloudPogoData.collection('versionTimestamps').get();
 
-    double progress = 0;
+    int totalEntries = 0;
+    for (var doc in event.docs) {
+      totalEntries += doc.data().entries.length;
+    }
+
+    int progress = 0;
     for (var doc in event.docs) {
       for (var timestampEntry in doc.data().entries) {
         DateTime? localTimestamp;
@@ -79,8 +84,8 @@ class PogoData {
           }
         }
 
-        progress += 1;
-        yield Pair(a: 'loading...', b: progress / event.docs.length);
+        ++progress;
+        yield Pair(a: 'loading...', b: 100 * progress / totalEntries);
       }
     }
 
@@ -92,6 +97,8 @@ class PogoData {
     }
     localVersionTimestampsBox.close();
 
+    yield Pair(a: 'loading...', b: 100);
+    await Future.delayed(const Duration(milliseconds: 300));
     _loadGamemasterCollections();
   }
 

@@ -32,7 +32,7 @@ void generatePokemonRankings() async {
 
     for (Pokemon pokemon in cupPokemonList) {
       BattlePokemon battlePokemon = BattlePokemon.fromPokemon(pokemon);
-      battlePokemon.initialize(cup.cp);
+      battlePokemon.initializeStats(cup.cp);
       if (battlePokemon.cp >= Cups.cpMinimums[cup.cp]!) {
         RankingData rankingData = PokemonRanker.rank(
           battlePokemon,

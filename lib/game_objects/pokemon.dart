@@ -40,10 +40,12 @@ class Pokemon {
     required this.ultraLeagueIVs,
     FastMove? selectedFastMove,
     List<ChargeMove>? selectedChargeMoves,
+    IVs? selectedIVs,
     this.currentRating = 0,
   })  : selectedFastMove = selectedFastMove ?? FastMove.none,
         selectedChargeMoves =
-            selectedChargeMoves ?? List<ChargeMove>.filled(2, ChargeMove.none);
+            selectedChargeMoves ?? List<ChargeMove>.filled(2, ChargeMove.none),
+        selectedIVs = selectedIVs ?? IVs.empty();
 
   factory Pokemon.fromJson(
     Map<String, dynamic> json, {
@@ -249,6 +251,7 @@ class Pokemon {
       ultraLeagueIVs: other.ultraLeagueIVs,
       selectedFastMove: other.selectedFastMove,
       selectedChargeMoves: other.selectedChargeMoves,
+      selectedIVs: other.selectedIVs,
     );
   }
 
@@ -307,10 +310,14 @@ class Pokemon {
   final IVs? greatLeagueIVs;
   final IVs? ultraLeagueIVs;
 
-  IVs selectedIVs = IVs.empty();
+  IVs selectedIVs;
   FastMove selectedFastMove;
   List<ChargeMove> selectedChargeMoves;
   num currentRating;
+
+  void initializeStats(int cpCap) {
+    selectedIVs = getIvs(cpCap);
+  }
 
   // Form a string that describes this Pokemon's typing
   String get typeString => typing.toString();
@@ -742,8 +749,9 @@ class BattlePokemon extends Pokemon {
   }
 
   // Given a cp cap, give the Pokemon the ideal stats and moveset
-  void initialize(int cpCap) {
-    selectedIVs = getIvs(cpCap);
+  @override
+  void initializeStats(int cpCap) {
+    super.initializeStats(cpCap);
 
     // Calculate maxCp
     cp = Stats.calculateCP(stats, selectedIVs);

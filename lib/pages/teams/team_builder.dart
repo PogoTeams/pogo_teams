@@ -1,4 +1,4 @@
-// Flutter Imports
+// Flutter
 import 'package:flutter/material.dart';
 import 'package:pogo_teams/modules/data/pogo_data.dart';
 
@@ -146,6 +146,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
       pokemon: _filteredPokemon,
       onPokemonSelected: (pokemon) {
         setState(() {
+          pokemon.initializeStats(_cup.cp);
           _builderTeam.setPokemon(_builderIndex, pokemon);
           _updateWorkingIndex(_builderIndex + 1);
         });
@@ -197,7 +198,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
     if (newCup == null) return;
 
     setState(() {
-      (_builderTeam as UserPokemonTeam).setCup(newCup);
+      (_builderTeam as UserPokemonTeam).setCupById(newCup);
       _cup = (_builderTeam as UserPokemonTeam).cup;
       _filterCategory(_selectedCategory);
     });
