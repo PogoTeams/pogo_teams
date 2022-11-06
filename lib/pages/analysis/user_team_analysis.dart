@@ -10,6 +10,7 @@ import '../../game_objects/pokemon.dart';
 import '../../game_objects/pokemon_team.dart';
 import '../../game_objects/pokemon_typing.dart';
 import '../../modules/data/pokemon_types.dart';
+import '../../modules/data/pogo_data.dart';
 import '../../modules/ui/sizing.dart';
 import '../../tools/pair.dart';
 
@@ -41,6 +42,8 @@ class UserTeamAnalysis extends StatefulWidget {
 }
 
 class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
+  bool _initState = true;
+
   // The included type keys of the team's given cup
   late final List<String> includedTypesKeys = widget.team.cup.includedTypeKeys;
 
@@ -120,6 +123,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
           curve: Curves.decelerate,
         );
       });
+
+      PogoData.updateUserPokemonTeam(widget.team);
     }
   }
 
@@ -138,6 +143,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
         curve: Curves.decelerate,
       );
     });
+
+    PogoData.updateUserPokemonTeam(widget.team);
   }
 
   AppBar _buildAppBar() {
@@ -193,6 +200,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
                 widget.team.getPokemonTeam(),
                 widget.team.effectiveness,
               );
+
+              PogoData.updateUserPokemonTeam(widget.team);
             },
           ),
         ),
@@ -230,13 +239,6 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    _initializeExpansionPanels(widget.team.getPokemonTeam());
-  }
-
-  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
@@ -244,6 +246,11 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
 
   @override
   Widget build(BuildContext context) {
+    if (_initState) {
+      _initializeExpansionPanels(widget.team.getPokemonTeam());
+      _initState = false;
+    }
+
     return Scaffold(
       appBar: _buildAppBar(),
       body: Padding(
@@ -268,7 +275,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
             ),
 
             Text(
-              'PokemonType Coverage',
+              'Type Coverage',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline5,
             ),

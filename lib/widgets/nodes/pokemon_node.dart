@@ -154,7 +154,7 @@ class _SquareNodeBody extends StatelessWidget {
         FormattedPokemonName(
           name: pokemon.name,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline5,
+          style: Theme.of(context).textTheme.headline6,
           suffixStyle: Theme.of(context).textTheme.bodyMedium,
         ),
 

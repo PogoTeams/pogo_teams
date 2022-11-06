@@ -1,4 +1,6 @@
+// Local
 import 'pokemon.dart';
+import '../modules/data/pokemon_types.dart';
 
 class Cup {
   Cup({
@@ -54,7 +56,7 @@ class Cup {
   }
 
   List<String> get includedTypeKeys {
-    if (includeFilters == null) return [];
+    if (includeFilters == null) return PokemonTypes.typeIndexMap.keys.toList();
 
     for (CupFilter filter in includeFilters!) {
       if (filter.filterType == FilterType.type) {

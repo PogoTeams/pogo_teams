@@ -22,12 +22,13 @@ class PokemonTeam {
   PokemonTeam();
 
   String? id;
-
-  // The list of 3 pokemon references that make up the team
-  List<Pokemon?> pokemonTeam = List.filled(3, null);
+  int sortOrder = 0;
 
   // If true, the team cannot be removed or changed
   bool locked = false;
+
+  // The list of 3 pokemon references that make up the team
+  List<Pokemon?> pokemonTeam = List.filled(3, null);
 
   // A list of this pokemon team's net effectiveness
   List<double> effectiveness = List.generate(
@@ -174,22 +175,23 @@ class UserPokemonTeam extends PokemonTeam {
 
     for (Map<String, dynamic> pokemonEntry
         in List<Map<String, dynamic>>.from(json['pokemonTeam'])) {
-      final pokemonIndex = pokemonEntry['index'] as int;
-      pokemonTeam[pokemonIndex] = Pokemon.fromUserTeamJson(json);
+      final pokemonIndex = pokemonEntry['pokemonIndex'] as int;
+      pokemonTeam[pokemonIndex] = Pokemon.fromUserTeamJson(pokemonEntry);
     }
 
     return UserPokemonTeam()
       ..cup = Gamemaster().getCupById(json['cup'] as String)
       ..locked = json['locked'] as bool
+      ..sortOrder = json['sortOrder'] as int
       ..pokemonTeam = pokemonTeam;
   }
 
-  Map<String, dynamic> toJson(int teamIndex) {
+  Map<String, dynamic> toJson() {
     return {
-      'teamIndex': teamIndex,
-      'teamSize': pokemonTeam.length,
-      'locked': locked,
       'cup': cup.cupId,
+      'locked': locked,
+      'sortOrder': sortOrder,
+      'teamSize': pokemonTeam.length,
       'pokemonTeam': _pokemonTeamToJson(),
     };
   }
@@ -208,7 +210,6 @@ class UserPokemonTeam extends PokemonTeam {
   }
 
   // Copy over the cup, and Pokemon team
-  // Saves to db in PokemonTeam
   void fromBuilderCopy(UserPokemonTeam other) {
     cup = other.cup;
     setTeamSize(other.pokemonTeam.length);

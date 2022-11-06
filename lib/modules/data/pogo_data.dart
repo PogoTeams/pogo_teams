@@ -242,7 +242,7 @@ class PogoData {
           .collection('users')
           .doc(user.uid)
           .collection('teams')
-          .orderBy('teamIndex')
+          .orderBy('sortOrder')
           .get();
 
       for (QueryDocumentSnapshot<Map<String, dynamic>> doc in teamsData.docs) {
@@ -264,7 +264,7 @@ class PogoData {
               .collection('users')
               .doc(user.uid)
               .collection('teams')
-              .add(team.toJson(teamIndex)))
+              .add(team.toJson()))
           .id;
     }
 
@@ -272,17 +272,23 @@ class PogoData {
   }
 
   static void updateUserPokemonTeam(
-    UserPokemonTeam team,
-    int teamIndex,
-  ) {
+    UserPokemonTeam team, {
+    List<String>? updateMask,
+  }) {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null && team.id != null) {
+      final teamJson = team.toJson();
+
+      if (updateMask != null) {
+        teamJson.removeWhere((key, value) => !updateMask.contains(key));
+      }
+
       cloudPogoData
           .collection('users')
           .doc(user.uid)
           .collection('teams')
           .doc(team.id)
-          .update(team.toJson(teamIndex));
+          .update(teamJson);
     }
   }
 

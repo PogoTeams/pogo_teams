@@ -134,7 +134,7 @@ class _TeamSwapState extends State<TeamSwap> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              backgroundColor: Colors.red[400]!,
+              backgroundColor: const Color.fromARGB(255, 239, 83, 80),
             ),
 
             // Confirm exit button

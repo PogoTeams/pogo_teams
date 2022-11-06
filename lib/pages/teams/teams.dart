@@ -212,6 +212,10 @@ class _TeamsState extends State<Teams> {
     setState(() {
       _teams[teamIndex].toggleLock();
     });
+    PogoData.updateUserPokemonTeam(
+      _teams[teamIndex],
+      updateMask: ['locked'],
+    );
   }
 
   // Add a new empty team
@@ -242,7 +246,7 @@ class _TeamsState extends State<Teams> {
     if (newTeam != null) {
       setState(() {
         _teams[teamIndex].fromBuilderCopy(newTeam as UserPokemonTeam);
-        PogoData.updateUserPokemonTeam(_teams[teamIndex], teamIndex);
+        PogoData.updateUserPokemonTeam(_teams[teamIndex]);
       });
     }
   }

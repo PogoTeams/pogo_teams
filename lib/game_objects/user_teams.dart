@@ -12,13 +12,12 @@ class UserTeams {
   final List<UserPokemonTeam> _builderTeams = List.empty(growable: true);
   int teamsCount = 0;
 
-  // Getter
   UserPokemonTeam operator [](int index) => _builderTeams[index];
-
-  UserPokemonTeam? get last => _builderTeams.last;
+  int get length => _builderTeams.length;
 
   // Add a new empty team
   void addTeam(UserPokemonTeam team) {
+    team.sortOrder = teamsCount;
     _builderTeams.add(team);
     ++teamsCount;
   }

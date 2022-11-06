@@ -41,10 +41,13 @@ class CoverageGrids extends StatelessWidget {
             padding: EdgeInsets.all(Sizing.blockSizeHorizontal * 2.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Colors.red[900]!, Colors.red[400]!],
+                colors: [
+                  Color.fromARGB(255, 183, 28, 28),
+                  Color.fromARGB(255, 239, 83, 80),
+                ],
                 tileMode: TileMode.clamp,
               ),
             ),

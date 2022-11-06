@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'team_builder.dart';
 import '../analysis/analysis.dart';
 import '../../modules/ui/sizing.dart';
+import '../../modules/data/pogo_data.dart';
 import '../../widgets/nodes/pokemon_node.dart';
 import '../../widgets/dropdowns/cup_dropdown.dart';
 import '../../widgets/dropdowns/team_size_dropdown.dart';
@@ -45,6 +46,8 @@ class _TeamEditState extends State<TeamEdit> {
     setState(() {
       _builderTeam.setCup(newCup);
     });
+
+    PogoData.updateUserPokemonTeam(_builderTeam, updateMask: ['cup']);
   }
 
   void _onTeamSizeChanged(int? newSize) {
@@ -53,18 +56,28 @@ class _TeamEditState extends State<TeamEdit> {
     setState(() {
       _builderTeam.setTeamSize(newSize);
     });
+
+    PogoData.updateUserPokemonTeam(_builderTeam, updateMask: ['teamSize']);
   }
 
   void _onPokemonChanged(int index, Pokemon? newPokemon) {
     setState(() {
       _builderTeam.setPokemon(index, newPokemon);
     });
+
+    PogoData.updateUserPokemonTeam(_builderTeam);
   }
 
-  void _onTeamChanged(List<Pokemon?> newPokemonTeam) {
+  void _onMoveChanged() {
+    PogoData.updateUserPokemonTeam(_builderTeam);
+  }
+
+  void _onPokemonTeamChanged(List<Pokemon?> newPokemonTeam) {
     setState(() {
       _builderTeam.setPokemonTeam(newPokemonTeam);
     });
+
+    PogoData.updateUserPokemonTeam(_builderTeam);
   }
 
   void _onSearchPressed(int nodeIndex) async {
@@ -83,6 +96,8 @@ class _TeamEditState extends State<TeamEdit> {
       setState(() {
         _builderTeam.fromBuilderCopy(_newTeam);
       });
+
+      PogoData.updateUserPokemonTeam(_builderTeam);
     }
   }
 
@@ -98,7 +113,7 @@ class _TeamEditState extends State<TeamEdit> {
       }),
     );
 
-    if (newTeam != null) _onTeamChanged(newTeam);
+    if (newTeam != null) _onPokemonTeamChanged(newTeam);
   }
 
   AppBar _buildAppBar() {
@@ -202,7 +217,7 @@ class _TeamEditState extends State<TeamEdit> {
                     PokemonNode.large(
                       pokemon: pokemonTeam[index],
                       onEmptyPressed: () => _onSearchPressed(index),
-                      onMoveChanged: () {},
+                      onMoveChanged: _onMoveChanged,
                       cup: _builderTeam.cup,
                       footer: _buildNodeFooter(pokemonTeam[index], index),
                       padding: EdgeInsets.only(
@@ -221,7 +236,7 @@ class _TeamEditState extends State<TeamEdit> {
               : PokemonNode.large(
                   pokemon: pokemonTeam[index],
                   onEmptyPressed: () => _onSearchPressed(index),
-                  onMoveChanged: () {},
+                  onMoveChanged: _onMoveChanged,
                   cup: _builderTeam.cup,
                   footer: _buildNodeFooter(pokemonTeam[index], index),
                   padding: EdgeInsets.only(

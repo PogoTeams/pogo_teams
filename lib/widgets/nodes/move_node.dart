@@ -49,7 +49,7 @@ class MoveNode extends StatelessWidget {
       alignment: Alignment.center,
       child: Text(
         move.name,
-        style: Theme.of(context).textTheme.bodyMedium,
+        style: Theme.of(context).textTheme.bodySmall,
       ),
       margin: EdgeInsets.only(
         top: Sizing.blockSizeVertical * .7,
