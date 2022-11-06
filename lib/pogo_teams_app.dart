@@ -13,26 +13,21 @@ import 'pogo_scaffold.dart';
 class PogoTeamsApp extends StatelessWidget {
   const PogoTeamsApp({Key? key}) : super(key: key);
 
-  ThemeData _buildBaseTheme() {
-    return ThemeData(
-      fontFamily: 'Futura',
-    );
-  }
+  static const String _fontFamily = 'Futura';
 
   ThemeData _buildLightTheme(
     BuildContext context,
-    ThemeData baseThemeData,
   ) {
-    return baseThemeData.copyWith(
+    return ThemeData(
+      fontFamily: _fontFamily,
       colorScheme: const ColorScheme.light(),
     );
   }
 
   ThemeData _buildDarkTheme(
     BuildContext context,
-    ThemeData baseThemeData,
   ) {
-    return baseThemeData.copyWith(
+    return ThemeData(
       colorScheme: const ColorScheme.dark(),
       scaffoldBackgroundColor: const Color.fromARGB(255, 25, 25, 25),
       canvasColor: const Color.fromARGB(255, 25, 25, 25),
@@ -45,7 +40,7 @@ class PogoTeamsApp extends StatelessWidget {
         actionTextColor: Colors.white,
         contentTextStyle: TextStyle(
           color: Colors.white,
-          fontFamily: 'Futura',
+          fontFamily: _fontFamily,
         ),
       ),
       dialogTheme: const DialogTheme(
@@ -77,7 +72,7 @@ class PogoTeamsApp extends StatelessWidget {
         iconColor: const Color(0xFF02A1F9),
       ),
       textTheme: Theme.of(context).textTheme.apply(
-            fontFamily: 'Futura',
+            fontFamily: _fontFamily,
             displayColor: Colors.white,
             bodyColor: Colors.white,
             decorationColor: Colors.white,
@@ -105,12 +100,10 @@ class PogoTeamsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData baseThemeData = _buildBaseTheme();
-
     return MaterialApp(
       title: 'Pogo Teams',
-      theme: _buildLightTheme(context, baseThemeData),
-      darkTheme: _buildDarkTheme(context, baseThemeData),
+      theme: _buildLightTheme(context),
+      darkTheme: _buildDarkTheme(context),
       themeMode: ThemeMode.dark,
 
       home: const PogoScaffold(),

@@ -34,7 +34,12 @@ class Teams extends StatefulWidget {
 }
 
 class _TeamsState extends State<Teams> {
-  final UserTeams _teams = UserTeams();
+  late UserTeams _teams = UserTeams();
+
+  void _loadTeams() async {
+    _teams = await PogoData.getUserTeams();
+    setState(() {});
+  }
 
   // Build the list of TeamNodes, with the necessary callbacks
   Widget _buildTeamsList(BuildContext context) {
@@ -139,7 +144,10 @@ class _TeamsState extends State<Teams> {
   // Remove the team at specified index
   void _onClearTeam(int teamIndex) {
     setState(() {
-      _teams.removeTeamAt(teamIndex);
+      final removedTeam = _teams.removeTeamAt(teamIndex);
+      if (removedTeam.id != null) {
+        PogoData.deleteUserPokemonTeam(removedTeam.id!);
+      }
     });
   }
 
@@ -208,9 +216,11 @@ class _TeamsState extends State<Teams> {
 
   // Add a new empty team
   void _onAddTeam() async {
-    UserPokemonTeam newTeam = _teams.addTeam();
-    newTeam.id = await PogoData.createUserPokemonTeam(newTeam);
-    setState(() {});
+    UserPokemonTeam newTeam =
+        await PogoData.createUserPokemonTeam(_teams.teamsCount);
+    setState(() {
+      _teams.addTeam(newTeam);
+    });
   }
 
   // Navigate to the team build search page, with focus on the specified
@@ -232,7 +242,7 @@ class _TeamsState extends State<Teams> {
     if (newTeam != null) {
       setState(() {
         _teams[teamIndex].fromBuilderCopy(newTeam as UserPokemonTeam);
-        PogoData.updateUserPokemonTeam(newTeam);
+        PogoData.updateUserPokemonTeam(_teams[teamIndex], teamIndex);
       });
     }
   }
@@ -243,6 +253,12 @@ class _TeamsState extends State<Teams> {
     if (mounted) {
       super.setState(fn);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTeams();
   }
 
   @override

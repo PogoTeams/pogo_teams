@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pogo_teams/game_objects/user_teams.dart';
 
 // Local
 import 'gamemaster.dart';
@@ -232,22 +233,48 @@ class PogoData {
     return rankedList.getRange(0, limit).toList();
   }
 
-  static Future<String> createUserPokemonTeam(UserPokemonTeam team) async {
-    String docId = '';
+  static Future<UserTeams> getUserTeams() async {
+    final teams = UserTeams();
     User? user = FirebaseAuth.instance.currentUser;
+
     if (user != null) {
-      docId = (await cloudPogoData
+      final teamsData = await cloudPogoData
+          .collection('users')
+          .doc(user.uid)
+          .collection('teams')
+          .orderBy('teamIndex')
+          .get();
+
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in teamsData.docs) {
+        teams.addTeamJson(doc.data(), doc.id);
+      }
+    }
+
+    return teams;
+  }
+
+  static Future<UserPokemonTeam> createUserPokemonTeam(
+    int teamIndex,
+  ) async {
+    final UserPokemonTeam team = UserPokemonTeam();
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      team.id = (await cloudPogoData
               .collection('users')
               .doc(user.uid)
               .collection('teams')
-              .add(team.toJson()))
+              .add(team.toJson(teamIndex)))
           .id;
     }
 
-    return docId;
+    return team;
   }
 
-  static void updateUserPokemonTeam(UserPokemonTeam team) {
+  static void updateUserPokemonTeam(
+    UserPokemonTeam team,
+    int teamIndex,
+  ) {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null && team.id != null) {
       cloudPogoData
@@ -255,7 +282,19 @@ class PogoData {
           .doc(user.uid)
           .collection('teams')
           .doc(team.id)
-          .update(team.toJson());
+          .update(team.toJson(teamIndex));
+    }
+  }
+
+  static void deleteUserPokemonTeam(String teamId) {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      cloudPogoData
+          .collection('users')
+          .doc(user.uid)
+          .collection('teams')
+          .doc(teamId)
+          .delete();
     }
   }
 }

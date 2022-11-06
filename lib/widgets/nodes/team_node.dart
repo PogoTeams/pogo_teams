@@ -60,13 +60,13 @@ class TeamNode extends StatelessWidget {
         children: [
           Text(
             cup.name,
-            style: Theme.of(context).textTheme.headline5?.apply(
+            style: Theme.of(context).textTheme.headline6?.apply(
                   fontStyle: FontStyle.italic,
                 ),
           ),
           Text(
             'Win Rate : ${(team as UserPokemonTeam).getWinRate()} %',
-            style: Theme.of(context).textTheme.headline5?.apply(
+            style: Theme.of(context).textTheme.bodyLarge?.apply(
                   fontStyle: FontStyle.italic,
                 ),
           ),

@@ -15,16 +15,22 @@ class UserTeams {
   // Getter
   UserPokemonTeam operator [](int index) => _builderTeams[index];
 
+  UserPokemonTeam? get last => _builderTeams.last;
+
   // Add a new empty team
-  UserPokemonTeam addTeam() {
-    _builderTeams.add(UserPokemonTeam());
+  void addTeam(UserPokemonTeam team) {
+    _builderTeams.add(team);
     ++teamsCount;
-    return _builderTeams.last;
+  }
+
+  void addTeamJson(Map<String, dynamic> teamJson, String id) {
+    _builderTeams.add(UserPokemonTeam.fromJson(teamJson)..id = id);
+    ++teamsCount;
   }
 
   // Remove a team at the specified index
-  void removeTeamAt(int index) async {
-    _builderTeams.removeAt(index);
+  UserPokemonTeam removeTeamAt(int index) {
     --teamsCount;
+    return _builderTeams.removeAt(index);
   }
 }

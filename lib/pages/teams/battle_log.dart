@@ -233,7 +233,7 @@ class _BattleLogState extends State<BattleLog> {
           children: [
             Text(
               'Log Opponent Team',
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headline6,
             ),
             SizedBox(
               width: Sizing.blockSizeHorizontal * 5.0,

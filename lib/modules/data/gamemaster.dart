@@ -86,13 +86,16 @@ class Gamemaster {
     cups.sort((c1, c2) => c1.cp - c2.cp);
   }
 
-  Pokemon getPokemonById(String pokemonId) => pokemonMap[pokemonId]!;
-
   FastMove getFastMoveById(String moveId) =>
       _fastMoveMap[moveId] ?? FastMove.none;
 
   ChargeMove getChargeMoveById(String moveId) =>
       _chargeMoveMap[moveId] ?? ChargeMove.none;
+
+  Pokemon getPokemonById(String pokemonId) => pokemonMap[pokemonId]!;
+
+  Cup getCupById(String cupId) =>
+      cups.firstWhere((cup) => cup.cupId == cupId, orElse: () => cups.first);
 
   List<Pokemon> getCupFilteredPokemonList(Cup cup) {
     return pokemonList

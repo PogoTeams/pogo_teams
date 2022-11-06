@@ -252,6 +252,40 @@ class Pokemon {
     );
   }
 
+  factory Pokemon.fromUserTeamJson(Map<String, dynamic> json) {
+    Pokemon pokemon =
+        Pokemon.from(Gamemaster().getPokemonById(json['pokemonId']));
+
+    String fastMoveId = json['moveset']['fastMove'] as String;
+    pokemon.selectedFastMove = Gamemaster().getFastMoveById(fastMoveId);
+
+    List<String> chargeMoveIds =
+        List<String>.from(json['moveset']['chargeMoves']);
+    pokemon.selectedChargeMoves = [
+      Gamemaster().getChargeMoveById(chargeMoveIds.first),
+      Gamemaster().getChargeMoveById(chargeMoveIds.last),
+    ];
+
+    pokemon.selectedIVs = IVs.fromJson(json['ivs']);
+
+    return pokemon;
+  }
+
+  Map<String, dynamic> toUserTeamJson(int pokemonIndex) {
+    return {
+      'pokemonId': pokemonId,
+      'pokemonIndex': pokemonIndex,
+      'ivs': selectedIVs.toJson(),
+      'moveset': {
+        'fastMove': selectedFastMove.moveId,
+        'chargeMoves': [
+          selectedChargeMoves.first.moveId,
+          selectedChargeMoves.last.moveId,
+        ],
+      }
+    };
+  }
+
   final int dex;
   final String pokemonId;
   final String name;
@@ -273,6 +307,7 @@ class Pokemon {
   final IVs? greatLeagueIVs;
   final IVs? ultraLeagueIVs;
 
+  IVs selectedIVs = IVs.empty();
   FastMove selectedFastMove;
   List<ChargeMove> selectedChargeMoves;
   num currentRating;
@@ -586,7 +621,7 @@ class BattlePokemon extends Pokemon {
       ultraLeagueIVs: other.ultraLeagueIVs,
     );
 
-    copy.ivs = other.ivs;
+    copy.selectedIVs = other.selectedIVs;
     copy.cp = other.cp;
     copy.maxHp = other.maxHp;
     copy.currentHp = other.currentHp;
@@ -612,7 +647,6 @@ class BattlePokemon extends Pokemon {
   }
 
   late final num maxHp;
-  IVs ivs = IVs.empty();
   num cp = 0;
   num currentHp = 0.0;
   int currentShields = 0;
@@ -709,13 +743,13 @@ class BattlePokemon extends Pokemon {
 
   // Given a cp cap, give the Pokemon the ideal stats and moveset
   void initialize(int cpCap) {
-    ivs = getIvs(cpCap);
+    selectedIVs = getIvs(cpCap);
 
     // Calculate maxCp
-    cp = Stats.calculateCP(stats, ivs);
+    cp = Stats.calculateCP(stats, selectedIVs);
 
     // Calculate battle hp (stamina)
-    maxHp = Stats.calculateMaxHp(stats, ivs);
+    maxHp = Stats.calculateMaxHp(stats, selectedIVs);
   }
 
   // Bring that bar back
@@ -834,15 +868,15 @@ class BattlePokemon extends Pokemon {
 
   num get effectiveAttack {
     return atkBuff *
-        (stats.atk + ivs.atk) *
-        Stats.getCpMultiplier(ivs.level) *
+        (stats.atk + selectedIVs.atk) *
+        Stats.getCpMultiplier(selectedIVs.level) *
         (isShadow ? Stats.shadowAtkMultiplier : 1);
   }
 
   num get effectiveDefense {
     return defBuff *
-        (stats.def + ivs.def) *
-        Stats.getCpMultiplier(ivs.level) *
+        (stats.def + selectedIVs.def) *
+        Stats.getCpMultiplier(selectedIVs.level) *
         (isShadow ? Stats.shadowDefMultiplier : 1);
   }
 }
@@ -869,11 +903,11 @@ class RankedPokemon extends Pokemon {
     required littleCupIVs,
     required greatLeagueIVs,
     required ultraLeagueIVs,
-    required this.ivs,
+    required selectedIVs,
     required this.ratings,
     required selectedFastMove,
     required selectedChargeMoves,
-  })  : cp = Stats.calculateCP(baseStats, ivs),
+  })  : cp = Stats.calculateCP(baseStats, selectedIVs),
         super(
           dex: dex,
           pokemonId: pokemonId,
@@ -897,6 +931,7 @@ class RankedPokemon extends Pokemon {
           ultraLeagueIVs: ultraLeagueIVs,
           currentRating: ratings.overall,
         ) {
+    this.selectedIVs = selectedIVs;
     this.selectedFastMove = selectedFastMove;
     this.selectedChargeMoves = selectedChargeMoves;
   }
@@ -931,14 +966,13 @@ class RankedPokemon extends Pokemon {
       littleCupIVs: other.littleCupIVs,
       greatLeagueIVs: other.greatLeagueIVs,
       ultraLeagueIVs: other.ultraLeagueIVs,
-      ivs: ivs,
+      selectedIVs: ivs,
       ratings: ratings,
       selectedFastMove: selectedFastMove,
       selectedChargeMoves: selectedChargeMoves,
     );
   }
 
-  final IVs ivs;
   final int cp;
   final Ratings ratings;
 }

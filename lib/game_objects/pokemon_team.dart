@@ -1,6 +1,8 @@
 // Local Imports
 import 'pokemon.dart';
 import 'cup.dart';
+import 'ratings.dart';
+import 'pokemon_stats.dart';
 import '../modules/data/pokemon_types.dart';
 import '../modules/data/gamemaster.dart';
 import '../modules/data/globals.dart';
@@ -152,15 +154,11 @@ class PokemonTeam {
   List<Map<String, dynamic>> _pokemonTeamToJson() {
     List<Map<String, dynamic>> teamJson = List.empty(growable: true);
 
-    /*
     for (int i = 0; i < pokemonTeam.length; ++i) {
-      if (pokemonTeam[i] == null) {
-        teamJson.add({'pokemon_$i': null});
-      } else {
-        teamJson.add({'pokemon_$i': pokemonTeam[i]!.toStateJson()});
+      if (pokemonTeam[i] != null) {
+        teamJson.add(pokemonTeam[i]!.toUserTeamJson(i));
       }
     }
-    */
 
     return teamJson;
   }
@@ -169,6 +167,32 @@ class PokemonTeam {
 // A user's team
 class UserPokemonTeam extends PokemonTeam {
   UserPokemonTeam();
+
+  factory UserPokemonTeam.fromJson(Map<String, dynamic> json) {
+    List<Pokemon?> pokemonTeam =
+        List<Pokemon?>.filled(json['teamSize'] as int, null);
+
+    for (Map<String, dynamic> pokemonEntry
+        in List<Map<String, dynamic>>.from(json['pokemonTeam'])) {
+      final pokemonIndex = pokemonEntry['index'] as int;
+      pokemonTeam[pokemonIndex] = Pokemon.fromUserTeamJson(json);
+    }
+
+    return UserPokemonTeam()
+      ..cup = Gamemaster().getCupById(json['cup'] as String)
+      ..locked = json['locked'] as bool
+      ..pokemonTeam = pokemonTeam;
+  }
+
+  Map<String, dynamic> toJson(int teamIndex) {
+    return {
+      'teamIndex': teamIndex,
+      'teamSize': pokemonTeam.length,
+      'locked': locked,
+      'cup': cup.cupId,
+      'pokemonTeam': _pokemonTeamToJson(),
+    };
+  }
 
   // Make a copy of other, but with no save to db callback
   // This is used in team editing, to allow for a confirm to save working copy
@@ -250,14 +274,6 @@ class UserPokemonTeam extends PokemonTeam {
       logs.add(LogPokemonTeam());
       logs.last.fromJson(logsJson[i]);
     }
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'pokemonTeam': _pokemonTeamToJson(),
-      'locked': locked,
-      'cup': cup.cupId
-    };
   }
 
   // Build and return a json serializable list of the logged opponent teams

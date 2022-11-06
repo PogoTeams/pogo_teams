@@ -55,13 +55,13 @@ class _PogoAccountState extends State<PogoAccount> {
     String? message;
 
     try {
-      final User? user = (await _auth.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
-      ))
-          .user;
+      );
       if (_auth.currentUser != null) {
         message = 'Signed in as ${_auth.currentUser!.email}';
+        setState(() {});
       }
     } catch (e) {
       if (e.runtimeType == FirebaseAuthException) {
@@ -284,7 +284,7 @@ class _PogoAccountState extends State<PogoAccount> {
       children: [
         Text(
           _auth.currentUser?.email ?? _auth.currentUser?.displayName ?? '',
-          style: Theme.of(context).textTheme.headline5,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         Container(
           padding: const EdgeInsets.symmetric(vertical: 16.0),

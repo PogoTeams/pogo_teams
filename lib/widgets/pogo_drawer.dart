@@ -170,8 +170,8 @@ class PogoDrawer extends StatelessWidget {
             ),
 
             Text(
-              _auth.currentUser?.email == null ? '' : _auth.currentUser!.email!,
-              style: Theme.of(context).textTheme.headline5?.apply(
+              _auth.currentUser?.email ?? '',
+              style: Theme.of(context).textTheme.bodyMedium?.apply(
                     fontStyle: FontStyle.italic,
                   ),
             ),

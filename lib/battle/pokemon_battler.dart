@@ -404,9 +404,9 @@ class PokemonBattler {
           'energy delta : ${self.selectedChargeMoves.first.energyDelta}',
       'charge2 : ${self.selectedChargeMoves.last.name} : ${self.selectedChargeMoves.last.damage} : '
           'energy delta : ${self.selectedChargeMoves.last.energyDelta}',
-      'level   : ${self.ivs.level}',
+      'level   : ${self.selectedIVs.level}',
       'cp      : ${self.cp}',
-      'ivs     : ${self.ivs.atk}  ${self.ivs.def}  ${self.ivs.hp}'
+      'ivs     : ${self.selectedIVs.atk}  ${self.selectedIVs.def}  ${self.selectedIVs.hp}'
     ]);
     DebugCLI.printMulti(opponent.name, [
       'fast : ${opponent.selectedFastMove.name} : ${opponent.selectedFastMove.damage} : '
@@ -415,9 +415,9 @@ class PokemonBattler {
           'energy delta : ${opponent.selectedChargeMoves.first.energyDelta}',
       'charge2 : ${opponent.selectedChargeMoves.last.name} : ${opponent.selectedChargeMoves.last.damage} : '
           'energy delta : ${opponent.selectedChargeMoves.last.energyDelta}',
-      'level   : ${opponent.ivs.level}',
+      'level   : ${opponent.selectedIVs.level}',
       'cp      : ${opponent.cp}',
-      'ivs     : ${opponent.ivs.atk}  ${opponent.ivs.def}  ${opponent.ivs.hp}'
+      'ivs     : ${opponent.selectedIVs.atk}  ${opponent.selectedIVs.def}  ${opponent.selectedIVs.hp}'
     ]);
   }
 
