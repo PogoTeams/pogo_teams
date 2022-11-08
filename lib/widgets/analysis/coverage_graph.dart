@@ -67,7 +67,7 @@ class CoverageGraph extends StatelessWidget {
                 gradient: const LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
-                  colors: [Colors.red, Colors.green],
+                  colors: [Colors.deepOrange, Color(0xBF29F19C)],
                   tileMode: TileMode.clamp,
                 ),
                 borderRadius: BorderRadius.circular(20),

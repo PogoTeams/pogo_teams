@@ -9,6 +9,7 @@ import 'logs_analysis.dart';
 import '../../game_objects/pokemon.dart';
 import '../../game_objects/pokemon_team.dart';
 import '../../game_objects/pokemon_typing.dart';
+import '../../game_objects/opponent_teams.dart';
 import '../../modules/data/pokemon_types.dart';
 import '../../tools/pair.dart';
 
@@ -32,8 +33,8 @@ class Analysis extends StatefulWidget {
   }) : super(key: key);
 
   final UserPokemonTeam team;
-  final LogPokemonTeam? opponentTeam;
-  final List<LogPokemonTeam>? opponentTeams;
+  final OpponentPokemonTeam? opponentTeam;
+  final OpponentPokemonTeams? opponentTeams;
 
   @override
   _AnalysisState createState() => _AnalysisState();
@@ -99,7 +100,7 @@ class _AnalysisState extends State<Analysis> {
 
   // For the logged opponent teams, calculate the net coverage
   void _calculateNetCoverage(
-    List<PokemonTeam> logs,
+    OpponentPokemonTeams logs,
     List<String> includedTypesKeys,
   ) {
     // The count of individually logged Pokemon in all the logs
@@ -115,7 +116,7 @@ class _AnalysisState extends State<Analysis> {
 
     // Foreach callback
     // Get the effectiveness of a single log, and accumulate it to the coverage
-    void _accumulateLog(log) {
+    void _accumulateLog(OpponentPokemonTeam log) {
       final List<Pokemon> pokemonTeam = log.getPokemonTeam();
       loggedPokemonCount += pokemonTeam.length;
 
@@ -139,7 +140,7 @@ class _AnalysisState extends State<Analysis> {
       }
     }
 
-    logs.forEach(_accumulateLog);
+    logs.teamsList.forEach(_accumulateLog);
 
     // Filter to the key values
     defenseThreats = defenseThreats

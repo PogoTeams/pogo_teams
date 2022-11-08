@@ -1,6 +1,5 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:pogo_teams/pages/account/pogo_account.dart';
 
 // Local Imports
 import 'pogo_scaffold.dart';

@@ -98,7 +98,7 @@ class PogoDrawer extends StatelessWidget {
                   ),
                   */
 
-                  // Teams page option
+                  // Teams
                   ListTile(
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -119,7 +119,28 @@ class PogoDrawer extends StatelessWidget {
                     },
                   ),
 
-                  // Rankings page option
+                  // Battle logs
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          PogoPages.battleLogs.displayName,
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
+                        SizedBox(
+                          width: Sizing.blockSizeHorizontal * 3.0,
+                        ),
+                        PogoPages.battleLogs.icon,
+                      ],
+                    ),
+                    onTap: () {
+                      onNavSelected(PogoPages.battleLogs);
+                      Navigator.pop(context);
+                    },
+                  ),
+
+                  // Rankings
                   ListTile(
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.start,

@@ -220,8 +220,7 @@ class _TeamsState extends State<Teams> {
 
   // Add a new empty team
   void _onAddTeam() async {
-    UserPokemonTeam newTeam =
-        await PogoData.createUserPokemonTeam(_teams.teamsCount);
+    final newTeam = await PogoData.updateUserPokemonTeam(UserPokemonTeam());
     setState(() {
       _teams.addTeam(newTeam);
     });

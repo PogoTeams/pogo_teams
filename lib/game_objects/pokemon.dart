@@ -255,7 +255,7 @@ class Pokemon {
     );
   }
 
-  factory Pokemon.fromUserTeamJson(Map<String, dynamic> json) {
+  factory Pokemon.fromTeamJson(Map<String, dynamic> json) {
     Pokemon pokemon =
         Pokemon.from(Gamemaster().getPokemonById(json['pokemonId']));
 

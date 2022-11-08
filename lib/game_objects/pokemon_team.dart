@@ -1,9 +1,12 @@
 // Local Imports
+import 'package:pogo_teams/game_objects/opponent_teams.dart';
+
 import 'pokemon.dart';
 import 'cup.dart';
 import '../modules/data/pokemon_types.dart';
 import '../modules/data/gamemaster.dart';
 import '../modules/data/globals.dart';
+import '../enums/battle_outcome.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -33,6 +36,27 @@ class PokemonTeam {
     Globals.typeCount,
     (index) => 0.0,
   );
+
+  // The selected PVP cup for this team
+  // Defaults to Great League
+  Cup _cup = Gamemaster().cups.first;
+  Cup get cup => _cup;
+  set cup(Cup value) {
+    _cup = value;
+
+    // initialize IVs to recommendation whenever the team's cup is set
+    for (Pokemon? pokemon in pokemonTeam) {
+      if (pokemon != null) {
+        pokemon.initializeStats(cup.cp);
+      }
+    }
+  }
+
+  // Switch to a different cup with the specified cupTitle
+  void setCupById(String cupId) {
+    cup = Gamemaster().cups.firstWhere((cup) => cup.cupId == cupId,
+        orElse: () => Gamemaster().cups.first);
+  }
 
   // Make a copy of the newTeam, keeping the size of the original team
   void setPokemonTeam(List<Pokemon?> newPokemonTeam) {
@@ -134,21 +158,6 @@ class PokemonTeam {
     locked = !locked;
   }
 
-  void _pokemonTeamFromJson(List<dynamic> teamJson) {
-    setTeamSize(teamJson.length);
-
-    /*
-    for (int i = 0; i < teamJson.length; ++i) {
-      pokemonTeam[i] = Pokemon.fromStateJson(
-        teamJson[i]['pokemon_$i'],
-        globals.gamemaster.pokemonIdMap,
-      );
-    }
-    */
-
-    _updateEffectiveness();
-  }
-
   // Build and return a json serializable list of the Pokemon Team
   List<Map<String, dynamic>> _pokemonTeamToJson() {
     List<Map<String, dynamic>> teamJson = List.empty(growable: true);
@@ -174,13 +183,14 @@ class UserPokemonTeam extends PokemonTeam {
     for (Map<String, dynamic> pokemonEntry
         in List<Map<String, dynamic>>.from(json['pokemonTeam'])) {
       final pokemonIndex = pokemonEntry['pokemonIndex'] as int;
-      pokemonTeam[pokemonIndex] = Pokemon.fromUserTeamJson(pokemonEntry);
+      pokemonTeam[pokemonIndex] = Pokemon.fromTeamJson(pokemonEntry);
     }
 
     return UserPokemonTeam()
       ..cup = Gamemaster().getCupById(json['cup'] as String)
       ..locked = json['locked'] as bool
       ..sortOrder = json['sortOrder'] as int
+      ..winRate = json['winRate'] as double
       ..pokemonTeam = pokemonTeam;
   }
 
@@ -190,62 +200,38 @@ class UserPokemonTeam extends PokemonTeam {
       'locked': locked,
       'sortOrder': sortOrder,
       'teamSize': pokemonTeam.length,
+      'winRate': winRate,
       'pokemonTeam': _pokemonTeamToJson(),
     };
-  }
-
-  // Make a copy of other, but with no save to db callback
-  // This is used in team editing, to allow for a confirm to save working copy
-  static UserPokemonTeam builderCopy(UserPokemonTeam other) {
-    final copy = UserPokemonTeam();
-    copy.locked = other.locked;
-    copy.cup = other.cup;
-    copy.logs = List.from(other.logs);
-    copy.setTeamSize(other.pokemonTeam.length);
-    copy.setPokemonTeam(other.pokemonTeam);
-
-    return copy;
   }
 
   // Copy over the cup, and Pokemon team
   void fromBuilderCopy(UserPokemonTeam other) {
     cup = other.cup;
+    winRate = other.winRate;
     setTeamSize(other.pokemonTeam.length);
     setPokemonTeam(other.pokemonTeam);
   }
 
-  // The selected PVP cup for this team
-  // Defaults to Great League
-  Cup _cup = Gamemaster().cups.first;
-  Cup get cup => _cup;
-  set cup(Cup value) {
-    _cup = value;
-
-    // initialize IVs to recommendation whenever the team's cup is set
-    for (Pokemon? pokemon in pokemonTeam) {
-      if (pokemon != null) {
-        pokemon.initializeStats(cup.cp);
-      }
-    }
-  }
-
-  // Switch to a different cup with the specified cupTitle
-  void setCupById(String cupId) {
-    cup = Gamemaster().cups.firstWhere((cup) => cup.cupId == cupId,
-        orElse: () => Gamemaster().cups.first);
+  // Make a copy of other, but with no save to db callback
+  // This is used in team editing, to allow for a confirm to save working copy
+  static UserPokemonTeam builderCopy(UserPokemonTeam other) {
+    return UserPokemonTeam()
+      ..locked = other.locked
+      ..cup = other.cup
+      ..winRate = other.winRate
+      ..setTeamSize(other.pokemonTeam.length)
+      ..setPokemonTeam(other.pokemonTeam);
   }
 
   // A list of logged opponent teams on this team
   // The user can report wins, ties, and losses given this list
-  List<LogPokemonTeam> logs = List.empty(growable: true);
+  List<OpponentPokemonTeam> logs = List.empty(growable: true);
 
-  void addLog() {
-    logs.add(LogPokemonTeam());
-    logs.last.locked = true;
-    logs.last.setTeamSize(pokemonTeam.length);
-  }
+  double winRate = 0.0;
+  String get winRateString => winRate.toStringAsFixed(2);
 
-  void setLogAt(int index, LogPokemonTeam newLog) {
+  void setLogAt(int index, OpponentPokemonTeam newLog) {
     logs[index] = newLog;
   }
 
@@ -255,99 +241,101 @@ class UserPokemonTeam extends PokemonTeam {
 
   // Calculate the average win rate for this Pokemon Team
   // Return a string representation for display
-  String getWinRate() {
-    if (logs.isEmpty) return '0.0';
+  void updateWinRate(OpponentPokemonTeams logs) {
+    winRate = 0.0;
 
-    double winRate = 0.0;
+    if (logs.length != 0) {
+      for (OpponentPokemonTeam log in logs.teamsList) {
+        if (log.isWin()) ++winRate;
+      }
 
-    for (int i = 0; i < logs.length; ++i) {
-      if (logs[i].isWin()) ++winRate;
+      winRate = 100 * winRate / logs.length;
     }
-
-    winRate /= logs.length;
-
-    return (winRate * 100.0).toStringAsFixed(2);
-  }
-
-  void fromJson(json) {
-    _pokemonTeamFromJson(json['pokemonTeam']);
-    locked = json['locked'];
-
-    final cupTitle = json['cup'] ?? 'Great League';
-    setCupById(cupTitle);
-
-    _logsFromJson(json['logs']);
-  }
-
-  void _logsFromJson(logsJson) {
-    for (int i = 0; i < logsJson.length; ++i) {
-      logs.add(LogPokemonTeam());
-      logs.last.fromJson(logsJson[i]);
-    }
-  }
-
-  // Build and return a json serializable list of the logged opponent teams
-  List<Map<String, dynamic>> _logsToJson() {
-    List<Map<String, dynamic>> logsJson = List.empty(growable: true);
-
-    for (int i = 0; i < logs.length; ++i) {
-      logsJson.add(logs[i].toJson());
-    }
-
-    return logsJson;
   }
 }
 
 // A logged opponent team
-class LogPokemonTeam extends PokemonTeam {
-  LogPokemonTeam();
+class OpponentPokemonTeam extends PokemonTeam {
+  OpponentPokemonTeam() {
+    locked = true;
+  }
+
+  factory OpponentPokemonTeam.fromJson(Map<String, dynamic> json) {
+    int teamSize = json['teamSize'] as int;
+    List<Pokemon?> pokemonTeam = List<Pokemon?>.filled(teamSize, null);
+
+    for (Map<String, dynamic> pokemonEntry
+        in List<Map<String, dynamic>>.from(json['pokemonTeam'])) {
+      final pokemonIndex = pokemonEntry['pokemonIndex'] as int;
+      pokemonTeam[pokemonIndex] = Pokemon.fromTeamJson(pokemonEntry);
+    }
+
+    return OpponentPokemonTeam()
+      ..sortOrder = json['sortOrder'] as int
+      ..userTeamId = json['userTeamId'] as String
+      ..cup = Gamemaster().getCupById(json['cupId'] as String)
+      ..battleOutcome = fromOutcomeName(json['battleOutcome'] as String)
+      ..locked = json['locked'] as bool
+      ..setPokemonTeam(pokemonTeam);
+  }
+
+  static BattleOutcome fromOutcomeName(String name) {
+    switch (name) {
+      case 'win':
+        return BattleOutcome.win;
+      case 'loss':
+        return BattleOutcome.loss;
+      case 'tie':
+        return BattleOutcome.tie;
+      default:
+        return BattleOutcome.win;
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'sortOrder': sortOrder,
+      'userTeamId': userTeamId,
+      'cupId': cup.cupId,
+      'teamSize': pokemonTeam.length,
+      'battleOutcome': battleOutcome.name,
+      'locked': locked,
+      'pokemonTeam': _pokemonTeamToJson()
+    };
+  }
 
   // Make a copy of other, but with no save to db callback
   // This is used in team editing, to allow for a confirm to save working copy
-  static LogPokemonTeam builderCopy(LogPokemonTeam other) {
-    final copy = LogPokemonTeam();
-    copy._winLossKey = other._winLossKey;
-    copy.locked = other.locked;
-    copy.setTeamSize(other.pokemonTeam.length);
-    copy.setPokemonTeam(other.pokemonTeam);
-
-    return copy;
+  static OpponentPokemonTeam builderCopy(OpponentPokemonTeam other) {
+    return OpponentPokemonTeam()
+      ..sortOrder = other.sortOrder
+      ..userTeamId = other.userTeamId
+      ..cup = other.cup
+      ..battleOutcome = other.battleOutcome
+      ..locked = other.locked
+      ..setPokemonTeam(other.pokemonTeam);
   }
 
   // Copy over the winLossKey, and Pokemon team
   // Saves to db in PokemonTeam
-  void fromBuilderCopy(LogPokemonTeam other) {
-    _winLossKey = other._winLossKey;
+  void fromBuilderCopy(OpponentPokemonTeam other) {
+    sortOrder = other.sortOrder;
+    userTeamId = other.userTeamId;
+    cup = other.cup;
+    battleOutcome = other.battleOutcome;
     setTeamSize(other.pokemonTeam.length);
     setPokemonTeam(other.pokemonTeam);
   }
+
+  String userTeamId = '';
 
   // For logging opponent teams, this value can either be :
   // Win
   // Tie
   // Loss
-  String _winLossKey = 'Win';
-  String get winLossKey => _winLossKey;
-
-  void setWinLossKey(String key) {
-    _winLossKey = key;
-  }
+  BattleOutcome battleOutcome = BattleOutcome.win;
 
   bool isWin() {
-    return _winLossKey == 'Win';
-  }
-
-  void fromJson(json) {
-    _winLossKey = json['_winLossKey'] ?? 'Win';
-    _pokemonTeamFromJson(json['pokemonTeam']);
-    locked = json['locked'] ?? true;
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'winLossKey': _winLossKey,
-      'pokemonTeam': _pokemonTeamToJson(),
-      'locked': locked
-    };
+    return battleOutcome == BattleOutcome.win;
   }
 }

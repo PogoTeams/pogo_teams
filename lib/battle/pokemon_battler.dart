@@ -3,13 +3,7 @@ import '../game_objects/pokemon.dart';
 import 'battle_result.dart';
 import '../modules/data/globals.dart';
 import '../modules/data/debug_cli.dart';
-
-enum BattleOutcome {
-  win,
-  loss,
-  tie,
-  none,
-}
+import '../enums/battle_outcome.dart';
 
 class PokemonBattler {
   static const List<int> shieldScenarios = [0, 1, 2];
@@ -422,24 +416,17 @@ class PokemonBattler {
   }
 
   static void debugPrintBattleOutcome(BattleResult results) {
-    String selfOutcome;
-    String opponentOutcome;
+    String selfOutcome = results.outcome.name;
+    String opponentOutcome = '';
     switch (results.outcome) {
       case BattleOutcome.tie:
-        selfOutcome = 'tie';
         opponentOutcome = 'tie';
         break;
       case BattleOutcome.loss:
-        selfOutcome = 'loss';
         opponentOutcome = 'win';
         break;
       case BattleOutcome.win:
-        selfOutcome = 'win';
         opponentOutcome = 'loss';
-        break;
-      case BattleOutcome.none:
-        selfOutcome = 'none';
-        opponentOutcome = 'none';
         break;
     }
     DebugCLI.printHeader('Outcome');

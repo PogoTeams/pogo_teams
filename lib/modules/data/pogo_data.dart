@@ -18,6 +18,7 @@ import '../../game_objects/ratings.dart';
 import '../../game_objects/cup.dart';
 import '../../game_objects/pokemon_team.dart';
 import '../../game_objects/user_teams.dart';
+import '../../game_objects/opponent_teams.dart';
 import '../ui/pogo_colors.dart';
 
 enum CacheType { pogoData, rankings }
@@ -260,52 +261,142 @@ class PogoData {
     return teams;
   }
 
-  static Future<UserPokemonTeam> createUserPokemonTeam(
-    int teamIndex,
-  ) async {
-    final UserPokemonTeam team = UserPokemonTeam();
+  static Future<UserPokemonTeam> updateUserPokemonTeam(
+    UserPokemonTeam team, {
+    List<String>? updateMask,
+  }) async {
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      team.id = (await cloudPogoData
-              .collection('users')
-              .doc(user.uid)
-              .collection('teams')
-              .add(team.toJson()))
-          .id;
+      // create
+      if (team.id == null || team.id!.isEmpty) {
+        team.id = (await cloudPogoData
+                .collection('users')
+                .doc(user.uid)
+                .collection('teams')
+                .add(team.toJson()))
+            .id;
+      }
+
+      // update
+      else {
+        final teamJson = team.toJson();
+
+        if (updateMask != null) {
+          teamJson.removeWhere((key, value) => !updateMask.contains(key));
+        }
+
+        cloudPogoData
+            .collection('users')
+            .doc(user.uid)
+            .collection('teams')
+            .doc(team.id)
+            .update(teamJson);
+      }
     }
 
     return team;
   }
 
-  static void updateUserPokemonTeam(
-    UserPokemonTeam team, {
-    List<String>? updateMask,
-  }) {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null && team.id != null) {
-      final teamJson = team.toJson();
+  static void deleteUserPokemonTeam(String? teamId) {
+    if (teamId == null || teamId.isEmpty) return;
 
-      if (updateMask != null) {
-        teamJson.removeWhere((key, value) => !updateMask.contains(key));
-      }
-
-      cloudPogoData
-          .collection('users')
-          .doc(user.uid)
-          .collection('teams')
-          .doc(team.id)
-          .update(teamJson);
-    }
-  }
-
-  static void deleteUserPokemonTeam(String teamId) {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       cloudPogoData
           .collection('users')
           .doc(user.uid)
           .collection('teams')
+          .doc(teamId)
+          .delete();
+    }
+  }
+
+  static Future<OpponentPokemonTeams> getOpponentPokemonTeams(
+    String? teamId,
+  ) async {
+    OpponentPokemonTeams teams = OpponentPokemonTeams();
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      QuerySnapshot<Map<String, dynamic>> teamsData;
+
+      // all logged opponents
+      if (teamId == null) {
+        teamsData = await cloudPogoData
+            .collection('users')
+            .doc(user.uid)
+            .collection('battle_logs')
+            .orderBy('sortOrder')
+            .get();
+      }
+
+      // user team logged opponents
+      else {
+        teamsData = await cloudPogoData
+            .collection('users')
+            .doc(user.uid)
+            .collection('battle_logs')
+            .where('userTeamId', isEqualTo: teamId)
+            .get();
+      }
+
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in teamsData.docs) {
+        teams.addTeamJson(doc.data(), doc.id);
+      }
+
+      teams.teamsList.sort((a, b) => b.sortOrder - a.sortOrder);
+    }
+
+    return teams;
+  }
+
+  static Future<OpponentPokemonTeam> updateOpponentPokemonTeam(
+    OpponentPokemonTeam team, {
+    List<String>? updateMask,
+  }) async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // create
+      if (team.id == null || team.id!.isEmpty) {
+        team.id = (await cloudPogoData
+                .collection('users')
+                .doc(user.uid)
+                .collection('battle_logs')
+                .add(team.toJson()))
+            .id;
+      }
+
+      // update
+      else {
+        final teamJson = team.toJson();
+
+        if (updateMask != null) {
+          teamJson.removeWhere((key, value) => !updateMask.contains(key));
+        }
+
+        await cloudPogoData
+            .collection('users')
+            .doc(user.uid)
+            .collection('battle_logs')
+            .doc(team.id)
+            .update(teamJson);
+      }
+    }
+
+    return team;
+  }
+
+  static void deleteOpponentPokemonTeam(String? teamId) {
+    if (teamId == null || teamId.isEmpty) return;
+
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      cloudPogoData
+          .collection('users')
+          .doc(user.uid)
+          .collection('battle_logs')
           .doc(teamId)
           .delete();
     }

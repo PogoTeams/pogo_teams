@@ -65,7 +65,7 @@ class TeamNode extends StatelessWidget {
                 ),
           ),
           Text(
-            'Win Rate : ${(team as UserPokemonTeam).getWinRate()} %',
+            'Win Rate : ${(team as UserPokemonTeam).winRateString} %',
             style: Theme.of(context).textTheme.bodyLarge?.apply(
                   fontStyle: FontStyle.italic,
                 ),

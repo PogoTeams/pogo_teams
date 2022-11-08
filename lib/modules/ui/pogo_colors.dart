@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Local
 import '../../game_objects/pokemon_typing.dart';
 import '../../game_objects/move.dart';
+import '../../enums/battle_outcome.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -61,5 +62,25 @@ class PogoColors {
 
   static void addCupColor(String cupId, String cupColorHex) {
     _cupColors[cupId] = Color(int.parse(cupColorHex));
+  }
+
+  static Color getBattleOutcomeColor(BattleOutcome outcome) {
+    Color color;
+
+    switch (outcome) {
+      case BattleOutcome.win:
+        color = const Color.fromARGB(188, 9, 210, 126);
+        break;
+
+      case BattleOutcome.loss:
+        color = Colors.deepOrange;
+        break;
+
+      case BattleOutcome.tie:
+        color = Colors.grey;
+        break;
+    }
+
+    return color;
   }
 }

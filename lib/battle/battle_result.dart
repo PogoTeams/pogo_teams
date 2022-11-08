@@ -2,6 +2,7 @@
 import 'pokemon_battler.dart';
 import '../game_objects/pokemon.dart';
 import '../modules/data/debug_cli.dart';
+import '../enums/battle_outcome.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -43,7 +44,7 @@ class BattleResult {
           opponent.selectedChargeMoves.last.moveId,
         ],
       },
-      'outcome': battleOutcomeString,
+      'outcome': outcome.name,
       'rating': self.currentRating,
       'selectedFastMove': self.selectedFastMove.moveId,
       'selectedChargeMoves': [
@@ -55,24 +56,11 @@ class BattleResult {
 
   final BattlePokemon self;
   final BattlePokemon opponent;
-  BattleOutcome outcome = BattleOutcome.none;
+  BattleOutcome outcome = BattleOutcome.win;
   List<BattleTurnSnapshot>? timeline;
 
   num get ratingDifference {
     return self.currentRating - opponent.currentRating;
-  }
-
-  String get battleOutcomeString {
-    switch (outcome) {
-      case BattleOutcome.loss:
-        return 'loss';
-      case BattleOutcome.tie:
-        return 'tie';
-      case BattleOutcome.win:
-        return 'win';
-      case BattleOutcome.none:
-        return 'none';
-    }
   }
 
   void debugPrintTimeline() {

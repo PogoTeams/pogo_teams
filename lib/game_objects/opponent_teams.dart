@@ -3,32 +3,34 @@ import 'pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
-All user created teams are managed by this abstraction. All user db operations
-are also handled here as well.
 -------------------------------------------------------------------------------
 */
 
-class UserTeams {
-  final List<UserPokemonTeam> _teamsList = List.empty(growable: true);
+class OpponentPokemonTeams {
+  final List<OpponentPokemonTeam> _teamsList = List.empty(growable: true);
+  List<OpponentPokemonTeam> get teamsList => _teamsList;
+
   int teamsCount = 0;
 
-  UserPokemonTeam operator [](int index) => _teamsList[index];
+  OpponentPokemonTeam operator [](int index) => _teamsList[index];
+  void operator []=(int index, OpponentPokemonTeam value) =>
+      _teamsList[index] = value;
   int get length => _teamsList.length;
 
   // Add a new empty team
-  void addTeam(UserPokemonTeam team) {
+  void addTeam(OpponentPokemonTeam team) {
     team.sortOrder = teamsCount;
     _teamsList.add(team);
     ++teamsCount;
   }
 
   void addTeamJson(Map<String, dynamic> teamJson, String id) {
-    _teamsList.add(UserPokemonTeam.fromJson(teamJson)..id = id);
+    _teamsList.add(OpponentPokemonTeam.fromJson(teamJson)..id = id);
     ++teamsCount;
   }
 
   // Remove a team at the specified index
-  UserPokemonTeam removeTeamAt(int index) {
+  OpponentPokemonTeam removeTeamAt(int index) {
     --teamsCount;
     return _teamsList.removeAt(index);
   }

@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
+import '../../enums/battle_outcome.dart';
 import '../../modules/ui/sizing.dart';
+import '../../modules/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -15,34 +17,10 @@ backlog.
 class WinLossNode extends StatelessWidget {
   const WinLossNode({
     Key? key,
-    required this.winLossKey,
+    required this.outcome,
   }) : super(key: key);
 
-  final String winLossKey;
-
-  Color _getColor() {
-    Color color;
-
-    switch (winLossKey) {
-      case 'Win':
-        color = Colors.green;
-        break;
-
-      case 'Tie':
-        color = Colors.grey;
-        break;
-
-      case 'Loss':
-        color = Colors.red;
-        break;
-
-      default:
-        color = Colors.green;
-        break;
-    }
-
-    return color;
-  }
+  final BattleOutcome outcome;
 
   @override
   Widget build(BuildContext context) {
@@ -56,15 +34,15 @@ class WinLossNode extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: Sizing.blockSizeHorizontal * .4,
+          width: Sizing.blockSizeHorizontal * .5,
         ),
-        borderRadius: BorderRadius.circular(100),
-        color: _getColor(),
+        borderRadius: BorderRadius.circular(25),
+        color: PogoColors.getBattleOutcomeColor(outcome),
       ),
 
       // Cup dropdown button
       child: Text(
-        winLossKey,
+        outcome.name,
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.headline5,
       ),

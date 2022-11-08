@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../../modules/ui/sizing.dart';
+import '../../modules/ui/pogo_colors.dart';
+import '../../enums/battle_outcome.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -19,8 +21,8 @@ class WinLossDropdown extends StatefulWidget {
     required this.width,
   }) : super(key: key);
 
-  final String selectedOption;
-  final void Function(String?) onChanged;
+  final BattleOutcome selectedOption;
+  final void Function(BattleOutcome?) onChanged;
   final double width;
 
   @override
@@ -29,45 +31,20 @@ class WinLossDropdown extends StatefulWidget {
 
 class _WinLossDropdownState extends State<WinLossDropdown>
     with AutomaticKeepAliveClientMixin {
-  final List<String> optionStrings = ['Win', 'Tie', 'Loss'];
-
-  // List of dropdown menu items
-  late final options = optionStrings.map<DropdownMenuItem<String>>(
-    (String optionString) {
-      return DropdownMenuItem(
-        value: optionString,
-        child: Center(
-          child: Text(
-            optionString,
-            style: Theme.of(context).textTheme.headline5,
+  List<DropdownMenuItem<BattleOutcome>> _buildOptions() {
+    return BattleOutcome.values.map<DropdownMenuItem<BattleOutcome>>(
+      (BattleOutcome outcome) {
+        return DropdownMenuItem(
+          value: outcome,
+          child: Center(
+            child: Text(
+              outcome.name,
+              style: Theme.of(context).textTheme.headline5,
+            ),
           ),
-        ),
-      );
-    },
-  ).toList();
-
-  Color _getColor() {
-    Color color;
-
-    switch (widget.selectedOption) {
-      case 'Win':
-        color = Colors.green;
-        break;
-
-      case 'Tie':
-        color = Colors.grey;
-        break;
-
-      case 'Loss':
-        color = Colors.red;
-        break;
-
-      default:
-        color = Colors.green;
-        break;
-    }
-
-    return color;
+        );
+      },
+    ).toList();
   }
 
   @override
@@ -90,7 +67,7 @@ class _WinLossDropdownState extends State<WinLossDropdown>
           width: Sizing.blockSizeHorizontal * .4,
         ),
         borderRadius: BorderRadius.circular(100.0),
-        color: _getColor(),
+        color: PogoColors.getBattleOutcomeColor(widget.selectedOption),
       ),
 
       // Cup dropdown button
@@ -101,7 +78,7 @@ class _WinLossDropdownState extends State<WinLossDropdown>
           icon: const Icon(Icons.arrow_drop_down_circle),
           style: DefaultTextStyle.of(context).style,
           onChanged: widget.onChanged,
-          items: options,
+          items: _buildOptions(),
         ),
       ),
     );

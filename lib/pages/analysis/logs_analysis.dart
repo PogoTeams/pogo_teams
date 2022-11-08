@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:pogo_teams/game_objects/opponent_teams.dart';
 
 // Local Imports
 import '../../widgets/analysis/type_coverage.dart';
@@ -30,7 +31,7 @@ class LogsAnalysis extends StatelessWidget {
   }) : super(key: key);
 
   final UserPokemonTeam team;
-  final List<PokemonTeam> logs;
+  final OpponentPokemonTeams logs;
   final List<Pair<PokemonType, double>> defenseThreats;
   final List<Pair<PokemonType, double>> offenseCoverage;
   final List<Pair<PokemonType, double>> netEffectiveness;
@@ -43,7 +44,7 @@ class LogsAnalysis extends StatelessWidget {
           // Page title
           Text(
             'Logged Opponents Net Analysis',
-            style: Theme.of(context).textTheme.headline5?.apply(
+            style: Theme.of(context).textTheme.headline6?.apply(
                   fontStyle: FontStyle.italic,
                 ),
           ),

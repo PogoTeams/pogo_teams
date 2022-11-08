@@ -126,7 +126,6 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
         // Rebuild progress bar
         return Scaffold(
-          backgroundColor: Theme.of(context).backgroundColor,
           body: Padding(
             padding: EdgeInsets.only(
               left: Sizing.blockSizeHorizontal * 2.0,
@@ -164,6 +163,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
                         ),
                       ),
                     ),
+                    PogoPages.teams.icon,
                   ],
                 ),
               ],

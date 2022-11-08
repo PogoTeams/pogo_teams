@@ -107,14 +107,14 @@ class _TeamBuilderState extends State<TeamBuilder> {
   }
 
   Widget _buildTeamNodeFooter() {
-    if (_builderTeam.runtimeType == LogPokemonTeam) {
+    if (_builderTeam.runtimeType == OpponentPokemonTeam) {
       return WinLossDropdown(
-        selectedOption: (_builderTeam as LogPokemonTeam).winLossKey,
-        onChanged: (winLossKey) {
-          if (winLossKey == null) return;
+        selectedOption: (_builderTeam as OpponentPokemonTeam).battleOutcome,
+        onChanged: (battleOutcome) {
+          if (battleOutcome == null) return;
 
           setState(() {
-            (_builderTeam as LogPokemonTeam).setWinLossKey(winLossKey);
+            (_builderTeam as OpponentPokemonTeam).battleOutcome = battleOutcome;
           });
         },
         width: Sizing.screenWidth,
@@ -244,7 +244,8 @@ class _TeamBuilderState extends State<TeamBuilder> {
     }
     // Building a log team
     else {
-      _builderTeam = LogPokemonTeam.builderCopy(widget.team as LogPokemonTeam);
+      _builderTeam =
+          OpponentPokemonTeam.builderCopy(widget.team as OpponentPokemonTeam);
     }
 
     // Set the starting index of the team edit
