@@ -2,7 +2,7 @@
 import 'dart:math';
 
 // Local
-import '../../game_objects/pokemon_stats.dart';
+import '../../pogo_objects/pokemon_stats.dart';
 import 'globals.dart';
 
 /*
@@ -42,7 +42,7 @@ class Stats {
         10, ((stats.hp + ivs.hp) * Stats.getCpMultiplier(ivs.level)).floor());
   }
 
-  static int calculateMinEncounterCp(BaseStats stats, int minLevel) {
+  static int calculateMinEncounterCp(BaseStats stats, double minLevel) {
     return calculateCP(
         stats,
         IVs(

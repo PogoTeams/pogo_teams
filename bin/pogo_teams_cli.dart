@@ -1,11 +1,10 @@
-// Dart
-import 'dart:io';
-
 // Local
 import 'package:pogo_teams/mapping/niantic_snapshot.dart';
-import 'package:pogo_teams/mapping/cloud_writes.dart';
 import 'package:pogo_teams/mapping/mapping_tools.dart';
 import 'package:pogo_teams/ranker/ranker_main.dart';
+import 'package:pogo_teams/pogo_objects/move.dart';
+
+import 'package:isar/isar.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -27,30 +26,12 @@ not suffixed with '_NORMAL'.
 */
 
 void main(List<String> arguments) async {
+  await Isar.initializeIsarCore(download: true);
   if (arguments.isEmpty) return;
 
   switch (arguments[0]) {
     case 'niantic-snapshot':
       mapNianticToSnapshot();
-      break;
-    case 'snapshot-cloud-writes':
-      CloudWrites.mapSnapshotDiffToCloudWrites();
-      break;
-    case 'cups-cloud-writes':
-      CloudWrites.mapCupsToCloudWrites();
-      break;
-    case 'rankings-cloud-writes':
-      CloudWrites.mapRankingsToCloudWrites();
-      break;
-    case 'cloud-writes-all':
-      CloudWrites.mapAllCloudWrites();
-      break;
-    case 'cloud-push':
-      if (arguments.length > 1) {
-        CloudWrites.cloudPush(arguments[1]);
-      } else {
-        stderr.writeln('cloud-push: no api key was specified');
-      }
       break;
     case 'alternate-forms':
       buildAlternateFormsList();

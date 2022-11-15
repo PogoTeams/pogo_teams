@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 // Local Imports
 import 'rankings.dart';
 import 'battle_logs.dart';
-import 'account/pogo_account.dart';
 import 'teams/teams.dart';
 import '../modules/ui/sizing.dart';
 
-enum PogoPages { teams, battleLogs, rankings, account }
+enum PogoPages { teams, battleLogs, rankings }
 
 extension PogoPagesExt on PogoPages {
   String get displayName {
@@ -19,8 +18,6 @@ extension PogoPagesExt on PogoPages {
         return 'Battle Logs';
       case PogoPages.rankings:
         return 'Rankings';
-      case PogoPages.account:
-        return 'Account';
     }
   }
 
@@ -41,11 +38,6 @@ extension PogoPagesExt on PogoPages {
           Icons.bar_chart,
           size: Sizing.icon3,
         );
-      case PogoPages.account:
-        return Icon(
-          Icons.account_circle,
-          size: Sizing.icon3,
-        );
     }
   }
 
@@ -57,8 +49,6 @@ extension PogoPagesExt on PogoPages {
         return const BattleLogs();
       case PogoPages.rankings:
         return const Rankings();
-      case PogoPages.account:
-        return const PogoAccount();
     }
   }
 }

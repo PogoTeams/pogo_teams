@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local
-import '../../game_objects/pokemon_typing.dart';
-import '../../game_objects/move.dart';
+import '../../pogo_objects/pokemon_typing.dart';
+import '../../pogo_objects/move.dart';
 import '../../enums/battle_outcome.dart';
 
 /*
@@ -43,7 +43,7 @@ class PogoColors {
       _typeColors[typeId] ?? defaultTypeColor;
 
   static List<Color> getPokemonTypingColors(PokemonTyping typing) {
-    if (typing.isMonoType) {
+    if (typing.isMonoType()) {
       return [_typeColors[typing.typeA.typeId] ?? defaultTypeColor];
     }
 

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import '../../widgets/analysis/type_coverage.dart';
 import '../../widgets/pokemon_list.dart';
 import '../../widgets/nodes/pokemon_node.dart';
-import '../../game_objects/pokemon.dart';
-import '../../game_objects/pokemon_typing.dart';
-import '../../game_objects/pokemon_team.dart';
+import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/pokemon_typing.dart';
+import '../../pogo_objects/pokemon_team.dart';
 import '../../modules/data/pogo_data.dart';
 import '../../modules/ui/sizing.dart';
 import '../../tools/pair.dart';
@@ -132,7 +132,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
               netEffectiveness: netEffectiveness,
               defenseThreats: defenseThreats,
               offenseCoverage: offenseCoverage,
-              includedTypesKeys: team.cup.includedTypeKeys,
+              includedTypesKeys: team.cup.includedTypeKeys(),
             ),
 
             // Spacer

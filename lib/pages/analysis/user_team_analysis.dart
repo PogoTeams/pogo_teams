@@ -6,9 +6,9 @@ import '../../widgets/analysis/swap_list.dart';
 import '../../widgets/analysis/type_coverage.dart';
 import '../../widgets/nodes/pokemon_node.dart';
 import '../teams/team_swap.dart';
-import '../../game_objects/pokemon.dart';
-import '../../game_objects/pokemon_team.dart';
-import '../../game_objects/pokemon_typing.dart';
+import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/pokemon_team.dart';
+import '../../pogo_objects/pokemon_typing.dart';
 import '../../modules/data/pokemon_types.dart';
 import '../../modules/data/pogo_data.dart';
 import '../../modules/ui/sizing.dart';
@@ -45,7 +45,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
   bool _initState = true;
 
   // The included type keys of the team's given cup
-  late final List<String> includedTypesKeys = widget.team.cup.includedTypeKeys;
+  late final List<String> includedTypesKeys =
+      widget.team.cup.includedTypeKeys();
 
   // The list of expansion panels
   List<PanelStates> _expansionPanels = [];

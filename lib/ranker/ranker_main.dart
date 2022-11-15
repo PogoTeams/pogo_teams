@@ -4,31 +4,37 @@ import 'dart:math';
 // Local
 import 'pokemon_ranker.dart';
 import 'ranking_data.dart';
-import '../game_objects/pokemon.dart';
-import '../game_objects/cup.dart';
+import '../pogo_objects/pokemon.dart';
+import '../pogo_objects/cup.dart';
 import '../tools/json_tools.dart';
-import '../modules/data/gamemaster.dart';
+import '../modules/data/pogo_data.dart';
 import '../modules/data/debug_cli.dart';
 import '../modules/data/cups.dart';
+
+/*
+-------------------------------------------------------------------- @PogoTeams
+-------------------------------------------------------------------------------
+*/
 
 void generatePokemonRankings() async {
   final Map<String, dynamic>? snapshot =
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  Gamemaster().loadFromJson(snapshot);
+  await PogoData.init();
+  await PogoData.loadFromJson(snapshot);
 
   Stopwatch stopwatch = Stopwatch();
   stopwatch.start();
 
-  for (Cup cup in Gamemaster().cups) {
+  for (Cup cup in PogoData.cups) {
     int bestOverallRating = 0;
     int bestLeadRating = 0;
     int bestSwitchRating = 0;
     int bestCloserRating = 0;
 
     List<RankingData> rankings = [];
-    List<Pokemon> cupPokemonList = Gamemaster().getCupFilteredPokemonList(cup);
+    List<Pokemon> cupPokemonList = PogoData.getCupFilteredPokemonList(cup);
 
     for (Pokemon pokemon in cupPokemonList) {
       BattlePokemon battlePokemon = BattlePokemon.fromPokemon(pokemon);
@@ -96,7 +102,7 @@ void generatePokemonRankingsTest(
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  Gamemaster().loadFromJson(snapshot);
+  PogoData.loadFromJson(snapshot);
 
   PokemonRanker.rankTesting(selfId, opponentId, cp);
 }
@@ -107,7 +113,7 @@ void debugPrintPokemonRatings(
   String cupName,
 ) {
   DebugCLI.printMulti(
-    '${pokemon.dex} | ${pokemon.name}${(pokemon.isShadow ? ' (Shadow)' : '')}',
+    '${pokemon.dex} | ${pokemon.name}${(pokemon.isShadow() ? ' (Shadow)' : '')}',
     [
       'overall : ${rankingData.ratings.overall}',
       'lead    : ${rankingData.ratings.lead}',

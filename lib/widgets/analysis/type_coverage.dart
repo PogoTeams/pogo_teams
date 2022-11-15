@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'coverage_graph.dart';
 import 'coverage_grids.dart';
 import '../../tools/pair.dart';
-import '../../game_objects/pokemon_typing.dart';
+import '../../pogo_objects/pokemon_typing.dart';
 import '../../modules/ui/sizing.dart';
 
 /*

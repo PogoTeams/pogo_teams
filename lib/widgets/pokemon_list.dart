@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../game_objects/pokemon.dart';
+import '../pogo_objects/pokemon.dart';
 import 'nodes/pokemon_node.dart';
 import '../modules/ui/sizing.dart';
 

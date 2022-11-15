@@ -1,9 +1,15 @@
 // Local
-import '../../game_objects/pokemon_typing.dart';
-import '../../game_objects/pokemon.dart';
+import '../../pogo_objects/pokemon_typing.dart';
+import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/move.dart';
 import '../../tools/pair.dart';
 import '../../tools/logic.dart';
 import 'globals.dart';
+
+/*
+-------------------------------------------------------------------- @PogoTeams
+-------------------------------------------------------------------------------
+*/
 
 class PokemonTypes {
   // type effectiveness damage scales
@@ -101,7 +107,7 @@ class PokemonTypes {
 
     // Accumulate team defensive type effectiveness for all types
     for (int i = 0; i < teamLen; ++i) {
-      final List<double> effectiveness = team[i].defenseEffectiveness;
+      final List<double> effectiveness = team[i].defenseEffectiveness();
 
       for (int k = 0; k < Globals.typeCount; ++k) {
         netEffectiveness[k] += effectiveness[k];
@@ -147,22 +153,23 @@ class PokemonTypes {
 
   // Get a list of offense coverage given a team's moveset
   static List<Pair<PokemonType, double>> getOffenseCoverage(
-    List<Pokemon> team,
+    List<RankedPokemon> team,
     List<String> includedTypesKeys,
   ) {
-    List<Pair<PokemonType, double>> offenseCoverage =
+    List<Pair<PokemonType, double>> offenseCoveragePairs =
         generateTypeValuePairedList(includedTypesKeys);
 
     for (int i = 0; i < team.length; ++i) {
-      final List<double> movesetEffectiveness = team[i].offenseCoverage;
+      final List<double> movesetEffectiveness =
+          offenseCoverage(team[i].moveset());
 
       for (int k = 0; k < includedTypesKeys.length; ++k) {
-        offenseCoverage[k].b +=
+        offenseCoveragePairs[k].b +=
             movesetEffectiveness[typeIndexMap[includedTypesKeys[k]]!];
       }
     }
 
-    return offenseCoverage;
+    return offenseCoveragePairs;
   }
 
   // Get the effectiveness given the defense effectiveness and offense coverage
@@ -207,7 +214,7 @@ class PokemonTypes {
 
     // Accumulate only the included types
     for (int i = 0; i < types.length; ++i) {
-      final List<double> effectiveness = types[i].defenseEffectiveness;
+      final List<double> effectiveness = types[i].defenseEffectiveness();
 
       for (int i = 0; i < includedTypesKeys.length; ++i) {
         netTypeEffectiveness[i].b +=
@@ -223,6 +230,40 @@ class PokemonTypes {
     }
 
     return counters;
+  }
+
+  // Go through the moveset typing, accumulate the best type effectiveness
+  static List<double> offenseCoverage(List<Move> moveset) {
+    List<double> offenseCoverage = [];
+    final fast = moveset[0].type.offenseEffectiveness();
+    final c1 = moveset[1].type.offenseEffectiveness();
+    List<double> c2;
+
+    if ((moveset[2].isNone())) {
+      c2 = List.filled(Globals.typeCount, 0.0);
+    } else {
+      c2 = moveset[2].type.offenseEffectiveness();
+    }
+
+    for (int i = 0; i < Globals.typeCount; ++i) {
+      offenseCoverage
+          .add([fast[i], c1[i], c2[i]].reduce((v1, v2) => (v1 > v2 ? v1 : v2)));
+    }
+
+    return offenseCoverage;
+  }
+
+  static double getOffenseEffectivenessFromTyping(
+    List<Move> moveset,
+    PokemonTyping typing,
+  ) {
+    List<double> coverage = offenseCoverage(moveset);
+    if (typing.isMonoType()) {
+      return coverage[PokemonTypes.typeIndexMap[typing.typeA.typeId]!];
+    }
+
+    return coverage[PokemonTypes.typeIndexMap[typing.typeA.typeId]!] *
+        coverage[PokemonTypes.typeIndexMap[typing.typeB?.typeId]!];
   }
 
   // All type offense & defense effectiveness.

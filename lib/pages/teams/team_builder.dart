@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:pogo_teams/modules/data/pogo_data.dart';
 
 // Local Imports
-import '../../modules/data/gamemaster.dart';
+import '../../modules/data/pogo_data.dart';
 import '../../modules/ui/sizing.dart';
-import '../../game_objects/pokemon.dart';
-import '../../game_objects/cup.dart';
-import '../../game_objects/pokemon_team.dart';
+import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/cup.dart';
+import '../../pogo_objects/pokemon_team.dart';
 import '../../widgets/pokemon_list.dart';
 import '../../widgets/buttons/exit_button.dart';
 import '../../widgets/pogo_text_field.dart';
@@ -224,7 +224,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
     // Dex is a special case where all Pokemon are in the list
     // Otherwise get the list from the ratings category
     if (RankingsCategories.dex == _selectedCategory) {
-      _pokemon = Gamemaster().pokemonList;
+      //_pokemon = PogoData.pokemonList;
     } else {
       _pokemon = await PogoData.getRankedPokemonList(_cup, _selectedCategory);
     }

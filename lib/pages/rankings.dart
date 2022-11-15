@@ -5,14 +5,14 @@ import 'package:flutter/widgets.dart';
 
 // Local Imports
 import '../modules/ui/sizing.dart';
-import '../game_objects/pokemon.dart';
-import '../game_objects/cup.dart';
+import '../pogo_objects/pokemon.dart';
+import '../pogo_objects/cup.dart';
 import '../widgets/pokemon_list.dart';
 import '../widgets/pogo_text_field.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
 import '../widgets/buttons/filter_button.dart';
 import '../modules/data/pogo_data.dart';
-import '../modules/data/gamemaster.dart';
+import '../modules/data/pogo_data.dart';
 import '../enums/rankings_categories.dart';
 
 /*
@@ -48,8 +48,8 @@ class _RankingsState extends State<Rankings> {
     if (newCupId == null) return;
 
     setState(() {
-      cup = Gamemaster().cups.firstWhere((cup) => cup.cupId == newCupId,
-          orElse: () => Gamemaster().cups.first);
+      cup = PogoData.cups.firstWhere((cup) => cup.cupId == newCupId,
+          orElse: () => PogoData.cups.first);
       _filterCategory(_selectedCategory);
     });
   }
@@ -124,7 +124,7 @@ class _RankingsState extends State<Rankings> {
   void initState() {
     super.initState();
 
-    cup = Gamemaster().cups.first;
+    cup = PogoData.cups.first;
 
     _filterCategory(RankingsCategories.overall);
 

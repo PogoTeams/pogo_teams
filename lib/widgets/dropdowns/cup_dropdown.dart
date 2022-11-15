@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../game_objects/cup.dart';
+import '../../pogo_objects/cup.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/ui/pogo_colors.dart';
-import '../../modules/data/gamemaster.dart';
+import '../../modules/data/pogo_data.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -34,10 +34,10 @@ class CupDropdown extends StatefulWidget {
 class _CupDropdownState extends State<CupDropdown>
     with AutomaticKeepAliveClientMixin {
   // List of pvp cups
-  final List<Cup> cups = Gamemaster().cups;
+  final List<Cup> cups = PogoData.cups;
 
   // List of dropdown menu items
-  late final cupOptions = Gamemaster().cups.map<DropdownMenuItem<String>>(
+  late final cupOptions = PogoData.cups.map<DropdownMenuItem<String>>(
     (Cup cup) {
       return DropdownMenuItem(
         value: cup.cupId,

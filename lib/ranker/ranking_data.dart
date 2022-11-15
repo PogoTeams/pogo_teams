@@ -1,10 +1,16 @@
 // Local
-import '../game_objects/pokemon.dart';
-import '../game_objects/move.dart';
-import '../game_objects/ratings.dart';
+import '../pogo_objects/pokemon.dart';
+import '../pogo_objects/move.dart';
+import '../pogo_objects/ratings.dart';
 import '../enums/battle_outcome.dart';
 import '../battle/battle_result.dart';
 import '../modules/data/globals.dart';
+import '../modules/data/pokemon_types.dart';
+
+/*
+-------------------------------------------------------------------- @PogoTeams
+-------------------------------------------------------------------------------
+*/
 
 class RankingData {
   RankingData({required this.pokemon});
@@ -27,7 +33,7 @@ class RankingData {
 
   final BattlePokemon pokemon;
 
-  Ratings ratings = Ratings.empty();
+  Ratings ratings = Ratings();
   //KeyMatchups keyLeads = KeyMatchups();
   //KeyMatchups keySwitches = KeyMatchups();
   //KeyMatchups keyClosers = KeyMatchups();
@@ -39,16 +45,18 @@ class RankingData {
     FastMove idealFastMove = pokemon.fastMoves.reduce((move1, move2) {
       return (move1.usage > move2.usage ? move1 : move2);
     });
-    pokemon.chargeMoves.sort((move1, move2) => move2.usage - move1.usage);
+    //pokemon.chargeMoves.sort((move1, move2) => move2.usage - move1.usage);
 
     return {
       'pokemonId': pokemon.pokemonId,
       'ratings': ratings.toJson(),
       'idealMoveset': {
         'fastMove': idealFastMove.moveId,
+        /*
         'chargeMoves': (pokemon.chargeMoves.length > 1
             ? [pokemon.chargeMoves[0].moveId, pokemon.chargeMoves[1].moveId]
             : [pokemon.chargeMoves[0].moveId])
+            */
       },
       //'keyLeads': keyLeads.toJson(),
       //'keySwitches': keySwitches.toJson(),
@@ -70,10 +78,10 @@ class RankingData {
   void addSwitchResult(BattleResult result, List<int> shieldScenario) {
     int switchRating = ((result.self.currentRating *
                     .5 *
-                    result.self.getOffenseEffectivenessFromTyping(
-                        result.opponent.typing) /
-                    result.opponent
-                        .getOffenseEffectivenessFromTyping(result.self.typing) +
+                    PokemonTypes.getOffenseEffectivenessFromTyping(
+                        result.self.moveset(), result.opponent.typing) /
+                    PokemonTypes.getOffenseEffectivenessFromTyping(
+                        result.opponent.moveset(), result.self.typing) +
                 _shieldRating(result, shieldScenario)) *
             Globals.pokemonRatingMagnitude)
         .floor();

@@ -1,5 +1,5 @@
 // Local
-import '../game_objects/pokemon.dart';
+import '../pogo_objects/pokemon.dart';
 import 'battle_result.dart';
 import '../modules/data/globals.dart';
 import '../modules/data/debug_cli.dart';
@@ -142,7 +142,7 @@ class PokemonBattler {
     BattlePokemon pokemon,
     int opponentCooldown,
   ) {
-    return !pokemon.nextDecidedChargeMove.isNone &&
+    return !pokemon.nextDecidedChargeMove.isNone() &&
         pokemon.energy + pokemon.nextDecidedChargeMove.energyDelta >= 0 &&
         (pokemon.prioritizeMoveAlignment ? opponentCooldown == 0 : true);
   }

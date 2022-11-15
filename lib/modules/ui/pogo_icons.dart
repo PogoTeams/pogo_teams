@@ -1,6 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:pogo_teams/game_objects/pokemon_typing.dart';
+import 'package:pogo_teams/pogo_objects/pokemon_typing.dart';
 
 class PogoIcons {
   // Get a type icon for this type, if size is not specified, the default size
@@ -16,7 +16,7 @@ class PogoIcons {
     PokemonTyping typing, {
     double scale = 1.0,
   }) {
-    if (typing.isMonoType) {
+    if (typing.isMonoType()) {
       return [
         Image.asset(
           'assets/white_type_icons/' + typing.typeA.typeId + '.png',

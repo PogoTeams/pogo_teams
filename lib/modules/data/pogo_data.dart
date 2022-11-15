@@ -2,236 +2,351 @@
 import 'dart:convert';
 
 // Packages
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:flutter/services.dart';
+import 'package:isar/isar.dart';
 
 // Local
-import 'gamemaster.dart';
 import '../../enums/rankings_categories.dart';
 import '../../tools/pair.dart';
-import '../../firebase_options.dart';
-import '../../game_objects/pokemon.dart';
-import '../../game_objects/pokemon_typing.dart';
-import '../../game_objects/ratings.dart';
-import '../../game_objects/cup.dart';
-import '../../game_objects/pokemon_team.dart';
-import '../../game_objects/user_teams.dart';
-import '../../game_objects/opponent_teams.dart';
-import '../ui/pogo_colors.dart';
+import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/pokemon_typing.dart';
+import '../../pogo_objects/ratings.dart';
+import '../../pogo_objects/cup.dart';
+import '../../pogo_objects/pokemon_team.dart';
+import '../../pogo_objects/user_teams.dart';
+import '../../pogo_objects/opponent_teams.dart';
+import '../../pogo_objects/move.dart';
+import '../../pogo_objects/move.dart';
+import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/ratings.dart';
+import '../data/cups.dart';
+//import '../ui/pogo_colors.dart';
 
-enum CacheType { pogoData, rankings }
+/*
+-------------------------------------------------------------------- @PogoTeams
+-------------------------------------------------------------------------------
+*/
 
 class PogoData {
-  static late final Box localPogoData;
-  static late final Box localRankings;
-  static late final FirebaseFirestore cloudPogoData;
+  static late final Isar isar;
+
+  static List<Cup> get cups => isar.cups.where().findAllSync();
+  static List<Pokemon> get pokemon => isar.pokemon.where().findAllSync();
 
   static Future<void> init() async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    isar = await Isar.open([
+      FastMoveSchema,
+      ChargeMoveSchema,
+      CupSchema,
+      CupFilterSchema,
+      PokemonSchema,
+      EvolutionSchema,
+      TempEvolutionSchema,
+      RankedPokemonSchema,
+    ]);
 
-    await Hive.initFlutter();
-
-    localPogoData = await Hive.openBox('pogo');
-    localRankings = await Hive.openBox('rankings');
-    cloudPogoData = FirebaseFirestore.instance;
+    await isar.writeTxn(() async => await isar.clear());
   }
 
   static Stream<Pair<String, double>> loadPogoData() async* {
-    final Box localVersionTimestampsBox =
-        await Hive.openBox('versionTimestamps');
-    Map<String, Map<String, dynamic>> localVersionTimestamps = {};
-    localVersionTimestamps['pogo'] = Map<String, dynamic>.from(
-        localVersionTimestampsBox.get('pogo', defaultValue: {}));
-    localVersionTimestamps['rankings'] = Map<String, dynamic>.from(
-        localVersionTimestampsBox.get('rankings', defaultValue: {}));
+    final Map<String, dynamic>? pogoDataJson = {}; //jsonDecode(
+    //await rootBundle.loadString('bin/json/niantic-snapshot.json'));
+    if (pogoDataJson == null) return;
 
-    yield Pair(a: 'loading...', b: .5);
+    await loadFromJson(pogoDataJson);
+  }
 
-    QuerySnapshot<Map<String, dynamic>> event =
-        await cloudPogoData.collection('versionTimestamps').get();
+  static Future<void> loadFromJson(Map<String, dynamic> json) async {
+    await isar.writeTxn(() async {
+      await loadFastMoves(json['fastMoves']);
+      await loadChargeMoves(json['chargeMoves']);
+      await loadPokemon(json['pokemon']);
+      await loadCups(json['cups']);
+    });
+  }
 
-    int totalEntries = 0;
-    for (var doc in event.docs) {
-      totalEntries += doc.data().entries.length;
+  static Future<void> loadFastMoves(List<dynamic> fastMovesJson) async {
+    for (var moveJson in List<Map<String, dynamic>>.from(fastMovesJson)) {
+      await isar.fastMoves.put(FastMove.fromJson(moveJson));
     }
+  }
 
-    int progress = 0;
-    for (var doc in event.docs) {
-      for (var timestampEntry in doc.data().entries) {
-        DateTime? localTimestamp;
-        if (localVersionTimestamps.containsKey(doc.id)) {
-          localTimestamp = DateTime.tryParse(
-              localVersionTimestamps[doc.id]![timestampEntry.key] ?? '');
-        }
+  static Future<void> loadChargeMoves(List<dynamic> chargeMovesJson) async {
+    for (var moveJson in List<Map<String, dynamic>>.from(chargeMovesJson)) {
+      await isar.chargeMoves.put(ChargeMove.fromJson(moveJson));
+    }
+  }
 
-        DateTime cloudTimestamp = DateTime.parse(timestampEntry.value);
+  static Future<void> loadPokemon(List<dynamic> pokemonJson) async {
+    for (var pokemonEntry in List<Map<String, dynamic>>.from(pokemonJson)) {
+      await _processPokemonEntry(pokemonEntry);
+    }
+  }
 
-        if (!localPogoData.containsKey(timestampEntry.key) ||
-            localTimestamp == null ||
-            localTimestamp != cloudTimestamp) {
-          localVersionTimestamps[doc.id]![timestampEntry.key] =
-              timestampEntry.value.toString();
-          switch (doc.id) {
-            case 'pogo':
-              _refreshCache(timestampEntry.key, CacheType.pogoData);
-              break;
-            case 'rankings':
-              _refreshCache(timestampEntry.key, CacheType.rankings);
-              break;
-          }
-        }
+  static Future<void> _processPokemonEntry(
+      Map<String, dynamic> pokemonEntry) async {
+    // Standard Pokemon entries
+    Pokemon pokemon = Pokemon.fromJson(pokemonEntry);
+    List<FastMove> fastMove = [];
+    List<ChargeMove> chargeMove = [];
 
-        ++progress;
-        yield Pair(a: 'loading...', b: 100 * progress / totalEntries);
+    if (pokemonEntry.containsKey('fastMoves')) {
+      for (var moveId in List<String>.from(pokemonEntry['fastMoves'])) {
+        FastMove? move = await isar.fastMoves
+            .where()
+            .filter()
+            .moveIdEqualTo(moveId)
+            .findFirst();
+
+        if (move != null) fastMove.add(move);
       }
     }
 
-    for (var timestampEntry in localVersionTimestamps.entries) {
-      await localVersionTimestampsBox.put(
-        timestampEntry.key,
-        timestampEntry.value,
+    if (pokemonEntry.containsKey('chargeMoves')) {
+      for (var moveId in List<String>.from(pokemonEntry['chargeMoves'])) {
+        ChargeMove? move =
+            await isar.chargeMoves.filter().moveIdEqualTo(moveId).findFirst();
+
+        if (move != null) chargeMove.add(move);
+      }
+    }
+
+    if (pokemonEntry.containsKey('eliteFastMoves')) {
+      for (var moveId in List<String>.from(pokemonEntry['eliteFastMoves'])) {
+        FastMove? move =
+            await isar.fastMoves.filter().moveIdEqualTo(moveId).findFirst();
+
+        if (move != null) fastMove.add(move);
+      }
+    }
+
+    if (pokemonEntry.containsKey('eliteChargeMoves')) {
+      for (var moveId in List<String>.from(pokemonEntry['eliteChargeMoves'])) {
+        ChargeMove? move =
+            await isar.chargeMoves.filter().moveIdEqualTo(moveId).findFirst();
+
+        if (move != null) chargeMove.add(move);
+      }
+    }
+
+    if (pokemonEntry.containsKey('shadow') &&
+        pokemonEntry['shadow']['released']) {
+      ChargeMove? move = await isar.chargeMoves
+          .filter()
+          .moveIdEqualTo(pokemonEntry['shadow']['purifiedChargeMove'])
+          .findFirst();
+
+      if (move != null) chargeMove.add(move);
+    }
+
+    pokemon.fastMoves.addAll(fastMove);
+    pokemon.chargeMoves.addAll(chargeMove);
+
+    if (pokemonEntry.containsKey('evolutions')) {
+      final evolutions = List<Map<String, dynamic>>.from(
+              pokemonEntry['evolutions'])
+          .map<Evolution>((evolutionJson) => Evolution.fromJson(evolutionJson))
+          .toList();
+
+      await isar.evolutions.putAll(evolutions);
+      pokemon.evolutions.addAll(evolutions);
+    }
+
+    if (pokemonEntry.containsKey('tempEvolutions')) {
+      final evolutions =
+          List<Map<String, dynamic>>.from(pokemonEntry['tempEvolutions'])
+              .map<TempEvolution>(
+                  (evolutionJson) => TempEvolution.fromJson(evolutionJson))
+              .toList();
+
+      await isar.tempEvolutions.putAll(evolutions);
+      pokemon.tempEvolutions.addAll(evolutions);
+    }
+
+    await isar.pokemon.put(pokemon);
+    await pokemon.evolutions.save();
+    await pokemon.tempEvolutions.save();
+    await pokemon.fastMoves.save();
+    await pokemon.chargeMoves.save();
+
+    // Shadow entries
+    if (pokemonEntry.containsKey('shadow')) {
+      Pokemon shadowPokemon = Pokemon.fromJson(pokemonEntry, shadowForm: true);
+
+      shadowPokemon.fastMoves.addAll(fastMove);
+      shadowPokemon.chargeMoves.addAll(chargeMove);
+      ChargeMove? shadowMove = await isar.chargeMoves
+          .filter()
+          .moveIdEqualTo(pokemonEntry['shadow']['shadowChargeMove'])
+          .findFirst();
+      if (shadowMove != null) shadowPokemon.chargeMoves.add(shadowMove);
+
+      await isar.pokemon.put(shadowPokemon);
+      await shadowPokemon.fastMoves.save();
+      await shadowPokemon.chargeMoves.save();
+    }
+
+    // Temporary evolution entries
+    if (pokemonEntry.containsKey('tempEvolutions')) {
+      for (var overrideJson
+          in List<Map<String, dynamic>>.from(pokemonEntry['tempEvolutions'])) {
+        Pokemon tempEvoPokemon = Pokemon.tempEvolutionFromJson(
+          pokemonEntry,
+          overrideJson,
+        );
+
+        tempEvoPokemon.fastMoves.addAll(fastMove);
+        tempEvoPokemon.chargeMoves.addAll(chargeMove);
+
+        await isar.pokemon.put(tempEvoPokemon);
+        await tempEvoPokemon.fastMoves.save();
+        await tempEvoPokemon.chargeMoves.save();
+      }
+    }
+  }
+
+  static Future<void> loadCups(List<dynamic> cupsJson) async {
+    for (var cupEntry in List<Map<String, dynamic>>.from(cupsJson)) {
+      final Cup cup = Cup.fromJson(cupEntry);
+
+      if (cupEntry.containsKey('include')) {
+        final List<CupFilter> includeFilters =
+            List<Map<String, dynamic>>.from(cupEntry['include'])
+                .map<CupFilter>((filter) => CupFilter.fromJson(filter))
+                .toList();
+        await isar.cupFilters.putAll(includeFilters);
+        cup.includeFilters.addAll(includeFilters);
+      }
+
+      if (cupEntry.containsKey('exclude')) {
+        final List<CupFilter> excludeFilters =
+            List<Map<String, dynamic>>.from(cupEntry['exclude'])
+                .map<CupFilter>((filter) => CupFilter.fromJson(filter))
+                .toList();
+        await isar.cupFilters.putAll(excludeFilters);
+        cup.excludeFilters.addAll(excludeFilters);
+      }
+
+      final List<Id> rankingsIds = []; //await _loadRankings(jsonDecode(
+      //await rootBundle.loadString('bin/json/rankings/${cup.cupId}.json')));
+
+      cup.rankings.addAll((await isar.rankedPokemon.getAll(rankingsIds))
+          .whereType<RankedPokemon>());
+
+      await isar.cups.put(cup);
+      await cup.includeFilters.save();
+      await cup.excludeFilters.save();
+      await cup.rankings.save();
+
+      //PogoColors.addCupColor(cup.cupId, cupEntry['uiColor'] as String);
+    }
+  }
+
+  static Future<List<Id>> _loadRankings(List<dynamic> rankingsJson) async {
+    List<Id> rankingsIds = [];
+
+    for (var rankingsEntry in List<Map<String, dynamic>>.from(rankingsJson)) {
+      final List<String> selectedChargeMoves =
+          List<String>.from(rankingsEntry['idealMoveset']['chargeMoves']);
+
+      final rankedPokemon = RankedPokemon(
+        ratings: Ratings.fromJson(rankingsEntry['ratings']),
       );
-    }
-    localVersionTimestampsBox.close();
 
-    yield Pair(a: 'loading...', b: 100);
-    await Future.delayed(const Duration(milliseconds: 300));
-    _loadGamemasterCollections();
+      rankedPokemon
+        ..pokemon.value = await isar.pokemon
+            .filter()
+            .pokemonIdEqualTo(rankingsEntry['pokemonId'])
+            .findFirst()
+        ..selectedFastMove.value = await isar.fastMoves
+            .filter()
+            .moveIdEqualTo(rankingsEntry['idealMoveset']['fastMove'])
+            .findFirst()
+        ..selectedChargeMoves.addAll(await isar.chargeMoves
+            .filter()
+            .moveIdEqualTo(selectedChargeMoves.first)
+            .or()
+            .moveIdEqualTo(selectedChargeMoves.last)
+            .findAll());
+
+      rankingsIds.add(await isar.rankedPokemon.put(rankedPokemon));
+      await rankedPokemon.pokemon.save();
+      await rankedPokemon.selectedFastMove.save();
+      await rankedPokemon.selectedChargeMoves.save();
+    }
+
+    return rankingsIds;
   }
 
-  static void _refreshCache(
-    String collectionName,
-    CacheType cache,
-  ) async {
-    switch (cache) {
-      case CacheType.pogoData:
-        await cloudPogoData
-            .collection(collectionName)
-            .get()
-            .then((event) async {
-          final List<Map<String, dynamic>> json =
-              event.docs.map((doc) => doc.data()).toList();
-          await localPogoData.put(collectionName, jsonEncode(json));
-        });
-        break;
-      case CacheType.rankings:
-        await cloudPogoData
-            .collection('cups')
-            .doc(collectionName)
-            .collection('rankings')
-            .get()
-            .then((event) async {
-          final List<Map<String, dynamic>> json =
-              event.docs.map((doc) => doc.data()).toList();
-          await localRankings.put(collectionName, jsonEncode(json));
-        });
-        break;
-    }
+  static Pokemon getPokemonById(String pokemonId) {
+    return isar.pokemon.filter().pokemonIdEqualTo(pokemonId).findFirstSync() ??
+        Pokemon.missingNo();
   }
 
-  static void _loadGamemasterCollections() {
-    Gamemaster().loadFastMoves(List<Map<String, dynamic>>.from(
-        jsonDecode(localPogoData.get('fastMoves', defaultValue: ''))));
+  static List<Pokemon> getCupFilteredPokemonList(Cup cup) {
+    final filteredPokemonList = isar.pokemon
+        .filter()
+        .releasedEqualTo(true)
+        .and()
+        .fastMovesIsNotEmpty()
+        .and()
+        .chargeMovesIsNotEmpty()
+        .findAllSync()
+        .where((Pokemon pokemon) =>
+            cup.pokemonIsAllowed(pokemon) && !Cups.isBanned(pokemon, cup.cp))
+        .toList();
 
-    Gamemaster().loadChargeMoves(List<Map<String, dynamic>>.from(
-        jsonDecode(localPogoData.get('chargeMoves', defaultValue: ''))));
-
-    Gamemaster().loadPokemon(List<Map<String, dynamic>>.from(
-        jsonDecode(localPogoData.get('pokemon', defaultValue: ''))));
-
-    final cupsJson = List<Map<String, dynamic>>.from(
-        jsonDecode(localPogoData.get('cups', defaultValue: '')));
-    Gamemaster().loadCups(cupsJson);
-    for (var cupEntry in cupsJson) {
-      PogoColors.addCupColor(cupEntry['cupId'], cupEntry['uiColor']);
+    for (var pokemon in filteredPokemonList) {
+      pokemon.fastMoves.loadSync();
+      pokemon.chargeMoves.loadSync();
     }
+
+    return filteredPokemonList;
   }
 
   static Future<List<RankedPokemon>> getRankedPokemonList(
     Cup cup,
     RankingsCategories rankingsCategory,
   ) async {
-    List<RankedPokemon> rankedPokemon = [];
-    for (var json in List<Map<String, dynamic>>.from(
-        jsonDecode(await localRankings.get(cup.cupId)))) {
-      String fastMoveId = json['idealMoveset']['fastMove'] as String;
-      List<String> chargeMoveIds =
-          List<String>.from(json['idealMoveset']['chargeMoves']);
+    if (!cup.rankings.isLoaded) await cup.rankings.load();
 
-      Pokemon pokemon = Gamemaster().pokemonMap[json['pokemonId']]!;
-      rankedPokemon.add(
-        RankedPokemon.fromPokemon(
-          pokemon,
-          pokemon.getIvs(cup.cp),
-          Ratings.fromJson(json['ratings']),
-          Gamemaster().getFastMoveById(fastMoveId),
-          [
-            Gamemaster().getChargeMoveById(chargeMoveIds.first),
-            Gamemaster().getChargeMoveById(chargeMoveIds.last),
-          ],
-        ),
-      );
+    for (var rankedPokemon in cup.rankings) {
+      if (rankedPokemon.pokemon.value == null) continue;
+
+      if (!rankedPokemon.pokemon.isLoaded) {
+        await rankedPokemon.pokemon.load();
+      }
+      if (!rankedPokemon.selectedFastMove.isLoaded) {
+        await rankedPokemon.selectedFastMove.load();
+      }
+      if (!rankedPokemon.selectedChargeMoves.isLoaded) {
+        await rankedPokemon.selectedChargeMoves.load();
+      }
     }
 
-    sortRankedPokemonList(rankedPokemon, rankingsCategory);
-    return rankedPokemon;
-  }
-
-  static void sortRankedPokemonList(
-    List<RankedPokemon> list,
-    RankingsCategories rankingsCategory,
-  ) {
-    switch (rankingsCategory) {
-      case RankingsCategories.overall:
-        for (var rankedPokemon in list) {
-          rankedPokemon.currentRating = rankedPokemon.ratings.overall;
-        }
-        break;
-      case RankingsCategories.leads:
-        for (var rankedPokemon in list) {
-          rankedPokemon.currentRating = rankedPokemon.ratings.lead;
-        }
-        break;
-      case RankingsCategories.switches:
-        for (var rankedPokemon in list) {
-          rankedPokemon.currentRating = rankedPokemon.ratings.switchRating;
-        }
-        break;
-      case RankingsCategories.closers:
-        for (var rankedPokemon in list) {
-          rankedPokemon.currentRating = rankedPokemon.ratings.closer;
-        }
-        break;
-      default:
-        break;
-    }
-
-    list.sort((pokemon1, pokemon2) =>
-        (pokemon2.currentRating - pokemon1.currentRating).toInt());
+    return cup.rankings.toList();
   }
 
   // Get a list of Pokemon that contain one of the specified types
   // The rankings category
   // The list length will be up to the limit
-  static Future<List<Pokemon>> getFilteredRankedPokemonList(
+  static Future<List<RankedPokemon>> getFilteredRankedPokemonList(
     Cup cup,
     List<PokemonType> types,
     RankingsCategories rankingsCategory, {
     int limit = 20,
   }) async {
-    List<Pokemon> rankedList =
+    List<RankedPokemon> rankedList =
         await getRankedPokemonList(cup, rankingsCategory);
 
     // Filter the list to Pokemon that have one of the types in their typing
     // or their selected moveset
+    /* TODO
     rankedList = rankedList
         .where((pokemon) =>
             pokemon.hasType(types) || pokemon.hasSelectedMovesetType(types))
         .toList();
+        */
 
     // There weren't enough Pokemon in this cup to satisfy the filtered limit
     if (rankedList.length < limit) {
@@ -241,113 +356,21 @@ class PogoData {
     return rankedList.getRange(0, limit).toList();
   }
 
-  static Future<UserTeams> getUserTeams() async {
-    final teams = UserTeams();
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      final teamsData = await cloudPogoData
-          .collection('users')
-          .doc(user.uid)
-          .collection('teams')
-          .orderBy('sortOrder')
-          .get();
-
-      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in teamsData.docs) {
-        teams.addTeamJson(doc.data(), doc.id);
-      }
-    }
-
-    return teams;
-  }
-
   static Future<UserPokemonTeam> updateUserPokemonTeam(
     UserPokemonTeam team, {
     List<String>? updateMask,
   }) async {
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      // create
-      if (team.id == null || team.id!.isEmpty) {
-        team.id = (await cloudPogoData
-                .collection('users')
-                .doc(user.uid)
-                .collection('teams')
-                .add(team.toJson()))
-            .id;
-      }
-
-      // update
-      else {
-        final teamJson = team.toJson();
-
-        if (updateMask != null) {
-          teamJson.removeWhere((key, value) => !updateMask.contains(key));
-        }
-
-        cloudPogoData
-            .collection('users')
-            .doc(user.uid)
-            .collection('teams')
-            .doc(team.id)
-            .update(teamJson);
-      }
-    }
-
     return team;
   }
 
   static void deleteUserPokemonTeam(String? teamId) {
     if (teamId == null || teamId.isEmpty) return;
-
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      cloudPogoData
-          .collection('users')
-          .doc(user.uid)
-          .collection('teams')
-          .doc(teamId)
-          .delete();
-    }
   }
 
   static Future<OpponentPokemonTeams> getOpponentPokemonTeams(
     String? teamId,
   ) async {
     OpponentPokemonTeams teams = OpponentPokemonTeams();
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      QuerySnapshot<Map<String, dynamic>> teamsData;
-
-      // all logged opponents
-      if (teamId == null) {
-        teamsData = await cloudPogoData
-            .collection('users')
-            .doc(user.uid)
-            .collection('battle_logs')
-            .orderBy('sortOrder')
-            .get();
-      }
-
-      // user team logged opponents
-      else {
-        teamsData = await cloudPogoData
-            .collection('users')
-            .doc(user.uid)
-            .collection('battle_logs')
-            .where('userTeamId', isEqualTo: teamId)
-            .get();
-      }
-
-      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in teamsData.docs) {
-        teams.addTeamJson(doc.data(), doc.id);
-      }
-
-      teams.teamsList.sort((a, b) => b.sortOrder - a.sortOrder);
-    }
-
     return teams;
   }
 
@@ -355,50 +378,10 @@ class PogoData {
     OpponentPokemonTeam team, {
     List<String>? updateMask,
   }) async {
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      // create
-      if (team.id == null || team.id!.isEmpty) {
-        team.id = (await cloudPogoData
-                .collection('users')
-                .doc(user.uid)
-                .collection('battle_logs')
-                .add(team.toJson()))
-            .id;
-      }
-
-      // update
-      else {
-        final teamJson = team.toJson();
-
-        if (updateMask != null) {
-          teamJson.removeWhere((key, value) => !updateMask.contains(key));
-        }
-
-        await cloudPogoData
-            .collection('users')
-            .doc(user.uid)
-            .collection('battle_logs')
-            .doc(team.id)
-            .update(teamJson);
-      }
-    }
-
     return team;
   }
 
   static void deleteOpponentPokemonTeam(String? teamId) {
     if (teamId == null || teamId.isEmpty) return;
-
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      cloudPogoData
-          .collection('users')
-          .doc(user.uid)
-          .collection('battle_logs')
-          .doc(teamId)
-          .delete();
-    }
   }
 }

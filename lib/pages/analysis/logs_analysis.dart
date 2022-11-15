@@ -1,13 +1,13 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:pogo_teams/game_objects/opponent_teams.dart';
+import 'package:pogo_teams/pogo_objects/opponent_teams.dart';
 
 // Local Imports
 import '../../widgets/analysis/type_coverage.dart';
 import '../../widgets/pokemon_list.dart';
-import '../../game_objects/pokemon.dart';
-import '../../game_objects/pokemon_team.dart';
-import '../../game_objects/pokemon_typing.dart';
+import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/pokemon_team.dart';
+import '../../pogo_objects/pokemon_typing.dart';
 import '../../modules/data/pogo_data.dart';
 import '../../modules/ui/sizing.dart';
 import '../../tools/pair.dart';
@@ -101,7 +101,7 @@ class LogsAnalysis extends StatelessWidget {
               netEffectiveness: netEffectiveness,
               defenseThreats: defenseThreats,
               offenseCoverage: offenseCoverage,
-              includedTypesKeys: team.cup.includedTypeKeys,
+              includedTypesKeys: team.cup.includedTypeKeys(),
             ),
 
             // Spacer

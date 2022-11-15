@@ -13,7 +13,7 @@ class Globals {
   // ex. Scrafty (dark / fighting) : fairy would have 1.6^2 = 2.56 damage
   static const double maxEffectiveDamage = 2.56;
 
-  static const int maxPokemonLevel = 50;
+  static const double maxPokemonLevel = 50.0;
 
   // The max number of turns in a pvp battle
   // maxTurns = 4m * 60s * 2 (turns per second)

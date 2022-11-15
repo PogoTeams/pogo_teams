@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../../tools/pair.dart';
-import '../../game_objects/pokemon_typing.dart';
+import '../../pogo_objects/pokemon_typing.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/ui/pogo_icons.dart';
 

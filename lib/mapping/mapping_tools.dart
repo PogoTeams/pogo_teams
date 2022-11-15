@@ -2,8 +2,8 @@
 import 'dart:io';
 
 // Local
+import '../modules/data/pogo_data.dart';
 import '../tools/json_tools.dart';
-import '../modules/data/gamemaster.dart';
 
 void buildAlternateFormsList() async {
   final List<dynamic>? nianticGamemaster =
@@ -53,15 +53,16 @@ void buildSnapshotReleasedIdsList() async {
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  Gamemaster().loadFromJson(snapshot);
+  PogoData.loadFromJson(snapshot);
 
   List<String> snapshotReleasedIds = [];
 
-  for (var pokemon in Gamemaster().pokemonList) {
+  for (var pokemon in PogoData.pokemon) {
     if (pokemon.released) {
       snapshotReleasedIds.add(pokemon.pokemonId);
     }
   }
+
   await JsonTools.writeJson(
       snapshotReleasedIds, 'bin/json/released-pokemon-ids');
 }

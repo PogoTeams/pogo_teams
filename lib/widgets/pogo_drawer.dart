@@ -1,13 +1,11 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 // Packages
 import 'package:url_launcher/url_launcher.dart';
 
 // Local Imports
 import '../pages/pogo_pages.dart';
-import '../modules/data/globals.dart';
 import '../modules/ui/sizing.dart';
 
 /*
@@ -18,13 +16,12 @@ accessible to the user by any screen that contains a scaffold app bar.
 */
 
 class PogoDrawer extends StatelessWidget {
-  PogoDrawer({
+  const PogoDrawer({
     Key? key,
     required this.onNavSelected,
   }) : super(key: key);
 
   final Function(PogoPages) onNavSelected;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void _launchGitHubUrl() async => await launchUrl(Uri(
         host: 'https://github.com',
@@ -162,39 +159,6 @@ class PogoDrawer extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-
-            // Spacer
-            SizedBox(
-              height: Sizing.blockSizeVertical * 2.0,
-            ),
-
-            // Account
-            ListTile(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    PogoPages.account.displayName,
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                  SizedBox(
-                    width: Sizing.blockSizeHorizontal * 3.0,
-                  ),
-                  PogoPages.account.icon,
-                ],
-              ),
-              onTap: () {
-                onNavSelected(PogoPages.account);
-                Navigator.pop(context);
-              },
-            ),
-
-            Text(
-              _auth.currentUser?.email ?? '',
-              style: Theme.of(context).textTheme.bodyMedium?.apply(
-                    fontStyle: FontStyle.italic,
-                  ),
             ),
           ],
         ),

@@ -1,12 +1,17 @@
 // Local
 import 'ranking_data.dart';
-import '../game_objects/pokemon.dart';
-import '../game_objects/cup.dart';
+import '../pogo_objects/pokemon.dart';
+import '../pogo_objects/cup.dart';
 import '../battle/pokemon_battler.dart';
 import '../battle/battle_result.dart';
-import '../modules/data/gamemaster.dart';
+import '../modules/data/pogo_data.dart';
 import '../modules/data/cups.dart';
 import '../modules/data/debug_cli.dart';
+
+/*
+-------------------------------------------------------------------- @PogoTeams
+-------------------------------------------------------------------------------
+*/
 
 class PokemonRanker {
   static RankingData rank(
@@ -25,8 +30,8 @@ class PokemonRanker {
         opponent.selectMoveset(self);
 
         self.selectedFastMove.usage += 1;
-        opponent.selectedChargeMoves.first.usage += 1;
-        opponent.selectedChargeMoves.last.usage += 1;
+        self.selectedChargeMoves.first.usage += 1;
+        self.selectedChargeMoves.last.usage += 1;
 
         PokemonBattler.resetPokemon(self, opponent);
 
@@ -79,9 +84,9 @@ class PokemonRanker {
     int cp,
   ) {
     BattlePokemon self =
-        BattlePokemon.fromPokemon(Gamemaster().getPokemonById(selfId));
+        BattlePokemon.fromPokemon(PogoData.getPokemonById(selfId));
     BattlePokemon opponent =
-        BattlePokemon.fromPokemon(Gamemaster().getPokemonById(opponentId));
+        BattlePokemon.fromPokemon(PogoData.getPokemonById(opponentId));
 
     self.initializeStats(cp);
     opponent.initializeStats(cp);

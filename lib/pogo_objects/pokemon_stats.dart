@@ -1,4 +1,10 @@
+// Packages
+import 'package:isar/isar.dart';
+
+// Local
 import '../modules/data/globals.dart';
+
+part 'pokemon_stats.g.dart';
 
 class PokemonStats {
   PokemonStats({
@@ -12,11 +18,12 @@ class PokemonStats {
   int cp = 0;
 }
 
+@embedded
 class BaseStats {
   BaseStats({
-    required this.atk,
-    required this.def,
-    required this.hp,
+    this.atk = 0,
+    this.def = 0,
+    this.hp = 0,
   });
 
   factory BaseStats.fromJson(Map<String, dynamic> json) {
@@ -40,17 +47,18 @@ class BaseStats {
   final int hp;
 }
 
+@embedded
 class IVs {
   IVs({
-    required this.level,
-    required this.atk,
-    required this.def,
-    required this.hp,
+    this.level = 1,
+    this.atk = 0,
+    this.def = 0,
+    this.hp = 0,
   });
 
   factory IVs.fromJson(Map<String, dynamic> json) {
     return IVs(
-      level: json['level'] as num,
+      level: json['level'] as double,
       atk: json['atk'] as int,
       def: json['def'] as int,
       hp: json['hp'] as int,
@@ -66,15 +74,6 @@ class IVs {
     };
   }
 
-  factory IVs.empty() {
-    return IVs(
-      level: 0,
-      atk: 0,
-      def: 0,
-      hp: 0,
-    );
-  }
-
   factory IVs.max() {
     return IVs(
       level: Globals.maxPokemonLevel,
@@ -84,7 +83,7 @@ class IVs {
     );
   }
 
-  num level;
+  double level;
   int atk;
   int def;
   int hp;

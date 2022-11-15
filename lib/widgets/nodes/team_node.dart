@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import 'pokemon_node.dart';
-import '../../game_objects/cup.dart';
-import '../../game_objects/pokemon.dart';
-import '../../game_objects/pokemon_team.dart';
+import '../../pogo_objects/cup.dart';
+import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/pokemon_team.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/ui/pogo_colors.dart';
 

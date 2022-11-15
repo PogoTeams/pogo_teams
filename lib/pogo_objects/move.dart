@@ -1,12 +1,16 @@
 // Dart
 import 'dart:math';
 
+// Packages
+import 'package:isar/isar.dart';
+
 // Local
 import 'pokemon_typing.dart';
 import 'pokemon.dart';
-import '../modules/data/pokemon_types.dart';
 import '../modules/data/stats.dart';
 import '../modules/data/debug_cli.dart';
+
+part 'move.g.dart';
 
 /*
 ------------------------- D A M A G E - F O R M U L A -------------------------
@@ -26,22 +30,32 @@ class Move {
     required this.energyDelta,
   });
 
+  Id id = Isar.autoIncrement;
+
+  @Index(unique: true)
   final String moveId;
   final String name;
   final PokemonType type;
-  final num power;
-  final num energyDelta;
+  final double power;
+  final double energyDelta;
 
-  num rating = 0;
-  num damage = 0;
+  @ignore
+  double rating = 0;
+
+  @ignore
+  double damage = 0;
+
+  @ignore
   int usage = 0;
+
+  bool isNone() => moveId == 'none';
 
   bool isSameMove(Move other) {
     return moveId == other.moveId;
   }
 
   void calculateEffectiveDamage(BattlePokemon owner, BattlePokemon opponent) {
-    num stab = 1;
+    double stab = 1;
 
     // Stab
     if (owner.typing.contains(type)) {
@@ -49,7 +63,8 @@ class Move {
     }
 
     // Effectiveness
-    num effectiveness = opponent.typing.getEffectivenessFromType(type);
+    double effectiveness =
+        opponent.typing.getEffectivenessFromType(type).toDouble();
 
     damage = (.5 *
                 power *
@@ -61,11 +76,9 @@ class Move {
         1;
   }
 
-  bool get isNone => moveId == 'none';
-
   // Calculate cycle damage per turn given a fast move paired with
   // the given charge move
-  static num calculateCycleDpt(FastMove fastMove, ChargeMove chargeMove) {
+  static double calculateCycleDpt(FastMove fastMove, ChargeMove chargeMove) {
     if (chargeMove.energyDelta == 0) return 1.0;
 
     // Calculate multiple cycles to avoid issues with overflow energy
@@ -80,13 +93,14 @@ class Move {
   }
 }
 
+@Collection(accessor: 'fastMoves')
 class FastMove extends Move {
   FastMove({
-    required moveId,
-    required name,
-    required type,
-    required power,
-    required energyDelta,
+    required String moveId,
+    required String name,
+    required PokemonType type,
+    required double power,
+    required double energyDelta,
     required this.duration,
   }) : super(
           moveId: moveId,
@@ -98,7 +112,7 @@ class FastMove extends Move {
     _calculateBaseRating();
   }
 
-  static FastMove from(FastMove other) {
+  factory FastMove.from(FastMove other) {
     return FastMove(
       moveId: other.moveId,
       name: other.name,
@@ -113,12 +127,14 @@ class FastMove extends Move {
     return FastMove(
       moveId: json['moveId'] as String,
       name: json['name'] as String,
-      type: PokemonTypes.typeMap[json['type'] as String]!,
-      power: json['power'] as num,
-      energyDelta: json['energyDelta'] as num,
+      type: PokemonType(typeId: json['type'] as String),
+      power: (json['power'] as num).toDouble(),
+      energyDelta: (json['energyDelta'] as num).toDouble(),
       duration: json['duration'] as int,
     );
   }
+
+  final int duration;
 
   static final FastMove none = FastMove(
     moveId: 'none',
@@ -129,34 +145,33 @@ class FastMove extends Move {
     duration: 4,
   );
 
-  final int duration;
-
   // Damage per turn
-  num get dpt {
+  double dpt() {
     return power / duration;
   }
 
   // Energy gain per turn
-  num get ept {
+  double ept() {
     return energyDelta / duration;
   }
 
   void _calculateBaseRating() {
-    rating = pow(dpt * pow(ept, 4), .2);
+    rating = pow(dpt() * pow(ept(), 4), .2).toDouble();
   }
 
   void debugPrint() {
-    DebugCLI.print(name, 'dpt: $dpt  ept: $ept  rating: $rating');
+    DebugCLI.print(name, 'dpt : $dpt()  ept : $ept()  rating : $rating');
   }
 }
 
+@Collection(accessor: 'chargeMoves')
 class ChargeMove extends Move {
   ChargeMove({
-    required moveId,
-    required name,
-    required type,
-    required power,
-    required energyDelta,
+    required String moveId,
+    required String name,
+    required PokemonType type,
+    required double power,
+    required double energyDelta,
     required this.buffs,
   }) : super(
           moveId: moveId,
@@ -168,7 +183,7 @@ class ChargeMove extends Move {
     _calculateBaseRating();
   }
 
-  static ChargeMove from(ChargeMove other) {
+  factory ChargeMove.from(ChargeMove other) {
     return ChargeMove(
       moveId: other.moveId,
       name: other.name,
@@ -183,13 +198,15 @@ class ChargeMove extends Move {
     return ChargeMove(
       moveId: json['moveId'] as String,
       name: json['name'] as String,
-      type: PokemonTypes.typeMap[json['type'] as String]!,
-      power: json['power'] as num,
-      energyDelta: json['energyDelta'] as num,
+      type: PokemonType(typeId: json['type'] as String),
+      power: (json['power'] as num).toDouble(),
+      energyDelta: (json['energyDelta'] as num).toDouble(),
       buffs:
           json.containsKey('buffs') ? MoveBuffs.fromJson(json['buffs']) : null,
     );
   }
+
+  final MoveBuffs? buffs;
 
   static final ChargeMove none = ChargeMove(
     moveId: 'none',
@@ -200,35 +217,35 @@ class ChargeMove extends Move {
     buffs: null,
   );
 
-  final MoveBuffs? buffs;
+  void _calculateBaseRating() {
+    rating = dpe() *
+        (buffs == null ? 1 : pow(buffs!.buffMultiplier(), 2)).toDouble();
+  }
 
   // Damage per energy
-  num get dpe {
+  double dpe() {
     if (energyDelta == 0) return 1.0;
     return pow(power, 2) / pow(energyDelta, 4);
   }
 
-  void _calculateBaseRating() {
-    rating = dpe * (buffs == null ? 1 : pow(buffs!.buffMultiplier, 2));
-  }
-
   void debugPrint() {
-    DebugCLI.print(name, 'dpe : $dpe  rating : $rating');
+    DebugCLI.print(name, 'dpe : $dpe()  rating : $rating');
   }
 }
 
+@embedded
 class MoveBuffs {
   MoveBuffs({
-    required this.chance,
-    required this.selfAttack,
-    required this.selfDefense,
-    required this.opponentAttack,
-    required this.opponentDefense,
+    this.chance = 0,
+    this.selfAttack,
+    this.selfDefense,
+    this.opponentAttack,
+    this.opponentDefense,
   });
 
   factory MoveBuffs.fromJson(Map<String, dynamic> json) {
     return MoveBuffs(
-      chance: json['chance'] as num,
+      chance: (json['chance'] as num).toDouble(),
       selfAttack: json['selfAttack'] as int?,
       selfDefense: json['selfDefense'] as int?,
       opponentAttack: json['opponentAttack'] as int?,
@@ -236,7 +253,7 @@ class MoveBuffs {
     );
   }
 
-  final num chance;
+  final double chance;
   final int? selfAttack;
   final int? selfDefense;
   final int? opponentAttack;
@@ -246,18 +263,18 @@ class MoveBuffs {
   // - Opponent buff
   // - Owner buff
   // - Apply chance
-  num get buffMultiplier {
-    num multiplier = chance;
+  double buffMultiplier() {
+    double multiplier = chance;
     multiplier *= _buffMultiplier(selfAttack, false);
     multiplier *= _buffMultiplier(opponentAttack, true);
     multiplier *= _buffMultiplier(opponentDefense, true);
     return 1 + ((multiplier - 1) * chance);
   }
 
-  num _buffMultiplier(num? buff, bool targetOpponent) {
+  double _buffMultiplier(int? buff, bool targetOpponent) {
     if (buff == null) return 1;
 
-    num multiplier = 1;
+    double multiplier = 1;
     if (targetOpponent) {
       if (buff > 0) {
         multiplier *= 1 / ((4 + buff) / 4);

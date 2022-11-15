@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../game_objects/move.dart';
-import '../../game_objects/pokemon.dart';
+import '../../pogo_objects/move.dart';
+import '../../pogo_objects/pokemon.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/ui/pogo_colors.dart';
 
@@ -30,8 +30,8 @@ class MoveDropdowns extends StatefulWidget {
   final VoidCallback? onChanged;
 
   // Lists of the moves a Pokemon can learn
-  late final List<String> fastMoveNames = pokemon.fastMoveIds;
-  late final List<String> chargedMoveNames = pokemon.chargeMoveIds;
+  late final List<String> fastMoveNames = pokemon.fastMoveIds();
+  late final List<String> chargedMoveNames = pokemon.chargeMoveIds();
 
   @override
   _MoveDropdownsState createState() => _MoveDropdownsState();
@@ -53,7 +53,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
 
   // Setup the move dropdown items
   void _initializeMoveData() {
-    fastMoveOptions = _generateDropdownItems(widget.pokemon.fastMoves);
+    //fastMoveOptions = _generateDropdownItems(widget.pokemon.fastMoves);
 
     _updateChargedMoveOptions();
   }

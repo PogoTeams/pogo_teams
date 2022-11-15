@@ -1,9 +1,15 @@
+// Packages
+import 'package:isar/isar.dart';
+
+part 'ratings.g.dart';
+
+@embedded
 class Ratings {
   Ratings({
-    required this.overall,
-    required this.lead,
-    required this.switchRating,
-    required this.closer,
+    this.overall = 0,
+    this.lead = 0,
+    this.switchRating = 0,
+    this.closer = 0,
   });
 
   factory Ratings.fromJson(Map<String, dynamic> json) {
@@ -23,13 +29,6 @@ class Ratings {
       'closer': closer,
     };
   }
-
-  static Ratings empty() => Ratings(
-        overall: 0,
-        lead: 0,
-        switchRating: 0,
-        closer: 0,
-      );
 
   int overall;
   int lead;

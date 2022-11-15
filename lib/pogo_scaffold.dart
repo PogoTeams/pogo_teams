@@ -30,7 +30,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
   bool _loaded = false;
 
   // Used to navigate between pages by key
-  PogoPages _currentPage = PogoPages.account;
+  PogoPages _currentPage = PogoPages.teams;
 
   // For animating the loading progress bar
   late final AnimationController _progressBarAnimController =

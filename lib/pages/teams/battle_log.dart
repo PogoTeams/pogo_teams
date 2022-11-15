@@ -4,8 +4,8 @@ import 'package:pogo_teams/pages/analysis/analysis.dart';
 
 // Local Imports
 import 'team_builder.dart';
-import '../../game_objects/pokemon_team.dart';
-import '../../game_objects/opponent_teams.dart';
+import '../../pogo_objects/pokemon_team.dart';
+import '../../pogo_objects/opponent_teams.dart';
 import '../../../widgets/nodes/team_node.dart';
 import '../../../widgets/buttons/gradient_button.dart';
 import '../../../widgets/nodes/win_loss_node.dart';

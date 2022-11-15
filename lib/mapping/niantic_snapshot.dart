@@ -3,7 +3,7 @@ import 'dart:io';
 
 // Local
 import 'snapshot_diff.dart';
-import '../game_objects/pokemon_stats.dart';
+import '../pogo_objects/pokemon_stats.dart';
 import '../modules/data/stats.dart';
 import '../tools/json_tools.dart';
 
@@ -155,8 +155,8 @@ void _mapFastMove(Map<String, dynamic> fastMoveSrc, String templateId) {
 
   String name = _getName(moveId);
   String type = _getType(fastMoveSrc['type']);
-  num power = fastMoveSrc['power'] ?? 0;
-  num energyDelta = fastMoveSrc['energyDelta'] ?? 0;
+  double power = (fastMoveSrc['power'] as num? ?? 0.0).toDouble();
+  double energyDelta = (fastMoveSrc['energyDelta'] as num? ?? 0.0).toDouble();
   int duration = 1 + (fastMoveSrc['durationTurns'] ?? 0) as int;
 
   _fastMovesOutput.add(<String, dynamic>{
@@ -197,7 +197,7 @@ void _mapChargeMove(Map<String, dynamic> chargeMoveSrc, String templateId) {
     }
 
     buffs = {};
-    buffs['chance'] = buffsJson['buffActivationChance'] as num;
+    buffs['chance'] = (buffsJson['buffActivationChance'] as num).toDouble();
     if (buffsJson.containsKey('attackerAttackStatStageChange')) {
       buffs['selfAttack'] = buffsJson['attackerAttackStatStageChange'] as int;
     }

@@ -34,16 +34,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   path_provider: ^2.0.7
-  hive_flutter: ^1.1.0
-  hive_generator: ^1.1.1
   build_runner: ^2.1.5
   http: ^0.13.4
   url_launcher: ^6.0.17
-  firebase_core: ^1.24.0
-  cloud_firestore: ^3.5.0
-  firebase_auth: ^3.11.2
-  firebase_dynamic_links: ^4.3.11
-  email_validator: '^2.1.16'
+  isar: ^3.0.2
+  isar_flutter_libs: ^3.0.2
+  isar_generator: ^3.0.2
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +76,9 @@ flutter:
   assets:
     - assets/
     - assets/white_type_icons/
+    - bin/
+    - bin/json/
+    - bin/json/rankings/
 
   fonts:
     - family: Futura

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../game_objects/pokemon.dart';
+import '../pogo_objects/pokemon.dart';
 import '../modules/ui/sizing.dart';
 
 /*
@@ -31,7 +31,7 @@ class TraitsIcons extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           //pokemon.isXL ? XlIcon(scale: scale) : Container(),
-          pokemon.isShadow ? ShadowIcon(scale: scale) : Container(),
+          pokemon.isShadow() ? ShadowIcon(scale: scale) : Container(),
         ],
       ),
     );

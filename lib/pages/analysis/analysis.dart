@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'user_team_analysis.dart';
 import 'opponent_team_analysis.dart';
 import 'logs_analysis.dart';
-import '../../game_objects/pokemon.dart';
-import '../../game_objects/pokemon_team.dart';
-import '../../game_objects/pokemon_typing.dart';
-import '../../game_objects/opponent_teams.dart';
+import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/pokemon_team.dart';
+import '../../pogo_objects/pokemon_typing.dart';
+import '../../pogo_objects/opponent_teams.dart';
 import '../../modules/data/pokemon_types.dart';
 import '../../tools/pair.dart';
 
@@ -177,7 +177,7 @@ class _AnalysisState extends State<Analysis> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> includedTypesKeys = widget.team.cup.includedTypeKeys;
+    List<String> includedTypesKeys = widget.team.cup.includedTypeKeys();
 
     // Analysis will be on all logged opponent teams
     if (widget.opponentTeams != null) {

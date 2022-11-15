@@ -1,32 +1,33 @@
+// Packages
+import 'package:isar/isar.dart';
+
 // Local
 import '../modules/data/globals.dart';
 import '../modules/data/pokemon_types.dart';
+
+part 'pokemon_typing.g.dart';
 
 /*
 -------------------------------------------------------------------------------
 Manages a Pokemon's typing which can be exactly 1 or 2 types.
 -------------------------------------------------------------------------------
 */
-
+@embedded
 class PokemonTyping {
-  PokemonTyping({
-    required this.typeA,
-    required this.typeB,
-  });
+  PokemonTyping();
 
   factory PokemonTyping.fromJson(Map<String, dynamic> json) {
-    return PokemonTyping(
-      typeA: PokemonTypes.typeMap[json['typeA'] as String]!,
-      typeB: json.containsKey('typeB')
+    return PokemonTyping()
+      ..typeA = PokemonTypes.typeMap[json['typeA'] as String]!
+      ..typeB = json.containsKey('typeB')
           ? PokemonTypes.typeMap[json['typeB'] as String]!
-          : null,
-    );
+          : null;
   }
 
-  final PokemonType typeA;
-  final PokemonType? typeB;
+  PokemonType typeA = PokemonType.none;
+  PokemonType? typeB;
 
-  bool get isMonoType => typeB == null;
+  bool isMonoType() => typeB == null;
 
   bool contains(PokemonType type) {
     return (typeA.isSameType(type) || typeB != null && typeB!.isSameType(type));
@@ -34,7 +35,8 @@ class PokemonTyping {
 
   bool containsType(List<PokemonType> types) {
     for (PokemonType type in types) {
-      if (typeA.isSameType(type) || (!isMonoType && typeB!.isSameType(type))) {
+      if (typeA.isSameType(type) ||
+          (!isMonoType() && typeB!.isSameType(type))) {
         return true;
       }
     }
@@ -47,11 +49,11 @@ class PokemonTyping {
   }
 
   // Get defense effectiveness of all types on this typing
-  List<double> get defenseEffectiveness {
-    if (isMonoType) return typeA.defenseEffectiveness;
+  List<double> defenseEffectiveness() {
+    if (isMonoType()) return typeA.defenseEffectiveness();
 
-    List<double> aEffectiveness = typeA.defenseEffectiveness;
-    List<double>? bEffectiveness = typeB?.defenseEffectiveness;
+    List<double> aEffectiveness = typeA.defenseEffectiveness();
+    List<double>? bEffectiveness = typeB?.defenseEffectiveness();
 
     // Calculate duo-type effectiveness
     for (int i = 0; i < Globals.typeCount; ++i) {
@@ -62,7 +64,7 @@ class PokemonTyping {
   }
 
   num getEffectivenessFromType(PokemonType type) {
-    if (isMonoType) {
+    if (isMonoType()) {
       return PokemonTypes.effectivenessMaster[typeA.typeId]![type.typeId]![1];
     }
 
@@ -72,7 +74,7 @@ class PokemonTyping {
 
   @override
   String toString() {
-    if (isMonoType) {
+    if (isMonoType()) {
       return typeA.typeId;
     }
 
@@ -84,10 +86,9 @@ class PokemonTyping {
 Manages all data cooresponding to a single type. This can be a type from a
 Pokemon's duo / mono typing or a Pokemon move.
 */
+@embedded
 class PokemonType {
-  PokemonType({required this.typeId}) {
-    effectivenessMap = PokemonTypes.getEffectivenessMap(typeId);
-  }
+  PokemonType({this.typeId = 'none'});
 
   static final PokemonType none = PokemonType(typeId: 'none');
 
@@ -96,23 +97,24 @@ class PokemonType {
   // The offensive and defensive effectivness of this type to all types
   // [0] : offensive
   // [1] : defensive
-  late final Map<String, List<double>> effectivenessMap;
+  Map<String, List<double>> effectivenessMap() =>
+      PokemonTypes.getEffectivenessMap(typeId);
 
   bool isSameType(PokemonType other) {
     return typeId == other.typeId;
   }
 
   bool isWeakTo(PokemonType type) {
-    return effectivenessMap[type.typeId]![1] > 1.0;
+    return effectivenessMap()[type.typeId]![1] > 1.0;
   }
 
-  List<double> get defenseEffectiveness {
+  List<double> defenseEffectiveness() {
     List<double> effectiveness =
         List.generate(Globals.typeCount, (index) => 0.0);
 
     int i = 0;
 
-    for (List<double> effectivenessVal in effectivenessMap.values) {
+    for (List<double> effectivenessVal in effectivenessMap().values) {
       effectiveness[i] = effectivenessVal[1];
       ++i;
     }
@@ -120,13 +122,13 @@ class PokemonType {
     return effectiveness;
   }
 
-  List<double> get offenseEffectiveness {
+  List<double> offenseEffectiveness() {
     List<double> effectiveness =
         List.generate(Globals.typeCount, (index) => 0.0);
 
     int i = 0;
 
-    for (List<double> effectivenessVal in effectivenessMap.values) {
+    for (List<double> effectivenessVal in effectivenessMap().values) {
       effectiveness[i] = effectivenessVal[0];
       ++i;
     }

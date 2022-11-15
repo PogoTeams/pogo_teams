@@ -9,9 +9,9 @@ import '../analysis/analysis.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../modules/ui/sizing.dart';
-import '../../game_objects/user_teams.dart';
-import '../../game_objects/pokemon.dart';
-import '../../game_objects/pokemon_team.dart';
+import '../../pogo_objects/user_teams.dart';
+import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/pokemon_team.dart';
 import '../../modules/data/pogo_data.dart';
 
 /*
@@ -37,7 +37,7 @@ class _TeamsState extends State<Teams> {
   late UserTeams _teams = UserTeams();
 
   void _loadTeams() async {
-    _teams = await PogoData.getUserTeams();
+    //_teams = await PogoData.getUserTeams();
     setState(() {});
   }
 

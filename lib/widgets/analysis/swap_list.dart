@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../game_objects/pokemon_team.dart';
-import '../../game_objects/pokemon.dart';
-import '../../game_objects/pokemon_typing.dart';
+import '../../pogo_objects/pokemon_team.dart';
+import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/pokemon_typing.dart';
 import '../nodes/pokemon_node.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/data/pogo_data.dart';

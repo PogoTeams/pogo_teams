@@ -1,10 +1,9 @@
 // Local Imports
-import 'package:pogo_teams/game_objects/opponent_teams.dart';
-
+import 'opponent_teams.dart';
 import 'pokemon.dart';
 import 'cup.dart';
 import '../modules/data/pokemon_types.dart';
-import '../modules/data/gamemaster.dart';
+import '../modules/data/pogo_data.dart';
 import '../modules/data/globals.dart';
 import '../enums/battle_outcome.dart';
 
@@ -39,7 +38,7 @@ class PokemonTeam {
 
   // The selected PVP cup for this team
   // Defaults to Great League
-  Cup _cup = Gamemaster().cups.first;
+  Cup _cup = PogoData.cups.first;
   Cup get cup => _cup;
   set cup(Cup value) {
     _cup = value;
@@ -47,15 +46,15 @@ class PokemonTeam {
     // initialize IVs to recommendation whenever the team's cup is set
     for (Pokemon? pokemon in pokemonTeam) {
       if (pokemon != null) {
-        pokemon.initializeStats(cup.cp);
+        // TODO pokemon.initializeStats(cup.cp);
       }
     }
   }
 
   // Switch to a different cup with the specified cupTitle
   void setCupById(String cupId) {
-    cup = Gamemaster().cups.firstWhere((cup) => cup.cupId == cupId,
-        orElse: () => Gamemaster().cups.first);
+    cup = PogoData.cups.firstWhere((cup) => cup.cupId == cupId,
+        orElse: () => PogoData.cups.first);
   }
 
   // Make a copy of the newTeam, keeping the size of the original team
@@ -73,7 +72,7 @@ class PokemonTeam {
     if (pokemon == null) {
       pokemonTeam[index] = null;
     } else {
-      pokemonTeam[index] = Pokemon.from(pokemon);
+      // TODO pokemonTeam[index] = Pokemon.fromIsar(pokemon);
     }
 
     _updateEffectiveness();
@@ -164,7 +163,7 @@ class PokemonTeam {
 
     for (int i = 0; i < pokemonTeam.length; ++i) {
       if (pokemonTeam[i] != null) {
-        teamJson.add(pokemonTeam[i]!.toUserTeamJson(i));
+        // TODO teamJson.add(pokemonTeam[i]!.toUserTeamJson(i));
       }
     }
 
@@ -183,11 +182,13 @@ class UserPokemonTeam extends PokemonTeam {
     for (Map<String, dynamic> pokemonEntry
         in List<Map<String, dynamic>>.from(json['pokemonTeam'])) {
       final pokemonIndex = pokemonEntry['pokemonIndex'] as int;
-      pokemonTeam[pokemonIndex] = Pokemon.fromTeamJson(pokemonEntry);
+      //TODO
+      //pokemonTeam[pokemonIndex] = Pokemon.fromTeamJson(pokemonEntry);
     }
 
     return UserPokemonTeam()
-      ..cup = Gamemaster().getCupById(json['cup'] as String)
+      //TODO
+      //..cup = PogoData.getCupById(json['cup'] as String)
       ..locked = json['locked'] as bool
       ..sortOrder = json['sortOrder'] as int
       ..winRate = json['winRate'] as double
@@ -267,13 +268,15 @@ class OpponentPokemonTeam extends PokemonTeam {
     for (Map<String, dynamic> pokemonEntry
         in List<Map<String, dynamic>>.from(json['pokemonTeam'])) {
       final pokemonIndex = pokemonEntry['pokemonIndex'] as int;
-      pokemonTeam[pokemonIndex] = Pokemon.fromTeamJson(pokemonEntry);
+      // TODO
+      //pokemonTeam[pokemonIndex] = Pokemon.fromTeamJson(pokemonEntry);
     }
 
     return OpponentPokemonTeam()
       ..sortOrder = json['sortOrder'] as int
       ..userTeamId = json['userTeamId'] as String
-      ..cup = Gamemaster().getCupById(json['cupId'] as String)
+      // TODO
+      //..cup = PogoData.getCupById(json['cupId'] as String)
       ..battleOutcome = fromOutcomeName(json['battleOutcome'] as String)
       ..locked = json['locked'] as bool
       ..setPokemonTeam(pokemonTeam);

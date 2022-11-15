@@ -1,6 +1,6 @@
 // Local
 import 'pokemon_battler.dart';
-import '../game_objects/pokemon.dart';
+import '../pogo_objects/pokemon.dart';
 import '../modules/data/debug_cli.dart';
 import '../enums/battle_outcome.dart';
 
@@ -15,9 +15,9 @@ class BattleResult {
     required this.opponent,
     required this.timeline,
   }) {
-    num selfRating =
+    double selfRating =
         self.currentHpRatio * self.chargeDPE + opponent.damageRecievedRatio;
-    num opponentRating =
+    double opponentRating =
         opponent.currentHpRatio * opponent.chargeDPE + self.damageRecievedRatio;
 
     if (self.currentHp > 0) {

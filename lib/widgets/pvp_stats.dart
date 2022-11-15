@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../game_objects/pokemon_stats.dart';
+import '../pogo_objects/pokemon_stats.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

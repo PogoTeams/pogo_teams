@@ -5,9 +5,9 @@ import 'package:flutter/widgets.dart';
 
 // Local Imports
 import '../modules/ui/sizing.dart';
-import '../game_objects/cup.dart';
+import '../pogo_objects/cup.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
-import '../modules/data/gamemaster.dart';
+import '../modules/data/pogo_data.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -28,7 +28,7 @@ class _RankingsState extends State<BattleLogs> {
     if (newCupId == null) return;
 
     setState(() {
-      cup = Gamemaster().getCupById(newCupId);
+      //cup = PogoData.getCupById(newCupId);
     });
   }
 
@@ -61,7 +61,7 @@ class _RankingsState extends State<BattleLogs> {
   void initState() {
     super.initState();
 
-    cup = Gamemaster().cups.first;
+    cup = PogoData.cups.first;
   }
 
   @override
