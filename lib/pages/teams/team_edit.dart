@@ -60,7 +60,7 @@ class _TeamEditState extends State<TeamEdit> {
     PogoData.updateUserPokemonTeam(_builderTeam, updateMask: ['teamSize']);
   }
 
-  void _onPokemonChanged(int index, Pokemon? newPokemon) {
+  void _onPokemonChanged(int index, RankedPokemon? newPokemon) {
     setState(() {
       _builderTeam.setPokemon(index, newPokemon);
     });
@@ -72,7 +72,7 @@ class _TeamEditState extends State<TeamEdit> {
     PogoData.updateUserPokemonTeam(_builderTeam);
   }
 
-  void _onPokemonTeamChanged(List<Pokemon?> newPokemonTeam) {
+  void _onPokemonTeamChanged(List<RankedPokemon?> newPokemonTeam) {
     setState(() {
       _builderTeam.setPokemonTeam(newPokemonTeam);
     });
@@ -108,7 +108,7 @@ class _TeamEditState extends State<TeamEdit> {
 
     final newTeam = await Navigator.push(
       context,
-      MaterialPageRoute<List<Pokemon?>>(builder: (BuildContext context) {
+      MaterialPageRoute<List<RankedPokemon?>>(builder: (BuildContext context) {
         return Analysis(team: _builderTeam);
       }),
     );
@@ -154,7 +154,7 @@ class _TeamEditState extends State<TeamEdit> {
 
   // Build a row of icon buttons at the bottom of a Pokemon's Node
   // If the Pokemon in question is null, this footer is also null
-  Widget? _buildNodeFooter(Pokemon? pokemon, int nodeIndex) {
+  Widget? _buildNodeFooter(RankedPokemon? pokemon, int nodeIndex) {
     if (pokemon == null) return null;
 
     // Size of the footer icons
@@ -201,7 +201,7 @@ class _TeamEditState extends State<TeamEdit> {
   }
 
   // Build the list of either 3 or 6 PokemonNodes that make up this team
-  Widget _buildTeamNodes(List<Pokemon?> pokemonTeam) {
+  Widget _buildTeamNodes(List<RankedPokemon?> pokemonTeam) {
     return ListView(
       shrinkWrap: true,
       children: List.generate(

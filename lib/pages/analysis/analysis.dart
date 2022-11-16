@@ -49,7 +49,7 @@ class _AnalysisState extends State<Analysis> {
   final ScrollController _scrollController = ScrollController();
 
   void _calculateSingleCoverage(
-    List<Pokemon> pokemonTeam,
+    List<RankedPokemon> pokemonTeam,
     List<double> effectiveness,
     List<String> includedTypesKeys,
   ) {
@@ -117,7 +117,7 @@ class _AnalysisState extends State<Analysis> {
     // Foreach callback
     // Get the effectiveness of a single log, and accumulate it to the coverage
     void _accumulateLog(OpponentPokemonTeam log) {
-      final List<Pokemon> pokemonTeam = log.getPokemonTeam();
+      final List<RankedPokemon> pokemonTeam = log.getPokemonTeam();
       loggedPokemonCount += pokemonTeam.length;
 
       // Get coverage lists

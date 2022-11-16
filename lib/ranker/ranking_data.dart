@@ -42,7 +42,7 @@ class RankingData {
   int closerBattleCount = 0;
 
   Map<String, dynamic> toJson() {
-    FastMove idealFastMove = pokemon.fastMoves.reduce((move1, move2) {
+    FastMove idealFastMove = pokemon.getFastMoves().reduce((move1, move2) {
       return (move1.usage > move2.usage ? move1 : move2);
     });
     //pokemon.chargeMoves.sort((move1, move2) => move2.usage - move1.usage);

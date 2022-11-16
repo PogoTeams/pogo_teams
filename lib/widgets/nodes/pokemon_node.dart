@@ -36,7 +36,6 @@ class PokemonNode extends StatelessWidget {
     height = Sizing.blockSizeHorizontal * 25.0;
     cup = null;
     dropdowns = false;
-    rating = false;
 
     if (pokemon == null) return;
 
@@ -52,7 +51,7 @@ class PokemonNode extends StatelessWidget {
     this.emptyTransparent = false,
     this.padding,
     this.dropdowns = true,
-    this.rating = false,
+    this.rating,
   }) : super(key: key) {
     width = double.infinity;
     height = Sizing.blockSizeVertical * 15.0;
@@ -79,7 +78,6 @@ class PokemonNode extends StatelessWidget {
     width = double.infinity;
     height = Sizing.blockSizeVertical * 22.0;
     dropdowns = false;
-    rating = false;
 
     if (pokemon == null) return;
 
@@ -91,7 +89,7 @@ class PokemonNode extends StatelessWidget {
     );
   }
 
-  final Pokemon? pokemon;
+  final RankedPokemon? pokemon;
   late final VoidCallback? onPressed;
   late final VoidCallback? onEmptyPressed;
   late final VoidCallback? onMoveChanged;
@@ -105,7 +103,7 @@ class PokemonNode extends StatelessWidget {
   late final double width;
   late final double height;
   late final bool dropdowns;
-  late final bool rating;
+  late final String? rating;
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +123,7 @@ class PokemonNode extends StatelessWidget {
                     right: Sizing.blockSizeHorizontal * 2.0,
                     bottom: Sizing.blockSizeVertical * .5,
                   ),
-              pokemon: pokemon!,
+              pokemon: pokemon!.getBase(),
               child: onPressed == null
                   ? body
                   : MaterialButton(
@@ -143,7 +141,7 @@ class _SquareNodeBody extends StatelessWidget {
     required this.pokemon,
   }) : super(key: key);
 
-  final Pokemon pokemon;
+  final RankedPokemon pokemon;
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +150,7 @@ class _SquareNodeBody extends StatelessWidget {
       children: [
         // Pokemon name
         FormattedPokemonName(
-          name: pokemon.name,
+          name: pokemon.getBase().name,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline6,
           suffixStyle: Theme.of(context).textTheme.bodyMedium,
@@ -165,12 +163,12 @@ class _SquareNodeBody extends StatelessWidget {
         ),
 
         TraitsIcons(
-          pokemon: pokemon,
+          pokemon: pokemon.getBase(),
           scale: .7,
         ),
 
         MoveDots(
-            moveColors: PogoColors.getPokemonMovesetColors(pokemon.moveset)),
+            moveColors: PogoColors.getPokemonMovesetColors(pokemon.moveset())),
       ],
     );
   }
@@ -182,66 +180,68 @@ class _SmallNodeBody extends StatelessWidget {
     required this.pokemon,
     required this.dropdowns,
     required this.onMoveChanged,
-    required this.rating,
+    this.rating,
   }) : super(key: key);
 
-  final Pokemon pokemon;
+  final RankedPokemon pokemon;
   final bool dropdowns;
   final VoidCallback? onMoveChanged;
-  final bool rating;
+  final String? rating;
 
   // Display the Pokemon's name perfect PVP ivs and typing icon(s)
   // If rating is true, place the rating in the upper left corner
-  Row _buildNodeHeader(BuildContext context, Pokemon pokemon) {
-    if (rating) {
+  Row _buildNodeHeader(BuildContext context, RankedPokemon pokemon) {
+    if (rating == null) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Pokemon cup - specific rating
-          // Used for the ratings pages
-          Text(
-            pokemon.ratingString,
-            style: Theme.of(context).textTheme.headline5,
-          ),
-
           // Pokemon name
           Text(
-            pokemon.name,
+            pokemon.getBase().name,
             style: Theme.of(context).textTheme.headline5,
           ),
 
           // Traits Icons
-          TraitsIcons(pokemon: pokemon),
+          TraitsIcons(pokemon: pokemon.getBase()),
 
           // Typing icon(s)
           Container(
             alignment: Alignment.topRight,
             height: Sizing.blockSizeHorizontal * 8.0,
             child: Row(
-              children: PogoIcons.getPokemonTypingIcons(pokemon.typing),
+              children:
+                  PogoIcons.getPokemonTypingIcons(pokemon.getBase().typing),
             ),
           ),
         ],
       );
     }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        // Pokemon cup - specific rating
+        // Used for the ratings pages
+        Text(
+          rating!,
+          style: Theme.of(context).textTheme.headline5,
+        ),
+
         // Pokemon name
         Text(
-          pokemon.name,
+          pokemon.getBase().name,
           style: Theme.of(context).textTheme.headline5,
         ),
 
         // Traits Icons
-        TraitsIcons(pokemon: pokemon),
+        TraitsIcons(pokemon: pokemon.getBase()),
 
         // Typing icon(s)
         Container(
           alignment: Alignment.topRight,
           height: Sizing.blockSizeHorizontal * 8.0,
           child: Row(
-            children: PogoIcons.getPokemonTypingIcons(pokemon.typing),
+            children: PogoIcons.getPokemonTypingIcons(pokemon.getBase().typing),
           ),
         ),
       ],
@@ -291,31 +291,31 @@ class _LargeNodeBody extends StatelessWidget {
     this.onMoveChanged,
   }) : super(key: key);
 
-  final Pokemon pokemon;
+  final RankedPokemon pokemon;
   final Cup? cup;
   final Widget? footer;
   final VoidCallback? onMoveChanged;
 
   // Display the Pokemon's name perfect PVP ivs and typing icon(s)
-  Row _buildNodeHeader(BuildContext context, Pokemon pokemon, Cup? cup) {
+  Row _buildNodeHeader(BuildContext context, RankedPokemon pokemon, Cup? cup) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Pokemon name
         Text(
-          pokemon.name,
+          pokemon.getBase().name,
           style: Theme.of(context).textTheme.headline5,
         ),
 
         // Traits Icons
-        TraitsIcons(pokemon: pokemon),
+        TraitsIcons(pokemon: pokemon.getBase()),
 
         // The perfect IVs for this Pokemon given the selected cup
         cup == null
             ? Container()
             : PvpStats(
-                cp: Stats.calculateCP(pokemon.stats, pokemon.selectedIVs),
-                ivs: pokemon.selectedIVs,
+                cp: Stats.calculateCP(pokemon.getBase().stats, pokemon.ivs),
+                ivs: pokemon.ivs,
               ),
 
         // Typing icon(s)
@@ -323,7 +323,7 @@ class _LargeNodeBody extends StatelessWidget {
           alignment: Alignment.topRight,
           height: Sizing.blockSizeHorizontal * 8.0,
           child: Row(
-            children: PogoIcons.getPokemonTypingIcons(pokemon.typing),
+            children: PogoIcons.getPokemonTypingIcons(pokemon.getBase().typing),
           ),
         ),
       ],

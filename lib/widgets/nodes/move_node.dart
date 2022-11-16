@@ -20,16 +20,16 @@ class MoveNodes extends StatelessWidget {
     required this.pokemon,
   }) : super(key: key);
 
-  final Pokemon pokemon;
+  final RankedPokemon pokemon;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        MoveNode(move: pokemon.selectedFastMove),
-        MoveNode(move: pokemon.selectedChargeMoves[0]),
-        MoveNode(move: pokemon.selectedChargeMoves[1]),
+        MoveNode(move: pokemon.getSelectedFastMove()),
+        MoveNode(move: pokemon.getSelectedChargeMoves().first),
+        MoveNode(move: pokemon.getSelectedChargeMoves().last),
       ],
     );
   }

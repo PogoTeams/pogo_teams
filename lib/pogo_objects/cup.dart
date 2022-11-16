@@ -1,5 +1,6 @@
 // Packages
 import 'package:isar/isar.dart';
+import 'package:pogo_teams/enums/rankings_categories.dart';
 
 // Local
 import 'pokemon.dart';
@@ -39,9 +40,65 @@ class Cup {
   final bool live;
   final String? publisher;
 
-  IsarLinks<CupFilter> includeFilters = IsarLinks<CupFilter>();
-  IsarLinks<CupFilter> excludeFilters = IsarLinks<CupFilter>();
-  IsarLinks<RankedPokemon> rankings = IsarLinks<RankedPokemon>();
+  final IsarLinks<CupFilter> _includeFilters = IsarLinks<CupFilter>();
+  final IsarLinks<CupFilter> _excludeFilters = IsarLinks<CupFilter>();
+  final IsarLinks<RankedPokemon> _rankings = IsarLinks<RankedPokemon>();
+
+  @ignore
+  IsarLinks<RankedPokemon> get rankings {
+    if (_rankings.isAttached && !_rankings.isLoaded) {
+      _rankings.loadSync();
+    }
+
+    return _rankings;
+  }
+
+  @ignore
+  IsarLinks<CupFilter> get includeFilters {
+    if (_includeFilters.isAttached && !_includeFilters.isLoaded) {
+      _includeFilters.loadSync();
+    }
+
+    return _includeFilters;
+  }
+
+  @ignore
+  IsarLinks<CupFilter> get excludeFilters {
+    if (_excludeFilters.isAttached && !_excludeFilters.isLoaded) {
+      _excludeFilters.loadSync();
+    }
+
+    return _excludeFilters;
+  }
+
+  List<RankedPokemon> getRankedPokemonList(
+      RankingsCategories rankingsCategory) {
+    final List<RankedPokemon> rankedPokemonList = rankings.toList();
+
+    switch (rankingsCategory) {
+      case RankingsCategories.overall:
+        rankedPokemonList
+            .sort((p1, p2) => p2.ratings.overall - p1.ratings.overall);
+        break;
+      case RankingsCategories.leads:
+        rankedPokemonList.sort((p1, p2) => p2.ratings.lead - p1.ratings.lead);
+        break;
+      case RankingsCategories.switches:
+        rankedPokemonList.sort(
+            (p1, p2) => p2.ratings.switchRating - p1.ratings.switchRating);
+        break;
+      case RankingsCategories.closers:
+        rankedPokemonList
+            .sort((p1, p2) => p2.ratings.closer - p1.ratings.closer);
+        break;
+      default:
+        rankedPokemonList
+            .sort((p1, p2) => p2.ratings.overall - p1.ratings.overall);
+        break;
+    }
+
+    return rankedPokemonList;
+  }
 
   bool pokemonIsAllowed(Pokemon pokemon) {
     if (includeFilters.isNotEmpty) {

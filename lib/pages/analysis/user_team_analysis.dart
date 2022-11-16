@@ -35,7 +35,7 @@ class UserTeamAnalysis extends StatefulWidget {
   final List<Pair<PokemonType, double>> defenseThreats;
   final List<Pair<PokemonType, double>> offenseCoverage;
   final List<Pair<PokemonType, double>> netEffectiveness;
-  final Function(List<Pokemon>, List<double>) recalculate;
+  final Function(List<RankedPokemon>, List<double>) recalculate;
 
   @override
   _UserTeamAnalysisState createState() => _UserTeamAnalysisState();
@@ -54,7 +54,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
   final ScrollController _scrollController = ScrollController();
 
   // Setup the list of expansion panels given the PokemonTeam
-  void _initializeExpansionPanels(List<Pokemon> pokemonTeam) {
+  void _initializeExpansionPanels(List<RankedPokemon> pokemonTeam) {
     final defenseThreatTypes =
         widget.defenseThreats.map((typeData) => typeData.a).toList();
 
@@ -96,10 +96,10 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
 
   // When the team is changed from a swap page, animate to the top of to
   // display the new team
-  void _onSwap(Pokemon swapPokemon) async {
-    List<Pokemon>? newTeam = await Navigator.push(
+  void _onSwap(RankedPokemon swapPokemon) async {
+    List<RankedPokemon>? newTeam = await Navigator.push(
       context,
-      MaterialPageRoute<List<Pokemon>>(
+      MaterialPageRoute<List<RankedPokemon>>(
         builder: (BuildContext context) {
           return TeamSwap(
             team: widget.team,
@@ -129,7 +129,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
     }
   }
 
-  void _onAddPokemon(Pokemon pokemon) {
+  void _onAddPokemon(RankedPokemon pokemon) {
     widget.team.addPokemon(pokemon);
 
     widget.recalculate(
@@ -184,7 +184,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
   }
 
   // Build the list of either 3 or 6 PokemonNodes that make up this team
-  Widget _buildPokemonNodes(List<Pokemon> pokemonTeam) {
+  Widget _buildPokemonNodes(List<RankedPokemon> pokemonTeam) {
     return ListView(
       shrinkWrap: true,
       children: List.generate(

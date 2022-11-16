@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../pogo_objects/pokemon.dart';
 import 'nodes/pokemon_node.dart';
 import '../modules/ui/sizing.dart';
+import '../enums/rankings_categories.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -20,13 +21,13 @@ class PokemonList extends StatelessWidget {
     required this.pokemon,
     required this.onPokemonSelected,
     this.dropdowns = true,
-    this.rating = false,
+    this.rankingsCategory,
   }) : super(key: key);
 
-  final List<Pokemon> pokemon;
-  final Function(Pokemon) onPokemonSelected;
+  final List<RankedPokemon> pokemon;
+  final Function(RankedPokemon) onPokemonSelected;
   final bool dropdowns;
-  final bool rating;
+  final RankingsCategories? rankingsCategory;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,9 @@ class PokemonList extends StatelessWidget {
                   child: PokemonNode.small(
                     pokemon: pokemon[index],
                     dropdowns: dropdowns,
-                    rating: rating,
+                    rating: rankingsCategory == null
+                        ? null
+                        : pokemon[index].getRating(rankingsCategory!),
                   ),
                 ),
               );
@@ -76,7 +79,7 @@ class PokemonColumn extends StatelessWidget {
     this.dropdowns = true,
   }) : super(key: key);
 
-  final List<Pokemon> pokemon;
+  final List<RankedPokemon> pokemon;
   final Function(Pokemon) onPokemonSelected;
   final bool dropdowns;
 

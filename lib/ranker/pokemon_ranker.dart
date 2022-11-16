@@ -29,9 +29,9 @@ class PokemonRanker {
         self.selectMoveset((opponent));
         opponent.selectMoveset(self);
 
-        self.selectedFastMove.usage += 1;
-        self.selectedChargeMoves.first.usage += 1;
-        self.selectedChargeMoves.last.usage += 1;
+        self.selectedBattleFastMove.usage += 1;
+        self.selectedBattleChargeMoves.first.usage += 1;
+        self.selectedBattleChargeMoves.last.usage += 1;
 
         PokemonBattler.resetPokemon(self, opponent);
 

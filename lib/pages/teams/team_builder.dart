@@ -53,10 +53,10 @@ class _TeamBuilderState extends State<TeamBuilder> {
   final TextEditingController _searchController = TextEditingController();
 
   // List of ALL Pokemon
-  List<Pokemon> _pokemon = [];
+  List<RankedPokemon> _pokemon = [];
 
   // A variable list of Pokemon based on search bar text input
-  List<Pokemon> _filteredPokemon = [];
+  List<RankedPokemon> _filteredPokemon = [];
 
   RankingsCategories _selectedCategory = RankingsCategories.overall;
 
@@ -72,12 +72,12 @@ class _TeamBuilderState extends State<TeamBuilder> {
       final int termsLen = terms.length;
 
       // Callback to filter Pokemon by the search terms
-      bool filterPokemon(Pokemon pokemon) {
+      bool filterPokemon(RankedPokemon pokemon) {
         bool isMatch = false;
 
         for (int i = 0; i < termsLen && !isMatch; ++i) {
-          isMatch = pokemon.name.toLowerCase().startsWith(terms[i]) ||
-              pokemon.typing.containsTypeId(terms[i]);
+          isMatch = pokemon.getBase().name.toLowerCase().startsWith(terms[i]) ||
+              pokemon.getBase().typing.containsTypeId(terms[i]);
         }
 
         return isMatch;
@@ -146,7 +146,6 @@ class _TeamBuilderState extends State<TeamBuilder> {
       pokemon: _filteredPokemon,
       onPokemonSelected: (pokemon) {
         setState(() {
-          pokemon.initializeStats(_cup.cp);
           _builderTeam.setPokemon(_builderIndex, pokemon);
           _updateWorkingIndex(_builderIndex + 1);
         });
@@ -226,7 +225,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
     if (RankingsCategories.dex == _selectedCategory) {
       //_pokemon = PogoData.pokemonList;
     } else {
-      _pokemon = await PogoData.getRankedPokemonList(_cup, _selectedCategory);
+      _pokemon = _builderTeam.cup.getRankedPokemonList(rankingsCategory);
     }
 
     _filterPokemonList();

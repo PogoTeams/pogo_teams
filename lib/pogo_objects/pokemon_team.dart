@@ -28,7 +28,7 @@ class PokemonTeam {
   bool locked = false;
 
   // The list of 3 pokemon references that make up the team
-  List<Pokemon?> pokemonTeam = List.filled(3, null);
+  List<RankedPokemon?> pokemonTeam = List.filled(3, null);
 
   // A list of this pokemon team's net effectiveness
   List<double> effectiveness = List.generate(
@@ -44,10 +44,8 @@ class PokemonTeam {
     _cup = value;
 
     // initialize IVs to recommendation whenever the team's cup is set
-    for (Pokemon? pokemon in pokemonTeam) {
-      if (pokemon != null) {
-        // TODO pokemon.initializeStats(cup.cp);
-      }
+    for (RankedPokemon? pokemon in pokemonTeam) {
+      pokemon?.initializeStats(cup.cp);
     }
   }
 
@@ -58,7 +56,7 @@ class PokemonTeam {
   }
 
   // Make a copy of the newTeam, keeping the size of the original team
-  void setPokemonTeam(List<Pokemon?> newPokemonTeam) {
+  void setPokemonTeam(List<RankedPokemon?> newPokemonTeam) {
     pokemonTeam = List.generate(
         pokemonTeam.length,
         (index) =>
@@ -68,7 +66,7 @@ class PokemonTeam {
   }
 
   // Set the specified Pokemon in the team by the specified index
-  void setPokemon(int index, Pokemon? pokemon) {
+  void setPokemon(int index, RankedPokemon? pokemon) {
     if (pokemon == null) {
       pokemonTeam[index] = null;
     } else {
@@ -79,8 +77,8 @@ class PokemonTeam {
   }
 
   // Get the list of non-null Pokemon
-  List<Pokemon> getPokemonTeam() {
-    return pokemonTeam.whereType<Pokemon>().toList();
+  List<RankedPokemon> getPokemonTeam() {
+    return pokemonTeam.whereType<RankedPokemon>().toList();
   }
 
   // Get the Pokemon ref at the given index
@@ -89,7 +87,7 @@ class PokemonTeam {
   }
 
   // Add newPokemon if there is free space in the team
-  void addPokemon(Pokemon newPokemon) {
+  void addPokemon(RankedPokemon newPokemon) {
     bool added = false;
 
     for (int i = 0; i < pokemonTeam.length && !added; ++i) {
@@ -139,7 +137,7 @@ class PokemonTeam {
   void setTeamSize(int newSize) {
     if (pokemonTeam.length == newSize) return;
 
-    pokemonTeam = List<Pokemon?>.generate(
+    pokemonTeam = List<RankedPokemon?>.generate(
       newSize,
       (index) => index < pokemonTeam.length ? pokemonTeam[index] : null,
     );
@@ -176,19 +174,19 @@ class UserPokemonTeam extends PokemonTeam {
   UserPokemonTeam();
 
   factory UserPokemonTeam.fromJson(Map<String, dynamic> json) {
-    List<Pokemon?> pokemonTeam =
-        List<Pokemon?>.filled(json['teamSize'] as int, null);
+    List<RankedPokemon?> pokemonTeam =
+        List<RankedPokemon?>.filled(json['teamSize'] as int, null);
 
     for (Map<String, dynamic> pokemonEntry
         in List<Map<String, dynamic>>.from(json['pokemonTeam'])) {
       final pokemonIndex = pokemonEntry['pokemonIndex'] as int;
-      //TODO
+      // TODO
       //pokemonTeam[pokemonIndex] = Pokemon.fromTeamJson(pokemonEntry);
     }
 
     return UserPokemonTeam()
-      //TODO
-      //..cup = PogoData.getCupById(json['cup'] as String)
+      // TODO
+      ..cup = PogoData.getCupById(json['cup'] as String)
       ..locked = json['locked'] as bool
       ..sortOrder = json['sortOrder'] as int
       ..winRate = json['winRate'] as double
@@ -263,7 +261,8 @@ class OpponentPokemonTeam extends PokemonTeam {
 
   factory OpponentPokemonTeam.fromJson(Map<String, dynamic> json) {
     int teamSize = json['teamSize'] as int;
-    List<Pokemon?> pokemonTeam = List<Pokemon?>.filled(teamSize, null);
+    List<RankedPokemon?> pokemonTeam =
+        List<RankedPokemon?>.filled(teamSize, null);
 
     for (Map<String, dynamic> pokemonEntry
         in List<Map<String, dynamic>>.from(json['pokemonTeam'])) {

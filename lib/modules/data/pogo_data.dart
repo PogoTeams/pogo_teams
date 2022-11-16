@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 // Packages
-//import 'package:flutter/services.dart';
+import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
 
 // Local
@@ -10,17 +10,14 @@ import '../../enums/rankings_categories.dart';
 import '../../tools/pair.dart';
 import '../../pogo_objects/pokemon.dart';
 import '../../pogo_objects/pokemon_typing.dart';
+import '../../pogo_objects/move.dart';
 import '../../pogo_objects/ratings.dart';
 import '../../pogo_objects/cup.dart';
 import '../../pogo_objects/pokemon_team.dart';
 import '../../pogo_objects/user_teams.dart';
 import '../../pogo_objects/opponent_teams.dart';
-import '../../pogo_objects/move.dart';
-import '../../pogo_objects/move.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/ratings.dart';
 import '../data/cups.dart';
-//import '../ui/pogo_colors.dart';
+import '../ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -49,8 +46,8 @@ class PogoData {
   }
 
   static Stream<Pair<String, double>> loadPogoData() async* {
-    final Map<String, dynamic>? pogoDataJson = {}; //jsonDecode(
-    //await rootBundle.loadString('bin/json/niantic-snapshot.json'));
+    final Map<String, dynamic>? pogoDataJson = jsonDecode(
+        await rootBundle.loadString('bin/json/niantic-snapshot.json'));
     if (pogoDataJson == null) return;
 
     await loadFromJson(pogoDataJson);
@@ -139,8 +136,8 @@ class PogoData {
       if (move != null) chargeMove.add(move);
     }
 
-    pokemon.fastMoves.addAll(fastMove);
-    pokemon.chargeMoves.addAll(chargeMove);
+    pokemon.getFastMoves().addAll(fastMove);
+    pokemon.getChargeMoves().addAll(chargeMove);
 
     if (pokemonEntry.containsKey('evolutions')) {
       final evolutions = List<Map<String, dynamic>>.from(
@@ -149,7 +146,7 @@ class PogoData {
           .toList();
 
       await isar.evolutions.putAll(evolutions);
-      pokemon.evolutions.addAll(evolutions);
+      pokemon.getEvolutions().addAll(evolutions);
     }
 
     if (pokemonEntry.containsKey('tempEvolutions')) {
@@ -160,30 +157,30 @@ class PogoData {
               .toList();
 
       await isar.tempEvolutions.putAll(evolutions);
-      pokemon.tempEvolutions.addAll(evolutions);
+      pokemon.getTempEvolutions().addAll(evolutions);
     }
 
     await isar.pokemon.put(pokemon);
-    await pokemon.evolutions.save();
-    await pokemon.tempEvolutions.save();
-    await pokemon.fastMoves.save();
-    await pokemon.chargeMoves.save();
+    await pokemon.getEvolutions().save();
+    await pokemon.getTempEvolutions().save();
+    await pokemon.getFastMoves().save();
+    await pokemon.getChargeMoves().save();
 
     // Shadow entries
     if (pokemonEntry.containsKey('shadow')) {
       Pokemon shadowPokemon = Pokemon.fromJson(pokemonEntry, shadowForm: true);
 
-      shadowPokemon.fastMoves.addAll(fastMove);
-      shadowPokemon.chargeMoves.addAll(chargeMove);
+      shadowPokemon.getFastMoves().addAll(fastMove);
+      shadowPokemon.getChargeMoves().addAll(chargeMove);
       ChargeMove? shadowMove = await isar.chargeMoves
           .filter()
           .moveIdEqualTo(pokemonEntry['shadow']['shadowChargeMove'])
           .findFirst();
-      if (shadowMove != null) shadowPokemon.chargeMoves.add(shadowMove);
+      if (shadowMove != null) shadowPokemon.getChargeMoves().add(shadowMove);
 
       await isar.pokemon.put(shadowPokemon);
-      await shadowPokemon.fastMoves.save();
-      await shadowPokemon.chargeMoves.save();
+      await shadowPokemon.getFastMoves().save();
+      await shadowPokemon.getChargeMoves().save();
     }
 
     // Temporary evolution entries
@@ -195,12 +192,12 @@ class PogoData {
           overrideJson,
         );
 
-        tempEvoPokemon.fastMoves.addAll(fastMove);
-        tempEvoPokemon.chargeMoves.addAll(chargeMove);
+        tempEvoPokemon.getFastMoves().addAll(fastMove);
+        tempEvoPokemon.getChargeMoves().addAll(chargeMove);
 
         await isar.pokemon.put(tempEvoPokemon);
-        await tempEvoPokemon.fastMoves.save();
-        await tempEvoPokemon.chargeMoves.save();
+        await tempEvoPokemon.getFastMoves().save();
+        await tempEvoPokemon.getChargeMoves().save();
       }
     }
   }
@@ -227,8 +224,11 @@ class PogoData {
         cup.excludeFilters.addAll(excludeFilters);
       }
 
-      final List<Id> rankingsIds = []; //await _loadRankings(jsonDecode(
-      //await rootBundle.loadString('bin/json/rankings/${cup.cupId}.json')));
+      final List<Id> rankingsIds = await _loadRankings(
+        jsonDecode(
+            await rootBundle.loadString('bin/json/rankings/${cup.cupId}.json')),
+        cup.cp,
+      );
 
       cup.rankings.addAll((await isar.rankedPokemon.getAll(rankingsIds))
           .whereType<RankedPokemon>());
@@ -238,41 +238,45 @@ class PogoData {
       await cup.excludeFilters.save();
       await cup.rankings.save();
 
-      //PogoColors.addCupColor(cup.cupId, cupEntry['uiColor'] as String);
+      PogoColors.addCupColor(cup.cupId, cupEntry['uiColor'] as String);
     }
   }
 
-  static Future<List<Id>> _loadRankings(List<dynamic> rankingsJson) async {
+  static Future<List<Id>> _loadRankings(
+    List<dynamic> rankingsJson,
+    int cp,
+  ) async {
     List<Id> rankingsIds = [];
 
     for (var rankingsEntry in List<Map<String, dynamic>>.from(rankingsJson)) {
       final List<String> selectedChargeMoves =
           List<String>.from(rankingsEntry['idealMoveset']['chargeMoves']);
 
-      final rankedPokemon = RankedPokemon(
-        ratings: Ratings.fromJson(rankingsEntry['ratings']),
-      );
+      final Pokemon? pokemon = await isar.pokemon
+          .filter()
+          .pokemonIdEqualTo(rankingsEntry['pokemonId'])
+          .findFirst();
 
-      rankedPokemon
-        ..pokemon.value = await isar.pokemon
-            .filter()
-            .pokemonIdEqualTo(rankingsEntry['pokemonId'])
-            .findFirst()
-        ..selectedFastMove.value = await isar.fastMoves
-            .filter()
-            .moveIdEqualTo(rankingsEntry['idealMoveset']['fastMove'])
-            .findFirst()
-        ..selectedChargeMoves.addAll(await isar.chargeMoves
-            .filter()
-            .moveIdEqualTo(selectedChargeMoves.first)
-            .or()
-            .moveIdEqualTo(selectedChargeMoves.last)
-            .findAll());
+      if (pokemon == null) continue;
+
+      final rankedPokemon = RankedPokemon(
+          pokemon: pokemon,
+          ratings: Ratings.fromJson(rankingsEntry['ratings']),
+          ivs: pokemon.getIvs(cp),
+          selectedFastMove: await isar.fastMoves
+                  .filter()
+                  .moveIdEqualTo(rankingsEntry['idealMoveset']['fastMove'])
+                  .findFirst() ??
+              FastMove.none,
+          selectedChargeMoves: await isar.chargeMoves
+              .filter()
+              .moveIdEqualTo(selectedChargeMoves.first)
+              .or()
+              .moveIdEqualTo(selectedChargeMoves.last)
+              .findAll());
 
       rankingsIds.add(await isar.rankedPokemon.put(rankedPokemon));
-      await rankedPokemon.pokemon.save();
-      await rankedPokemon.selectedFastMove.save();
-      await rankedPokemon.selectedChargeMoves.save();
+      await rankedPokemon.saveLinks();
     }
 
     return rankingsIds;
@@ -281,6 +285,10 @@ class PogoData {
   static Pokemon getPokemonById(String pokemonId) {
     return isar.pokemon.filter().pokemonIdEqualTo(pokemonId).findFirstSync() ??
         Pokemon.missingNo();
+  }
+
+  static Cup getCupById(String cupId) {
+    return isar.cups.filter().cupIdEqualTo(cupId).findFirstSync() ?? cups.first;
   }
 
   static List<Pokemon> getCupFilteredPokemonList(Cup cup) {
@@ -296,35 +304,7 @@ class PogoData {
             cup.pokemonIsAllowed(pokemon) && !Cups.isBanned(pokemon, cup.cp))
         .toList();
 
-    for (var pokemon in filteredPokemonList) {
-      pokemon.fastMoves.loadSync();
-      pokemon.chargeMoves.loadSync();
-    }
-
     return filteredPokemonList;
-  }
-
-  static Future<List<RankedPokemon>> getRankedPokemonList(
-    Cup cup,
-    RankingsCategories rankingsCategory,
-  ) async {
-    if (!cup.rankings.isLoaded) await cup.rankings.load();
-
-    for (var rankedPokemon in cup.rankings) {
-      if (rankedPokemon.pokemon.value == null) continue;
-
-      if (!rankedPokemon.pokemon.isLoaded) {
-        await rankedPokemon.pokemon.load();
-      }
-      if (!rankedPokemon.selectedFastMove.isLoaded) {
-        await rankedPokemon.selectedFastMove.load();
-      }
-      if (!rankedPokemon.selectedChargeMoves.isLoaded) {
-        await rankedPokemon.selectedChargeMoves.load();
-      }
-    }
-
-    return cup.rankings.toList();
   }
 
   // Get a list of Pokemon that contain one of the specified types
@@ -336,8 +316,7 @@ class PogoData {
     RankingsCategories rankingsCategory, {
     int limit = 20,
   }) async {
-    List<RankedPokemon> rankedList =
-        await getRankedPokemonList(cup, rankingsCategory);
+    List<RankedPokemon> rankedList = cup.getRankedPokemonList(rankingsCategory);
 
     // Filter the list to Pokemon that have one of the types in their typing
     // or their selected moveset

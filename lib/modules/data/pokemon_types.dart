@@ -97,7 +97,7 @@ class PokemonTypes {
   // Get a list of the provided pokemon team's net effectiveness
   // [0] : offensive
   // [1] : defensive
-  static List<double> getNetEffectiveness(List<Pokemon> team) {
+  static List<double> getNetEffectiveness(List<RankedPokemon> team) {
     List<double> netEffectiveness = List.generate(
       Globals.typeCount,
       (index) => 0.0,
@@ -107,7 +107,8 @@ class PokemonTypes {
 
     // Accumulate team defensive type effectiveness for all types
     for (int i = 0; i < teamLen; ++i) {
-      final List<double> effectiveness = team[i].defenseEffectiveness();
+      final List<double> effectiveness =
+          team[i].getBase().defenseEffectiveness();
 
       for (int k = 0; k < Globals.typeCount; ++k) {
         netEffectiveness[k] += effectiveness[k];

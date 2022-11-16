@@ -1,6 +1,9 @@
 // Packages
 import 'package:isar/isar.dart';
 
+// Local
+import '../enums/rankings_categories.dart';
+
 part 'ratings.g.dart';
 
 @embedded
@@ -34,4 +37,21 @@ class Ratings {
   int lead;
   int switchRating;
   int closer;
+
+  String getRating(RankingsCategories rankingsCategory) {
+    switch (rankingsCategory) {
+      case RankingsCategories.overall:
+        return overall.toString();
+      case RankingsCategories.leads:
+        return lead.toString();
+      case RankingsCategories.switches:
+        return switchRating.toString();
+      case RankingsCategories.closers:
+        return closer.toString();
+      default:
+        break;
+    }
+
+    return overall.toString();
+  }
 }

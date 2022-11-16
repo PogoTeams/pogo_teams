@@ -158,7 +158,7 @@ class _TeamsState extends State<Teams> {
 
     final newPokemonTeam = await Navigator.push(
       context,
-      MaterialPageRoute<List<Pokemon?>>(builder: (BuildContext context) {
+      MaterialPageRoute<List<RankedPokemon?>>(builder: (BuildContext context) {
         return Analysis(team: _teams[teamIndex]);
       }),
     );

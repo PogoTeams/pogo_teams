@@ -26,7 +26,7 @@ class MoveDropdowns extends StatefulWidget {
     this.onChanged,
   }) : super(key: key);
 
-  final Pokemon pokemon;
+  final RankedPokemon pokemon;
   final VoidCallback? onChanged;
 
   // Lists of the moves a Pokemon can learn
@@ -61,14 +61,18 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
   // Upon initial build, update, or dropdown onChanged callback
   // Filter the left and right charged move lists for the dropdowns
   void _updateChargedMoveOptions() {
-    chargedMoveNamesL = widget.pokemon.chargeMoves
-        .where(
-            (move) => !move.isSameMove(widget.pokemon.selectedChargeMoves[1]))
+    chargedMoveNamesL = widget.pokemon
+        .getBase()
+        .getChargeMoves()
+        .where((move) =>
+            !move.isSameMove(widget.pokemon.getSelectedChargeMoves().last))
         .toList();
 
-    chargedMoveNamesR = widget.pokemon.chargeMoves
-        .where(
-            (move) => !move.isSameMove(widget.pokemon.selectedChargeMoves[0]))
+    chargedMoveNamesR = widget.pokemon
+        .getBase()
+        .getChargeMoves()
+        .where((move) =>
+            !move.isSameMove(widget.pokemon.getSelectedChargeMoves().first))
         .toList();
 
     chargedMoveOptionsL = _generateDropdownItems(chargedMoveNamesL);
@@ -85,7 +89,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
           value: move,
           child: Center(
             child: Text(
-              widget.pokemon.getFormattedMoveName(move),
+              widget.pokemon.getBase().getFormattedMoveName(move),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
@@ -115,12 +119,12 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
       children: [
         MoveDropdown(
           label: 'F A S T',
-          move: widget.pokemon.selectedFastMove,
+          move: widget.pokemon.getSelectedFastMove(),
           options: fastMoveOptions,
           onChanged: (Move? newFastMove) {
             setState(() {
               if (newFastMove != null) {
-                widget.pokemon.selectedFastMove = newFastMove as FastMove;
+                widget.pokemon.setSelectedFastMoveSync(newFastMove as FastMove);
               }
               if (widget.onChanged != null) widget.onChanged!();
             });
@@ -128,13 +132,15 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
         ),
         MoveDropdown(
           label: 'C H A R G E  1',
-          move: widget.pokemon.selectedChargeMoves[0],
+          move: widget.pokemon.getSelectedChargeMoves().first,
           options: chargedMoveOptionsL,
           onChanged: (Move? newChargedMove) {
             setState(() {
               if (newChargedMove != null) {
-                widget.pokemon.selectedChargeMoves.first =
-                    newChargedMove as ChargeMove;
+                widget.pokemon.getSelectedChargeMoves().updateSync(link: [
+                  newChargedMove as ChargeMove,
+                  widget.pokemon.getSelectedChargeMoves().last,
+                ]);
               }
               _updateChargedMoveOptions();
               if (widget.onChanged != null) widget.onChanged!();
@@ -143,13 +149,15 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
         ),
         MoveDropdown(
           label: 'C H A R G E  2',
-          move: widget.pokemon.selectedChargeMoves[1],
+          move: widget.pokemon.getSelectedChargeMoves().last,
           options: chargedMoveOptionsR,
           onChanged: (Move? newChargedMove) {
             setState(() {
               if (newChargedMove != null) {
-                widget.pokemon.selectedChargeMoves.last =
-                    newChargedMove as ChargeMove;
+                widget.pokemon.getSelectedChargeMoves().updateSync(link: [
+                  widget.pokemon.getSelectedChargeMoves().first,
+                  newChargedMove as ChargeMove,
+                ]);
               }
               _updateChargedMoveOptions();
               if (widget.onChanged != null) widget.onChanged!();

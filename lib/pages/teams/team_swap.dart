@@ -24,19 +24,19 @@ class TeamSwap extends StatefulWidget {
   }) : super(key: key);
 
   final PokemonTeam team;
-  final Pokemon swap;
+  final RankedPokemon swap;
 
   @override
   _TeamSwapState createState() => _TeamSwapState();
 }
 
 class _TeamSwapState extends State<TeamSwap> {
-  late List<Pokemon> _pokemonTeam;
-  late Pokemon _swap;
+  late List<RankedPokemon> _pokemonTeam;
+  late RankedPokemon _swap;
   bool _changed = false;
 
   Widget _buildFooter(BuildContext context, int index) {
-    void _onSwap(Pokemon swapPokemon) {
+    void _onSwap(RankedPokemon swapPokemon) {
       setState(() {
         _changed = true;
         _pokemonTeam[index] = _swap;

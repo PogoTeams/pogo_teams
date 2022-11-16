@@ -10,8 +10,8 @@ import 'move.dart';
 import 'ratings.dart';
 import 'pokemon_stats.dart';
 import '../modules/data/stats.dart';
-import '../modules/data/pokemon_types.dart';
 import '../modules/data/globals.dart';
+import '../enums/rankings_categories.dart';
 
 part 'pokemon.g.dart';
 
@@ -161,8 +161,8 @@ class Pokemon {
   final String name;
   final PokemonTyping typing;
   final BaseStats stats;
-  IsarLinks<FastMove> fastMoves = IsarLinks<FastMove>();
-  IsarLinks<ChargeMove> chargeMoves = IsarLinks<ChargeMove>();
+  final IsarLinks<FastMove> fastMoves = IsarLinks<FastMove>();
+  final IsarLinks<ChargeMove> chargeMoves = IsarLinks<ChargeMove>();
   final List<String>? eliteFastMoveIds;
   final List<String>? eliteChargeMoveIds;
   final ThirdMoveCost? thirdMoveCost;
@@ -177,6 +177,38 @@ class Pokemon {
   final IVs? greatLeagueIVs;
   final IVs? ultraLeagueIVs;
 
+  IsarLinks<FastMove> getFastMoves() {
+    if (fastMoves.isAttached && !fastMoves.isLoaded) {
+      fastMoves.loadSync();
+    }
+
+    return fastMoves;
+  }
+
+  IsarLinks<ChargeMove> getChargeMoves() {
+    if (chargeMoves.isAttached && !chargeMoves.isLoaded) {
+      chargeMoves.loadSync();
+    }
+
+    return chargeMoves;
+  }
+
+  IsarLinks<Evolution> getEvolutions() {
+    if (evolutions.isAttached && !evolutions.isLoaded) {
+      evolutions.loadSync();
+    }
+
+    return evolutions;
+  }
+
+  IsarLinks<TempEvolution> getTempEvolutions() {
+    if (tempEvolutions.isAttached && !tempEvolutions.isLoaded) {
+      tempEvolutions.loadSync();
+    }
+
+    return tempEvolutions;
+  }
+
   // Form a string that describes this Pokemon's typing
   String typeString() => typing.toString();
 
@@ -184,22 +216,6 @@ class Pokemon {
 
   // Get the type effectiveness of this Pokemon, factoring in current moveset
   List<double> defenseEffectiveness() => typing.defenseEffectiveness();
-
-  // Get a list of all fast move names
-  List<String> fastMoveNames() =>
-      fastMoves.map((FastMove move) => move.name).toList();
-
-  // Get a list of all fast move ids
-  List<String> fastMoveIds() =>
-      fastMoves.map((FastMove move) => move.moveId).toList();
-
-  // Get a list of all charge move names
-  List<String> chargeMoveNames() =>
-      chargeMoves.map<String>((ChargeMove move) => move.name).toList();
-
-  // Get a list of all charge move ids
-  List<String> chargeMoveIds() =>
-      chargeMoves.map<String>((ChargeMove move) => move.moveId).toList();
 
   bool isShadow() => tags?.contains('shadow') ?? false;
   bool isMega() => tags?.contains('mega') ?? false;
@@ -336,36 +352,6 @@ class TempEvolution {
   bool released;
 }
 
-@Collection(accessor: 'rankedPokemon')
-class RankedPokemon {
-  RankedPokemon({
-    required this.ratings,
-  });
-
-  Id id = Isar.autoIncrement;
-
-  Ratings ratings;
-  IsarLink<Pokemon> pokemon = IsarLink<Pokemon>();
-  IsarLink<FastMove> selectedFastMove = IsarLink<FastMove>();
-  IsarLinks<ChargeMove> selectedChargeMoves = IsarLinks<ChargeMove>();
-
-  List<Move> moveset() =>
-      [selectedFastMove.value ?? FastMove.none, ...selectedChargeMoves];
-
-  // True if this Pokemon's selected moveset contains one of the types
-  bool hasSelectedMovesetType(List<PokemonType> types) {
-    for (PokemonType type in types) {
-      if (type.isSameType(selectedFastMove.value!.type) ||
-          type.isSameType(selectedChargeMoves.first.type) ||
-          type.isSameType(selectedChargeMoves.last.type)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-}
-
 // Pokemon instance for simulating battles
 class BattlePokemon extends Pokemon {
   BattlePokemon({
@@ -432,9 +418,10 @@ class BattlePokemon extends Pokemon {
       greatLeagueIVs: other.greatLeagueIVs,
       ultraLeagueIVs: other.ultraLeagueIVs,
     )
-      ..fastMovesList.addAll(other.fastMoves.map((move) => FastMove.from(move)))
-      ..chargeMovesList
-          .addAll(other.chargeMoves.map((move) => ChargeMove.from(move)));
+      ..battleFastMoves
+          .addAll(other.getFastMoves().map((move) => FastMove.from(move)))
+      ..battleChargeMoves
+          .addAll(other.getChargeMoves().map((move) => ChargeMove.from(move)));
   }
 
   factory BattlePokemon.from(
@@ -468,8 +455,8 @@ class BattlePokemon extends Pokemon {
       chargeEnergyDelta: other.chargeEnergyDelta,
       prioritizeMoveAlignment: prioritizeMoveAlignment,
     )
-      ..selectedFastMove = other.selectedFastMove
-      ..selectedChargeMoves = other.selectedChargeMoves
+      ..selectedBattleFastMove = other.selectedBattleFastMove
+      ..selectedBattleChargeMoves = other.selectedBattleChargeMoves
       ..maxHp = other.maxHp
       .._atkBuffStage = other._atkBuffStage
       .._defBuffStage = other._defBuffStage;
@@ -493,11 +480,11 @@ class BattlePokemon extends Pokemon {
   num chargeEnergyDelta;
   bool prioritizeMoveAlignment;
 
-  List<FastMove> fastMovesList = [];
-  List<ChargeMove> chargeMovesList = [];
+  List<FastMove> battleFastMoves = [];
+  List<ChargeMove> battleChargeMoves = [];
 
-  FastMove selectedFastMove = FastMove.none;
-  List<ChargeMove> selectedChargeMoves = List.filled(2, ChargeMove.none);
+  FastMove selectedBattleFastMove = FastMove.none;
+  List<ChargeMove> selectedBattleChargeMoves = List.filled(2, ChargeMove.none);
   ChargeMove nextDecidedChargeMove = ChargeMove.none;
 
   int _atkBuffStage = 4;
@@ -538,15 +525,16 @@ class BattlePokemon extends Pokemon {
     return currentShields != 0;
   }
 
-  List<Move> moveset() => [selectedFastMove, ...selectedChargeMoves];
+  List<Move> moveset() =>
+      [selectedBattleFastMove, ...selectedBattleChargeMoves];
 
   void useShield() {
     currentShields -= 1;
   }
 
   void applyFastMoveDamage(BattlePokemon opponent) {
-    energy += selectedFastMove.energyDelta;
-    opponent.recieveDamage(selectedFastMove.damage);
+    energy += selectedBattleFastMove.energyDelta;
+    opponent.recieveDamage(selectedBattleFastMove.damage);
   }
 
   void applyChargeMoveDamage(BattlePokemon opponent) {
@@ -605,40 +593,40 @@ class BattlePokemon extends Pokemon {
   }
 
   void resetCooldown({int modifier = 0}) {
-    cooldown = selectedFastMove.duration + modifier;
+    cooldown = selectedBattleFastMove.duration + modifier;
   }
 
   void selectMoveset(BattlePokemon opponent) {
-    if (fastMovesList.isEmpty || chargeMovesList.isEmpty) return;
+    if (battleFastMoves.isEmpty || battleChargeMoves.isEmpty) return;
 
     // Find the charge move with highest damage per energy
-    chargeMovesList.sort((move1, move2) => (move1.dpe() > move2.dpe()
+    battleChargeMoves.sort((move1, move2) => (move1.dpe() > move2.dpe()
         ? -1
         : ((move2.dpe() > move1.dpe()) ? 1 : 0)));
-    num highestDpe = chargeMovesList.first.dpe();
+    num highestDpe = battleChargeMoves.first.dpe();
 
-    _sortByRating(chargeMovesList);
-    ChargeMove highestRated = chargeMovesList.first;
+    _sortByRating(battleChargeMoves);
+    ChargeMove highestRated = battleChargeMoves.first;
 
     // For moves that have a strictly better preference, sharply reduce usage
     num ratingsSum = highestRated.rating;
 
-    for (var i = 1; i < chargeMovesList.length; i++) {
+    for (var i = 1; i < battleChargeMoves.length; i++) {
       for (var n = 0; n < i; n++) {
-        if ((chargeMovesList[i].type == chargeMovesList[n].type) &&
-            (chargeMovesList[i].energyDelta >=
-                chargeMovesList[n].energyDelta) &&
-            (chargeMovesList[i].dpe() / chargeMovesList[n].dpe() < 1.3)) {
-          chargeMovesList[i].rating *= .5;
+        if ((battleChargeMoves[i].type == battleChargeMoves[n].type) &&
+            (battleChargeMoves[i].energyDelta >=
+                battleChargeMoves[n].energyDelta) &&
+            (battleChargeMoves[i].dpe() / battleChargeMoves[n].dpe() < 1.3)) {
+          battleChargeMoves[i].rating *= .5;
           break;
         }
       }
 
-      ratingsSum += chargeMovesList[i].rating;
+      ratingsSum += battleChargeMoves[i].rating;
     }
 
     if (ratingsSum > 0) {
-      for (var move in chargeMovesList) {
+      for (var move in battleChargeMoves) {
         move.calculateEffectiveDamage(this, opponent);
 
         // Normalize move rating
@@ -646,13 +634,13 @@ class BattlePokemon extends Pokemon {
       }
     }
 
-    _sortByRating(chargeMovesList);
-    highestRated = chargeMovesList.first;
+    _sortByRating(battleChargeMoves);
+    highestRated = battleChargeMoves.first;
 
     ratingsSum = 0;
     num baseline = Move.calculateCycleDpt(FastMove.none, highestRated);
 
-    for (var move in fastMovesList) {
+    for (var move in battleFastMoves) {
       move.calculateEffectiveDamage(this, opponent);
 
       num cycleDpt = Move.calculateCycleDpt(move, highestRated);
@@ -665,17 +653,17 @@ class BattlePokemon extends Pokemon {
 
     if (ratingsSum > 0) {
       // Normalize move rating
-      for (var move in fastMovesList) {
+      for (var move in battleFastMoves) {
         move.rating = ((move.rating / ratingsSum) * 100).round().toDouble();
       }
     }
 
-    _sortByRating(fastMovesList);
+    _sortByRating(battleFastMoves);
 
-    selectedFastMove = fastMovesList.first;
-    selectedChargeMoves.first = chargeMovesList[0];
-    if (chargeMovesList.length > 1) {
-      selectedChargeMoves.last = chargeMovesList[1];
+    selectedBattleFastMove = battleFastMoves.first;
+    selectedBattleChargeMoves.first = battleChargeMoves[0];
+    if (battleChargeMoves.length > 1) {
+      selectedBattleChargeMoves.last = battleChargeMoves[1];
     }
   }
 
@@ -688,14 +676,14 @@ class BattlePokemon extends Pokemon {
   // Go through the moveset typing, accumulate the best type effectiveness
   List<double> getOffenseCoverage() {
     List<double> offenseCoverage = [];
-    final fast = selectedFastMove.type.offenseEffectiveness();
-    final c1 = selectedChargeMoves[0].type.offenseEffectiveness();
+    final fast = selectedBattleFastMove.type.offenseEffectiveness();
+    final c1 = selectedBattleChargeMoves[0].type.offenseEffectiveness();
     List<double> c2;
 
-    if ((selectedChargeMoves.last.isNone())) {
+    if ((selectedBattleChargeMoves.last.isNone())) {
       c2 = List.filled(Globals.typeCount, 0.0);
     } else {
-      c2 = selectedChargeMoves[1].type.offenseEffectiveness();
+      c2 = selectedBattleChargeMoves[1].type.offenseEffectiveness();
     }
 
     for (int i = 0; i < Globals.typeCount; ++i) {
@@ -728,5 +716,113 @@ class BattlePokemon extends Pokemon {
         (stats.def + selectedIVs.def) *
         Stats.getCpMultiplier(selectedIVs.level) *
         (isShadow() ? Stats.shadowDefMultiplier : 1);
+  }
+}
+
+@Collection(accessor: 'rankedPokemon')
+class RankedPokemon {
+  RankedPokemon({
+    required this.ratings,
+    required this.ivs,
+    Pokemon? pokemon,
+    FastMove? selectedFastMove,
+    List<ChargeMove>? selectedChargeMoves,
+  }) {
+    base.value = pokemon;
+    this.selectedFastMove.value = selectedFastMove;
+    if (selectedChargeMoves != null) {
+      this.selectedChargeMoves.addAll(selectedChargeMoves);
+    }
+  }
+
+  Id id = Isar.autoIncrement;
+
+  Ratings ratings;
+  IVs ivs;
+  final IsarLink<Pokemon> base = IsarLink<Pokemon>();
+  final IsarLink<FastMove> selectedFastMove = IsarLink<FastMove>();
+  final IsarLinks<ChargeMove> selectedChargeMoves = IsarLinks<ChargeMove>();
+
+  Pokemon getBase() {
+    if (base.isAttached && !base.isLoaded) {
+      base.loadSync();
+    }
+
+    return base.value ?? Pokemon.missingNo();
+  }
+
+  FastMove getSelectedFastMove() {
+    if (selectedFastMove.isAttached && !selectedFastMove.isLoaded) {
+      selectedFastMove.loadSync();
+    }
+
+    return selectedFastMove.value ?? FastMove.none;
+  }
+
+  IsarLinks<ChargeMove> getSelectedChargeMoves() {
+    if (selectedChargeMoves.isAttached && !selectedChargeMoves.isLoaded) {
+      selectedChargeMoves.loadSync();
+    }
+
+    return selectedChargeMoves;
+  }
+
+  void setSelectedFastMoveSync(FastMove move) {
+    selectedFastMove.value = move;
+    selectedFastMove.saveSync();
+  }
+
+  Future<void> saveLinks() async {
+    await base.save();
+    await selectedFastMove.save();
+    await selectedChargeMoves.save();
+  }
+
+  void saveLinksSync() {
+    base.saveSync();
+    selectedFastMove.saveSync();
+    selectedChargeMoves.saveSync();
+  }
+
+  void initializeStats(int cpCap) {
+    ivs = getBase().getIvs(cpCap);
+  }
+
+  // Get a list of all fast move names
+  List<String> fastMoveNames() =>
+      getBase().getFastMoves().map((FastMove move) => move.name).toList();
+
+  // Get a list of all fast move ids
+  List<String> fastMoveIds() =>
+      getBase().getFastMoves().map((FastMove move) => move.moveId).toList();
+
+  // Get a list of all charge move names
+  List<String> chargeMoveNames() => getBase()
+      .getChargeMoves()
+      .map<String>((ChargeMove move) => move.name)
+      .toList();
+
+  // Get a list of all charge move ids
+  List<String> chargeMoveIds() => getBase()
+      .getChargeMoves()
+      .map<String>((ChargeMove move) => move.moveId)
+      .toList();
+
+  List<Move> moveset() => [getSelectedFastMove(), ...getSelectedChargeMoves()];
+
+  String getRating(RankingsCategories rankingsCategory) =>
+      ratings.getRating(rankingsCategory);
+
+  // True if this Pokemon's selected moveset contains one of the types
+  bool hasSelectedMovesetType(List<PokemonType> types) {
+    for (PokemonType type in types) {
+      if (type.isSameType(getSelectedFastMove().type) ||
+          type.isSameType(getSelectedChargeMoves().first.type) ||
+          type.isSameType(getSelectedChargeMoves().last.type)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

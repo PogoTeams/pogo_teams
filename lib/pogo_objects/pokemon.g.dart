@@ -4041,8 +4041,14 @@ const RankedPokemonSchema = CollectionSchema(
   name: r'RankedPokemon',
   id: -1487174714399648182,
   properties: {
-    r'ratings': PropertySchema(
+    r'ivs': PropertySchema(
       id: 0,
+      name: r'ivs',
+      type: IsarType.object,
+      target: r'IVs',
+    ),
+    r'ratings': PropertySchema(
+      id: 1,
       name: r'ratings',
       type: IsarType.object,
       target: r'Ratings',
@@ -4055,9 +4061,9 @@ const RankedPokemonSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {
-    r'pokemon': LinkSchema(
-      id: 4210084742173876783,
-      name: r'pokemon',
+    r'base': LinkSchema(
+      id: 7982108129141641934,
+      name: r'base',
       target: r'Pokemon',
       single: true,
     ),
@@ -4074,7 +4080,7 @@ const RankedPokemonSchema = CollectionSchema(
       single: false,
     )
   },
-  embeddedSchemas: {r'Ratings': RatingsSchema},
+  embeddedSchemas: {r'Ratings': RatingsSchema, r'IVs': IVsSchema},
   getId: _rankedPokemonGetId,
   getLinks: _rankedPokemonGetLinks,
   attach: _rankedPokemonAttach,
@@ -4087,6 +4093,8 @@ int _rankedPokemonEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount +=
+      3 + IVsSchema.estimateSize(object.ivs, allOffsets[IVs]!, allOffsets);
   bytesCount += 3 +
       RatingsSchema.estimateSize(
           object.ratings, allOffsets[Ratings]!, allOffsets);
@@ -4099,8 +4107,14 @@ void _rankedPokemonSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeObject<Ratings>(
+  writer.writeObject<IVs>(
     offsets[0],
+    allOffsets,
+    IVsSchema.serialize,
+    object.ivs,
+  );
+  writer.writeObject<Ratings>(
+    offsets[1],
     allOffsets,
     RatingsSchema.serialize,
     object.ratings,
@@ -4114,8 +4128,14 @@ RankedPokemon _rankedPokemonDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = RankedPokemon(
-    ratings: reader.readObjectOrNull<Ratings>(
+    ivs: reader.readObjectOrNull<IVs>(
           offsets[0],
+          IVsSchema.deserialize,
+          allOffsets,
+        ) ??
+        IVs(),
+    ratings: reader.readObjectOrNull<Ratings>(
+          offsets[1],
           RatingsSchema.deserialize,
           allOffsets,
         ) ??
@@ -4133,6 +4153,13 @@ P _rankedPokemonDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readObjectOrNull<IVs>(
+            offset,
+            IVsSchema.deserialize,
+            allOffsets,
+          ) ??
+          IVs()) as P;
+    case 1:
       return (reader.readObjectOrNull<Ratings>(
             offset,
             RatingsSchema.deserialize,
@@ -4149,13 +4176,13 @@ Id _rankedPokemonGetId(RankedPokemon object) {
 }
 
 List<IsarLinkBase<dynamic>> _rankedPokemonGetLinks(RankedPokemon object) {
-  return [object.pokemon, object.selectedFastMove, object.selectedChargeMoves];
+  return [object.base, object.selectedFastMove, object.selectedChargeMoves];
 }
 
 void _rankedPokemonAttach(
     IsarCollection<dynamic> col, Id id, RankedPokemon object) {
   object.id = id;
-  object.pokemon.attach(col, col.isar.collection<Pokemon>(), r'pokemon', id);
+  object.base.attach(col, col.isar.collection<Pokemon>(), r'base', id);
   object.selectedFastMove
       .attach(col, col.isar.collection<FastMove>(), r'selectedFastMove', id);
   object.selectedChargeMoves.attach(
@@ -4302,6 +4329,13 @@ extension RankedPokemonQueryFilter
 
 extension RankedPokemonQueryObject
     on QueryBuilder<RankedPokemon, RankedPokemon, QFilterCondition> {
+  QueryBuilder<RankedPokemon, RankedPokemon, QAfterFilterCondition> ivs(
+      FilterQuery<IVs> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'ivs');
+    });
+  }
+
   QueryBuilder<RankedPokemon, RankedPokemon, QAfterFilterCondition> ratings(
       FilterQuery<Ratings> q) {
     return QueryBuilder.apply(this, (query) {
@@ -4312,17 +4346,17 @@ extension RankedPokemonQueryObject
 
 extension RankedPokemonQueryLinks
     on QueryBuilder<RankedPokemon, RankedPokemon, QFilterCondition> {
-  QueryBuilder<RankedPokemon, RankedPokemon, QAfterFilterCondition> pokemon(
+  QueryBuilder<RankedPokemon, RankedPokemon, QAfterFilterCondition> base(
       FilterQuery<Pokemon> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'pokemon');
+      return query.link(q, r'base');
     });
   }
 
   QueryBuilder<RankedPokemon, RankedPokemon, QAfterFilterCondition>
-      pokemonIsNull() {
+      baseIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'pokemon', 0, true, 0, true);
+      return query.linkLength(r'base', 0, true, 0, true);
     });
   }
 
@@ -4430,6 +4464,12 @@ extension RankedPokemonQueryProperty
   QueryBuilder<RankedPokemon, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<RankedPokemon, IVs, QQueryOperations> ivsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ivs');
     });
   }
 

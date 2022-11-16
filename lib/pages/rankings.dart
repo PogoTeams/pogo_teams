@@ -12,7 +12,6 @@ import '../widgets/pogo_text_field.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
 import '../widgets/buttons/filter_button.dart';
 import '../modules/data/pogo_data.dart';
-import '../modules/data/pogo_data.dart';
 import '../enums/rankings_categories.dart';
 
 /*
@@ -36,20 +35,19 @@ class _RankingsState extends State<Rankings> {
   // Search bar text input controller
   final TextEditingController _searchController = TextEditingController();
 
-  // List of ALL Pokemon
-  List<Pokemon> pokemon = [];
+  List<RankedPokemon> _pokemon = [];
 
   // A variable list of Pokemon based on search bar text input
-  List<Pokemon> filteredPokemon = [];
+  List<RankedPokemon> _filteredPokemon = [];
 
   RankingsCategories _selectedCategory = RankingsCategories.overall;
 
-  void _onCupChanged(String? newCupId) {
+  void _onCupChanged(String? newCupId) async {
     if (newCupId == null) return;
 
+    cup = PogoData.getCupById(newCupId);
+
     setState(() {
-      cup = PogoData.cups.firstWhere((cup) => cup.cupId == newCupId,
-          orElse: () => PogoData.cups.first);
       _filterCategory(_selectedCategory);
     });
   }
@@ -59,7 +57,7 @@ class _RankingsState extends State<Rankings> {
   void _filterCategory(RankingsCategories rankingsCategory) async {
     _selectedCategory = rankingsCategory;
 
-    pokemon = await PogoData.getRankedPokemonList(cup, rankingsCategory);
+    _pokemon = cup.getRankedPokemonList(rankingsCategory);
 
     _filterPokemonList();
   }
@@ -76,19 +74,19 @@ class _RankingsState extends State<Rankings> {
       final int termsLen = terms.length;
 
       // Callback to filter Pokemon by the search terms
-      bool filterPokemon(Pokemon pokemon) {
+      bool filterPokemon(RankedPokemon pokemon) {
         bool isMatch = false;
 
         for (int i = 0; i < termsLen && !isMatch; ++i) {
-          isMatch = pokemon.name.toLowerCase().startsWith(terms[i]) ||
-              pokemon.typing.containsTypeId(terms[i]);
+          isMatch = pokemon.getBase().name.toLowerCase().startsWith(terms[i]) ||
+              pokemon.getBase().typing.containsTypeId(terms[i]);
         }
 
         return isMatch;
       }
 
       // Filter by the search terms
-      filteredPokemon = pokemon.where(filterPokemon).toList();
+      _filteredPokemon = _pokemon.where(filterPokemon).toList();
     });
   }
 
@@ -125,8 +123,7 @@ class _RankingsState extends State<Rankings> {
     super.initState();
 
     cup = PogoData.cups.first;
-
-    _filterCategory(RankingsCategories.overall);
+    _filterCategory(_selectedCategory);
 
     // Start listening to changes.
     _searchController.addListener(_filterPokemonList);
@@ -142,8 +139,8 @@ class _RankingsState extends State<Rankings> {
   @override
   Widget build(BuildContext context) {
     //Display all Pokemon if there is no input
-    if (filteredPokemon.isEmpty && _searchController.text.isEmpty) {
-      filteredPokemon = pokemon;
+    if (_filteredPokemon.isEmpty && _searchController.text.isEmpty) {
+      _filteredPokemon = _pokemon;
     }
 
     return Padding(
@@ -176,10 +173,10 @@ class _RankingsState extends State<Rankings> {
 
           // Build list
           PokemonList(
-            pokemon: filteredPokemon,
+            pokemon: _filteredPokemon,
             onPokemonSelected: (_) {},
             dropdowns: false,
-            rating: true,
+            rankingsCategory: _selectedCategory,
           ),
         ],
       ),

@@ -263,11 +263,11 @@ class PokemonBattler {
       ..._battle(
         BattlePokemon.from(
           self,
-          nextDecidedChargeMove: self.selectedChargeMoves.first,
+          nextDecidedChargeMove: self.selectedBattleChargeMoves.first,
         ),
         BattlePokemon.from(
           opponent,
-          nextDecidedChargeMove: opponent.selectedChargeMoves.first,
+          nextDecidedChargeMove: opponent.selectedBattleChargeMoves.first,
         ),
         turn,
         timeline == null ? null : List<BattleTurnSnapshot>.from(timeline),
@@ -275,11 +275,11 @@ class PokemonBattler {
       ..._battle(
         BattlePokemon.from(
           self,
-          nextDecidedChargeMove: self.selectedChargeMoves.last,
+          nextDecidedChargeMove: self.selectedBattleChargeMoves.last,
         ),
         BattlePokemon.from(
           opponent,
-          nextDecidedChargeMove: opponent.selectedChargeMoves.last,
+          nextDecidedChargeMove: opponent.selectedBattleChargeMoves.last,
         ),
         turn,
         timeline == null ? null : List<BattleTurnSnapshot>.from(timeline),
@@ -287,11 +287,11 @@ class PokemonBattler {
       ..._battle(
         BattlePokemon.from(
           self,
-          nextDecidedChargeMove: self.selectedChargeMoves.first,
+          nextDecidedChargeMove: self.selectedBattleChargeMoves.first,
         ),
         BattlePokemon.from(
           opponent,
-          nextDecidedChargeMove: opponent.selectedChargeMoves.last,
+          nextDecidedChargeMove: opponent.selectedBattleChargeMoves.last,
         ),
         turn,
         timeline == null ? null : List<BattleTurnSnapshot>.from(timeline),
@@ -299,11 +299,11 @@ class PokemonBattler {
       ..._battle(
         BattlePokemon.from(
           self,
-          nextDecidedChargeMove: self.selectedChargeMoves.last,
+          nextDecidedChargeMove: self.selectedBattleChargeMoves.last,
         ),
         BattlePokemon.from(
           opponent,
-          nextDecidedChargeMove: opponent.selectedChargeMoves.first,
+          nextDecidedChargeMove: opponent.selectedBattleChargeMoves.first,
         ),
         turn,
         timeline == null ? null : List<BattleTurnSnapshot>.from(timeline),
@@ -324,7 +324,7 @@ class PokemonBattler {
       ..._battle(
         BattlePokemon.from(
           self,
-          nextDecidedChargeMove: self.selectedChargeMoves.first,
+          nextDecidedChargeMove: self.selectedBattleChargeMoves.first,
           prioritizeMoveAlignment: prioritizeMoveAlignment,
         ),
         BattlePokemon.from(
@@ -337,7 +337,7 @@ class PokemonBattler {
       ..._battle(
         BattlePokemon.from(
           self,
-          nextDecidedChargeMove: self.selectedChargeMoves.last,
+          nextDecidedChargeMove: self.selectedBattleChargeMoves.last,
           prioritizeMoveAlignment: prioritizeMoveAlignment,
         ),
         BattlePokemon.from(
@@ -365,7 +365,7 @@ class PokemonBattler {
         ),
         BattlePokemon.from(
           opponent,
-          nextDecidedChargeMove: opponent.selectedChargeMoves.first,
+          nextDecidedChargeMove: opponent.selectedBattleChargeMoves.first,
           prioritizeMoveAlignment: prioritizeMoveAlignment,
         ),
         turn,
@@ -378,7 +378,7 @@ class PokemonBattler {
         ),
         BattlePokemon.from(
           opponent,
-          nextDecidedChargeMove: opponent.selectedChargeMoves.last,
+          nextDecidedChargeMove: opponent.selectedBattleChargeMoves.last,
           prioritizeMoveAlignment: prioritizeMoveAlignment,
         ),
         turn,
@@ -392,23 +392,23 @@ class PokemonBattler {
     BattlePokemon opponent,
   ) {
     DebugCLI.printMulti(self.name, [
-      'fast    : ${self.selectedFastMove.name} : ${self.selectedFastMove.damage} : '
-          'energy delta : ${self.selectedFastMove.energyDelta}',
-      'charge1 : ${self.selectedChargeMoves.first.name} : ${self.selectedChargeMoves.first.damage} : '
-          'energy delta : ${self.selectedChargeMoves.first.energyDelta}',
-      'charge2 : ${self.selectedChargeMoves.last.name} : ${self.selectedChargeMoves.last.damage} : '
-          'energy delta : ${self.selectedChargeMoves.last.energyDelta}',
+      'fast    : ${self.selectedBattleFastMove.name} : ${self.selectedBattleFastMove.damage} : '
+          'energy delta : ${self.selectedBattleFastMove.energyDelta}',
+      'charge1 : ${self.selectedBattleChargeMoves.first.name} : ${self.selectedBattleChargeMoves.first.damage} : '
+          'energy delta : ${self.selectedBattleChargeMoves.first.energyDelta}',
+      'charge2 : ${self.selectedBattleChargeMoves.last.name} : ${self.selectedBattleChargeMoves.last.damage} : '
+          'energy delta : ${self.selectedBattleChargeMoves.last.energyDelta}',
       'level   : ${self.selectedIVs.level}',
       'cp      : ${self.cp}',
       'ivs     : ${self.selectedIVs.atk}  ${self.selectedIVs.def}  ${self.selectedIVs.hp}'
     ]);
     DebugCLI.printMulti(opponent.name, [
-      'fast : ${opponent.selectedFastMove.name} : ${opponent.selectedFastMove.damage} : '
-          'energy delta : ${opponent.selectedFastMove.energyDelta}',
-      'charge1 : ${opponent.selectedChargeMoves.first.name} : ${opponent.selectedChargeMoves.first.damage} : '
-          'energy delta : ${opponent.selectedChargeMoves.first.energyDelta}',
-      'charge2 : ${opponent.selectedChargeMoves.last.name} : ${opponent.selectedChargeMoves.last.damage} : '
-          'energy delta : ${opponent.selectedChargeMoves.last.energyDelta}',
+      'fast : ${opponent.selectedBattleFastMove.name} : ${opponent.selectedBattleFastMove.damage} : '
+          'energy delta : ${opponent.selectedBattleFastMove.energyDelta}',
+      'charge1 : ${opponent.selectedBattleChargeMoves.first.name} : ${opponent.selectedBattleChargeMoves.first.damage} : '
+          'energy delta : ${opponent.selectedBattleChargeMoves.first.energyDelta}',
+      'charge2 : ${opponent.selectedBattleChargeMoves.last.name} : ${opponent.selectedBattleChargeMoves.last.damage} : '
+          'energy delta : ${opponent.selectedBattleChargeMoves.last.energyDelta}',
       'level   : ${opponent.selectedIVs.level}',
       'cp      : ${opponent.cp}',
       'ivs     : ${opponent.selectedIVs.atk}  ${opponent.selectedIVs.def}  ${opponent.selectedIVs.hp}'

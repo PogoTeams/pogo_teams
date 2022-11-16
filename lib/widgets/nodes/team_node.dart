@@ -102,7 +102,7 @@ class TeamNode extends StatelessWidget {
     );
   }
 
-  Widget _buildFocusNodes(List<Pokemon?> pokemonTeam) {
+  Widget _buildFocusNodes(List<RankedPokemon?> pokemonTeam) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisSpacing: Sizing.blockSizeHorizontal * 1.0,
@@ -119,7 +119,7 @@ class TeamNode extends StatelessWidget {
 
   // If the focus index is provided, draw a special border
   // This indicates the current 'focus' node
-  Widget _buildFocusNode(Pokemon? pokemon, int index) {
+  Widget _buildFocusNode(RankedPokemon? pokemon, int index) {
     Color _color;
 
     if (index == focusIndex) {

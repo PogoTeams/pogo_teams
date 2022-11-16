@@ -38,18 +38,18 @@ class BattleResult {
       'opponent': {
         'pokemonId': opponent.pokemonId,
         'rating': opponent.currentRating,
-        'selectedFastMove': opponent.selectedFastMove.moveId,
+        'selectedFastMove': opponent.selectedBattleFastMove.moveId,
         'selectedChargeMoves': [
-          opponent.selectedChargeMoves.first.moveId,
-          opponent.selectedChargeMoves.last.moveId,
+          opponent.selectedBattleChargeMoves.first.moveId,
+          opponent.selectedBattleChargeMoves.last.moveId,
         ],
       },
       'outcome': outcome.name,
       'rating': self.currentRating,
-      'selectedFastMove': self.selectedFastMove.moveId,
+      'selectedFastMove': self.selectedBattleFastMove.moveId,
       'selectedChargeMoves': [
-        self.selectedChargeMoves.first.moveId,
-        self.selectedChargeMoves.last.moveId,
+        self.selectedBattleChargeMoves.first.moveId,
+        self.selectedBattleChargeMoves.last.moveId,
       ],
     };
   }

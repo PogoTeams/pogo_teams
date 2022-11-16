@@ -54,26 +54,7 @@ const CupSchema = CollectionSchema(
   deserializeProp: _cupDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {
-    r'includeFilters': LinkSchema(
-      id: 7425088563612649887,
-      name: r'includeFilters',
-      target: r'CupFilter',
-      single: false,
-    ),
-    r'excludeFilters': LinkSchema(
-      id: -7267867558453503378,
-      name: r'excludeFilters',
-      target: r'CupFilter',
-      single: false,
-    ),
-    r'rankings': LinkSchema(
-      id: -7345411310555650539,
-      name: r'rankings',
-      target: r'RankedPokemon',
-      single: false,
-    )
-  },
+  links: {},
   embeddedSchemas: {},
   getId: _cupGetId,
   getLinks: _cupGetLinks,
@@ -159,17 +140,11 @@ Id _cupGetId(Cup object) {
 }
 
 List<IsarLinkBase<dynamic>> _cupGetLinks(Cup object) {
-  return [object.includeFilters, object.excludeFilters, object.rankings];
+  return [];
 }
 
 void _cupAttach(IsarCollection<dynamic> col, Id id, Cup object) {
   object.id = id;
-  object.includeFilters
-      .attach(col, col.isar.collection<CupFilter>(), r'includeFilters', id);
-  object.excludeFilters
-      .attach(col, col.isar.collection<CupFilter>(), r'excludeFilters', id);
-  object.rankings
-      .attach(col, col.isar.collection<RankedPokemon>(), r'rankings', id);
 }
 
 extension CupQueryWhereSort on QueryBuilder<Cup, Cup, QWhere> {
@@ -816,175 +791,7 @@ extension CupQueryFilter on QueryBuilder<Cup, Cup, QFilterCondition> {
 
 extension CupQueryObject on QueryBuilder<Cup, Cup, QFilterCondition> {}
 
-extension CupQueryLinks on QueryBuilder<Cup, Cup, QFilterCondition> {
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFilters(
-      FilterQuery<CupFilter> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'includeFilters');
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFiltersLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'includeFilters', length, true, length, true);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFiltersIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'includeFilters', 0, true, 0, true);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFiltersIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'includeFilters', 0, false, 999999, true);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFiltersLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'includeFilters', 0, true, length, include);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFiltersLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'includeFilters', length, include, 999999, true);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFiltersLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(
-          r'includeFilters', lower, includeLower, upper, includeUpper);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFilters(
-      FilterQuery<CupFilter> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'excludeFilters');
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFiltersLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'excludeFilters', length, true, length, true);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFiltersIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'excludeFilters', 0, true, 0, true);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFiltersIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'excludeFilters', 0, false, 999999, true);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFiltersLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'excludeFilters', 0, true, length, include);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFiltersLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'excludeFilters', length, include, 999999, true);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFiltersLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(
-          r'excludeFilters', lower, includeLower, upper, includeUpper);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankings(
-      FilterQuery<RankedPokemon> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'rankings');
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankingsLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'rankings', length, true, length, true);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankingsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'rankings', 0, true, 0, true);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankingsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'rankings', 0, false, 999999, true);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankingsLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'rankings', 0, true, length, include);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankingsLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'rankings', length, include, 999999, true);
-    });
-  }
-
-  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankingsLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(
-          r'rankings', lower, includeLower, upper, includeUpper);
-    });
-  }
-}
+extension CupQueryLinks on QueryBuilder<Cup, Cup, QFilterCondition> {}
 
 extension CupQuerySortBy on QueryBuilder<Cup, Cup, QSortBy> {
   QueryBuilder<Cup, Cup, QAfterSortBy> sortByCp() {
