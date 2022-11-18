@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'pokemon_node.dart';
 import '../../pogo_objects/cup.dart';
 import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_team.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/ui/pogo_colors.dart';
 
@@ -23,9 +22,10 @@ class TeamNode extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.onEmptyPressed,
-    required this.team,
+    required this.pokemonTeam,
     required this.cup,
     this.buildHeader = false,
+    this.winRate,
     this.footer,
     this.focusIndex,
     this.emptyTransparent = false,
@@ -35,10 +35,11 @@ class TeamNode extends StatelessWidget {
 
   final Function(int) onPressed;
   final Function(int) onEmptyPressed;
-  final PokemonTeam team;
+  final List<Pokemon?> pokemonTeam;
   final Cup cup;
 
   final bool buildHeader;
+  final String? winRate;
   final Widget? footer;
   final int? focusIndex;
   final bool emptyTransparent;
@@ -47,8 +48,6 @@ class TeamNode extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     // Only applicable to user Pokemon teams
-    if (team.runtimeType != UserPokemonTeam) return Container();
-
     return Padding(
       padding: EdgeInsets.only(
         left: Sizing.blockSizeHorizontal * 2.0,
@@ -65,7 +64,7 @@ class TeamNode extends StatelessWidget {
                 ),
           ),
           Text(
-            'Win Rate : ${(team as UserPokemonTeam).winRateString} %',
+            'Win Rate : ${winRate ?? 0.toStringAsFixed(2)} %',
             style: Theme.of(context).textTheme.bodyLarge?.apply(
                   fontStyle: FontStyle.italic,
                 ),
@@ -75,14 +74,19 @@ class TeamNode extends StatelessWidget {
     );
   }
 
+  bool _pokemonTeamIsEmpty() {
+    for (var pokemon in pokemonTeam) {
+      if (pokemon != null) return false;
+    }
+    return true;
+  }
+
   // Build the grid view of the current Pokemon team
   Widget _buildPokemonNodes() {
-    if (collapsible && team.isEmpty()) return Container();
-
-    final pokemonTeam = team.pokemonTeam;
+    if (collapsible && _pokemonTeamIsEmpty()) return Container();
 
     if (focusIndex != null) {
-      return _buildFocusNodes(pokemonTeam);
+      return _buildFocusNodes();
     }
 
     return GridView.builder(
@@ -102,7 +106,7 @@ class TeamNode extends StatelessWidget {
     );
   }
 
-  Widget _buildFocusNodes(List<RankedPokemon?> pokemonTeam) {
+  Widget _buildFocusNodes() {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisSpacing: Sizing.blockSizeHorizontal * 1.0,
@@ -119,7 +123,7 @@ class TeamNode extends StatelessWidget {
 
   // If the focus index is provided, draw a special border
   // This indicates the current 'focus' node
-  Widget _buildFocusNode(RankedPokemon? pokemon, int index) {
+  Widget _buildFocusNode(Pokemon? pokemon, int index) {
     Color _color;
 
     if (index == focusIndex) {
@@ -155,12 +159,12 @@ class TeamNode extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: PogoColors.getCupColor(cup.cupId),
+          color: PogoColors.getCupColor(cup),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomRight,
             colors: [
-              PogoColors.getCupColor(cup.cupId),
+              PogoColors.getCupColor(cup),
               const Color(0xBF29F19C),
             ],
             tileMode: TileMode.clamp,

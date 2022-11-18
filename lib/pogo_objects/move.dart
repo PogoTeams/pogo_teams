@@ -6,7 +6,7 @@ import 'package:isar/isar.dart';
 
 // Local
 import 'pokemon_typing.dart';
-import 'pokemon.dart';
+import 'battle_pokemon.dart';
 import '../modules/data/stats.dart';
 import '../modules/data/debug_cli.dart';
 

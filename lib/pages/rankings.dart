@@ -35,10 +35,10 @@ class _RankingsState extends State<Rankings> {
   // Search bar text input controller
   final TextEditingController _searchController = TextEditingController();
 
-  List<RankedPokemon> _pokemon = [];
+  List<Pokemon> _pokemon = [];
 
   // A variable list of Pokemon based on search bar text input
-  List<RankedPokemon> _filteredPokemon = [];
+  List<Pokemon> _filteredPokemon = [];
 
   RankingsCategories _selectedCategory = RankingsCategories.overall;
 
@@ -74,7 +74,7 @@ class _RankingsState extends State<Rankings> {
       final int termsLen = terms.length;
 
       // Callback to filter Pokemon by the search terms
-      bool filterPokemon(RankedPokemon pokemon) {
+      bool filterPokemon(Pokemon pokemon) {
         bool isMatch = false;
 
         for (int i = 0; i < termsLen && !isMatch; ++i) {

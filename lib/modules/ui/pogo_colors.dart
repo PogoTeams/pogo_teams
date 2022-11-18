@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Local
 import '../../pogo_objects/pokemon_typing.dart';
 import '../../pogo_objects/move.dart';
+import '../../pogo_objects/cup.dart';
 import '../../enums/battle_outcome.dart';
 
 /*
@@ -57,12 +58,8 @@ class PogoColors {
       .map((move) => _typeColors[move.type.typeId] ?? defaultTypeColor)
       .toList();
 
-  static Color getCupColor(String cupId) =>
-      _cupColors[cupId] ?? defaultCupColor;
-
-  static void addCupColor(String cupId, String cupColorHex) {
-    _cupColors[cupId] = Color(int.parse(cupColorHex));
-  }
+  static Color getCupColor(Cup cup) =>
+      cup.uiColor == null ? defaultCupColor : Color(int.parse(cup.uiColor!));
 
   static Color getBattleOutcomeColor(BattleOutcome outcome) {
     Color color;

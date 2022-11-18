@@ -35,18 +35,19 @@ class UserTeamAnalysis extends StatefulWidget {
   final List<Pair<PokemonType, double>> defenseThreats;
   final List<Pair<PokemonType, double>> offenseCoverage;
   final List<Pair<PokemonType, double>> netEffectiveness;
-  final Function(List<RankedPokemon>, List<double>) recalculate;
+  final Function(List<Pokemon>, List<double>) recalculate;
 
   @override
   _UserTeamAnalysisState createState() => _UserTeamAnalysisState();
 }
 
 class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
+  late UserPokemonTeam _team = widget.team;
   bool _initState = true;
 
   // The included type keys of the team's given cup
   late final List<String> includedTypesKeys =
-      widget.team.cup.includedTypeKeys();
+      widget.team.getCup().includedTypeKeys();
 
   // The list of expansion panels
   List<PanelStates> _expansionPanels = [];
@@ -54,7 +55,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
   final ScrollController _scrollController = ScrollController();
 
   // Setup the list of expansion panels given the PokemonTeam
-  void _initializeExpansionPanels(List<RankedPokemon> pokemonTeam) {
+  void _initializeExpansionPanels(List<Pokemon> pokemonTeam) {
     final defenseThreatTypes =
         widget.defenseThreats.map((typeData) => typeData.a).toList();
 
@@ -71,7 +72,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
         expandedValue: SwapList(
           onSwap: _onSwap,
           onAdd: _onAddPokemon,
-          team: widget.team,
+          team: _team,
           types: defenseThreatTypes,
         ),
         isExpanded: true,
@@ -86,7 +87,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
         expandedValue: SwapList(
           onSwap: _onSwap,
           onAdd: _onAddPokemon,
-          team: widget.team,
+          team: _team,
           types: threatCounterTypes,
         ),
         isExpanded: true,
@@ -96,25 +97,39 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
 
   // When the team is changed from a swap page, animate to the top of to
   // display the new team
-  void _onSwap(RankedPokemon swapPokemon) async {
-    List<RankedPokemon>? newTeam = await Navigator.push(
+  void _onSwap(Pokemon swapPokemon) async {
+    await Navigator.push(
       context,
-      MaterialPageRoute<List<RankedPokemon>>(
+      MaterialPageRoute(
         builder: (BuildContext context) {
           return TeamSwap(
-            team: widget.team,
+            team: _team,
             swap: swapPokemon,
           );
         },
       ),
     );
 
-    if (newTeam != null) {
-      widget.team.setPokemonTeam(newTeam);
+    _team = PogoData.getUserPokemonTeamSync(_team.id);
+    widget.recalculate(
+      _team.getOrderedPokemonList(),
+      _team.effectiveness,
+    );
 
+    setState(() {
+      _scrollController.animateTo(
+        0.0,
+        duration: const Duration(seconds: 1),
+        curve: Curves.decelerate,
+      );
+    });
+  }
+
+  void _onAddPokemon(Pokemon pokemon) {
+    if (_team.tryAddPokemon(pokemon)) {
       widget.recalculate(
-        widget.team.getPokemonTeam(),
-        widget.team.effectiveness,
+        _team.getOrderedPokemonList(),
+        _team.effectiveness,
       );
 
       setState(() {
@@ -125,27 +140,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
         );
       });
 
-      PogoData.updateUserPokemonTeam(widget.team);
+      PogoData.updatePokemonTeamSync(widget.team);
     }
-  }
-
-  void _onAddPokemon(RankedPokemon pokemon) {
-    widget.team.addPokemon(pokemon);
-
-    widget.recalculate(
-      widget.team.getPokemonTeam(),
-      widget.team.effectiveness,
-    );
-
-    setState(() {
-      _scrollController.animateTo(
-        0.0,
-        duration: const Duration(seconds: 1),
-        curve: Curves.decelerate,
-      );
-    });
-
-    PogoData.updateUserPokemonTeam(widget.team);
   }
 
   AppBar _buildAppBar() {
@@ -153,7 +149,6 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
       leading: IconButton(
         onPressed: () => Navigator.pop(
           context,
-          widget.team.pokemonTeam,
         ),
         icon: const Icon(Icons.arrow_back_ios),
       ),
@@ -184,7 +179,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
   }
 
   // Build the list of either 3 or 6 PokemonNodes that make up this team
-  Widget _buildPokemonNodes(List<RankedPokemon> pokemonTeam) {
+  Widget _buildPokemonNodes(List<Pokemon> pokemonTeam) {
     return ListView(
       shrinkWrap: true,
       children: List.generate(
@@ -198,11 +193,11 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
             pokemon: pokemonTeam[index],
             onMoveChanged: () {
               widget.recalculate(
-                widget.team.getPokemonTeam(),
-                widget.team.effectiveness,
+                _team.getOrderedPokemonList(),
+                _team.effectiveness,
               );
 
-              PogoData.updateUserPokemonTeam(widget.team);
+              PogoData.updatePokemonTeamSync(_team);
             },
           ),
         ),
@@ -247,8 +242,10 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
 
   @override
   Widget build(BuildContext context) {
+    _team = PogoData.getUserPokemonTeamSync(_team.id);
+
     if (_initState) {
-      _initializeExpansionPanels(widget.team.getPokemonTeam());
+      _initializeExpansionPanels(_team.getOrderedPokemonList());
       _initState = false;
     }
 
@@ -268,7 +265,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
             ),
 
             // Build the Pokemon nodes
-            _buildPokemonNodes(widget.team.getPokemonTeam()),
+            _buildPokemonNodes(_team.getOrderedPokemonList()),
 
             // Spacer
             SizedBox(

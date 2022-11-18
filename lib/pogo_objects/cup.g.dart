@@ -46,6 +46,11 @@ const CupSchema = CollectionSchema(
       id: 5,
       name: r'publisher',
       type: IsarType.string,
+    ),
+    r'uiColor': PropertySchema(
+      id: 6,
+      name: r'uiColor',
+      type: IsarType.string,
     )
   },
   estimateSize: _cupEstimateSize,
@@ -54,7 +59,26 @@ const CupSchema = CollectionSchema(
   deserializeProp: _cupDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'includeFilters': LinkSchema(
+      id: 7425088563612649887,
+      name: r'includeFilters',
+      target: r'CupFilter',
+      single: false,
+    ),
+    r'excludeFilters': LinkSchema(
+      id: -7267867558453503378,
+      name: r'excludeFilters',
+      target: r'CupFilter',
+      single: false,
+    ),
+    r'rankings': LinkSchema(
+      id: -7345411310555650539,
+      name: r'rankings',
+      target: r'Pokemon',
+      single: false,
+    )
+  },
   embeddedSchemas: {},
   getId: _cupGetId,
   getLinks: _cupGetLinks,
@@ -76,6 +100,12 @@ int _cupEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.uiColor;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -91,6 +121,7 @@ void _cupSerialize(
   writer.writeString(offsets[3], object.name);
   writer.writeLong(offsets[4], object.partySize);
   writer.writeString(offsets[5], object.publisher);
+  writer.writeString(offsets[6], object.uiColor);
 }
 
 Cup _cupDeserialize(
@@ -106,6 +137,7 @@ Cup _cupDeserialize(
     name: reader.readString(offsets[3]),
     partySize: reader.readLong(offsets[4]),
     publisher: reader.readStringOrNull(offsets[5]),
+    uiColor: reader.readStringOrNull(offsets[6]),
   );
   object.id = id;
   return object;
@@ -130,6 +162,8 @@ P _cupDeserializeProp<P>(
       return (reader.readLong(offset)) as P;
     case 5:
       return (reader.readStringOrNull(offset)) as P;
+    case 6:
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -140,11 +174,16 @@ Id _cupGetId(Cup object) {
 }
 
 List<IsarLinkBase<dynamic>> _cupGetLinks(Cup object) {
-  return [];
+  return [object.includeFilters, object.excludeFilters, object.rankings];
 }
 
 void _cupAttach(IsarCollection<dynamic> col, Id id, Cup object) {
   object.id = id;
+  object.includeFilters
+      .attach(col, col.isar.collection<CupFilter>(), r'includeFilters', id);
+  object.excludeFilters
+      .attach(col, col.isar.collection<CupFilter>(), r'excludeFilters', id);
+  object.rankings.attach(col, col.isar.collection<Pokemon>(), r'rankings', id);
 }
 
 extension CupQueryWhereSort on QueryBuilder<Cup, Cup, QWhere> {
@@ -787,11 +826,323 @@ extension CupQueryFilter on QueryBuilder<Cup, Cup, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> uiColorIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'uiColor',
+      ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> uiColorIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'uiColor',
+      ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> uiColorEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'uiColor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> uiColorGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'uiColor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> uiColorLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'uiColor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> uiColorBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'uiColor',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> uiColorStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'uiColor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> uiColorEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'uiColor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> uiColorContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'uiColor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> uiColorMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'uiColor',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> uiColorIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'uiColor',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> uiColorIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'uiColor',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension CupQueryObject on QueryBuilder<Cup, Cup, QFilterCondition> {}
 
-extension CupQueryLinks on QueryBuilder<Cup, Cup, QFilterCondition> {}
+extension CupQueryLinks on QueryBuilder<Cup, Cup, QFilterCondition> {
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFilters(
+      FilterQuery<CupFilter> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'includeFilters');
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFiltersLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'includeFilters', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFiltersIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'includeFilters', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFiltersIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'includeFilters', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFiltersLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'includeFilters', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFiltersLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'includeFilters', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> includeFiltersLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'includeFilters', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFilters(
+      FilterQuery<CupFilter> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'excludeFilters');
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFiltersLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'excludeFilters', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFiltersIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'excludeFilters', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFiltersIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'excludeFilters', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFiltersLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'excludeFilters', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFiltersLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'excludeFilters', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> excludeFiltersLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'excludeFilters', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankings(
+      FilterQuery<Pokemon> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'rankings');
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankingsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'rankings', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankingsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'rankings', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankingsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'rankings', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankingsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'rankings', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankingsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'rankings', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterFilterCondition> rankingsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'rankings', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension CupQuerySortBy on QueryBuilder<Cup, Cup, QSortBy> {
   QueryBuilder<Cup, Cup, QAfterSortBy> sortByCp() {
@@ -863,6 +1214,18 @@ extension CupQuerySortBy on QueryBuilder<Cup, Cup, QSortBy> {
   QueryBuilder<Cup, Cup, QAfterSortBy> sortByPublisherDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'publisher', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterSortBy> sortByUiColor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'uiColor', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterSortBy> sortByUiColorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'uiColor', Sort.desc);
     });
   }
 }
@@ -951,6 +1314,18 @@ extension CupQuerySortThenBy on QueryBuilder<Cup, Cup, QSortThenBy> {
       return query.addSortBy(r'publisher', Sort.desc);
     });
   }
+
+  QueryBuilder<Cup, Cup, QAfterSortBy> thenByUiColor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'uiColor', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterSortBy> thenByUiColorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'uiColor', Sort.desc);
+    });
+  }
 }
 
 extension CupQueryWhereDistinct on QueryBuilder<Cup, Cup, QDistinct> {
@@ -990,6 +1365,13 @@ extension CupQueryWhereDistinct on QueryBuilder<Cup, Cup, QDistinct> {
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'publisher', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QDistinct> distinctByUiColor(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'uiColor', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1034,6 +1416,12 @@ extension CupQueryProperty on QueryBuilder<Cup, Cup, QQueryProperty> {
   QueryBuilder<Cup, String?, QQueryOperations> publisherProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'publisher');
+    });
+  }
+
+  QueryBuilder<Cup, String?, QQueryOperations> uiColorProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'uiColor');
     });
   }
 }

@@ -1,5 +1,5 @@
 // Local
-import '../pogo_objects/pokemon.dart';
+import '../pogo_objects/battle_pokemon.dart';
 import '../pogo_objects/move.dart';
 import '../pogo_objects/ratings.dart';
 import '../enums/battle_outcome.dart';

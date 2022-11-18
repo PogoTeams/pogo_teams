@@ -9,8 +9,6 @@ import '../analysis/analysis.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../modules/ui/sizing.dart';
-import '../../pogo_objects/user_teams.dart';
-import '../../pogo_objects/pokemon.dart';
 import '../../pogo_objects/pokemon_team.dart';
 import '../../modules/data/pogo_data.dart';
 
@@ -34,29 +32,25 @@ class Teams extends StatefulWidget {
 }
 
 class _TeamsState extends State<Teams> {
-  late UserTeams _teams = UserTeams();
-
-  void _loadTeams() async {
-    //_teams = await PogoData.getUserTeams();
-    setState(() {});
-  }
+  late List<UserPokemonTeam> _teams;
 
   // Build the list of TeamNodes, with the necessary callbacks
   Widget _buildTeamsList(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: _teams.teamsCount,
+      itemCount: _teams.length,
       itemBuilder: (context, index) {
-        if (index == _teams.teamsCount - 1) {
+        if (index == _teams.length - 1) {
           return Column(
             children: [
               TeamNode(
                 onEmptyPressed: (nodeIndex) =>
                     _onEmptyPressed(index, nodeIndex),
                 onPressed: (_) {},
-                team: _teams[index],
-                cup: _teams[index].cup,
+                pokemonTeam: _teams[index].getOrderedPokemonListFilled(),
+                cup: _teams[index].getCup(),
                 buildHeader: true,
+                winRate: _teams[index].getWinRate(),
                 footer: _buildTeamNodeFooter(index),
               ),
 
@@ -71,9 +65,10 @@ class _TeamsState extends State<Teams> {
         return TeamNode(
           onEmptyPressed: (nodeIndex) => _onEmptyPressed(index, nodeIndex),
           onPressed: (_) {},
-          team: _teams[index],
-          cup: _teams[index].cup,
+          pokemonTeam: _teams[index].getOrderedPokemonListFilled(),
+          cup: _teams[index].getCup(),
           buildHeader: true,
+          winRate: _teams[index].getWinRate(),
           footer: _buildTeamNodeFooter(index),
         );
       },
@@ -144,10 +139,7 @@ class _TeamsState extends State<Teams> {
   // Remove the team at specified index
   void _onClearTeam(int teamIndex) {
     setState(() {
-      final removedTeam = _teams.removeTeamAt(teamIndex);
-      if (removedTeam.id != null) {
-        PogoData.deleteUserPokemonTeam(removedTeam.id!);
-      }
+      PogoData.deleteUserPokemonTeamSync(_teams[teamIndex].id);
     });
   }
 
@@ -156,73 +148,58 @@ class _TeamsState extends State<Teams> {
     // If the team is empty, no action will be taken
     if (_teams[teamIndex].isEmpty()) return;
 
-    final newPokemonTeam = await Navigator.push(
+    await Navigator.push(
       context,
-      MaterialPageRoute<List<RankedPokemon?>>(builder: (BuildContext context) {
+      MaterialPageRoute<bool>(builder: (BuildContext context) {
         return Analysis(team: _teams[teamIndex]);
       }),
     );
 
-    if (newPokemonTeam != null) {
-      setState(() {
-        _teams[teamIndex].setPokemonTeam(newPokemonTeam);
-      });
-    }
+    setState(() {
+      PogoData.updatePokemonTeamSync(_teams[teamIndex]);
+    });
   }
 
   void _onLogTeam(int teamIndex) async {
-    final team = _teams[teamIndex];
-
-    final newTeam = await Navigator.push(
+    await Navigator.push(
       context,
-      MaterialPageRoute<PokemonTeam>(
+      MaterialPageRoute<bool>(
         builder: (BuildContext context) => BattleLog(
-          team: team,
+          team: _teams[teamIndex],
         ),
       ),
     );
 
-    if (newTeam != null) {
-      setState(() {
-        _teams[teamIndex].fromBuilderCopy((newTeam as UserPokemonTeam));
-      });
-    }
+    setState(() {});
   }
 
   // Edit the team at specified index
   void _onEditTeam(int teamIndex) async {
-    final team = _teams[teamIndex];
-
-    final newTeam = await Navigator.push(
+    await Navigator.push(
       context,
-      MaterialPageRoute<PokemonTeam>(
-        builder: (BuildContext context) => TeamEdit(team: team),
+      MaterialPageRoute(
+        builder: (BuildContext context) => TeamEdit(team: _teams[teamIndex]),
       ),
     );
 
-    if (newTeam != null) {
-      setState(() {
-        _teams[teamIndex].fromBuilderCopy((newTeam as UserPokemonTeam));
-      });
-    }
+    setState(() {});
   }
 
   // On locking a team, the clear option is removed
   void _onLockTeam(int teamIndex) {
     setState(() {
       _teams[teamIndex].toggleLock();
+      PogoData.updatePokemonTeamSync(_teams[teamIndex]);
     });
-    PogoData.updateUserPokemonTeam(
-      _teams[teamIndex],
-      updateMask: ['locked'],
-    );
   }
 
   // Add a new empty team
   void _onAddTeam() async {
-    final newTeam = await PogoData.updateUserPokemonTeam(UserPokemonTeam());
     setState(() {
-      _teams.addTeam(newTeam);
+      UserPokemonTeam newTeam = UserPokemonTeam()
+        ..dateCreated = DateTime.now().toUtc()
+        ..cup.value = PogoData.cups.first;
+      PogoData.updatePokemonTeamSync(newTeam);
     });
   }
 
@@ -231,23 +208,18 @@ class _TeamsState extends State<Teams> {
   void _onEmptyPressed(int teamIndex, int nodeIndex) async {
     final team = _teams[teamIndex];
 
-    final newTeam = await Navigator.push(
+    await Navigator.push(
       context,
-      MaterialPageRoute<PokemonTeam>(builder: (BuildContext context) {
+      MaterialPageRoute(builder: (BuildContext context) {
         return TeamBuilder(
           team: team,
-          cup: team.cup,
+          cup: team.getCup(),
           focusIndex: nodeIndex,
         );
       }),
     );
 
-    if (newTeam != null) {
-      setState(() {
-        _teams[teamIndex].fromBuilderCopy(newTeam as UserPokemonTeam);
-        PogoData.updateUserPokemonTeam(_teams[teamIndex]);
-      });
-    }
+    setState(() {});
   }
 
   // Ensure the widget is mounted before setState
@@ -259,13 +231,9 @@ class _TeamsState extends State<Teams> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _loadTeams();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    _teams = PogoData.getUserPokemonTeamsSync();
+
     return Scaffold(
       body: _buildTeamsList(context),
 

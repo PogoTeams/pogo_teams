@@ -1,10 +1,10 @@
+// Packages
+import 'package:isar/isar.dart';
+
 // Local
 import 'package:pogo_teams/mapping/niantic_snapshot.dart';
 import 'package:pogo_teams/mapping/mapping_tools.dart';
 import 'package:pogo_teams/ranker/ranker_main.dart';
-import 'package:pogo_teams/pogo_objects/move.dart';
-
-import 'package:isar/isar.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

@@ -97,7 +97,7 @@ class PokemonTypes {
   // Get a list of the provided pokemon team's net effectiveness
   // [0] : offensive
   // [1] : defensive
-  static List<double> getNetEffectiveness(List<RankedPokemon> team) {
+  static List<double> getNetEffectiveness(List<Pokemon> team) {
     List<double> netEffectiveness = List.generate(
       Globals.typeCount,
       (index) => 0.0,
@@ -154,7 +154,7 @@ class PokemonTypes {
 
   // Get a list of offense coverage given a team's moveset
   static List<Pair<PokemonType, double>> getOffenseCoverage(
-    List<RankedPokemon> team,
+    List<Pokemon> team,
     List<String> includedTypesKeys,
   ) {
     List<Pair<PokemonType, double>> offenseCoveragePairs =

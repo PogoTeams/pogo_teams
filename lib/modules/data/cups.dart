@@ -1,4 +1,4 @@
-import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/pokemon_base.dart';
 
 class Cups {
   static const Map<int, int> cpMinimums = {
@@ -14,7 +14,7 @@ class Cups {
     'shedinja',
   ];
 
-  static bool isBanned(Pokemon pokemon, int cpCap) {
+  static bool isBanned(PokemonBase pokemon, int cpCap) {
     return permaBanList.contains(pokemon.pokemonId);
   }
 }

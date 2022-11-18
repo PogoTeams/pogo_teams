@@ -1,13 +1,12 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:pogo_teams/modules/data/pogo_data.dart';
 
 // Local Imports
+import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/pokemon_team.dart';
+import '../../pogo_objects/cup.dart';
 import '../../modules/data/pogo_data.dart';
 import '../../modules/ui/sizing.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/cup.dart';
-import '../../pogo_objects/pokemon_team.dart';
 import '../../widgets/pokemon_list.dart';
 import '../../widgets/buttons/exit_button.dart';
 import '../../widgets/pogo_text_field.dart';
@@ -43,8 +42,9 @@ class TeamBuilder extends StatefulWidget {
 }
 
 class _TeamBuilderState extends State<TeamBuilder> {
+  late final PokemonTeam _team;
+  late List<Pokemon?> _pokemonTeam;
   late Cup _cup = widget.cup;
-  late final PokemonTeam _builderTeam;
 
   // The current index of the team the user is editing
   int _builderIndex = 0;
@@ -53,10 +53,10 @@ class _TeamBuilderState extends State<TeamBuilder> {
   final TextEditingController _searchController = TextEditingController();
 
   // List of ALL Pokemon
-  List<RankedPokemon> _pokemon = [];
+  List<Pokemon> _pokemon = [];
 
   // A variable list of Pokemon based on search bar text input
-  List<RankedPokemon> _filteredPokemon = [];
+  List<Pokemon> _filteredPokemon = [];
 
   RankingsCategories _selectedCategory = RankingsCategories.overall;
 
@@ -72,7 +72,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
       final int termsLen = terms.length;
 
       // Callback to filter Pokemon by the search terms
-      bool filterPokemon(RankedPokemon pokemon) {
+      bool filterPokemon(Pokemon pokemon) {
         bool isMatch = false;
 
         for (int i = 0; i < termsLen && !isMatch; ++i) {
@@ -93,7 +93,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
     return TeamNode(
       onPressed: _updateWorkingIndex,
       onEmptyPressed: _updateWorkingIndex,
-      team: _builderTeam,
+      pokemonTeam: _pokemonTeam,
       cup: _cup,
       focusIndex: _builderIndex,
       emptyTransparent: true,
@@ -107,14 +107,14 @@ class _TeamBuilderState extends State<TeamBuilder> {
   }
 
   Widget _buildTeamNodeFooter() {
-    if (_builderTeam.runtimeType == OpponentPokemonTeam) {
+    if (_team.runtimeType == OpponentPokemonTeam) {
       return WinLossDropdown(
-        selectedOption: (_builderTeam as OpponentPokemonTeam).battleOutcome,
+        selectedOption: (_team as OpponentPokemonTeam).battleOutcome,
         onChanged: (battleOutcome) {
           if (battleOutcome == null) return;
 
           setState(() {
-            (_builderTeam as OpponentPokemonTeam).battleOutcome = battleOutcome;
+            (_team as OpponentPokemonTeam).battleOutcome = battleOutcome;
           });
         },
         width: Sizing.screenWidth,
@@ -133,7 +133,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
 
         // Dropdown to select team size
         TeamSizeDropdown(
-          size: _builderTeam.pokemonTeam.length,
+          size: _team.teamSize,
           onTeamSizeChanged: _onTeamSizeChanged,
         ),
       ],
@@ -146,7 +146,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
       pokemon: _filteredPokemon,
       onPokemonSelected: (pokemon) {
         setState(() {
-          _builderTeam.setPokemon(_builderIndex, pokemon);
+          _pokemonTeam[_builderIndex] = Pokemon.from(pokemon);
           _updateWorkingIndex(_builderIndex + 1);
         });
       },
@@ -174,7 +174,10 @@ class _TeamBuilderState extends State<TeamBuilder> {
           ExitButton(
             key: UniqueKey(),
             onPressed: () {
-              Navigator.pop(context, _builderTeam);
+              _team.cup.value = _cup;
+              PogoData.updatePokemonTeamSync(_team,
+                  newPokemonTeam: _pokemonTeam);
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.check),
           ),
@@ -188,7 +191,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
   // in a round-robin fashion.
   void _updateWorkingIndex(int index) {
     setState(() {
-      _builderIndex = (index == _builderTeam.pokemonTeam.length ? 0 : index);
+      _builderIndex = (index == _team.teamSize ? 0 : index);
     });
   }
 
@@ -197,8 +200,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
     if (newCup == null) return;
 
     setState(() {
-      (_builderTeam as UserPokemonTeam).setCupById(newCup);
-      _cup = (_builderTeam as UserPokemonTeam).cup;
+      _cup = PogoData.getCupById(newCup);
       _filterCategory(_selectedCategory);
     });
   }
@@ -211,7 +213,13 @@ class _TeamBuilderState extends State<TeamBuilder> {
         _builderIndex = newSize - 1;
       }
 
-      (_builderTeam as UserPokemonTeam).setTeamSize(newSize);
+      if (_pokemonTeam.length != newSize) {
+        final newTeam = List.generate(
+            newSize, (i) => i < _pokemonTeam.length ? _pokemonTeam[i] : null);
+        _pokemonTeam = newTeam;
+      }
+
+      _team.teamSize = newSize;
     });
   }
 
@@ -225,7 +233,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
     if (RankingsCategories.dex == _selectedCategory) {
       //_pokemon = PogoData.pokemonList;
     } else {
-      _pokemon = _builderTeam.cup.getRankedPokemonList(rankingsCategory);
+      _pokemon = _cup.getRankedPokemonList(rankingsCategory);
     }
 
     _filterPokemonList();
@@ -238,14 +246,14 @@ class _TeamBuilderState extends State<TeamBuilder> {
 
     // Building a user team
     if (widget.team.runtimeType == UserPokemonTeam) {
-      _builderTeam =
-          UserPokemonTeam.builderCopy(widget.team as UserPokemonTeam);
+      _team = widget.team as UserPokemonTeam;
     }
     // Building a log team
     else {
-      _builderTeam =
-          OpponentPokemonTeam.builderCopy(widget.team as OpponentPokemonTeam);
+      _team = widget.team as OpponentPokemonTeam;
     }
+
+    _pokemonTeam = _team.getOrderedPokemonListFilled();
 
     // Set the starting index of the team edit
     _builderIndex = widget.focusIndex;

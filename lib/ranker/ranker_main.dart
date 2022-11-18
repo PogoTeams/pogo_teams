@@ -4,7 +4,8 @@ import 'dart:math';
 // Local
 import 'pokemon_ranker.dart';
 import 'ranking_data.dart';
-import '../pogo_objects/pokemon.dart';
+import '../pogo_objects/pokemon_base.dart';
+import '../pogo_objects/battle_pokemon.dart';
 import '../pogo_objects/cup.dart';
 import '../tools/json_tools.dart';
 import '../modules/data/pogo_data.dart';
@@ -34,9 +35,9 @@ void generatePokemonRankings() async {
     int bestCloserRating = 0;
 
     List<RankingData> rankings = [];
-    List<Pokemon> cupPokemonList = PogoData.getCupFilteredPokemonList(cup);
+    List<PokemonBase> cupPokemonList = PogoData.getCupFilteredPokemonList(cup);
 
-    for (Pokemon pokemon in cupPokemonList) {
+    for (PokemonBase pokemon in cupPokemonList) {
       BattlePokemon battlePokemon = BattlePokemon.fromPokemon(pokemon);
       battlePokemon.initializeStats(cup.cp);
       if (battlePokemon.cp >= Cups.cpMinimums[cup.cp]!) {
@@ -108,7 +109,7 @@ void generatePokemonRankingsTest(
 }
 
 void debugPrintPokemonRatings(
-  Pokemon pokemon,
+  PokemonBase pokemon,
   RankingData rankingData,
   String cupName,
 ) {

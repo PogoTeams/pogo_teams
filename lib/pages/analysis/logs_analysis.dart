@@ -1,6 +1,5 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:pogo_teams/pogo_objects/opponent_teams.dart';
 
 // Local Imports
 import '../../widgets/analysis/type_coverage.dart';
@@ -24,14 +23,14 @@ class LogsAnalysis extends StatelessWidget {
   const LogsAnalysis({
     Key? key,
     required this.team,
-    required this.logs,
+    required this.opponents,
     required this.defenseThreats,
     required this.offenseCoverage,
     required this.netEffectiveness,
   }) : super(key: key);
 
   final UserPokemonTeam team;
-  final OpponentPokemonTeams logs;
+  final List<OpponentPokemonTeam> opponents;
   final List<Pair<PokemonType, double>> defenseThreats;
   final List<Pair<PokemonType, double>> offenseCoverage;
   final List<Pair<PokemonType, double>> netEffectiveness;
@@ -70,8 +69,8 @@ class LogsAnalysis extends StatelessWidget {
   ) async {
     final counterTypes = defenseThreats.map((typeData) => typeData.a).toList();
 
-    List<RankedPokemon> counters = await PogoData.getFilteredRankedPokemonList(
-      team.cup,
+    List<Pokemon> counters = await PogoData.getFilteredRankedPokemonList(
+      team.getCup(),
       counterTypes,
       RankingsCategories.overall,
       limit: 50,
@@ -101,7 +100,7 @@ class LogsAnalysis extends StatelessWidget {
               netEffectiveness: netEffectiveness,
               defenseThreats: defenseThreats,
               offenseCoverage: offenseCoverage,
-              includedTypesKeys: team.cup.includedTypeKeys(),
+              includedTypesKeys: team.getCup().includedTypeKeys(),
             ),
 
             // Spacer

@@ -89,7 +89,7 @@ class PokemonNode extends StatelessWidget {
     );
   }
 
-  final RankedPokemon? pokemon;
+  final Pokemon? pokemon;
   late final VoidCallback? onPressed;
   late final VoidCallback? onEmptyPressed;
   late final VoidCallback? onMoveChanged;
@@ -141,7 +141,7 @@ class _SquareNodeBody extends StatelessWidget {
     required this.pokemon,
   }) : super(key: key);
 
-  final RankedPokemon pokemon;
+  final Pokemon pokemon;
 
   @override
   Widget build(BuildContext context) {
@@ -183,14 +183,14 @@ class _SmallNodeBody extends StatelessWidget {
     this.rating,
   }) : super(key: key);
 
-  final RankedPokemon pokemon;
+  final Pokemon pokemon;
   final bool dropdowns;
   final VoidCallback? onMoveChanged;
   final String? rating;
 
   // Display the Pokemon's name perfect PVP ivs and typing icon(s)
   // If rating is true, place the rating in the upper left corner
-  Row _buildNodeHeader(BuildContext context, RankedPokemon pokemon) {
+  Row _buildNodeHeader(BuildContext context, Pokemon pokemon) {
     if (rating == null) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -291,13 +291,13 @@ class _LargeNodeBody extends StatelessWidget {
     this.onMoveChanged,
   }) : super(key: key);
 
-  final RankedPokemon pokemon;
+  final Pokemon pokemon;
   final Cup? cup;
   final Widget? footer;
   final VoidCallback? onMoveChanged;
 
   // Display the Pokemon's name perfect PVP ivs and typing icon(s)
-  Row _buildNodeHeader(BuildContext context, RankedPokemon pokemon, Cup? cup) {
+  Row _buildNodeHeader(BuildContext context, Pokemon pokemon, Cup? cup) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

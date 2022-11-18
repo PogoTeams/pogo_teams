@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pogo_objects/pokemon.dart';
+import '../pogo_objects/pokemon_base.dart';
 import '../modules/ui/pogo_colors.dart';
 
 /*
@@ -24,12 +24,12 @@ class ColoredContainer extends StatelessWidget {
 
   final double? height;
   final EdgeInsets? padding;
-  final Pokemon pokemon;
+  final PokemonBase pokemon;
   final Widget child;
 
   // If the pokemon is monotype, color the node to this type
   // For duotyping, render a linear gradient between the type colors
-  BoxDecoration _buildDecoration(Pokemon pokemon) {
+  BoxDecoration _buildDecoration(PokemonBase pokemon) {
     if (pokemon.typing.isMonoType()) {
       return BoxDecoration(
         color: PogoColors.getPokemonTypeColor(pokemon.typing.typeA.typeId),

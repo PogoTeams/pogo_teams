@@ -1,11 +1,15 @@
+// Packages
+import 'package:isar/isar.dart';
+
 // Local Imports
-import 'opponent_teams.dart';
 import 'pokemon.dart';
 import 'cup.dart';
 import '../modules/data/pokemon_types.dart';
 import '../modules/data/pogo_data.dart';
 import '../modules/data/globals.dart';
 import '../enums/battle_outcome.dart';
+
+part 'pokemon_team.g.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -21,14 +25,13 @@ the app.
 class PokemonTeam {
   PokemonTeam();
 
-  String? id;
-  int sortOrder = 0;
-
-  // If true, the team cannot be removed or changed
+  Id id = Isar.autoIncrement;
+  DateTime? dateCreated;
   bool locked = false;
+  int teamSize = 3;
 
-  // The list of 3 pokemon references that make up the team
-  List<RankedPokemon?> pokemonTeam = List.filled(3, null);
+  // The list of pokemon managed by this team
+  final IsarLinks<Pokemon> pokemonTeam = IsarLinks<Pokemon>();
 
   // A list of this pokemon team's net effectiveness
   List<double> effectiveness = List.generate(
@@ -37,116 +40,100 @@ class PokemonTeam {
   );
 
   // The selected PVP cup for this team
-  // Defaults to Great League
-  Cup _cup = PogoData.cups.first;
-  Cup get cup => _cup;
-  set cup(Cup value) {
-    _cup = value;
+  final IsarLink<Cup> cup = IsarLink<Cup>();
 
-    // initialize IVs to recommendation whenever the team's cup is set
-    for (RankedPokemon? pokemon in pokemonTeam) {
-      pokemon?.initializeStats(cup.cp);
+  IsarLinks<Pokemon> getPokemonTeam() {
+    if (pokemonTeam.isAttached && !pokemonTeam.isLoaded) {
+      pokemonTeam.loadSync();
     }
+
+    return pokemonTeam;
+  }
+
+  List<Pokemon> getOrderedPokemonList() {
+    List<Pokemon> orderedPokemonList = getPokemonTeam().toList();
+    orderedPokemonList
+        .sort((p1, p2) => (p2.teamIndex ?? 0) - (p1.teamIndex ?? 0));
+
+    return orderedPokemonList;
+  }
+
+  List<Pokemon?> getOrderedPokemonListFilled() {
+    List<Pokemon?> orderedPokemonList = List.filled(teamSize, null);
+
+    for (int i = 0; i < teamSize; ++i) {
+      orderedPokemonList[i] = getPokemon(i);
+    }
+
+    return orderedPokemonList;
+  }
+
+  Cup getCup() {
+    if (cup.isAttached && (cup.value == null || !cup.isLoaded)) {
+      cup.loadSync();
+    }
+
+    return cup.value ?? PogoData.cups.first;
+  }
+
+  Future<void> saveSync() async {
+    await getPokemonTeam().save();
+    if (cup.value != null) await cup.save();
   }
 
   // Switch to a different cup with the specified cupTitle
   void setCupById(String cupId) {
-    cup = PogoData.cups.firstWhere((cup) => cup.cupId == cupId,
-        orElse: () => PogoData.cups.first);
+    cup.value = PogoData.getCupById(cupId);
   }
 
-  // Make a copy of the newTeam, keeping the size of the original team
-  void setPokemonTeam(List<RankedPokemon?> newPokemonTeam) {
-    pokemonTeam = List.generate(
-        pokemonTeam.length,
-        (index) =>
-            index < newPokemonTeam.length ? newPokemonTeam[index] : null);
-
-    _updateEffectiveness();
-  }
-
-  // Set the specified Pokemon in the team by the specified index
-  void setPokemon(int index, RankedPokemon? pokemon) {
-    if (pokemon == null) {
-      pokemonTeam[index] = null;
-    } else {
-      // TODO pokemonTeam[index] = Pokemon.fromIsar(pokemon);
+  Pokemon? getPokemon(int index) {
+    for (var pokemon in getPokemonTeam()) {
+      if (pokemon.teamIndex == index) return pokemon;
     }
-
-    _updateEffectiveness();
+    return null;
   }
 
-  // Get the list of non-null Pokemon
-  List<RankedPokemon> getPokemonTeam() {
-    return pokemonTeam.whereType<RankedPokemon>().toList();
-  }
-
-  // Get the Pokemon ref at the given index
-  Pokemon getPokemon(int index) {
-    return pokemonTeam[index] as Pokemon;
+  void removePokemon(int index) {
+    getPokemonTeam().removeWhere((p) => p.teamIndex == index);
+    updateEffectiveness();
   }
 
   // Add newPokemon if there is free space in the team
-  void addPokemon(RankedPokemon newPokemon) {
-    bool added = false;
+  bool tryAddPokemon(Pokemon newPokemon) {
+    if (getPokemonTeam().length == teamSize) return false;
 
-    for (int i = 0; i < pokemonTeam.length && !added; ++i) {
-      if (pokemonTeam[i] == null) {
-        pokemonTeam[i] = newPokemon;
+    final List<Pokemon> pokemonList = getOrderedPokemonList();
+    bool added = false;
+    for (int i = 0; i < teamSize && !added; ++i) {
+      if (pokemonList.indexWhere((pokemon) => pokemon.teamIndex == i) == -1) {
+        newPokemon.teamIndex = i;
+        pokemonTeam.add(newPokemon);
         added = true;
       }
     }
 
     if (added) {
-      _updateEffectiveness();
+      updateEffectiveness();
     }
-  }
 
-  // True if the Pokemon ref is null at the given index
-  bool isNull(int index) {
-    return pokemonTeam[index] == null;
+    return added;
   }
 
   // True if there are no Pokemon on the team
-  bool isEmpty() {
-    bool empty = true;
-    for (int i = 0; i < pokemonTeam.length && empty; ++i) {
-      empty = pokemonTeam[i] == null;
-    }
-
-    return empty;
-  }
+  bool isEmpty() => getPokemonTeam().isEmpty;
 
   // True if one of the team refs is null
   bool hasSpace() {
-    bool space = false;
-    for (int i = 0; i < pokemonTeam.length && !space; ++i) {
-      space = pokemonTeam[i] == null;
-    }
-
-    return space;
+    return teamSize != getPokemonTeam().length;
   }
 
   // The size of the Pokemon team (1 - 3)
-  int getSize() {
-    return getPokemonTeam().length;
-  }
-
-  // Change the size of the pokemonTeam
-  // This is useful for custom cups such as any Silph Cup that uses 6 Pokemon
-  void setTeamSize(int newSize) {
-    if (pokemonTeam.length == newSize) return;
-
-    pokemonTeam = List<RankedPokemon?>.generate(
-      newSize,
-      (index) => index < pokemonTeam.length ? pokemonTeam[index] : null,
-    );
-  }
+  int getSize() => getPokemonTeam().length;
 
   // Update the type effectiveness of this Pokemon team
   // Called whenever the team is changed
-  void _updateEffectiveness() {
-    effectiveness = PokemonTypes.getNetEffectiveness(getPokemonTeam());
+  void updateEffectiveness() {
+    effectiveness = PokemonTypes.getNetEffectiveness(getOrderedPokemonList());
   }
 
   // Toggle a lock on this team
@@ -159,10 +146,8 @@ class PokemonTeam {
   List<Map<String, dynamic>> _pokemonTeamToJson() {
     List<Map<String, dynamic>> teamJson = List.empty(growable: true);
 
-    for (int i = 0; i < pokemonTeam.length; ++i) {
-      if (pokemonTeam[i] != null) {
-        // TODO teamJson.add(pokemonTeam[i]!.toUserTeamJson(i));
-      }
+    for (var pokemon in getPokemonTeam()) {
+      // TODO teamJson.add(pokemonTeam[i]!.toUserTeamJson(i));
     }
 
     return teamJson;
@@ -170,118 +155,102 @@ class PokemonTeam {
 }
 
 // A user's team
+@Collection(accessor: 'userPokemonTeams')
 class UserPokemonTeam extends PokemonTeam {
   UserPokemonTeam();
 
   factory UserPokemonTeam.fromJson(Map<String, dynamic> json) {
-    List<RankedPokemon?> pokemonTeam =
-        List<RankedPokemon?>.filled(json['teamSize'] as int, null);
+    final userPokemonTeam = UserPokemonTeam()
+      ..dateCreated = json['dateCreated'] as DateTime?
+      ..locked = json['locked'] as bool
+      ..teamSize = json['teamSize'] as int
+      ..cup.value = PogoData.getCupById(json['cup'] as String);
 
     for (Map<String, dynamic> pokemonEntry
         in List<Map<String, dynamic>>.from(json['pokemonTeam'])) {
-      final pokemonIndex = pokemonEntry['pokemonIndex'] as int;
-      // TODO
-      //pokemonTeam[pokemonIndex] = Pokemon.fromTeamJson(pokemonEntry);
+      /* TODO
+      pokemonTeam.add(Pokemon.fromJson(pokemonEntry)
+        ..pokemonIndex = pokemonEntry['teamIndex'] as int);
+        */
     }
 
-    return UserPokemonTeam()
-      // TODO
-      ..cup = PogoData.getCupById(json['cup'] as String)
-      ..locked = json['locked'] as bool
-      ..sortOrder = json['sortOrder'] as int
-      ..winRate = json['winRate'] as double
-      ..pokemonTeam = pokemonTeam;
+    userPokemonTeam.updateEffectiveness();
+    return userPokemonTeam;
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'cup': cup.cupId,
+      'dateCreated': dateCreated,
       'locked': locked,
-      'sortOrder': sortOrder,
-      'teamSize': pokemonTeam.length,
-      'winRate': winRate,
+      'teamSize': teamSize,
+      'cup': getCup().cupId,
       'pokemonTeam': _pokemonTeamToJson(),
+      'opponents': _opponnentsToJson(),
     };
   }
 
-  // Copy over the cup, and Pokemon team
-  void fromBuilderCopy(UserPokemonTeam other) {
-    cup = other.cup;
-    winRate = other.winRate;
-    setTeamSize(other.pokemonTeam.length);
-    setPokemonTeam(other.pokemonTeam);
-  }
-
-  // Make a copy of other, but with no save to db callback
-  // This is used in team editing, to allow for a confirm to save working copy
-  static UserPokemonTeam builderCopy(UserPokemonTeam other) {
-    return UserPokemonTeam()
-      ..locked = other.locked
-      ..cup = other.cup
-      ..winRate = other.winRate
-      ..setTeamSize(other.pokemonTeam.length)
-      ..setPokemonTeam(other.pokemonTeam);
+  Map<String, dynamic> _opponnentsToJson() {
+    // TODO
+    return {};
   }
 
   // A list of logged opponent teams on this team
   // The user can report wins, ties, and losses given this list
-  List<OpponentPokemonTeam> logs = List.empty(growable: true);
+  IsarLinks<OpponentPokemonTeam> opponents = IsarLinks<OpponentPokemonTeam>();
 
-  double winRate = 0.0;
-  String get winRateString => winRate.toStringAsFixed(2);
+  IsarLinks<OpponentPokemonTeam> getOpponents() {
+    if (opponents.isAttached && !opponents.isLoaded) {
+      opponents.loadSync();
+    }
 
-  void setLogAt(int index, OpponentPokemonTeam newLog) {
-    logs[index] = newLog;
-  }
-
-  void removeLogAt(int index) {
-    logs.removeAt(index);
+    return opponents;
   }
 
   // Calculate the average win rate for this Pokemon Team
   // Return a string representation for display
-  void updateWinRate(OpponentPokemonTeams logs) {
-    winRate = 0.0;
+  String getWinRate() {
+    double winRate = 0.0;
 
-    if (logs.length != 0) {
-      for (OpponentPokemonTeam log in logs.teamsList) {
+    if (getOpponents().isNotEmpty) {
+      for (OpponentPokemonTeam log in getOpponents()) {
         if (log.isWin()) ++winRate;
       }
 
-      winRate = 100 * winRate / logs.length;
+      winRate = 100 * winRate / getOpponents().length;
     }
+
+    return winRate.toStringAsFixed(2);
   }
 }
 
 // A logged opponent team
+@Collection(accessor: 'opponentPokemonTeams')
 class OpponentPokemonTeam extends PokemonTeam {
   OpponentPokemonTeam() {
     locked = true;
   }
 
   factory OpponentPokemonTeam.fromJson(Map<String, dynamic> json) {
-    int teamSize = json['teamSize'] as int;
-    List<RankedPokemon?> pokemonTeam =
-        List<RankedPokemon?>.filled(teamSize, null);
+    final userPokemonTeam = OpponentPokemonTeam()
+      ..dateCreated = json['dateCreated'] as DateTime?
+      ..locked = json['locked'] as bool
+      ..teamSize = json['teamSize'] as int
+      ..battleOutcome = _fromOutcomeName(json['battleOutcome'])
+      ..cup.value = PogoData.getCupById(json['cup'] as String);
 
     for (Map<String, dynamic> pokemonEntry
         in List<Map<String, dynamic>>.from(json['pokemonTeam'])) {
-      final pokemonIndex = pokemonEntry['pokemonIndex'] as int;
-      // TODO
-      //pokemonTeam[pokemonIndex] = Pokemon.fromTeamJson(pokemonEntry);
+      /* TODO
+      pokemonTeam.add(Pokemon.fromJson(pokemonEntry)
+        ..pokemonIndex = pokemonEntry['teamIndex'] as int);
+        */
     }
 
-    return OpponentPokemonTeam()
-      ..sortOrder = json['sortOrder'] as int
-      ..userTeamId = json['userTeamId'] as String
-      // TODO
-      //..cup = PogoData.getCupById(json['cupId'] as String)
-      ..battleOutcome = fromOutcomeName(json['battleOutcome'] as String)
-      ..locked = json['locked'] as bool
-      ..setPokemonTeam(pokemonTeam);
+    userPokemonTeam.updateEffectiveness();
+    return userPokemonTeam;
   }
 
-  static BattleOutcome fromOutcomeName(String name) {
+  static BattleOutcome _fromOutcomeName(String name) {
     switch (name) {
       case 'win':
         return BattleOutcome.win;
@@ -296,45 +265,20 @@ class OpponentPokemonTeam extends PokemonTeam {
 
   Map<String, dynamic> toJson() {
     return {
-      'sortOrder': sortOrder,
-      'userTeamId': userTeamId,
-      'cupId': cup.cupId,
-      'teamSize': pokemonTeam.length,
-      'battleOutcome': battleOutcome.name,
+      'dateCreated': dateCreated,
       'locked': locked,
-      'pokemonTeam': _pokemonTeamToJson()
+      'teamSize': teamSize,
+      'battleOutcome': battleOutcome.name,
+      'cup': getCup().cupId,
+      'pokemonTeam': _pokemonTeamToJson(),
     };
   }
 
-  // Make a copy of other, but with no save to db callback
-  // This is used in team editing, to allow for a confirm to save working copy
-  static OpponentPokemonTeam builderCopy(OpponentPokemonTeam other) {
-    return OpponentPokemonTeam()
-      ..sortOrder = other.sortOrder
-      ..userTeamId = other.userTeamId
-      ..cup = other.cup
-      ..battleOutcome = other.battleOutcome
-      ..locked = other.locked
-      ..setPokemonTeam(other.pokemonTeam);
-  }
-
-  // Copy over the winLossKey, and Pokemon team
-  // Saves to db in PokemonTeam
-  void fromBuilderCopy(OpponentPokemonTeam other) {
-    sortOrder = other.sortOrder;
-    userTeamId = other.userTeamId;
-    cup = other.cup;
-    battleOutcome = other.battleOutcome;
-    setTeamSize(other.pokemonTeam.length);
-    setPokemonTeam(other.pokemonTeam);
-  }
-
-  String userTeamId = '';
-
   // For logging opponent teams, this value can either be :
   // Win
-  // Tie
   // Loss
+  // Tie
+  @Enumerated(EnumType.ordinal)
   BattleOutcome battleOutcome = BattleOutcome.win;
 
   bool isWin() {

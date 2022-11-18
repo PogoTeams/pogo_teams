@@ -37,7 +37,7 @@ class TeamEdit extends StatefulWidget {
 
 class _TeamEditState extends State<TeamEdit> {
   // The working copy of this team
-  late final UserPokemonTeam _builderTeam = widget.team;
+  late UserPokemonTeam _builderTeam = widget.team;
 
   // SETTER CALLBACKS
   void _onCupChanged(String? newCup) {
@@ -45,60 +45,45 @@ class _TeamEditState extends State<TeamEdit> {
 
     setState(() {
       _builderTeam.setCupById(newCup);
+      PogoData.updatePokemonTeamSync(_builderTeam);
     });
-
-    PogoData.updateUserPokemonTeam(_builderTeam, updateMask: ['cup']);
   }
 
   void _onTeamSizeChanged(int? newSize) {
     if (newSize == null) return;
 
     setState(() {
-      _builderTeam.setTeamSize(newSize);
+      _builderTeam.teamSize = newSize;
+      PogoData.updatePokemonTeamSync(_builderTeam);
     });
-
-    PogoData.updateUserPokemonTeam(_builderTeam, updateMask: ['teamSize']);
   }
 
-  void _onPokemonChanged(int index, RankedPokemon? newPokemon) {
+  void _onPokemonCleared(int index) {
     setState(() {
-      _builderTeam.setPokemon(index, newPokemon);
+      _builderTeam.removePokemon(index);
+      PogoData.updatePokemonTeamSync(_builderTeam);
     });
-
-    PogoData.updateUserPokemonTeam(_builderTeam);
   }
 
-  void _onMoveChanged() {
-    PogoData.updateUserPokemonTeam(_builderTeam);
-  }
-
-  void _onPokemonTeamChanged(List<RankedPokemon?> newPokemonTeam) {
+  void _onPokemonMoveChanged() {
     setState(() {
-      _builderTeam.setPokemonTeam(newPokemonTeam);
+      PogoData.updatePokemonTeamSync(_builderTeam);
     });
-
-    PogoData.updateUserPokemonTeam(_builderTeam);
   }
 
   void _onSearchPressed(int nodeIndex) async {
-    final _newTeam = await Navigator.push(
+    await Navigator.push(
       context,
-      MaterialPageRoute<UserPokemonTeam>(builder: (BuildContext context) {
+      MaterialPageRoute(builder: (BuildContext context) {
         return TeamBuilder(
           team: _builderTeam,
-          cup: _builderTeam.cup,
+          cup: _builderTeam.getCup(),
           focusIndex: nodeIndex,
         );
       }),
     );
 
-    if (_newTeam != null) {
-      setState(() {
-        _builderTeam.fromBuilderCopy(_newTeam);
-      });
-
-      PogoData.updateUserPokemonTeam(_builderTeam);
-    }
+    setState(() {});
   }
 
   // Scroll to the analysis portion of the screen
@@ -106,14 +91,14 @@ class _TeamEditState extends State<TeamEdit> {
     // If the team is empty, no action will be taken
     if (_builderTeam.isEmpty()) return;
 
-    final newTeam = await Navigator.push(
+    await Navigator.push(
       context,
-      MaterialPageRoute<List<RankedPokemon?>>(builder: (BuildContext context) {
+      MaterialPageRoute<List<Pokemon?>>(builder: (BuildContext context) {
         return Analysis(team: _builderTeam);
       }),
     );
 
-    if (newTeam != null) _onPokemonTeamChanged(newTeam);
+    PogoData.updatePokemonTeamSync(_builderTeam);
   }
 
   AppBar _buildAppBar() {
@@ -154,7 +139,7 @@ class _TeamEditState extends State<TeamEdit> {
 
   // Build a row of icon buttons at the bottom of a Pokemon's Node
   // If the Pokemon in question is null, this footer is also null
-  Widget? _buildNodeFooter(RankedPokemon? pokemon, int nodeIndex) {
+  Widget? _buildNodeFooter(Pokemon? pokemon, int nodeIndex) {
     if (pokemon == null) return null;
 
     // Size of the footer icons
@@ -164,7 +149,7 @@ class _TeamEditState extends State<TeamEdit> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
-          onPressed: () => _onPokemonChanged(nodeIndex, null),
+          onPressed: () => _onPokemonCleared(nodeIndex),
           icon: const Icon(Icons.clear),
           tooltip: 'remove this pokemon from your team',
           iconSize: iconSize,
@@ -180,7 +165,7 @@ class _TeamEditState extends State<TeamEdit> {
   }
 
   // Build a cup dropdown and team size dropdown
-  Widget _buildHeaderDropdowns(Cup cup, int teamLength) {
+  Widget _buildHeaderDropdowns(Cup cup) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -193,7 +178,7 @@ class _TeamEditState extends State<TeamEdit> {
 
         // Dropdown to select team size
         TeamSizeDropdown(
-          size: teamLength,
+          size: _builderTeam.teamSize,
           onTeamSizeChanged: _onTeamSizeChanged,
         ),
       ],
@@ -201,25 +186,26 @@ class _TeamEditState extends State<TeamEdit> {
   }
 
   // Build the list of either 3 or 6 PokemonNodes that make up this team
-  Widget _buildTeamNodes(List<RankedPokemon?> pokemonTeam) {
+  Widget _buildTeamNodes() {
     return ListView(
       shrinkWrap: true,
       children: List.generate(
-        pokemonTeam.length,
+        _builderTeam.teamSize,
         (index) => Padding(
           padding: EdgeInsets.only(
             top: Sizing.blockSizeVertical * 1.1,
             bottom: Sizing.blockSizeVertical * 1.1,
           ),
-          child: (index == pokemonTeam.length - 1)
+          child: (index == _builderTeam.teamSize - 1)
               ? Column(
                   children: [
                     PokemonNode.large(
-                      pokemon: pokemonTeam[index],
+                      pokemon: _builderTeam.getPokemon(index),
                       onEmptyPressed: () => _onSearchPressed(index),
-                      onMoveChanged: _onMoveChanged,
-                      cup: _builderTeam.cup,
-                      footer: _buildNodeFooter(pokemonTeam[index], index),
+                      onMoveChanged: _onPokemonMoveChanged,
+                      cup: _builderTeam.getCup(),
+                      footer: _buildNodeFooter(
+                          _builderTeam.getPokemon(index), index),
                       padding: EdgeInsets.only(
                         top: Sizing.blockSizeVertical * .7,
                         left: Sizing.blockSizeHorizontal * 2.0,
@@ -234,11 +220,12 @@ class _TeamEditState extends State<TeamEdit> {
                   ],
                 )
               : PokemonNode.large(
-                  pokemon: pokemonTeam[index],
+                  pokemon: _builderTeam.getPokemon(index),
                   onEmptyPressed: () => _onSearchPressed(index),
-                  onMoveChanged: _onMoveChanged,
-                  cup: _builderTeam.cup,
-                  footer: _buildNodeFooter(pokemonTeam[index], index),
+                  onMoveChanged: _onPokemonMoveChanged,
+                  cup: _builderTeam.getCup(),
+                  footer:
+                      _buildNodeFooter(_builderTeam.getPokemon(index), index),
                   padding: EdgeInsets.only(
                     top: Sizing.blockSizeVertical * .7,
                     left: Sizing.blockSizeHorizontal * 2.0,
@@ -253,7 +240,7 @@ class _TeamEditState extends State<TeamEdit> {
 
   @override
   Widget build(BuildContext context) {
-    final pokemonTeam = _builderTeam.pokemonTeam;
+    _builderTeam = PogoData.getUserPokemonTeamSync(_builderTeam.id);
 
     return Scaffold(
       appBar: _buildAppBar(),
@@ -266,7 +253,7 @@ class _TeamEditState extends State<TeamEdit> {
         child: ListView(
           children: [
             // Cup and team size dropdown menus at the top of the page
-            _buildHeaderDropdowns(_builderTeam.cup, pokemonTeam.length),
+            _buildHeaderDropdowns(_builderTeam.getCup()),
 
             // Spacer
             SizedBox(
@@ -274,7 +261,7 @@ class _TeamEditState extends State<TeamEdit> {
             ),
 
             // The list of team nodes
-            _buildTeamNodes(pokemonTeam),
+            _buildTeamNodes(),
 
             // Spacer
             SizedBox(

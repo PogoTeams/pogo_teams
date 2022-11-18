@@ -94,6 +94,8 @@ class PokemonType {
 
   final String typeId;
 
+  bool isNone() => typeId == 'none';
+
   // The offensive and defensive effectivness of this type to all types
   // [0] : offensive
   // [1] : defensive

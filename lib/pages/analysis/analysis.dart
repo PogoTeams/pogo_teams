@@ -9,7 +9,6 @@ import 'logs_analysis.dart';
 import '../../pogo_objects/pokemon.dart';
 import '../../pogo_objects/pokemon_team.dart';
 import '../../pogo_objects/pokemon_typing.dart';
-import '../../pogo_objects/opponent_teams.dart';
 import '../../modules/data/pokemon_types.dart';
 import '../../tools/pair.dart';
 
@@ -34,7 +33,7 @@ class Analysis extends StatefulWidget {
 
   final UserPokemonTeam team;
   final OpponentPokemonTeam? opponentTeam;
-  final OpponentPokemonTeams? opponentTeams;
+  final List<OpponentPokemonTeam>? opponentTeams;
 
   @override
   _AnalysisState createState() => _AnalysisState();
@@ -49,7 +48,7 @@ class _AnalysisState extends State<Analysis> {
   final ScrollController _scrollController = ScrollController();
 
   void _calculateSingleCoverage(
-    List<RankedPokemon> pokemonTeam,
+    List<Pokemon> pokemonTeam,
     List<double> effectiveness,
     List<String> includedTypesKeys,
   ) {
@@ -100,7 +99,7 @@ class _AnalysisState extends State<Analysis> {
 
   // For the logged opponent teams, calculate the net coverage
   void _calculateNetCoverage(
-    OpponentPokemonTeams logs,
+    List<OpponentPokemonTeam> opponents,
     List<String> includedTypesKeys,
   ) {
     // The count of individually logged Pokemon in all the logs
@@ -116,13 +115,13 @@ class _AnalysisState extends State<Analysis> {
 
     // Foreach callback
     // Get the effectiveness of a single log, and accumulate it to the coverage
-    void _accumulateLog(OpponentPokemonTeam log) {
-      final List<RankedPokemon> pokemonTeam = log.getPokemonTeam();
+    void _accumulateLog(OpponentPokemonTeam opponent) {
+      final List<Pokemon> pokemonTeam = opponent.getOrderedPokemonList();
       loggedPokemonCount += pokemonTeam.length;
 
       // Get coverage lists
-      final defense =
-          PokemonTypes.getDefenseCoverage(log.effectiveness, includedTypesKeys);
+      final defense = PokemonTypes.getDefenseCoverage(
+          opponent.effectiveness, includedTypesKeys);
       final offense =
           PokemonTypes.getOffenseCoverage(pokemonTeam, includedTypesKeys);
 
@@ -140,7 +139,7 @@ class _AnalysisState extends State<Analysis> {
       }
     }
 
-    logs.teamsList.forEach(_accumulateLog);
+    opponents.forEach(_accumulateLog);
 
     // Filter to the key values
     defenseThreats = defenseThreats
@@ -177,7 +176,7 @@ class _AnalysisState extends State<Analysis> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> includedTypesKeys = widget.team.cup.includedTypeKeys();
+    List<String> includedTypesKeys = widget.team.getCup().includedTypeKeys();
 
     // Analysis will be on all logged opponent teams
     if (widget.opponentTeams != null) {
@@ -187,7 +186,7 @@ class _AnalysisState extends State<Analysis> {
       );
       return LogsAnalysis(
         team: widget.team,
-        logs: widget.opponentTeams!,
+        opponents: widget.opponentTeams!,
         defenseThreats: defenseThreats,
         offenseCoverage: offenseCoverage,
         netEffectiveness: netEffectiveness,
@@ -197,13 +196,13 @@ class _AnalysisState extends State<Analysis> {
     // Analysis will be on the opponent team
     else if (widget.opponentTeam != null) {
       _calculateSingleCoverage(
-        widget.opponentTeam!.getPokemonTeam(),
+        widget.opponentTeam!.getOrderedPokemonList(),
         widget.opponentTeam!.effectiveness,
         includedTypesKeys,
       );
       return OpponentTeamAnalysis(
         team: widget.team,
-        pokemonTeam: widget.opponentTeam!.getPokemonTeam(),
+        pokemonTeam: widget.opponentTeam!.getOrderedPokemonList(),
         defenseThreats: defenseThreats,
         offenseCoverage: offenseCoverage,
         netEffectiveness: netEffectiveness,
@@ -212,7 +211,7 @@ class _AnalysisState extends State<Analysis> {
 
     // Analysis will be on the user team
     _calculateSingleCoverage(
-      widget.team.getPokemonTeam(),
+      widget.team.getOrderedPokemonList(),
       widget.team.effectiveness,
       includedTypesKeys,
     );

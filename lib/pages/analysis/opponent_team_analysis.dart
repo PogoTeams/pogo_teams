@@ -31,7 +31,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
   }) : super(key: key);
 
   final UserPokemonTeam team;
-  final List<RankedPokemon> pokemonTeam;
+  final List<Pokemon> pokemonTeam;
   final List<Pair<PokemonType, double>> defenseThreats;
   final List<Pair<PokemonType, double>> offenseCoverage;
   final List<Pair<PokemonType, double>> netEffectiveness;
@@ -65,7 +65,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
   }
 
   // Build the list of either 3 or 6 PokemonNodes that make up this team
-  Widget _buildPokemonNodes(List<RankedPokemon> pokemonTeam) {
+  Widget _buildPokemonNodes(List<Pokemon> pokemonTeam) {
     return ListView(
       shrinkWrap: true,
       children: List.generate(
@@ -90,8 +90,8 @@ class OpponentTeamAnalysis extends StatelessWidget {
       List<Pair<PokemonType, double>> defenseThreats) async {
     final counterTypes = defenseThreats.map((typeData) => typeData.a).toList();
 
-    List<RankedPokemon> counters = await PogoData.getFilteredRankedPokemonList(
-      team.cup,
+    List<Pokemon> counters = await PogoData.getFilteredRankedPokemonList(
+      team.getCup(),
       counterTypes,
       RankingsCategories.overall,
       limit: 50,
@@ -132,7 +132,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
               netEffectiveness: netEffectiveness,
               defenseThreats: defenseThreats,
               offenseCoverage: offenseCoverage,
-              includedTypesKeys: team.cup.includedTypeKeys(),
+              includedTypesKeys: team.getCup().includedTypeKeys(),
             ),
 
             // Spacer

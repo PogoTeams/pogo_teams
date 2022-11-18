@@ -1,6 +1,7 @@
 // Local
 import 'ranking_data.dart';
-import '../pogo_objects/pokemon.dart';
+import '../pogo_objects/pokemon_base.dart';
+import '../pogo_objects/battle_pokemon.dart';
 import '../pogo_objects/cup.dart';
 import '../battle/pokemon_battler.dart';
 import '../battle/battle_result.dart';
@@ -17,11 +18,11 @@ class PokemonRanker {
   static RankingData rank(
     BattlePokemon self,
     Cup cup,
-    List<Pokemon> opponents,
+    List<PokemonBase> opponents,
   ) {
     RankingData rankingData = RankingData(pokemon: self);
 
-    for (Pokemon opponentPokemon in opponents) {
+    for (PokemonBase opponentPokemon in opponents) {
       if (self.pokemonId != opponentPokemon.pokemonId) {
         BattlePokemon opponent = BattlePokemon.fromPokemon(opponentPokemon);
 

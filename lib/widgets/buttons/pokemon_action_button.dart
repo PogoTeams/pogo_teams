@@ -23,10 +23,10 @@ class PokemonActionButton extends StatelessWidget {
   }) : super(key: key);
 
   final double width;
-  final RankedPokemon pokemon;
+  final Pokemon pokemon;
   final String label;
   final Icon icon;
-  final Function(RankedPokemon) onPressed;
+  final Function(Pokemon) onPressed;
 
   @override
   Widget build(BuildContext context) {

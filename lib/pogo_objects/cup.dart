@@ -3,6 +3,7 @@ import 'package:isar/isar.dart';
 import 'package:pogo_teams/enums/rankings_categories.dart';
 
 // Local
+import 'pokemon_base.dart';
 import 'pokemon.dart';
 import '../modules/data/pokemon_types.dart';
 import '../enums/cup_filter_type.dart';
@@ -18,6 +19,7 @@ class Cup {
     required this.partySize,
     required this.live,
     this.publisher,
+    this.uiColor,
   });
 
   factory Cup.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class Cup {
       partySize: json['partySize'] as int,
       live: json['live'] as bool,
       publisher: json['publisher'] as String?,
+      uiColor: json['uiColor'],
     );
   }
 
@@ -39,41 +42,38 @@ class Cup {
   final int partySize;
   final bool live;
   final String? publisher;
+  final String? uiColor;
 
-  final IsarLinks<CupFilter> _includeFilters = IsarLinks<CupFilter>();
-  final IsarLinks<CupFilter> _excludeFilters = IsarLinks<CupFilter>();
-  final IsarLinks<RankedPokemon> _rankings = IsarLinks<RankedPokemon>();
+  final IsarLinks<CupFilter> includeFilters = IsarLinks<CupFilter>();
+  final IsarLinks<CupFilter> excludeFilters = IsarLinks<CupFilter>();
+  final IsarLinks<Pokemon> rankings = IsarLinks<Pokemon>();
 
-  @ignore
-  IsarLinks<RankedPokemon> get rankings {
-    if (_rankings.isAttached && !_rankings.isLoaded) {
-      _rankings.loadSync();
+  IsarLinks<Pokemon> getRankings() {
+    if (rankings.isAttached && !rankings.isLoaded) {
+      rankings.loadSync();
     }
 
-    return _rankings;
+    return rankings;
   }
 
-  @ignore
-  IsarLinks<CupFilter> get includeFilters {
-    if (_includeFilters.isAttached && !_includeFilters.isLoaded) {
-      _includeFilters.loadSync();
+  IsarLinks<CupFilter> getIncludeFilters() {
+    if (includeFilters.isAttached && !includeFilters.isLoaded) {
+      includeFilters.loadSync();
     }
 
-    return _includeFilters;
+    return includeFilters;
   }
 
-  @ignore
-  IsarLinks<CupFilter> get excludeFilters {
-    if (_excludeFilters.isAttached && !_excludeFilters.isLoaded) {
-      _excludeFilters.loadSync();
+  IsarLinks<CupFilter> getExcludeFilters() {
+    if (excludeFilters.isAttached && !excludeFilters.isLoaded) {
+      excludeFilters.loadSync();
     }
 
-    return _excludeFilters;
+    return excludeFilters;
   }
 
-  List<RankedPokemon> getRankedPokemonList(
-      RankingsCategories rankingsCategory) {
-    final List<RankedPokemon> rankedPokemonList = rankings.toList();
+  List<Pokemon> getRankedPokemonList(RankingsCategories rankingsCategory) {
+    final List<Pokemon> rankedPokemonList = getRankings().toList();
 
     switch (rankingsCategory) {
       case RankingsCategories.overall:
@@ -100,17 +100,17 @@ class Cup {
     return rankedPokemonList;
   }
 
-  bool pokemonIsAllowed(Pokemon pokemon) {
-    if (includeFilters.isNotEmpty) {
-      for (CupFilter filter in includeFilters) {
+  bool pokemonIsAllowed(PokemonBase pokemon) {
+    if (getIncludeFilters().isNotEmpty) {
+      for (CupFilter filter in getIncludeFilters()) {
         if (filter.contains(pokemon)) {
           return true;
         }
       }
     }
 
-    if (excludeFilters.isNotEmpty) {
-      for (CupFilter filter in excludeFilters) {
+    if (getExcludeFilters().isNotEmpty) {
+      for (CupFilter filter in getExcludeFilters()) {
         if (filter.contains(pokemon)) {
           return false;
         }
@@ -121,9 +121,11 @@ class Cup {
   }
 
   List<String> includedTypeKeys() {
-    if (includeFilters.isEmpty) return PokemonTypes.typeIndexMap.keys.toList();
+    if (getIncludeFilters().isEmpty) {
+      return PokemonTypes.typeIndexMap.keys.toList();
+    }
 
-    for (CupFilter filter in includeFilters) {
+    for (CupFilter filter in getIncludeFilters()) {
       if (filter.filterType == CupFilterType.type) {
         return filter.values;
       }
@@ -169,7 +171,7 @@ class CupFilter {
     return CupFilterType.pokemonId;
   }
 
-  bool contains(Pokemon pokemon) {
+  bool contains(PokemonBase pokemon) {
     switch (filterType) {
       case CupFilterType.dex:
         return values.contains(pokemon.dex.toString());

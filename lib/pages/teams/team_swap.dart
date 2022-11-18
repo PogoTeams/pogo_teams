@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../../modules/ui/sizing.dart';
+import '../../modules/data/pogo_data.dart';
 import '../../pogo_objects/pokemon.dart';
 import '../../widgets/buttons/exit_button.dart';
 import '../../widgets/buttons/pokemon_action_button.dart';
@@ -24,19 +25,19 @@ class TeamSwap extends StatefulWidget {
   }) : super(key: key);
 
   final PokemonTeam team;
-  final RankedPokemon swap;
+  final Pokemon swap;
 
   @override
   _TeamSwapState createState() => _TeamSwapState();
 }
 
 class _TeamSwapState extends State<TeamSwap> {
-  late List<RankedPokemon> _pokemonTeam;
-  late RankedPokemon _swap;
+  late List<Pokemon> _pokemonTeam;
+  late Pokemon _swap;
   bool _changed = false;
 
   Widget _buildFooter(BuildContext context, int index) {
-    void _onSwap(RankedPokemon swapPokemon) {
+    void _onSwap(Pokemon swapPokemon) {
       setState(() {
         _changed = true;
         _pokemonTeam[index] = _swap;
@@ -59,7 +60,7 @@ class _TeamSwapState extends State<TeamSwap> {
   @override
   void initState() {
     super.initState();
-    _pokemonTeam = widget.team.getPokemonTeam();
+    _pokemonTeam = widget.team.getOrderedPokemonList();
     _swap = widget.swap;
   }
 
@@ -142,10 +143,11 @@ class _TeamSwapState extends State<TeamSwap> {
               key: UniqueKey(),
               onPressed: () {
                 if (_changed) {
-                  Navigator.pop(
-                    context,
-                    _pokemonTeam,
+                  PogoData.updatePokemonTeamSync(
+                    widget.team,
+                    newPokemonTeam: _pokemonTeam,
                   );
+                  Navigator.pop(context);
                 } else {
                   Navigator.pop(context);
                 }

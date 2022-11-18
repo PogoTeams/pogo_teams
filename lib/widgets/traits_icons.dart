@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pogo_objects/pokemon.dart';
+import '../pogo_objects/pokemon_base.dart';
 import '../modules/ui/sizing.dart';
 
 /*
@@ -21,7 +21,7 @@ class TraitsIcons extends StatelessWidget {
     this.scale = 1.0,
   }) : super(key: key);
 
-  final Pokemon pokemon;
+  final PokemonBase pokemon;
   final double scale;
 
   @override

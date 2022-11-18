@@ -76,7 +76,7 @@ class _CupDropdownState extends State<CupDropdown>
           begin: Alignment.bottomCenter,
           end: Alignment.centerRight,
           colors: [
-            PogoColors.getCupColor(_selectedCup.cupId),
+            PogoColors.getCupColor(_selectedCup),
             Colors.transparent,
           ],
           tileMode: TileMode.clamp,

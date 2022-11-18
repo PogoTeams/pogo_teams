@@ -1,6 +1,6 @@
 // Local
 import 'pokemon_battler.dart';
-import '../pogo_objects/pokemon.dart';
+import '../pogo_objects/battle_pokemon.dart';
 import '../modules/data/debug_cli.dart';
 import '../enums/battle_outcome.dart';
 
