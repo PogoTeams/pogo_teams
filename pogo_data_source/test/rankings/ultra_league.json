@@ -1,0 +1,8658 @@
+[
+  {
+    "pokemonId": "deoxys_defense",
+    "ratings": {
+      "overall": 10000,
+      "lead": 10000,
+      "switch": 10000,
+      "closer": 10000
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "psycho_boost",
+        "rock_slide"
+      ]
+    }
+  },
+  {
+    "pokemonId": "giratina_altered",
+    "ratings": {
+      "overall": 9801,
+      "lead": 9871,
+      "switch": 9787,
+      "closer": 9741
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "dragon_claw",
+        "ancient_power"
+      ]
+    }
+  },
+  {
+    "pokemonId": "victini",
+    "ratings": {
+      "overall": 9694,
+      "lead": 9491,
+      "switch": 9917,
+      "closer": 9693
+    },
+    "idealMoveset": {
+      "fastMove": "quick_attack",
+      "chargeMoves": [
+        "v_create",
+        "overheat"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cobalion",
+    "ratings": {
+      "overall": 9540,
+      "lead": 9110,
+      "switch": 9830,
+      "closer": 9708
+    },
+    "idealMoveset": {
+      "fastMove": "double_kick",
+      "chargeMoves": [
+        "close_combat",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "stunfisk_galarian",
+    "ratings": {
+      "overall": 9405,
+      "lead": 9052,
+      "switch": 9730,
+      "closer": 9460
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "rock_slide",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "steelix",
+    "ratings": {
+      "overall": 9329,
+      "lead": 9300,
+      "switch": 9213,
+      "closer": 9467
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "psychic_fangs",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "melmetal",
+    "ratings": {
+      "overall": 9295,
+      "lead": 9278,
+      "switch": 9417,
+      "closer": 9198
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "super_power",
+        "rock_slide"
+      ]
+    }
+  },
+  {
+    "pokemonId": "dubwool",
+    "ratings": {
+      "overall": 9208,
+      "lead": 9578,
+      "switch": 8233,
+      "closer": 9746
+    },
+    "idealMoveset": {
+      "fastMove": "double_kick",
+      "chargeMoves": [
+        "wild_charge",
+        "body_slam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "scrafty",
+    "ratings": {
+      "overall": 9201,
+      "lead": 9216,
+      "switch": 8946,
+      "closer": 9424
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "foul_play",
+        "power_up_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "swampert_shadow",
+    "ratings": {
+      "overall": 9131,
+      "lead": 9212,
+      "switch": 8755,
+      "closer": 9403
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "hydro_cannon",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "magnezone_shadow",
+    "ratings": {
+      "overall": 9126,
+      "lead": 8597,
+      "switch": 9582,
+      "closer": 9239
+    },
+    "idealMoveset": {
+      "fastMove": "spark",
+      "chargeMoves": [
+        "wild_charge",
+        "mirror_shot"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mew",
+    "ratings": {
+      "overall": 9118,
+      "lead": 9792,
+      "switch": 8171,
+      "closer": 9318
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "wild_charge",
+        "dragon_claw"
+      ]
+    }
+  },
+  {
+    "pokemonId": "virizion",
+    "ratings": {
+      "overall": 9113,
+      "lead": 8928,
+      "switch": 9586,
+      "closer": 8857
+    },
+    "idealMoveset": {
+      "fastMove": "double_kick",
+      "chargeMoves": [
+        "leaf_blade",
+        "close_combat"
+      ]
+    }
+  },
+  {
+    "pokemonId": "swampert",
+    "ratings": {
+      "overall": 9096,
+      "lead": 9258,
+      "switch": 8718,
+      "closer": 9286
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "hydro_cannon",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "overqwil",
+    "ratings": {
+      "overall": 9021,
+      "lead": 9549,
+      "switch": 7975,
+      "closer": 9465
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "aqua_tail",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "genesect_shock",
+    "ratings": {
+      "overall": 9013,
+      "lead": 9117,
+      "switch": 8894,
+      "closer": 9019
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "techno_blast_shock",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "genesect_douse",
+    "ratings": {
+      "overall": 8931,
+      "lead": 8982,
+      "switch": 8747,
+      "closer": 9051
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "techno_blast_water",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "genesect_chill",
+    "ratings": {
+      "overall": 8881,
+      "lead": 9062,
+      "switch": 8693,
+      "closer": 8872
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "techno_blast_chill",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cofagrigus",
+    "ratings": {
+      "overall": 8849,
+      "lead": 9091,
+      "switch": 7937,
+      "closer": 9460
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "shadow_ball",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gliscor",
+    "ratings": {
+      "overall": 8832,
+      "lead": 9126,
+      "switch": 8212,
+      "closer": 9115
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "night_slash",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sandslash_alola_shadow",
+    "ratings": {
+      "overall": 8799,
+      "lead": 8767,
+      "switch": 8914,
+      "closer": 8723
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "ice_punch",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "togedemaru",
+    "ratings": {
+      "overall": 8796,
+      "lead": 8466,
+      "switch": 8853,
+      "closer": 9080
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "wild_charge",
+        "gyro_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "perrserker",
+    "ratings": {
+      "overall": 8765,
+      "lead": 8694,
+      "switch": 8471,
+      "closer": 9115
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "close_combat",
+        "foul_play"
+      ]
+    }
+  },
+  {
+    "pokemonId": "malamar",
+    "ratings": {
+      "overall": 8753,
+      "lead": 9410,
+      "switch": 7716,
+      "closer": 9055
+    },
+    "idealMoveset": {
+      "fastMove": "psycho_cut",
+      "chargeMoves": [
+        "super_power",
+        "foul_play"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sandslash_alola",
+    "ratings": {
+      "overall": 8739,
+      "lead": 8668,
+      "switch": 8855,
+      "closer": 8701
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "ice_punch",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "genesect_burn",
+    "ratings": {
+      "overall": 8736,
+      "lead": 8803,
+      "switch": 8490,
+      "closer": 8900
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "techno_blast_burn",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mandibuzz",
+    "ratings": {
+      "overall": 8641,
+      "lead": 8730,
+      "switch": 7887,
+      "closer": 9258
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "foul_play",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gliscor_shadow",
+    "ratings": {
+      "overall": 8631,
+      "lead": 8766,
+      "switch": 7957,
+      "closer": 9126
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "night_slash",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "qwilfish_hisuian",
+    "ratings": {
+      "overall": 8608,
+      "lead": 9099,
+      "switch": 7368,
+      "closer": 9270
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "aqua_tail",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lapras",
+    "ratings": {
+      "overall": 8564,
+      "lead": 8753,
+      "switch": 7805,
+      "closer": 9082
+    },
+    "idealMoveset": {
+      "fastMove": "ice_shard",
+      "chargeMoves": [
+        "surf",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "aurorus",
+    "ratings": {
+      "overall": 8557,
+      "lead": 8811,
+      "switch": 8027,
+      "closer": 8796
+    },
+    "idealMoveset": {
+      "fastMove": "powder_snow",
+      "chargeMoves": [
+        "weather_ball_ice",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "nidoqueen",
+    "ratings": {
+      "overall": 8534,
+      "lead": 8457,
+      "switch": 8079,
+      "closer": 9042
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "poison_fang",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sandslash_shadow",
+    "ratings": {
+      "overall": 8527,
+      "lead": 8792,
+      "switch": 7949,
+      "closer": 8799
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "night_slash",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "trevenant",
+    "ratings": {
+      "overall": 8504,
+      "lead": 8934,
+      "switch": 7667,
+      "closer": 8850
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "foul_play",
+        "seed_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "kommo_o",
+    "ratings": {
+      "overall": 8470,
+      "lead": 7849,
+      "switch": 8300,
+      "closer": 9265
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "close_combat",
+        "dragon_claw"
+      ]
+    }
+  },
+  {
+    "pokemonId": "raichu",
+    "ratings": {
+      "overall": 8467,
+      "lead": 8608,
+      "switch": 8026,
+      "closer": 8736
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "wild_charge",
+        "brick_break"
+      ]
+    }
+  },
+  {
+    "pokemonId": "registeel",
+    "ratings": {
+      "overall": 8437,
+      "lead": 8054,
+      "switch": 8524,
+      "closer": 8748
+    },
+    "idealMoveset": {
+      "fastMove": "lock_on",
+      "chargeMoves": [
+        "focus_blast",
+        "hyper_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sneasler",
+    "ratings": {
+      "overall": 8410,
+      "lead": 8230,
+      "switch": 8191,
+      "closer": 8800
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "close_combat",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "nidoqueen_shadow",
+    "ratings": {
+      "overall": 8409,
+      "lead": 8069,
+      "switch": 7984,
+      "closer": 9159
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "poison_fang",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "snorlax_shadow",
+    "ratings": {
+      "overall": 8399,
+      "lead": 9015,
+      "switch": 6713,
+      "closer": 9354
+    },
+    "idealMoveset": {
+      "fastMove": "lick",
+      "chargeMoves": [
+        "body_slam",
+        "super_power"
+      ]
+    }
+  },
+  {
+    "pokemonId": "obstagoon",
+    "ratings": {
+      "overall": 8373,
+      "lead": 8655,
+      "switch": 7810,
+      "closer": 8613
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "cross_chop",
+        "night_slash"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ferrothorn",
+    "ratings": {
+      "overall": 8348,
+      "lead": 8326,
+      "switch": 7958,
+      "closer": 8738
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_seed",
+      "chargeMoves": [
+        "power_whip",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "magnezone",
+    "ratings": {
+      "overall": 8336,
+      "lead": 8181,
+      "switch": 8067,
+      "closer": 8746
+    },
+    "idealMoveset": {
+      "fastMove": "spark",
+      "chargeMoves": [
+        "wild_charge",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "politoed_shadow",
+    "ratings": {
+      "overall": 8318,
+      "lead": 8681,
+      "switch": 7531,
+      "closer": 8687
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "weather_ball_water",
+        "surf"
+      ]
+    }
+  },
+  {
+    "pokemonId": "umbreon",
+    "ratings": {
+      "overall": 8310,
+      "lead": 8639,
+      "switch": 7345,
+      "closer": 8881
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "foul_play",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sandslash",
+    "ratings": {
+      "overall": 8306,
+      "lead": 8758,
+      "switch": 7766,
+      "closer": 8352
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "night_slash",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "bisharp",
+    "ratings": {
+      "overall": 8295,
+      "lead": 8563,
+      "switch": 8038,
+      "closer": 8263
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "x_scissor",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "whiscash",
+    "ratings": {
+      "overall": 8292,
+      "lead": 8812,
+      "switch": 7196,
+      "closer": 8790
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "mud_bomb",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "luxray_shadow",
+    "ratings": {
+      "overall": 8289,
+      "lead": 8698,
+      "switch": 7585,
+      "closer": 8534
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "wild_charge",
+        "psychic_fangs"
+      ]
+    }
+  },
+  {
+    "pokemonId": "zapdos",
+    "ratings": {
+      "overall": 8275,
+      "lead": 8392,
+      "switch": 7422,
+      "closer": 8958
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "drill_peck",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "snorlax",
+    "ratings": {
+      "overall": 8259,
+      "lead": 8809,
+      "switch": 6752,
+      "closer": 9112
+    },
+    "idealMoveset": {
+      "fastMove": "lick",
+      "chargeMoves": [
+        "body_slam",
+        "super_power"
+      ]
+    }
+  },
+  {
+    "pokemonId": "rapidash_galarian",
+    "ratings": {
+      "overall": 8241,
+      "lead": 8760,
+      "switch": 7441,
+      "closer": 8463
+    },
+    "idealMoveset": {
+      "fastMove": "psycho_cut",
+      "chargeMoves": [
+        "body_slam",
+        "megahorn"
+      ]
+    }
+  },
+  {
+    "pokemonId": "dragalge",
+    "ratings": {
+      "overall": 8232,
+      "lead": 7671,
+      "switch": 7835,
+      "closer": 9180
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "aqua_tail",
+        "outrage"
+      ]
+    }
+  },
+  {
+    "pokemonId": "zangoose",
+    "ratings": {
+      "overall": 8229,
+      "lead": 8521,
+      "switch": 7252,
+      "closer": 8848
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "close_combat",
+        "night_slash"
+      ]
+    }
+  },
+  {
+    "pokemonId": "jirachi",
+    "ratings": {
+      "overall": 8218,
+      "lead": 7790,
+      "switch": 7595,
+      "closer": 9241
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "doom_desire",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "pangoro",
+    "ratings": {
+      "overall": 8209,
+      "lead": 8284,
+      "switch": 7582,
+      "closer": 8724
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_punch",
+      "chargeMoves": [
+        "close_combat",
+        "night_slash"
+      ]
+    }
+  },
+  {
+    "pokemonId": "stunfisk",
+    "ratings": {
+      "overall": 8209,
+      "lead": 8553,
+      "switch": 7610,
+      "closer": 8419
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "mud_bomb",
+        "discharge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "poliwrath_shadow",
+    "ratings": {
+      "overall": 8196,
+      "lead": 8278,
+      "switch": 8178,
+      "closer": 8128
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "dynamic_punch",
+        "ice_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "zapdos_shadow",
+    "ratings": {
+      "overall": 8190,
+      "lead": 7772,
+      "switch": 7739,
+      "closer": 9042
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "drill_peck",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "luxray",
+    "ratings": {
+      "overall": 8186,
+      "lead": 8834,
+      "switch": 7042,
+      "closer": 8598
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "wild_charge",
+        "psychic_fangs"
+      ]
+    }
+  },
+  {
+    "pokemonId": "genesect",
+    "ratings": {
+      "overall": 8176,
+      "lead": 8559,
+      "switch": 7754,
+      "closer": 8181
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "x_scissor",
+        "magnet_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "greedent",
+    "ratings": {
+      "overall": 8163,
+      "lead": 8909,
+      "switch": 6542,
+      "closer": 8924
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_seed",
+      "chargeMoves": [
+        "body_slam",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "klinklang",
+    "ratings": {
+      "overall": 8144,
+      "lead": 8655,
+      "switch": 7355,
+      "closer": 8362
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "mirror_shot",
+        "hyper_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lanturn",
+    "ratings": {
+      "overall": 8140,
+      "lead": 8463,
+      "switch": 7598,
+      "closer": 8320
+    },
+    "idealMoveset": {
+      "fastMove": "spark",
+      "chargeMoves": [
+        "surf",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "manectric_shadow",
+    "ratings": {
+      "overall": 8114,
+      "lead": 8382,
+      "switch": 7494,
+      "closer": 8422
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "wild_charge",
+        "psychic_fangs"
+      ]
+    }
+  },
+  {
+    "pokemonId": "politoed",
+    "ratings": {
+      "overall": 8096,
+      "lead": 8661,
+      "switch": 7302,
+      "closer": 8265
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "weather_ball_water",
+        "surf"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lapras_shadow",
+    "ratings": {
+      "overall": 8094,
+      "lead": 8214,
+      "switch": 7198,
+      "closer": 8813
+    },
+    "idealMoveset": {
+      "fastMove": "ice_shard",
+      "chargeMoves": [
+        "surf",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "poliwrath",
+    "ratings": {
+      "overall": 8083,
+      "lead": 8124,
+      "switch": 7934,
+      "closer": 8181
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "dynamic_punch",
+        "ice_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "manectric",
+    "ratings": {
+      "overall": 8051,
+      "lead": 8608,
+      "switch": 6981,
+      "closer": 8487
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "wild_charge",
+        "psychic_fangs"
+      ]
+    }
+  },
+  {
+    "pokemonId": "electivire",
+    "ratings": {
+      "overall": 8038,
+      "lead": 8103,
+      "switch": 7374,
+      "closer": 8596
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "wild_charge",
+        "ice_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "raikou",
+    "ratings": {
+      "overall": 8024,
+      "lead": 8210,
+      "switch": 6993,
+      "closer": 8803
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "wild_charge",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "chesnaught",
+    "ratings": {
+      "overall": 8001,
+      "lead": 7693,
+      "switch": 8118,
+      "closer": 8207
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "super_power",
+        "energy_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "relicanth",
+    "ratings": {
+      "overall": 7970,
+      "lead": 8303,
+      "switch": 7437,
+      "closer": 8131
+    },
+    "idealMoveset": {
+      "fastMove": "water_gun",
+      "chargeMoves": [
+        "aqua_tail",
+        "ancient_power"
+      ]
+    }
+  },
+  {
+    "pokemonId": "bewear",
+    "ratings": {
+      "overall": 7959,
+      "lead": 7918,
+      "switch": 7477,
+      "closer": 8455
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "super_power",
+        "stomp"
+      ]
+    }
+  },
+  {
+    "pokemonId": "escavalier",
+    "ratings": {
+      "overall": 7958,
+      "lead": 7589,
+      "switch": 7495,
+      "closer": 8773
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "drill_run",
+        "megahorn"
+      ]
+    }
+  },
+  {
+    "pokemonId": "golem_alola",
+    "ratings": {
+      "overall": 7935,
+      "lead": 7594,
+      "switch": 7694,
+      "closer": 8513
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "wild_charge",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lugia",
+    "ratings": {
+      "overall": 7932,
+      "lead": 7619,
+      "switch": 7243,
+      "closer": 8902
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "sky_attack",
+        "futuresight"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lugia_s",
+    "ratings": {
+      "overall": 7932,
+      "lead": 7619,
+      "switch": 7243,
+      "closer": 8902
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "sky_attack",
+        "futuresight"
+      ]
+    }
+  },
+  {
+    "pokemonId": "electivire_shadow",
+    "ratings": {
+      "overall": 7922,
+      "lead": 7452,
+      "switch": 7724,
+      "closer": 8590
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "wild_charge",
+        "ice_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "excadrill",
+    "ratings": {
+      "overall": 7917,
+      "lead": 7656,
+      "switch": 7963,
+      "closer": 8142
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "drill_run",
+        "rock_slide"
+      ]
+    }
+  },
+  {
+    "pokemonId": "talonflame",
+    "ratings": {
+      "overall": 7911,
+      "lead": 7610,
+      "switch": 7359,
+      "closer": 8739
+    },
+    "idealMoveset": {
+      "fastMove": "incinerate",
+      "chargeMoves": [
+        "brave_bird",
+        "flame_charge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "arcanine_shadow",
+    "ratings": {
+      "overall": 7905,
+      "lead": 8346,
+      "switch": 6922,
+      "closer": 8376
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "wild_charge",
+        "psychic_fangs"
+      ]
+    }
+  },
+  {
+    "pokemonId": "electrode_hisuian",
+    "ratings": {
+      "overall": 7895,
+      "lead": 7923,
+      "switch": 7345,
+      "closer": 8383
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "wild_charge",
+        "energy_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cradily",
+    "ratings": {
+      "overall": 7895,
+      "lead": 8033,
+      "switch": 6650,
+      "closer": 8923
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_seed",
+      "chargeMoves": [
+        "grass_knot",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "charizard",
+    "ratings": {
+      "overall": 7893,
+      "lead": 7940,
+      "switch": 7137,
+      "closer": 8555
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "blast_burn",
+        "dragon_claw"
+      ]
+    }
+  },
+  {
+    "pokemonId": "scizor_shadow",
+    "ratings": {
+      "overall": 7892,
+      "lead": 8471,
+      "switch": 6930,
+      "closer": 8205
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_punch",
+      "chargeMoves": [
+        "night_slash",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "muk",
+    "ratings": {
+      "overall": 7868,
+      "lead": 8219,
+      "switch": 6482,
+      "closer": 8812
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "thunder_punch",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "meganium",
+    "ratings": {
+      "overall": 7863,
+      "lead": 8091,
+      "switch": 7153,
+      "closer": 8298
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "frenzy_plant",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "bellossom",
+    "ratings": {
+      "overall": 7852,
+      "lead": 8259,
+      "switch": 6936,
+      "closer": 8298
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_seed",
+      "chargeMoves": [
+        "leaf_blade",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lickilicky",
+    "ratings": {
+      "overall": 7850,
+      "lead": 8581,
+      "switch": 6224,
+      "closer": 8629
+    },
+    "idealMoveset": {
+      "fastMove": "lick",
+      "chargeMoves": [
+        "body_slam",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "drifblim",
+    "ratings": {
+      "overall": 7840,
+      "lead": 8003,
+      "switch": 7258,
+      "closer": 8221
+    },
+    "idealMoveset": {
+      "fastMove": "hex",
+      "chargeMoves": [
+        "icy_wind",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "meganium_shadow",
+    "ratings": {
+      "overall": 7834,
+      "lead": 7899,
+      "switch": 7044,
+      "closer": 8509
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "frenzy_plant",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "galvantula",
+    "ratings": {
+      "overall": 7824,
+      "lead": 8652,
+      "switch": 6388,
+      "closer": 8326
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "cross_poison",
+        "lunge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ampharos",
+    "ratings": {
+      "overall": 7810,
+      "lead": 8194,
+      "switch": 6694,
+      "closer": 8466
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "thunder_punch",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "scolipede",
+    "ratings": {
+      "overall": 7795,
+      "lead": 7386,
+      "switch": 7284,
+      "closer": 8694
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "x_scissor",
+        "megahorn"
+      ]
+    }
+  },
+  {
+    "pokemonId": "donphan",
+    "ratings": {
+      "overall": 7771,
+      "lead": 8221,
+      "switch": 6769,
+      "closer": 8252
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "body_slam",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "primeape",
+    "ratings": {
+      "overall": 7771,
+      "lead": 7407,
+      "switch": 7280,
+      "closer": 8606
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "night_slash"
+      ]
+    }
+  },
+  {
+    "pokemonId": "celesteela",
+    "ratings": {
+      "overall": 7764,
+      "lead": 7797,
+      "switch": 6920,
+      "closer": 8524
+    },
+    "idealMoveset": {
+      "fastMove": "smack_down",
+      "chargeMoves": [
+        "body_slam",
+        "iron_head"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cresselia",
+    "ratings": {
+      "overall": 7756,
+      "lead": 7552,
+      "switch": 6650,
+      "closer": 9005
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "grass_knot",
+        "futuresight"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lurantis",
+    "ratings": {
+      "overall": 7748,
+      "lead": 7991,
+      "switch": 7252,
+      "closer": 7966
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "leaf_blade",
+        "super_power"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tentacruel",
+    "ratings": {
+      "overall": 7731,
+      "lead": 7437,
+      "switch": 6796,
+      "closer": 8912
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "scald",
+        "sludge_wave"
+      ]
+    }
+  },
+  {
+    "pokemonId": "arcanine",
+    "ratings": {
+      "overall": 7721,
+      "lead": 8363,
+      "switch": 6461,
+      "closer": 8248
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "wild_charge",
+        "psychic_fangs"
+      ]
+    }
+  },
+  {
+    "pokemonId": "landorus_therian",
+    "ratings": {
+      "overall": 7710,
+      "lead": 7385,
+      "switch": 7479,
+      "closer": 8261
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "super_power",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "scizor",
+    "ratings": {
+      "overall": 7707,
+      "lead": 8275,
+      "switch": 6729,
+      "closer": 8044
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_punch",
+      "chargeMoves": [
+        "night_slash",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "staraptor",
+    "ratings": {
+      "overall": 7703,
+      "lead": 6653,
+      "switch": 7402,
+      "closer": 9062
+    },
+    "idealMoveset": {
+      "fastMove": "quick_attack",
+      "chargeMoves": [
+        "close_combat",
+        "brave_bird"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tapu_fini",
+    "ratings": {
+      "overall": 7699,
+      "lead": 7384,
+      "switch": 6944,
+      "closer": 8731
+    },
+    "idealMoveset": {
+      "fastMove": "water_gun",
+      "chargeMoves": [
+        "surf",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "shiftry",
+    "ratings": {
+      "overall": 7685,
+      "lead": 7527,
+      "switch": 7534,
+      "closer": 7987
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "leaf_blade",
+        "foul_play"
+      ]
+    }
+  },
+  {
+    "pokemonId": "jellicent",
+    "ratings": {
+      "overall": 7680,
+      "lead": 7498,
+      "switch": 7073,
+      "closer": 8437
+    },
+    "idealMoveset": {
+      "fastMove": "hex",
+      "chargeMoves": [
+        "shadow_ball",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "runerigus",
+    "ratings": {
+      "overall": 7677,
+      "lead": 7491,
+      "switch": 7285,
+      "closer": 8238
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "shadow_ball",
+        "rock_tomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "golisopod",
+    "ratings": {
+      "overall": 7642,
+      "lead": 8483,
+      "switch": 6120,
+      "closer": 8213
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "x_scissor",
+        "aerial_ace"
+      ]
+    }
+  },
+  {
+    "pokemonId": "muk_shadow",
+    "ratings": {
+      "overall": 7629,
+      "lead": 7705,
+      "switch": 6356,
+      "closer": 8750
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "thunder_punch",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "piloswine",
+    "ratings": {
+      "overall": 7627,
+      "lead": 7835,
+      "switch": 6880,
+      "closer": 8117
+    },
+    "idealMoveset": {
+      "fastMove": "powder_snow",
+      "chargeMoves": [
+        "avalanche",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cradily_shadow",
+    "ratings": {
+      "overall": 7620,
+      "lead": 7725,
+      "switch": 6535,
+      "closer": 8534
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_seed",
+      "chargeMoves": [
+        "grass_knot",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "blastoise",
+    "ratings": {
+      "overall": 7613,
+      "lead": 7634,
+      "switch": 6273,
+      "closer": 8851
+    },
+    "idealMoveset": {
+      "fastMove": "water_gun",
+      "chargeMoves": [
+        "hydro_cannon",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "froslass",
+    "ratings": {
+      "overall": 7592,
+      "lead": 7414,
+      "switch": 6922,
+      "closer": 8406
+    },
+    "idealMoveset": {
+      "fastMove": "powder_snow",
+      "chargeMoves": [
+        "avalanche",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "bouffalant",
+    "ratings": {
+      "overall": 7587,
+      "lead": 8180,
+      "switch": 6060,
+      "closer": 8414
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "megahorn",
+        "stomp"
+      ]
+    }
+  },
+  {
+    "pokemonId": "raichu_alola",
+    "ratings": {
+      "overall": 7584,
+      "lead": 7465,
+      "switch": 6987,
+      "closer": 8266
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "wild_charge",
+        "grass_knot"
+      ]
+    }
+  },
+  {
+    "pokemonId": "druddigon",
+    "ratings": {
+      "overall": 7569,
+      "lead": 8383,
+      "switch": 5859,
+      "closer": 8345
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "dragon_claw",
+        "night_slash"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sirfetchd",
+    "ratings": {
+      "overall": 7568,
+      "lead": 7182,
+      "switch": 7142,
+      "closer": 8364
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "leaf_blade",
+        "close_combat"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sneasel_hisuian",
+    "ratings": {
+      "overall": 7558,
+      "lead": 7350,
+      "switch": 6941,
+      "closer": 8351
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "close_combat",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "shiftry_shadow",
+    "ratings": {
+      "overall": 7533,
+      "lead": 7231,
+      "switch": 7729,
+      "closer": 7659
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "leaf_blade",
+        "foul_play"
+      ]
+    }
+  },
+  {
+    "pokemonId": "dragonite",
+    "ratings": {
+      "overall": 7529,
+      "lead": 7407,
+      "switch": 6809,
+      "closer": 8332
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "super_power",
+        "dragon_claw"
+      ]
+    }
+  },
+  {
+    "pokemonId": "magneton_shadow",
+    "ratings": {
+      "overall": 7498,
+      "lead": 7488,
+      "switch": 7062,
+      "closer": 7917
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "magnet_bomb",
+        "discharge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "dusknoir",
+    "ratings": {
+      "overall": 7493,
+      "lead": 7792,
+      "switch": 6295,
+      "closer": 8314
+    },
+    "idealMoveset": {
+      "fastMove": "hex",
+      "chargeMoves": [
+        "shadow_ball",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "milotic",
+    "ratings": {
+      "overall": 7493,
+      "lead": 7662,
+      "switch": 6125,
+      "closer": 8607
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "surf",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "raikou_shadow",
+    "ratings": {
+      "overall": 7469,
+      "lead": 6898,
+      "switch": 6925,
+      "closer": 8567
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "wild_charge",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "zacian_hero",
+    "ratings": {
+      "overall": 7463,
+      "lead": 7511,
+      "switch": 6702,
+      "closer": 8128
+    },
+    "idealMoveset": {
+      "fastMove": "quick_attack",
+      "chargeMoves": [
+        "close_combat",
+        "wild_charge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "bellossom_shadow",
+    "ratings": {
+      "overall": 7462,
+      "lead": 7862,
+      "switch": 6784,
+      "closer": 7688
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_seed",
+      "chargeMoves": [
+        "leaf_blade",
+        "petal_blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "pelipper",
+    "ratings": {
+      "overall": 7460,
+      "lead": 7758,
+      "switch": 6447,
+      "closer": 8106
+    },
+    "idealMoveset": {
+      "fastMove": "wing_attack",
+      "chargeMoves": [
+        "weather_ball_water",
+        "hurricane"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lycanroc_midnight",
+    "ratings": {
+      "overall": 7455,
+      "lead": 7385,
+      "switch": 6592,
+      "closer": 8338
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "psychic_fangs",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "flygon",
+    "ratings": {
+      "overall": 7448,
+      "lead": 7087,
+      "switch": 6674,
+      "closer": 8546
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "dragon_claw",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "venusaur",
+    "ratings": {
+      "overall": 7444,
+      "lead": 7041,
+      "switch": 7157,
+      "closer": 8128
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "frenzy_plant",
+        "sludge_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "bronzong",
+    "ratings": {
+      "overall": 7437,
+      "lead": 6844,
+      "switch": 6677,
+      "closer": 8759
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psyshock",
+        "payback"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ampharos_shadow",
+    "ratings": {
+      "overall": 7418,
+      "lead": 7474,
+      "switch": 6429,
+      "closer": 8291
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "thunder_punch",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "rapidash",
+    "ratings": {
+      "overall": 7411,
+      "lead": 7814,
+      "switch": 6394,
+      "closer": 7953
+    },
+    "idealMoveset": {
+      "fastMove": "incinerate",
+      "chargeMoves": [
+        "drill_run",
+        "flame_charge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ninetales",
+    "ratings": {
+      "overall": 7387,
+      "lead": 7518,
+      "switch": 6341,
+      "closer": 8238
+    },
+    "idealMoveset": {
+      "fastMove": "ember",
+      "chargeMoves": [
+        "weather_ball_fire",
+        "psyshock"
+      ]
+    }
+  },
+  {
+    "pokemonId": "charizard_shadow",
+    "ratings": {
+      "overall": 7374,
+      "lead": 6646,
+      "switch": 6864,
+      "closer": 8601
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "blast_burn",
+        "dragon_claw"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lucario",
+    "ratings": {
+      "overall": 7374,
+      "lead": 6133,
+      "switch": 7425,
+      "closer": 8598
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "magneton",
+    "ratings": {
+      "overall": 7346,
+      "lead": 7624,
+      "switch": 6681,
+      "closer": 7686
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "magnet_bomb",
+        "discharge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gallade",
+    "ratings": {
+      "overall": 7344,
+      "lead": 6855,
+      "switch": 6300,
+      "closer": 8827
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "leaf_blade",
+        "close_combat"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gyarados",
+    "ratings": {
+      "overall": 7343,
+      "lead": 7474,
+      "switch": 6197,
+      "closer": 8286
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "aqua_tail",
+        "outrage"
+      ]
+    }
+  },
+  {
+    "pokemonId": "buzzwole",
+    "ratings": {
+      "overall": 7337,
+      "lead": 7128,
+      "switch": 7091,
+      "closer": 7782
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "super_power",
+        "lunge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ho_oh_s",
+    "ratings": {
+      "overall": 7303,
+      "lead": 6450,
+      "switch": 6941,
+      "closer": 8516
+    },
+    "idealMoveset": {
+      "fastMove": "incinerate",
+      "chargeMoves": [
+        "brave_bird",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ho_oh",
+    "ratings": {
+      "overall": 7303,
+      "lead": 6450,
+      "switch": 6941,
+      "closer": 8516
+    },
+    "idealMoveset": {
+      "fastMove": "incinerate",
+      "chargeMoves": [
+        "brave_bird",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hitmonchan",
+    "ratings": {
+      "overall": 7292,
+      "lead": 6940,
+      "switch": 6886,
+      "closer": 8036
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "ice_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "durant",
+    "ratings": {
+      "overall": 7276,
+      "lead": 7302,
+      "switch": 6656,
+      "closer": 7831
+    },
+    "idealMoveset": {
+      "fastMove": "bug_bite",
+      "chargeMoves": [
+        "x_scissor",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "dusknoir_shadow",
+    "ratings": {
+      "overall": 7274,
+      "lead": 7064,
+      "switch": 6322,
+      "closer": 8386
+    },
+    "idealMoveset": {
+      "fastMove": "hex",
+      "chargeMoves": [
+        "shadow_ball",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "leafeon",
+    "ratings": {
+      "overall": 7265,
+      "lead": 7638,
+      "switch": 6301,
+      "closer": 7791
+    },
+    "idealMoveset": {
+      "fastMove": "quick_attack",
+      "chargeMoves": [
+        "leaf_blade",
+        "last_resort"
+      ]
+    }
+  },
+  {
+    "pokemonId": "zapdos_galarian",
+    "ratings": {
+      "overall": 7256,
+      "lead": 6079,
+      "switch": 7140,
+      "closer": 8573
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "brave_bird"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sceptile",
+    "ratings": {
+      "overall": 7255,
+      "lead": 7353,
+      "switch": 6745,
+      "closer": 7636
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_seed",
+      "chargeMoves": [
+        "leaf_blade",
+        "frenzy_plant"
+      ]
+    }
+  },
+  {
+    "pokemonId": "pinsir",
+    "ratings": {
+      "overall": 7240,
+      "lead": 7365,
+      "switch": 6523,
+      "closer": 7786
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "close_combat",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "empoleon",
+    "ratings": {
+      "overall": 7233,
+      "lead": 6860,
+      "switch": 6637,
+      "closer": 8176
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "hydro_cannon",
+        "drill_peck"
+      ]
+    }
+  },
+  {
+    "pokemonId": "piloswine_shadow",
+    "ratings": {
+      "overall": 7230,
+      "lead": 7043,
+      "switch": 6881,
+      "closer": 7750
+    },
+    "idealMoveset": {
+      "fastMove": "powder_snow",
+      "chargeMoves": [
+        "avalanche",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "muk_alola",
+    "ratings": {
+      "overall": 7229,
+      "lead": 7042,
+      "switch": 6043,
+      "closer": 8536
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "dark_pulse",
+        "sludge_wave"
+      ]
+    }
+  },
+  {
+    "pokemonId": "roserade",
+    "ratings": {
+      "overall": 7217,
+      "lead": 6632,
+      "switch": 6571,
+      "closer": 8423
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "weather_ball_fire",
+        "grass_knot"
+      ]
+    }
+  },
+  {
+    "pokemonId": "falinks",
+    "ratings": {
+      "overall": 7207,
+      "lead": 6627,
+      "switch": 6872,
+      "closer": 8118
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "super_power",
+        "megahorn"
+      ]
+    }
+  },
+  {
+    "pokemonId": "seismitoad",
+    "ratings": {
+      "overall": 7203,
+      "lead": 7452,
+      "switch": 6170,
+      "closer": 7919
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "sludge_bomb",
+        "earth_power"
+      ]
+    }
+  },
+  {
+    "pokemonId": "miltank",
+    "ratings": {
+      "overall": 7198,
+      "lead": 8098,
+      "switch": 5324,
+      "closer": 8038
+    },
+    "idealMoveset": {
+      "fastMove": "rollout",
+      "chargeMoves": [
+        "body_slam",
+        "stomp"
+      ]
+    }
+  },
+  {
+    "pokemonId": "qwilfish",
+    "ratings": {
+      "overall": 7180,
+      "lead": 7516,
+      "switch": 6023,
+      "closer": 7924
+    },
+    "idealMoveset": {
+      "fastMove": "poison_sting",
+      "chargeMoves": [
+        "aqua_tail",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "typhlosion",
+    "ratings": {
+      "overall": 7179,
+      "lead": 6892,
+      "switch": 6401,
+      "closer": 8205
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "blast_burn",
+        "overheat"
+      ]
+    }
+  },
+  {
+    "pokemonId": "pinsir_shadow",
+    "ratings": {
+      "overall": 7178,
+      "lead": 6850,
+      "switch": 6634,
+      "closer": 8027
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "close_combat",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "weezing_galarian",
+    "ratings": {
+      "overall": 7176,
+      "lead": 7484,
+      "switch": 6247,
+      "closer": 7735
+    },
+    "idealMoveset": {
+      "fastMove": "tackle",
+      "chargeMoves": [
+        "sludge",
+        "overheat"
+      ]
+    }
+  },
+  {
+    "pokemonId": "vaporeon",
+    "ratings": {
+      "overall": 7147,
+      "lead": 7823,
+      "switch": 5737,
+      "closer": 7780
+    },
+    "idealMoveset": {
+      "fastMove": "water_gun",
+      "chargeMoves": [
+        "aqua_tail",
+        "last_resort"
+      ]
+    }
+  },
+  {
+    "pokemonId": "electabuzz_shadow",
+    "ratings": {
+      "overall": 7134,
+      "lead": 7111,
+      "switch": 6353,
+      "closer": 7892
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "thunder_punch",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ninetales_shadow",
+    "ratings": {
+      "overall": 7131,
+      "lead": 7076,
+      "switch": 6164,
+      "closer": 8096
+    },
+    "idealMoveset": {
+      "fastMove": "ember",
+      "chargeMoves": [
+        "weather_ball_fire",
+        "psyshock"
+      ]
+    }
+  },
+  {
+    "pokemonId": "magmar",
+    "ratings": {
+      "overall": 7127,
+      "lead": 7372,
+      "switch": 6248,
+      "closer": 7703
+    },
+    "idealMoveset": {
+      "fastMove": "karate_chop",
+      "chargeMoves": [
+        "fire_punch",
+        "flamethrower"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lugia_shadow",
+    "ratings": {
+      "overall": 7113,
+      "lead": 6433,
+      "switch": 6338,
+      "closer": 8538
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "sky_attack",
+        "futuresight"
+      ]
+    }
+  },
+  {
+    "pokemonId": "magmar_shadow",
+    "ratings": {
+      "overall": 7090,
+      "lead": 6805,
+      "switch": 6417,
+      "closer": 8015
+    },
+    "idealMoveset": {
+      "fastMove": "karate_chop",
+      "chargeMoves": [
+        "fire_punch",
+        "flamethrower"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mewtwo_a",
+    "ratings": {
+      "overall": 7089,
+      "lead": 7183,
+      "switch": 5374,
+      "closer": 8606
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psystrike",
+        "rock_slide"
+      ]
+    }
+  },
+  {
+    "pokemonId": "eelektross",
+    "ratings": {
+      "overall": 7087,
+      "lead": 7720,
+      "switch": 5963,
+      "closer": 7498
+    },
+    "idealMoveset": {
+      "fastMove": "spark",
+      "chargeMoves": [
+        "dragon_claw",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "dragonite_shadow",
+    "ratings": {
+      "overall": 7083,
+      "lead": 6839,
+      "switch": 6609,
+      "closer": 7780
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "super_power",
+        "dragon_claw"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cryogonal",
+    "ratings": {
+      "overall": 7082,
+      "lead": 7654,
+      "switch": 5674,
+      "closer": 7821
+    },
+    "idealMoveset": {
+      "fastMove": "ice_shard",
+      "chargeMoves": [
+        "night_slash",
+        "solar_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "venusaur_shadow",
+    "ratings": {
+      "overall": 7081,
+      "lead": 6615,
+      "switch": 6851,
+      "closer": 7775
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "frenzy_plant",
+        "sludge_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "celebi",
+    "ratings": {
+      "overall": 7064,
+      "lead": 6711,
+      "switch": 6274,
+      "closer": 8168
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "seed_bomb",
+        "leaf_storm"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hypno",
+    "ratings": {
+      "overall": 7058,
+      "lead": 7777,
+      "switch": 5287,
+      "closer": 7986
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psyshock",
+        "ice_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "electabuzz",
+    "ratings": {
+      "overall": 7038,
+      "lead": 7453,
+      "switch": 5936,
+      "closer": 7650
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "thunder_punch",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gurdurr",
+    "ratings": {
+      "overall": 7036,
+      "lead": 7261,
+      "switch": 5672,
+      "closer": 8087
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "stone_edge",
+        "brick_break"
+      ]
+    }
+  },
+  {
+    "pokemonId": "blastoise_shadow",
+    "ratings": {
+      "overall": 7034,
+      "lead": 6198,
+      "switch": 6229,
+      "closer": 8650
+    },
+    "idealMoveset": {
+      "fastMove": "water_gun",
+      "chargeMoves": [
+        "hydro_cannon",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tangrowth",
+    "ratings": {
+      "overall": 7019,
+      "lead": 7171,
+      "switch": 6018,
+      "closer": 7805
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "rock_slide",
+        "power_whip"
+      ]
+    }
+  },
+  {
+    "pokemonId": "avalugg",
+    "ratings": {
+      "overall": 7014,
+      "lead": 6842,
+      "switch": 5954,
+      "closer": 8188
+    },
+    "idealMoveset": {
+      "fastMove": "ice_fang",
+      "chargeMoves": [
+        "body_slam",
+        "avalanche"
+      ]
+    }
+  },
+  {
+    "pokemonId": "noctowl",
+    "ratings": {
+      "overall": 7005,
+      "lead": 7431,
+      "switch": 5703,
+      "closer": 7793
+    },
+    "idealMoveset": {
+      "fastMove": "wing_attack",
+      "chargeMoves": [
+        "sky_attack",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hitmonchan_shadow",
+    "ratings": {
+      "overall": 6992,
+      "lead": 6382,
+      "switch": 6671,
+      "closer": 7920
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "ice_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hitmontop",
+    "ratings": {
+      "overall": 6971,
+      "lead": 6079,
+      "switch": 6433,
+      "closer": 8393
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sudowoodo",
+    "ratings": {
+      "overall": 6945,
+      "lead": 6621,
+      "switch": 6076,
+      "closer": 8096
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "rock_slide",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "drapion",
+    "ratings": {
+      "overall": 6913,
+      "lead": 6790,
+      "switch": 5736,
+      "closer": 8145
+    },
+    "idealMoveset": {
+      "fastMove": "ice_fang",
+      "chargeMoves": [
+        "aqua_tail",
+        "sludge_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "altaria",
+    "ratings": {
+      "overall": 6895,
+      "lead": 6341,
+      "switch": 6186,
+      "closer": 8129
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "sky_attack",
+        "moonblast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "greninja",
+    "ratings": {
+      "overall": 6886,
+      "lead": 7193,
+      "switch": 6205,
+      "closer": 7212
+    },
+    "idealMoveset": {
+      "fastMove": "bubble",
+      "chargeMoves": [
+        "surf",
+        "night_slash"
+      ]
+    }
+  },
+  {
+    "pokemonId": "forretress",
+    "ratings": {
+      "overall": 6885,
+      "lead": 6205,
+      "switch": 6219,
+      "closer": 8208
+    },
+    "idealMoveset": {
+      "fastMove": "bug_bite",
+      "chargeMoves": [
+        "earthquake",
+        "heavy_slam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "flygon_shadow",
+    "ratings": {
+      "overall": 6871,
+      "lead": 6116,
+      "switch": 6228,
+      "closer": 8250
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "dragon_claw",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mantine",
+    "ratings": {
+      "overall": 6855,
+      "lead": 7315,
+      "switch": 5433,
+      "closer": 7721
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_seed",
+      "chargeMoves": [
+        "ice_beam",
+        "aerial_ace"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tangrowth_shadow",
+    "ratings": {
+      "overall": 6851,
+      "lead": 6629,
+      "switch": 6157,
+      "closer": 7731
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "rock_slide",
+        "power_whip"
+      ]
+    }
+  },
+  {
+    "pokemonId": "toxicroak",
+    "ratings": {
+      "overall": 6835,
+      "lead": 6526,
+      "switch": 6258,
+      "closer": 7694
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "dynamic_punch",
+        "mud_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gallade_shadow",
+    "ratings": {
+      "overall": 6823,
+      "lead": 5722,
+      "switch": 6195,
+      "closer": 8541
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "leaf_blade",
+        "close_combat"
+      ]
+    }
+  },
+  {
+    "pokemonId": "honchkrow",
+    "ratings": {
+      "overall": 6807,
+      "lead": 6123,
+      "switch": 6501,
+      "closer": 7797
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "brave_bird",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "crustle",
+    "ratings": {
+      "overall": 6805,
+      "lead": 6492,
+      "switch": 5683,
+      "closer": 8180
+    },
+    "idealMoveset": {
+      "fastMove": "smack_down",
+      "chargeMoves": [
+        "rock_slide",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "regice",
+    "ratings": {
+      "overall": 6785,
+      "lead": 6932,
+      "switch": 5494,
+      "closer": 7848
+    },
+    "idealMoveset": {
+      "fastMove": "lock_on",
+      "chargeMoves": [
+        "earthquake",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "darmanitan_standard",
+    "ratings": {
+      "overall": 6773,
+      "lead": 6287,
+      "switch": 6259,
+      "closer": 7755
+    },
+    "idealMoveset": {
+      "fastMove": "incinerate",
+      "chargeMoves": [
+        "rock_slide",
+        "overheat"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lairon",
+    "ratings": {
+      "overall": 6766,
+      "lead": 6886,
+      "switch": 6207,
+      "closer": 7168
+    },
+    "idealMoveset": {
+      "fastMove": "metal_claw",
+      "chargeMoves": [
+        "body_slam",
+        "rock_slide"
+      ]
+    }
+  },
+  {
+    "pokemonId": "heracross",
+    "ratings": {
+      "overall": 6745,
+      "lead": 5629,
+      "switch": 6489,
+      "closer": 8127
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "megahorn"
+      ]
+    }
+  },
+  {
+    "pokemonId": "latios",
+    "ratings": {
+      "overall": 6716,
+      "lead": 6332,
+      "switch": 5917,
+      "closer": 7860
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "dragon_claw",
+        "luster_purge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "machoke_shadow",
+    "ratings": {
+      "overall": 6714,
+      "lead": 6649,
+      "switch": 6167,
+      "closer": 7295
+    },
+    "idealMoveset": {
+      "fastMove": "karate_chop",
+      "chargeMoves": [
+        "cross_chop",
+        "dynamic_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "carracosta",
+    "ratings": {
+      "overall": 6711,
+      "lead": 6545,
+      "switch": 5783,
+      "closer": 7753
+    },
+    "idealMoveset": {
+      "fastMove": "rock_throw",
+      "chargeMoves": [
+        "body_slam",
+        "surf"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gyarados_shadow",
+    "ratings": {
+      "overall": 6710,
+      "lead": 6262,
+      "switch": 5810,
+      "closer": 8016
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "aqua_tail",
+        "outrage"
+      ]
+    }
+  },
+  {
+    "pokemonId": "haxorus",
+    "ratings": {
+      "overall": 6706,
+      "lead": 6674,
+      "switch": 5800,
+      "closer": 7591
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "dragon_claw",
+        "surf"
+      ]
+    }
+  },
+  {
+    "pokemonId": "articuno",
+    "ratings": {
+      "overall": 6678,
+      "lead": 6888,
+      "switch": 5604,
+      "closer": 7472
+    },
+    "idealMoveset": {
+      "fastMove": "ice_shard",
+      "chargeMoves": [
+        "icy_wind",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "machoke",
+    "ratings": {
+      "overall": 6675,
+      "lead": 7082,
+      "switch": 5959,
+      "closer": 6930
+    },
+    "idealMoveset": {
+      "fastMove": "karate_chop",
+      "chargeMoves": [
+        "cross_chop",
+        "dynamic_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "serperior",
+    "ratings": {
+      "overall": 6669,
+      "lead": 6725,
+      "switch": 6041,
+      "closer": 7202
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "frenzy_plant",
+        "grass_knot"
+      ]
+    }
+  },
+  {
+    "pokemonId": "staraptor_shadow",
+    "ratings": {
+      "overall": 6660,
+      "lead": 5035,
+      "switch": 7116,
+      "closer": 7895
+    },
+    "idealMoveset": {
+      "fastMove": "quick_attack",
+      "chargeMoves": [
+        "close_combat",
+        "brave_bird"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lairon_shadow",
+    "ratings": {
+      "overall": 6659,
+      "lead": 6894,
+      "switch": 5888,
+      "closer": 7142
+    },
+    "idealMoveset": {
+      "fastMove": "metal_claw",
+      "chargeMoves": [
+        "body_slam",
+        "rock_slide"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hitmonlee",
+    "ratings": {
+      "overall": 6656,
+      "lead": 6586,
+      "switch": 6203,
+      "closer": 7155
+    },
+    "idealMoveset": {
+      "fastMove": "double_kick",
+      "chargeMoves": [
+        "close_combat",
+        "stomp"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mamoswine",
+    "ratings": {
+      "overall": 6649,
+      "lead": 6307,
+      "switch": 6241,
+      "closer": 7382
+    },
+    "idealMoveset": {
+      "fastMove": "powder_snow",
+      "chargeMoves": [
+        "avalanche",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "drapion_shadow",
+    "ratings": {
+      "overall": 6623,
+      "lead": 6072,
+      "switch": 5641,
+      "closer": 8111
+    },
+    "idealMoveset": {
+      "fastMove": "ice_fang",
+      "chargeMoves": [
+        "aqua_tail",
+        "sludge_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hydreigon",
+    "ratings": {
+      "overall": 6620,
+      "lead": 5748,
+      "switch": 6118,
+      "closer": 7985
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "brutal_swing",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "oranguru",
+    "ratings": {
+      "overall": 6603,
+      "lead": 6127,
+      "switch": 4976,
+      "closer": 8621
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "foul_play",
+        "futuresight"
+      ]
+    }
+  },
+  {
+    "pokemonId": "zamazenta_hero",
+    "ratings": {
+      "overall": 6602,
+      "lead": 6512,
+      "switch": 5995,
+      "closer": 7266
+    },
+    "idealMoveset": {
+      "fastMove": "quick_attack",
+      "chargeMoves": [
+        "close_combat",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hypno_shadow",
+    "ratings": {
+      "overall": 6592,
+      "lead": 7174,
+      "switch": 4809,
+      "closer": 7674
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psyshock",
+        "ice_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "probopass",
+    "ratings": {
+      "overall": 6591,
+      "lead": 6006,
+      "switch": 5869,
+      "closer": 7869
+    },
+    "idealMoveset": {
+      "fastMove": "rock_throw",
+      "chargeMoves": [
+        "rock_slide",
+        "magnet_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "vigoroth",
+    "ratings": {
+      "overall": 6572,
+      "lead": 7259,
+      "switch": 5203,
+      "closer": 7155
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "body_slam",
+        "brick_break"
+      ]
+    }
+  },
+  {
+    "pokemonId": "spiritomb",
+    "ratings": {
+      "overall": 6564,
+      "lead": 6702,
+      "switch": 5391,
+      "closer": 7527
+    },
+    "idealMoveset": {
+      "fastMove": "sucker_punch",
+      "chargeMoves": [
+        "shadow_ball",
+        "shadow_sneak"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hitmonlee_shadow",
+    "ratings": {
+      "overall": 6563,
+      "lead": 6304,
+      "switch": 6252,
+      "closer": 7122
+    },
+    "idealMoveset": {
+      "fastMove": "double_kick",
+      "chargeMoves": [
+        "close_combat",
+        "stomp"
+      ]
+    }
+  },
+  {
+    "pokemonId": "terrakion",
+    "ratings": {
+      "overall": 6552,
+      "lead": 6020,
+      "switch": 6227,
+      "closer": 7403
+    },
+    "idealMoveset": {
+      "fastMove": "double_kick",
+      "chargeMoves": [
+        "close_combat",
+        "rock_slide"
+      ]
+    }
+  },
+  {
+    "pokemonId": "zebstrika",
+    "ratings": {
+      "overall": 6551,
+      "lead": 6372,
+      "switch": 5953,
+      "closer": 7297
+    },
+    "idealMoveset": {
+      "fastMove": "spark",
+      "chargeMoves": [
+        "wild_charge",
+        "flame_charge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "weavile",
+    "ratings": {
+      "overall": 6546,
+      "lead": 6277,
+      "switch": 6329,
+      "closer": 7027
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "avalanche",
+        "foul_play"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mismagius",
+    "ratings": {
+      "overall": 6541,
+      "lead": 6282,
+      "switch": 5606,
+      "closer": 7685
+    },
+    "idealMoveset": {
+      "fastMove": "hex",
+      "chargeMoves": [
+        "shadow_ball",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "vespiquen",
+    "ratings": {
+      "overall": 6525,
+      "lead": 6985,
+      "switch": 5852,
+      "closer": 6686
+    },
+    "idealMoveset": {
+      "fastMove": "poison_sting",
+      "chargeMoves": [
+        "x_scissor",
+        "bug_buzz"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cloyster",
+    "ratings": {
+      "overall": 6518,
+      "lead": 6235,
+      "switch": 5604,
+      "closer": 7668
+    },
+    "idealMoveset": {
+      "fastMove": "ice_shard",
+      "chargeMoves": [
+        "avalanche",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "nihilego",
+    "ratings": {
+      "overall": 6517,
+      "lead": 6045,
+      "switch": 5895,
+      "closer": 7586
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "rock_slide",
+        "sludge_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "golduck",
+    "ratings": {
+      "overall": 6513,
+      "lead": 7117,
+      "switch": 5175,
+      "closer": 7153
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "cross_chop",
+        "synchronoise"
+      ]
+    }
+  },
+  {
+    "pokemonId": "typhlosion_shadow",
+    "ratings": {
+      "overall": 6494,
+      "lead": 5749,
+      "switch": 6182,
+      "closer": 7551
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "blast_burn",
+        "overheat"
+      ]
+    }
+  },
+  {
+    "pokemonId": "machamp",
+    "ratings": {
+      "overall": 6483,
+      "lead": 5673,
+      "switch": 6049,
+      "closer": 7721
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "rock_slide"
+      ]
+    }
+  },
+  {
+    "pokemonId": "jolteon",
+    "ratings": {
+      "overall": 6475,
+      "lead": 6555,
+      "switch": 5345,
+      "closer": 7455
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "discharge",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "chandelure",
+    "ratings": {
+      "overall": 6464,
+      "lead": 5604,
+      "switch": 6150,
+      "closer": 7643
+    },
+    "idealMoveset": {
+      "fastMove": "incinerate",
+      "chargeMoves": [
+        "shadow_ball",
+        "flame_charge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "moltres_galarian",
+    "ratings": {
+      "overall": 6464,
+      "lead": 5652,
+      "switch": 6099,
+      "closer": 7641
+    },
+    "idealMoveset": {
+      "fastMove": "sucker_punch",
+      "chargeMoves": [
+        "brave_bird",
+        "payback"
+      ]
+    }
+  },
+  {
+    "pokemonId": "fraxure",
+    "ratings": {
+      "overall": 6430,
+      "lead": 6589,
+      "switch": 5130,
+      "closer": 7491
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "aqua_tail",
+        "dragon_claw"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gastrodon",
+    "ratings": {
+      "overall": 6417,
+      "lead": 6323,
+      "switch": 5397,
+      "closer": 7473
+    },
+    "idealMoveset": {
+      "fastMove": "mud_slap",
+      "chargeMoves": [
+        "body_slam",
+        "earth_power"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sudowoodo_shadow",
+    "ratings": {
+      "overall": 6409,
+      "lead": 5481,
+      "switch": 6043,
+      "closer": 7706
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "rock_slide",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "weavile_shadow",
+    "ratings": {
+      "overall": 6409,
+      "lead": 5708,
+      "switch": 6458,
+      "closer": 7081
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "avalanche",
+        "foul_play"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ho_oh_shadow",
+    "ratings": {
+      "overall": 6403,
+      "lead": 5174,
+      "switch": 6452,
+      "closer": 7615
+    },
+    "idealMoveset": {
+      "fastMove": "incinerate",
+      "chargeMoves": [
+        "brave_bird",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "kyurem",
+    "ratings": {
+      "overall": 6360,
+      "lead": 6351,
+      "switch": 5207,
+      "closer": 7454
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "dragon_claw",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "armaldo_shadow",
+    "ratings": {
+      "overall": 6356,
+      "lead": 6822,
+      "switch": 5351,
+      "closer": 6824
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "cross_poison",
+        "rock_blast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "garbodor",
+    "ratings": {
+      "overall": 6346,
+      "lead": 7218,
+      "switch": 4682,
+      "closer": 7017
+    },
+    "idealMoveset": {
+      "fastMove": "infestation",
+      "chargeMoves": [
+        "body_slam",
+        "seed_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "quagsire",
+    "ratings": {
+      "overall": 6332,
+      "lead": 6625,
+      "switch": 5026,
+      "closer": 7260
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "stone_edge",
+        "sludge_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "glalie",
+    "ratings": {
+      "overall": 6319,
+      "lead": 6197,
+      "switch": 5120,
+      "closer": 7572
+    },
+    "idealMoveset": {
+      "fastMove": "ice_shard",
+      "chargeMoves": [
+        "avalanche",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lopunny",
+    "ratings": {
+      "overall": 6304,
+      "lead": 6911,
+      "switch": 4700,
+      "closer": 7192
+    },
+    "idealMoveset": {
+      "fastMove": "double_kick",
+      "chargeMoves": [
+        "fire_punch",
+        "focus_blast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "quagsire_shadow",
+    "ratings": {
+      "overall": 6291,
+      "lead": 6176,
+      "switch": 5196,
+      "closer": 7440
+    },
+    "idealMoveset": {
+      "fastMove": "mud_shot",
+      "chargeMoves": [
+        "stone_edge",
+        "sludge_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "kingler",
+    "ratings": {
+      "overall": 6277,
+      "lead": 6344,
+      "switch": 5138,
+      "closer": 7281
+    },
+    "idealMoveset": {
+      "fastMove": "bubble",
+      "chargeMoves": [
+        "x_scissor",
+        "crabhammer"
+      ]
+    }
+  },
+  {
+    "pokemonId": "electrode",
+    "ratings": {
+      "overall": 6274,
+      "lead": 6799,
+      "switch": 4991,
+      "closer": 6944
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "foul_play",
+        "discharge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "zarude",
+    "ratings": {
+      "overall": 6264,
+      "lead": 6127,
+      "switch": 5836,
+      "closer": 6807
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "power_whip",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "metagross",
+    "ratings": {
+      "overall": 6258,
+      "lead": 5425,
+      "switch": 5955,
+      "closer": 7395
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_punch",
+      "chargeMoves": [
+        "meteor_mash",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "articuno_shadow",
+    "ratings": {
+      "overall": 6256,
+      "lead": 6044,
+      "switch": 5472,
+      "closer": 7210
+    },
+    "idealMoveset": {
+      "fastMove": "ice_shard",
+      "chargeMoves": [
+        "icy_wind",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "moltres",
+    "ratings": {
+      "overall": 6245,
+      "lead": 5488,
+      "switch": 5533,
+      "closer": 7690
+    },
+    "idealMoveset": {
+      "fastMove": "fire_spin",
+      "chargeMoves": [
+        "sky_attack",
+        "overheat"
+      ]
+    }
+  },
+  {
+    "pokemonId": "heatmor",
+    "ratings": {
+      "overall": 6234,
+      "lead": 6431,
+      "switch": 4896,
+      "closer": 7290
+    },
+    "idealMoveset": {
+      "fastMove": "fire_spin",
+      "chargeMoves": [
+        "thunder_punch",
+        "flamethrower"
+      ]
+    }
+  },
+  {
+    "pokemonId": "feraligatr",
+    "ratings": {
+      "overall": 6234,
+      "lead": 5139,
+      "switch": 5498,
+      "closer": 8047
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "hydro_cannon",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "huntail",
+    "ratings": {
+      "overall": 6233,
+      "lead": 6215,
+      "switch": 5102,
+      "closer": 7316
+    },
+    "idealMoveset": {
+      "fastMove": "water_gun",
+      "chargeMoves": [
+        "aqua_tail",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "arcanine_hisuian",
+    "ratings": {
+      "overall": 6231,
+      "lead": 6145,
+      "switch": 5846,
+      "closer": 6680
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "wild_charge",
+        "rock_slide"
+      ]
+    }
+  },
+  {
+    "pokemonId": "armaldo",
+    "ratings": {
+      "overall": 6220,
+      "lead": 6975,
+      "switch": 4870,
+      "closer": 6715
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "cross_poison",
+        "rock_blast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "golduck_shadow",
+    "ratings": {
+      "overall": 6211,
+      "lead": 6327,
+      "switch": 5095,
+      "closer": 7142
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "cross_chop",
+        "synchronoise"
+      ]
+    }
+  },
+  {
+    "pokemonId": "flareon",
+    "ratings": {
+      "overall": 6197,
+      "lead": 5813,
+      "switch": 5321,
+      "closer": 7414
+    },
+    "idealMoveset": {
+      "fastMove": "fire_spin",
+      "chargeMoves": [
+        "super_power",
+        "flamethrower"
+      ]
+    }
+  },
+  {
+    "pokemonId": "aggron",
+    "ratings": {
+      "overall": 6194,
+      "lead": 5461,
+      "switch": 5592,
+      "closer": 7512
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "stone_edge",
+        "heavy_slam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "latios_shadow",
+    "ratings": {
+      "overall": 6189,
+      "lead": 5354,
+      "switch": 5838,
+      "closer": 7376
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "dragon_claw",
+        "luster_purge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hariyama",
+    "ratings": {
+      "overall": 6182,
+      "lead": 5603,
+      "switch": 5817,
+      "closer": 7119
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "dynamic_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tauros",
+    "ratings": {
+      "overall": 6175,
+      "lead": 6987,
+      "switch": 4379,
+      "closer": 7031
+    },
+    "idealMoveset": {
+      "fastMove": "tackle",
+      "chargeMoves": [
+        "horn_attack",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tapu_bulu",
+    "ratings": {
+      "overall": 6174,
+      "lead": 6113,
+      "switch": 5601,
+      "closer": 6775
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_seed",
+      "chargeMoves": [
+        "megahorn",
+        "grass_knot"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gengar",
+    "ratings": {
+      "overall": 6173,
+      "lead": 4906,
+      "switch": 6453,
+      "closer": 7208
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "shadow_ball",
+        "sludge_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "electrode_shadow",
+    "ratings": {
+      "overall": 6172,
+      "lead": 6034,
+      "switch": 5222,
+      "closer": 7207
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "foul_play",
+        "discharge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "walrein",
+    "ratings": {
+      "overall": 6167,
+      "lead": 5581,
+      "switch": 5168,
+      "closer": 7707
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "icicle_spear",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "skuntank",
+    "ratings": {
+      "overall": 6166,
+      "lead": 6054,
+      "switch": 5174,
+      "closer": 7213
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "sludge_bomb",
+        "flamethrower"
+      ]
+    }
+  },
+  {
+    "pokemonId": "machamp_shadow",
+    "ratings": {
+      "overall": 6157,
+      "lead": 5411,
+      "switch": 6184,
+      "closer": 6895
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "rock_slide"
+      ]
+    }
+  },
+  {
+    "pokemonId": "palkia",
+    "ratings": {
+      "overall": 6151,
+      "lead": 5562,
+      "switch": 5174,
+      "closer": 7672
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "aqua_tail",
+        "draco_meteor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "probopass_shadow",
+    "ratings": {
+      "overall": 6134,
+      "lead": 5619,
+      "switch": 5523,
+      "closer": 7238
+    },
+    "idealMoveset": {
+      "fastMove": "rock_throw",
+      "chargeMoves": [
+        "rock_slide",
+        "magnet_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "seaking",
+    "ratings": {
+      "overall": 6106,
+      "lead": 5885,
+      "switch": 4836,
+      "closer": 7528
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "drill_run",
+        "icy_wind"
+      ]
+    }
+  },
+  {
+    "pokemonId": "forretress_shadow",
+    "ratings": {
+      "overall": 6098,
+      "lead": 5138,
+      "switch": 5609,
+      "closer": 7542
+    },
+    "idealMoveset": {
+      "fastMove": "bug_bite",
+      "chargeMoves": [
+        "earthquake",
+        "heavy_slam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "magmortar_shadow",
+    "ratings": {
+      "overall": 6073,
+      "lead": 6328,
+      "switch": 5324,
+      "closer": 6517
+    },
+    "idealMoveset": {
+      "fastMove": "karate_chop",
+      "chargeMoves": [
+        "fire_punch",
+        "brick_break"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mismagius_shadow",
+    "ratings": {
+      "overall": 6059,
+      "lead": 5186,
+      "switch": 5622,
+      "closer": 7365
+    },
+    "idealMoveset": {
+      "fastMove": "hex",
+      "chargeMoves": [
+        "shadow_ball",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "salazzle",
+    "ratings": {
+      "overall": 6058,
+      "lead": 6126,
+      "switch": 5443,
+      "closer": 6568
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "poison_fang",
+        "sludge_wave"
+      ]
+    }
+  },
+  {
+    "pokemonId": "haunter",
+    "ratings": {
+      "overall": 6056,
+      "lead": 4709,
+      "switch": 6469,
+      "closer": 7049
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "ice_punch",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mamoswine_shadow",
+    "ratings": {
+      "overall": 6030,
+      "lead": 4950,
+      "switch": 6225,
+      "closer": 6954
+    },
+    "idealMoveset": {
+      "fastMove": "powder_snow",
+      "chargeMoves": [
+        "avalanche",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "samurott",
+    "ratings": {
+      "overall": 6024,
+      "lead": 4942,
+      "switch": 5369,
+      "closer": 7749
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "hydro_cannon",
+        "megahorn"
+      ]
+    }
+  },
+  {
+    "pokemonId": "seviper",
+    "ratings": {
+      "overall": 6018,
+      "lead": 6779,
+      "switch": 4689,
+      "closer": 6489
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "poison_fang",
+        "wrap"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cloyster_shadow",
+    "ratings": {
+      "overall": 6017,
+      "lead": 5320,
+      "switch": 5533,
+      "closer": 7186
+    },
+    "idealMoveset": {
+      "fastMove": "ice_shard",
+      "chargeMoves": [
+        "avalanche",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tapu_koko",
+    "ratings": {
+      "overall": 5998,
+      "lead": 4994,
+      "switch": 5291,
+      "closer": 7694
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "brave_bird",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "klefki",
+    "ratings": {
+      "overall": 5996,
+      "lead": 5732,
+      "switch": 5080,
+      "closer": 7129
+    },
+    "idealMoveset": {
+      "fastMove": "tackle",
+      "chargeMoves": [
+        "foul_play",
+        "play_rough"
+      ]
+    }
+  },
+  {
+    "pokemonId": "slowbro_galarian",
+    "ratings": {
+      "overall": 5995,
+      "lead": 5883,
+      "switch": 5152,
+      "closer": 6903
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "sludge_bomb",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "honchkrow_shadow",
+    "ratings": {
+      "overall": 5991,
+      "lead": 4709,
+      "switch": 6204,
+      "closer": 7105
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "brave_bird",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "rhyperior",
+    "ratings": {
+      "overall": 5983,
+      "lead": 5236,
+      "switch": 5624,
+      "closer": 7086
+    },
+    "idealMoveset": {
+      "fastMove": "smack_down",
+      "chargeMoves": [
+        "rock_wrecker",
+        "super_power"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hariyama_shadow",
+    "ratings": {
+      "overall": 5967,
+      "lead": 5404,
+      "switch": 5957,
+      "closer": 6554
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "dynamic_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "magmortar",
+    "ratings": {
+      "overall": 5966,
+      "lead": 6536,
+      "switch": 5011,
+      "closer": 6281
+    },
+    "idealMoveset": {
+      "fastMove": "karate_chop",
+      "chargeMoves": [
+        "fire_punch",
+        "brick_break"
+      ]
+    }
+  },
+  {
+    "pokemonId": "chimecho",
+    "ratings": {
+      "overall": 5964,
+      "lead": 6243,
+      "switch": 4321,
+      "closer": 7223
+    },
+    "idealMoveset": {
+      "fastMove": "extrasensory",
+      "chargeMoves": [
+        "psyshock",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sawk",
+    "ratings": {
+      "overall": 5943,
+      "lead": 6218,
+      "switch": 4767,
+      "closer": 6769
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "body_slam",
+        "focus_blast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "scyther_shadow",
+    "ratings": {
+      "overall": 5918,
+      "lead": 5976,
+      "switch": 5335,
+      "closer": 6406
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "night_slash",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "infernape",
+    "ratings": {
+      "overall": 5891,
+      "lead": 4976,
+      "switch": 5655,
+      "closer": 7051
+    },
+    "idealMoveset": {
+      "fastMove": "fire_spin",
+      "chargeMoves": [
+        "close_combat",
+        "blast_burn"
+      ]
+    }
+  },
+  {
+    "pokemonId": "wailord",
+    "ratings": {
+      "overall": 5828,
+      "lead": 5633,
+      "switch": 4866,
+      "closer": 6932
+    },
+    "idealMoveset": {
+      "fastMove": "water_gun",
+      "chargeMoves": [
+        "surf",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "skarmory",
+    "ratings": {
+      "overall": 5827,
+      "lead": 4906,
+      "switch": 5364,
+      "closer": 7206
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "brave_bird",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "scyther",
+    "ratings": {
+      "overall": 5826,
+      "lead": 6309,
+      "switch": 5068,
+      "closer": 6045
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "night_slash",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hippowdon",
+    "ratings": {
+      "overall": 5818,
+      "lead": 6359,
+      "switch": 4551,
+      "closer": 6454
+    },
+    "idealMoveset": {
+      "fastMove": "fire_fang",
+      "chargeMoves": [
+        "body_slam",
+        "weather_ball_rock"
+      ]
+    }
+  },
+  {
+    "pokemonId": "zekrom",
+    "ratings": {
+      "overall": 5817,
+      "lead": 4180,
+      "switch": 5972,
+      "closer": 7349
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "wild_charge",
+        "outrage"
+      ]
+    }
+  },
+  {
+    "pokemonId": "dialga",
+    "ratings": {
+      "overall": 5814,
+      "lead": 5129,
+      "switch": 5596,
+      "closer": 6720
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "iron_head",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "thundurus_incarnate",
+    "ratings": {
+      "overall": 5804,
+      "lead": 5918,
+      "switch": 5113,
+      "closer": 6337
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "thunder_punch",
+        "brick_break"
+      ]
+    }
+  },
+  {
+    "pokemonId": "dewgong",
+    "ratings": {
+      "overall": 5802,
+      "lead": 5723,
+      "switch": 4681,
+      "closer": 6936
+    },
+    "idealMoveset": {
+      "fastMove": "ice_shard",
+      "chargeMoves": [
+        "icy_wind",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "camerupt",
+    "ratings": {
+      "overall": 5791,
+      "lead": 4645,
+      "switch": 5764,
+      "closer": 6993
+    },
+    "idealMoveset": {
+      "fastMove": "incinerate",
+      "chargeMoves": [
+        "overheat",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "musharna",
+    "ratings": {
+      "overall": 5776,
+      "lead": 6168,
+      "switch": 4143,
+      "closer": 6912
+    },
+    "idealMoveset": {
+      "fastMove": "charge_beam",
+      "chargeMoves": [
+        "psyshock",
+        "futuresight"
+      ]
+    }
+  },
+  {
+    "pokemonId": "uxie",
+    "ratings": {
+      "overall": 5725,
+      "lead": 5004,
+      "switch": 4355,
+      "closer": 7751
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "futuresight",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "skuntank_shadow",
+    "ratings": {
+      "overall": 5724,
+      "lead": 5389,
+      "switch": 5231,
+      "closer": 6531
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "sludge_bomb",
+        "flamethrower"
+      ]
+    }
+  },
+  {
+    "pokemonId": "alakazam",
+    "ratings": {
+      "overall": 5713,
+      "lead": 4948,
+      "switch": 5027,
+      "closer": 7142
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "fire_punch",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hippowdon_shadow",
+    "ratings": {
+      "overall": 5684,
+      "lead": 5702,
+      "switch": 4582,
+      "closer": 6701
+    },
+    "idealMoveset": {
+      "fastMove": "fire_fang",
+      "chargeMoves": [
+        "body_slam",
+        "weather_ball_rock"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ursaring",
+    "ratings": {
+      "overall": 5649,
+      "lead": 4528,
+      "switch": 5180,
+      "closer": 7240
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "feraligatr_shadow",
+    "ratings": {
+      "overall": 5641,
+      "lead": 4628,
+      "switch": 5486,
+      "closer": 6825
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "hydro_cannon",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "braviary",
+    "ratings": {
+      "overall": 5636,
+      "lead": 4413,
+      "switch": 5140,
+      "closer": 7357
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "close_combat",
+        "brave_bird"
+      ]
+    }
+  },
+  {
+    "pokemonId": "moltres_shadow",
+    "ratings": {
+      "overall": 5626,
+      "lead": 4420,
+      "switch": 5386,
+      "closer": 7089
+    },
+    "idealMoveset": {
+      "fastMove": "fire_spin",
+      "chargeMoves": [
+        "sky_attack",
+        "overheat"
+      ]
+    }
+  },
+  {
+    "pokemonId": "torkoal",
+    "ratings": {
+      "overall": 5619,
+      "lead": 4761,
+      "switch": 4785,
+      "closer": 7283
+    },
+    "idealMoveset": {
+      "fastMove": "fire_spin",
+      "chargeMoves": [
+        "overheat",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "banette",
+    "ratings": {
+      "overall": 5598,
+      "lead": 4250,
+      "switch": 5780,
+      "closer": 6809
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "shadow_ball",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "girafarig",
+    "ratings": {
+      "overall": 5573,
+      "lead": 5856,
+      "switch": 4192,
+      "closer": 6584
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psychic_fangs",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "groudon",
+    "ratings": {
+      "overall": 5556,
+      "lead": 4924,
+      "switch": 4394,
+      "closer": 7297
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "fire_punch",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "crawdaunt",
+    "ratings": {
+      "overall": 5542,
+      "lead": 5049,
+      "switch": 5109,
+      "closer": 6454
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "night_slash",
+        "crabhammer"
+      ]
+    }
+  },
+  {
+    "pokemonId": "metagross_shadow",
+    "ratings": {
+      "overall": 5538,
+      "lead": 4483,
+      "switch": 5487,
+      "closer": 6667
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_punch",
+      "chargeMoves": [
+        "meteor_mash",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "heliolisk",
+    "ratings": {
+      "overall": 5526,
+      "lead": 5532,
+      "switch": 4683,
+      "closer": 6313
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "grass_knot",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "kangaskhan",
+    "ratings": {
+      "overall": 5526,
+      "lead": 6187,
+      "switch": 3897,
+      "closer": 6380
+    },
+    "idealMoveset": {
+      "fastMove": "mud_slap",
+      "chargeMoves": [
+        "stomp",
+        "brick_break"
+      ]
+    }
+  },
+  {
+    "pokemonId": "aggron_shadow",
+    "ratings": {
+      "overall": 5524,
+      "lead": 4940,
+      "switch": 5156,
+      "closer": 6469
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "stone_edge",
+        "heavy_slam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "espeon",
+    "ratings": {
+      "overall": 5517,
+      "lead": 5228,
+      "switch": 4668,
+      "closer": 6612
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psychic_fangs",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "alakazam_shadow",
+    "ratings": {
+      "overall": 5514,
+      "lead": 4032,
+      "switch": 5572,
+      "closer": 6980
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "fire_punch",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mr_rime",
+    "ratings": {
+      "overall": 5493,
+      "lead": 5865,
+      "switch": 4195,
+      "closer": 6332
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "icy_wind",
+        "ice_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "deoxys_speed",
+    "ratings": {
+      "overall": 5481,
+      "lead": 6204,
+      "switch": 4348,
+      "closer": 5806
+    },
+    "idealMoveset": {
+      "fastMove": "charge_beam",
+      "chargeMoves": [
+        "psycho_boost",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "walrein_shadow",
+    "ratings": {
+      "overall": 5479,
+      "lead": 4773,
+      "switch": 4993,
+      "closer": 6661
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "icicle_spear",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "weezing",
+    "ratings": {
+      "overall": 5478,
+      "lead": 5608,
+      "switch": 4106,
+      "closer": 6635
+    },
+    "idealMoveset": {
+      "fastMove": "infestation",
+      "chargeMoves": [
+        "shadow_ball",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lunatone",
+    "ratings": {
+      "overall": 5468,
+      "lead": 4853,
+      "switch": 4774,
+      "closer": 6752
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "rock_slide",
+        "moonblast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "furfrou",
+    "ratings": {
+      "overall": 5467,
+      "lead": 6282,
+      "switch": 4025,
+      "closer": 5988
+    },
+    "idealMoveset": {
+      "fastMove": "sucker_punch",
+      "chargeMoves": [
+        "surf",
+        "grass_knot"
+      ]
+    }
+  },
+  {
+    "pokemonId": "simisage",
+    "ratings": {
+      "overall": 5442,
+      "lead": 5173,
+      "switch": 4897,
+      "closer": 6232
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "grass_knot",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "barbaracle",
+    "ratings": {
+      "overall": 5436,
+      "lead": 5533,
+      "switch": 4353,
+      "closer": 6356
+    },
+    "idealMoveset": {
+      "fastMove": "mud_slap",
+      "chargeMoves": [
+        "cross_chop",
+        "grass_knot"
+      ]
+    }
+  },
+  {
+    "pokemonId": "xerneas",
+    "ratings": {
+      "overall": 5417,
+      "lead": 4476,
+      "switch": 4592,
+      "closer": 7159
+    },
+    "idealMoveset": {
+      "fastMove": "tackle",
+      "chargeMoves": [
+        "close_combat",
+        "megahorn"
+      ]
+    }
+  },
+  {
+    "pokemonId": "comfey",
+    "ratings": {
+      "overall": 5410,
+      "lead": 5921,
+      "switch": 4271,
+      "closer": 5958
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "grass_knot",
+        "petal_blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "heatran",
+    "ratings": {
+      "overall": 5404,
+      "lead": 4660,
+      "switch": 5097,
+      "closer": 6455
+    },
+    "idealMoveset": {
+      "fastMove": "fire_spin",
+      "chargeMoves": [
+        "stone_edge",
+        "flamethrower"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ninetales_alola",
+    "ratings": {
+      "overall": 5392,
+      "lead": 5121,
+      "switch": 4848,
+      "closer": 6182
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "weather_ball_ice",
+        "psyshock"
+      ]
+    }
+  },
+  {
+    "pokemonId": "golurk",
+    "ratings": {
+      "overall": 5391,
+      "lead": 4752,
+      "switch": 5038,
+      "closer": 6377
+    },
+    "idealMoveset": {
+      "fastMove": "mud_slap",
+      "chargeMoves": [
+        "dynamic_punch",
+        "shadow_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "dodrio",
+    "ratings": {
+      "overall": 5388,
+      "lead": 4152,
+      "switch": 4959,
+      "closer": 7058
+    },
+    "idealMoveset": {
+      "fastMove": "feint_attack",
+      "chargeMoves": [
+        "brave_bird",
+        "drill_peck"
+      ]
+    }
+  },
+  {
+    "pokemonId": "girafarig_shadow",
+    "ratings": {
+      "overall": 5383,
+      "lead": 4995,
+      "switch": 4549,
+      "closer": 6564
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psychic_fangs",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "carnivine",
+    "ratings": {
+      "overall": 5366,
+      "lead": 5155,
+      "switch": 4795,
+      "closer": 6118
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "power_whip",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "goodra",
+    "ratings": {
+      "overall": 5326,
+      "lead": 4368,
+      "switch": 4714,
+      "closer": 6884
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "power_whip",
+        "sludge_wave"
+      ]
+    }
+  },
+  {
+    "pokemonId": "exeggutor_alola",
+    "ratings": {
+      "overall": 5325,
+      "lead": 4736,
+      "switch": 4841,
+      "closer": 6384
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "seed_bomb",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "simisear",
+    "ratings": {
+      "overall": 5323,
+      "lead": 4949,
+      "switch": 4372,
+      "closer": 6601
+    },
+    "idealMoveset": {
+      "fastMove": "fire_spin",
+      "chargeMoves": [
+        "flamethrower",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "venomoth",
+    "ratings": {
+      "overall": 5310,
+      "lead": 5615,
+      "switch": 4409,
+      "closer": 5845
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "poison_fang",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "giratina_origin",
+    "ratings": {
+      "overall": 5302,
+      "lead": 4950,
+      "switch": 4899,
+      "closer": 6041
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "shadow_ball",
+        "dragon_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "archeops",
+    "ratings": {
+      "overall": 5300,
+      "lead": 5237,
+      "switch": 4391,
+      "closer": 6220
+    },
+    "idealMoveset": {
+      "fastMove": "wing_attack",
+      "chargeMoves": [
+        "dragon_claw",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "solrock",
+    "ratings": {
+      "overall": 5284,
+      "lead": 4781,
+      "switch": 4589,
+      "closer": 6452
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "rock_slide",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "swalot",
+    "ratings": {
+      "overall": 5283,
+      "lead": 5574,
+      "switch": 3995,
+      "closer": 6196
+    },
+    "idealMoveset": {
+      "fastMove": "infestation",
+      "chargeMoves": [
+        "sludge_bomb",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "nidoking",
+    "ratings": {
+      "overall": 5280,
+      "lead": 4189,
+      "switch": 4941,
+      "closer": 6717
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "megahorn",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tangela",
+    "ratings": {
+      "overall": 5260,
+      "lead": 5021,
+      "switch": 4624,
+      "closer": 6103
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "grass_knot",
+        "sludge_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "rotom_wash",
+    "ratings": {
+      "overall": 5245,
+      "lead": 5024,
+      "switch": 4646,
+      "closer": 6034
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "thunderbolt",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "exeggutor",
+    "ratings": {
+      "overall": 5242,
+      "lead": 4414,
+      "switch": 4605,
+      "closer": 6690
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "seed_bomb",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gigalith",
+    "ratings": {
+      "overall": 5230,
+      "lead": 4350,
+      "switch": 4850,
+      "closer": 6491
+    },
+    "idealMoveset": {
+      "fastMove": "smack_down",
+      "chargeMoves": [
+        "super_power",
+        "meteor_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ursaring_shadow",
+    "ratings": {
+      "overall": 5229,
+      "lead": 3765,
+      "switch": 5271,
+      "closer": 6689
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "close_combat",
+        "play_rough"
+      ]
+    }
+  },
+  {
+    "pokemonId": "weezing_shadow",
+    "ratings": {
+      "overall": 5159,
+      "lead": 5330,
+      "switch": 4103,
+      "closer": 5979
+    },
+    "idealMoveset": {
+      "fastMove": "infestation",
+      "chargeMoves": [
+        "shadow_ball",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "simipour",
+    "ratings": {
+      "overall": 5156,
+      "lead": 4591,
+      "switch": 4464,
+      "closer": 6386
+    },
+    "idealMoveset": {
+      "fastMove": "water_gun",
+      "chargeMoves": [
+        "surf",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "toucannon",
+    "ratings": {
+      "overall": 5152,
+      "lead": 5396,
+      "switch": 4193,
+      "closer": 5805
+    },
+    "idealMoveset": {
+      "fastMove": "bullet_seed",
+      "chargeMoves": [
+        "drill_peck",
+        "rock_blast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "exeggutor_alola_shadow",
+    "ratings": {
+      "overall": 5142,
+      "lead": 4358,
+      "switch": 5210,
+      "closer": 5883
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "seed_bomb",
+        "dragon_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "conkeldurr",
+    "ratings": {
+      "overall": 5134,
+      "lead": 4445,
+      "switch": 5020,
+      "closer": 5948
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "dynamic_punch",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "skarmory_shadow",
+    "ratings": {
+      "overall": 5129,
+      "lead": 3947,
+      "switch": 5021,
+      "closer": 6442
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "brave_bird",
+        "flash_cannon"
+      ]
+    }
+  },
+  {
+    "pokemonId": "meloetta_aria",
+    "ratings": {
+      "overall": 5105,
+      "lead": 4690,
+      "switch": 3948,
+      "closer": 6618
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psyshock",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "amoonguss",
+    "ratings": {
+      "overall": 5083,
+      "lead": 4882,
+      "switch": 4186,
+      "closer": 6134
+    },
+    "idealMoveset": {
+      "fastMove": "feint_attack",
+      "chargeMoves": [
+        "grass_knot",
+        "foul_play"
+      ]
+    }
+  },
+  {
+    "pokemonId": "venomoth_shadow",
+    "ratings": {
+      "overall": 5055,
+      "lead": 4878,
+      "switch": 4403,
+      "closer": 5850
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "poison_fang",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "camerupt_shadow",
+    "ratings": {
+      "overall": 5022,
+      "lead": 3952,
+      "switch": 5431,
+      "closer": 5735
+    },
+    "idealMoveset": {
+      "fastMove": "incinerate",
+      "chargeMoves": [
+        "overheat",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "oricorio_sensu",
+    "ratings": {
+      "overall": 4979,
+      "lead": 3830,
+      "switch": 4799,
+      "closer": 6327
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "aerial_ace",
+        "hurricane"
+      ]
+    }
+  },
+  {
+    "pokemonId": "rhydon",
+    "ratings": {
+      "overall": 4978,
+      "lead": 4151,
+      "switch": 4571,
+      "closer": 6209
+    },
+    "idealMoveset": {
+      "fastMove": "mud_slap",
+      "chargeMoves": [
+        "surf",
+        "megahorn"
+      ]
+    }
+  },
+  {
+    "pokemonId": "banette_shadow",
+    "ratings": {
+      "overall": 4967,
+      "lead": 3398,
+      "switch": 5885,
+      "closer": 5711
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "shadow_ball",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "blaziken",
+    "ratings": {
+      "overall": 4939,
+      "lead": 4185,
+      "switch": 5272,
+      "closer": 5398
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "blast_burn",
+        "brave_bird"
+      ]
+    }
+  },
+  {
+    "pokemonId": "yveltal",
+    "ratings": {
+      "overall": 4926,
+      "lead": 4537,
+      "switch": 4637,
+      "closer": 5597
+    },
+    "idealMoveset": {
+      "fastMove": "gust",
+      "chargeMoves": [
+        "dark_pulse",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "glaceon",
+    "ratings": {
+      "overall": 4917,
+      "lead": 4356,
+      "switch": 4454,
+      "closer": 5927
+    },
+    "idealMoveset": {
+      "fastMove": "ice_shard",
+      "chargeMoves": [
+        "avalanche",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "rotom_mow",
+    "ratings": {
+      "overall": 4889,
+      "lead": 4474,
+      "switch": 4329,
+      "closer": 5841
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "thunderbolt",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tangela_shadow",
+    "ratings": {
+      "overall": 4878,
+      "lead": 3970,
+      "switch": 4698,
+      "closer": 5980
+    },
+    "idealMoveset": {
+      "fastMove": "vine_whip",
+      "chargeMoves": [
+        "grass_knot",
+        "sludge_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "rayquaza",
+    "ratings": {
+      "overall": 4874,
+      "lead": 4232,
+      "switch": 4602,
+      "closer": 5789
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "outrage",
+        "ancient_power"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sneasel",
+    "ratings": {
+      "overall": 4873,
+      "lead": 4517,
+      "switch": 4629,
+      "closer": 5469
+    },
+    "idealMoveset": {
+      "fastMove": "ice_shard",
+      "chargeMoves": [
+        "avalanche",
+        "foul_play"
+      ]
+    }
+  },
+  {
+    "pokemonId": "oricorio_baile",
+    "ratings": {
+      "overall": 4861,
+      "lead": 3838,
+      "switch": 4345,
+      "closer": 6395
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "aerial_ace",
+        "hurricane"
+      ]
+    }
+  },
+  {
+    "pokemonId": "kyogre",
+    "ratings": {
+      "overall": 4835,
+      "lead": 4027,
+      "switch": 4266,
+      "closer": 6198
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "surf",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sigilyph",
+    "ratings": {
+      "overall": 4834,
+      "lead": 4447,
+      "switch": 3967,
+      "closer": 6048
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "ancient_power",
+        "signal_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "amoonguss_shadow",
+    "ratings": {
+      "overall": 4810,
+      "lead": 4010,
+      "switch": 4092,
+      "closer": 6306
+    },
+    "idealMoveset": {
+      "fastMove": "feint_attack",
+      "chargeMoves": [
+        "grass_knot",
+        "foul_play"
+      ]
+    }
+  },
+  {
+    "pokemonId": "oricorio_pompom",
+    "ratings": {
+      "overall": 4789,
+      "lead": 3902,
+      "switch": 4109,
+      "closer": 6339
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "aerial_ace",
+        "hurricane"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sawsbuck",
+    "ratings": {
+      "overall": 4761,
+      "lead": 3675,
+      "switch": 4227,
+      "closer": 6375
+    },
+    "idealMoveset": {
+      "fastMove": "feint_attack",
+      "chargeMoves": [
+        "wild_charge",
+        "megahorn"
+      ]
+    }
+  },
+  {
+    "pokemonId": "exeggutor_shadow",
+    "ratings": {
+      "overall": 4753,
+      "lead": 4170,
+      "switch": 4511,
+      "closer": 5577
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "seed_bomb",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tyranitar",
+    "ratings": {
+      "overall": 4722,
+      "lead": 4178,
+      "switch": 4602,
+      "closer": 5393
+    },
+    "idealMoveset": {
+      "fastMove": "smack_down",
+      "chargeMoves": [
+        "stone_edge",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "oricorio_pau",
+    "ratings": {
+      "overall": 4717,
+      "lead": 3901,
+      "switch": 4142,
+      "closer": 6096
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "aerial_ace",
+        "hurricane"
+      ]
+    }
+  },
+  {
+    "pokemonId": "darkrai",
+    "ratings": {
+      "overall": 4704,
+      "lead": 4601,
+      "switch": 4519,
+      "closer": 4984
+    },
+    "idealMoveset": {
+      "fastMove": "snarl",
+      "chargeMoves": [
+        "shadow_ball",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "delphox",
+    "ratings": {
+      "overall": 4703,
+      "lead": 4490,
+      "switch": 4021,
+      "closer": 5563
+    },
+    "idealMoveset": {
+      "fastMove": "fire_spin",
+      "chargeMoves": [
+        "flame_charge",
+        "flamethrower"
+      ]
+    }
+  },
+  {
+    "pokemonId": "purugly",
+    "ratings": {
+      "overall": 4702,
+      "lead": 5023,
+      "switch": 3825,
+      "closer": 5199
+    },
+    "idealMoveset": {
+      "fastMove": "shadow_claw",
+      "chargeMoves": [
+        "thunder",
+        "aerial_ace"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mr_mime_galarian",
+    "ratings": {
+      "overall": 4679,
+      "lead": 4062,
+      "switch": 3956,
+      "closer": 5992
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "ice_punch",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "maractus",
+    "ratings": {
+      "overall": 4659,
+      "lead": 3540,
+      "switch": 4153,
+      "closer": 6282
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "aerial_ace",
+        "petal_blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sneasel_shadow",
+    "ratings": {
+      "overall": 4629,
+      "lead": 4103,
+      "switch": 4731,
+      "closer": 5072
+    },
+    "idealMoveset": {
+      "fastMove": "ice_shard",
+      "chargeMoves": [
+        "avalanche",
+        "foul_play"
+      ]
+    }
+  },
+  {
+    "pokemonId": "slowking",
+    "ratings": {
+      "overall": 4628,
+      "lead": 3983,
+      "switch": 4102,
+      "closer": 5785
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psychic",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "yanmega",
+    "ratings": {
+      "overall": 4616,
+      "lead": 3800,
+      "switch": 4241,
+      "closer": 5805
+    },
+    "idealMoveset": {
+      "fastMove": "wing_attack",
+      "chargeMoves": [
+        "ancient_power",
+        "aerial_ace"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sharpedo",
+    "ratings": {
+      "overall": 4609,
+      "lead": 4087,
+      "switch": 4442,
+      "closer": 5303
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "poison_fang",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "absol_shadow",
+    "ratings": {
+      "overall": 4606,
+      "lead": 3477,
+      "switch": 5080,
+      "closer": 5316
+    },
+    "idealMoveset": {
+      "fastMove": "psycho_cut",
+      "chargeMoves": [
+        "megahorn",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "absol",
+    "ratings": {
+      "overall": 4603,
+      "lead": 4162,
+      "switch": 4543,
+      "closer": 5110
+    },
+    "idealMoveset": {
+      "fastMove": "psycho_cut",
+      "chargeMoves": [
+        "megahorn",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "nidoking_shadow",
+    "ratings": {
+      "overall": 4598,
+      "lead": 3658,
+      "switch": 4813,
+      "closer": 5359
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "megahorn",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "slowbro",
+    "ratings": {
+      "overall": 4573,
+      "lead": 4295,
+      "switch": 4151,
+      "closer": 5253
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "ice_beam",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "emboar",
+    "ratings": {
+      "overall": 4553,
+      "lead": 3514,
+      "switch": 4497,
+      "closer": 5671
+    },
+    "idealMoveset": {
+      "fastMove": "ember",
+      "chargeMoves": [
+        "blast_burn",
+        "rock_slide"
+      ]
+    }
+  },
+  {
+    "pokemonId": "beheeyem",
+    "ratings": {
+      "overall": 4534,
+      "lead": 3794,
+      "switch": 4072,
+      "closer": 5728
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "rock_slide",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "xurkitree",
+    "ratings": {
+      "overall": 4524,
+      "lead": 3890,
+      "switch": 4554,
+      "closer": 5144
+    },
+    "idealMoveset": {
+      "fastMove": "thunder_shock",
+      "chargeMoves": [
+        "power_whip",
+        "discharge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "alomomola",
+    "ratings": {
+      "overall": 4517,
+      "lead": 3581,
+      "switch": 3800,
+      "closer": 6152
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "psychic",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gourgeist_super",
+    "ratings": {
+      "overall": 4502,
+      "lead": 3981,
+      "switch": 4093,
+      "closer": 5419
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "foul_play",
+        "seed_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "leavanny",
+    "ratings": {
+      "overall": 4498,
+      "lead": 4373,
+      "switch": 4123,
+      "closer": 4978
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "leaf_blade",
+        "x_scissor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "vikavolt",
+    "ratings": {
+      "overall": 4496,
+      "lead": 3596,
+      "switch": 3760,
+      "closer": 6111
+    },
+    "idealMoveset": {
+      "fastMove": "mud_slap",
+      "chargeMoves": [
+        "x_scissor",
+        "discharge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "unfezant",
+    "ratings": {
+      "overall": 4483,
+      "lead": 3346,
+      "switch": 4233,
+      "closer": 5883
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "sky_attack",
+        "hyper_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gourgeist_large",
+    "ratings": {
+      "overall": 4472,
+      "lead": 3981,
+      "switch": 4060,
+      "closer": 5363
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "foul_play",
+        "seed_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gourgeist_average",
+    "ratings": {
+      "overall": 4443,
+      "lead": 3928,
+      "switch": 4047,
+      "closer": 5345
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "foul_play",
+        "seed_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sharpedo_shadow",
+    "ratings": {
+      "overall": 4435,
+      "lead": 4158,
+      "switch": 4582,
+      "closer": 4580
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "poison_fang",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "slowking_galarian",
+    "ratings": {
+      "overall": 4415,
+      "lead": 4125,
+      "switch": 3956,
+      "closer": 5144
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "shadow_ball",
+        "futuresight"
+      ]
+    }
+  },
+  {
+    "pokemonId": "granbull",
+    "ratings": {
+      "overall": 4373,
+      "lead": 4861,
+      "switch": 4244,
+      "closer": 3996
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "close_combat",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "masquerain",
+    "ratings": {
+      "overall": 4333,
+      "lead": 3818,
+      "switch": 3917,
+      "closer": 5251
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "lunge",
+        "ominous_wind"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tyranitar_shadow",
+    "ratings": {
+      "overall": 4325,
+      "lead": 4204,
+      "switch": 4547,
+      "closer": 4241
+    },
+    "idealMoveset": {
+      "fastMove": "smack_down",
+      "chargeMoves": [
+        "stone_edge",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "incineroar",
+    "ratings": {
+      "overall": 4296,
+      "lead": 3828,
+      "switch": 4306,
+      "closer": 4766
+    },
+    "idealMoveset": {
+      "fastMove": "fire_fang",
+      "chargeMoves": [
+        "flame_charge",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "crobat",
+    "ratings": {
+      "overall": 4294,
+      "lead": 4054,
+      "switch": 3555,
+      "closer": 5237
+    },
+    "idealMoveset": {
+      "fastMove": "bite",
+      "chargeMoves": [
+        "poison_fang",
+        "cross_poison"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gourgeist_small",
+    "ratings": {
+      "overall": 4290,
+      "lead": 3820,
+      "switch": 3998,
+      "closer": 5047
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "foul_play",
+        "seed_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "stoutland",
+    "ratings": {
+      "overall": 4285,
+      "lead": 3532,
+      "switch": 3959,
+      "closer": 5363
+    },
+    "idealMoveset": {
+      "fastMove": "ice_fang",
+      "chargeMoves": [
+        "wild_charge",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "porygon2",
+    "ratings": {
+      "overall": 4273,
+      "lead": 3286,
+      "switch": 4250,
+      "closer": 5307
+    },
+    "idealMoveset": {
+      "fastMove": "lock_on",
+      "chargeMoves": [
+        "return",
+        "hyper_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "grumpig",
+    "ratings": {
+      "overall": 4255,
+      "lead": 3434,
+      "switch": 3326,
+      "closer": 5972
+    },
+    "idealMoveset": {
+      "fastMove": "extrasensory",
+      "chargeMoves": [
+        "shadow_ball",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "slowbro_shadow",
+    "ratings": {
+      "overall": 4233,
+      "lead": 4062,
+      "switch": 4224,
+      "closer": 4416
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "ice_beam",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "pidgeot",
+    "ratings": {
+      "overall": 4221,
+      "lead": 3883,
+      "switch": 4334,
+      "closer": 4460
+    },
+    "idealMoveset": {
+      "fastMove": "gust",
+      "chargeMoves": [
+        "brave_bird",
+        "hurricane"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tapu_lele",
+    "ratings": {
+      "overall": 4215,
+      "lead": 3552,
+      "switch": 3876,
+      "closer": 5213
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psyshock",
+        "futuresight"
+      ]
+    }
+  },
+  {
+    "pokemonId": "crobat_shadow",
+    "ratings": {
+      "overall": 4208,
+      "lead": 4205,
+      "switch": 3663,
+      "closer": 4725
+    },
+    "idealMoveset": {
+      "fastMove": "bite",
+      "chargeMoves": [
+        "poison_fang",
+        "cross_poison"
+      ]
+    }
+  },
+  {
+    "pokemonId": "kartana",
+    "ratings": {
+      "overall": 4200,
+      "lead": 4364,
+      "switch": 4095,
+      "closer": 4130
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "leaf_blade",
+        "night_slash"
+      ]
+    }
+  },
+  {
+    "pokemonId": "regirock",
+    "ratings": {
+      "overall": 4176,
+      "lead": 3131,
+      "switch": 4030,
+      "closer": 5385
+    },
+    "idealMoveset": {
+      "fastMove": "rock_throw",
+      "chargeMoves": [
+        "stone_edge",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ninjask",
+    "ratings": {
+      "overall": 4168,
+      "lead": 3673,
+      "switch": 4029,
+      "closer": 4806
+    },
+    "idealMoveset": {
+      "fastMove": "fury_cutter",
+      "chargeMoves": [
+        "shadow_ball",
+        "aerial_ace"
+      ]
+    }
+  },
+  {
+    "pokemonId": "stantler",
+    "ratings": {
+      "overall": 4143,
+      "lead": 2440,
+      "switch": 4211,
+      "closer": 5826
+    },
+    "idealMoveset": {
+      "fastMove": "tackle",
+      "chargeMoves": [
+        "wild_charge",
+        "megahorn"
+      ]
+    }
+  },
+  {
+    "pokemonId": "xatu",
+    "ratings": {
+      "overall": 4117,
+      "lead": 3299,
+      "switch": 3750,
+      "closer": 5300
+    },
+    "idealMoveset": {
+      "fastMove": "feint_attack",
+      "chargeMoves": [
+        "futuresight",
+        "aerial_ace"
+      ]
+    }
+  },
+  {
+    "pokemonId": "breloom",
+    "ratings": {
+      "overall": 4103,
+      "lead": 3779,
+      "switch": 4269,
+      "closer": 4280
+    },
+    "idealMoveset": {
+      "fastMove": "counter",
+      "chargeMoves": [
+        "dynamic_punch",
+        "grass_knot"
+      ]
+    }
+  },
+  {
+    "pokemonId": "claydol",
+    "ratings": {
+      "overall": 4087,
+      "lead": 3640,
+      "switch": 3677,
+      "closer": 4932
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "shadow_ball",
+        "ice_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "darmanitan_galarian_standard",
+    "ratings": {
+      "overall": 4064,
+      "lead": 3756,
+      "switch": 4366,
+      "closer": 4097
+    },
+    "idealMoveset": {
+      "fastMove": "ice_fang",
+      "chargeMoves": [
+        "avalanche",
+        "super_power"
+      ]
+    }
+  },
+  {
+    "pokemonId": "granbull_shadow",
+    "ratings": {
+      "overall": 4062,
+      "lead": 4914,
+      "switch": 4233,
+      "closer": 3029
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "close_combat",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sylveon",
+    "ratings": {
+      "overall": 4045,
+      "lead": 4154,
+      "switch": 3713,
+      "closer": 4245
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "psyshock",
+        "last_resort"
+      ]
+    }
+  },
+  {
+    "pokemonId": "clefable",
+    "ratings": {
+      "overall": 4002,
+      "lead": 4190,
+      "switch": 3819,
+      "closer": 3983
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "meteor_mash",
+        "moonblast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mewtwo",
+    "ratings": {
+      "overall": 3993,
+      "lead": 3121,
+      "switch": 4252,
+      "closer": 4642
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psystrike",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "kingdra",
+    "ratings": {
+      "overall": 3961,
+      "lead": 3410,
+      "switch": 4181,
+      "closer": 4321
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "outrage",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "reshiram",
+    "ratings": {
+      "overall": 3952,
+      "lead": 3668,
+      "switch": 4383,
+      "closer": 3838
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "stone_edge",
+        "overheat"
+      ]
+    }
+  },
+  {
+    "pokemonId": "basculin",
+    "ratings": {
+      "overall": 3877,
+      "lead": 4243,
+      "switch": 2930,
+      "closer": 4393
+    },
+    "idealMoveset": {
+      "fastMove": "tackle",
+      "chargeMoves": [
+        "aqua_tail",
+        "aqua_jet"
+      ]
+    }
+  },
+  {
+    "pokemonId": "houndoom",
+    "ratings": {
+      "overall": 3865,
+      "lead": 3318,
+      "switch": 4115,
+      "closer": 4193
+    },
+    "idealMoveset": {
+      "fastMove": "fire_fang",
+      "chargeMoves": [
+        "foul_play",
+        "flamethrower"
+      ]
+    }
+  },
+  {
+    "pokemonId": "slowking_shadow",
+    "ratings": {
+      "overall": 3838,
+      "lead": 3446,
+      "switch": 3883,
+      "closer": 4196
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psychic",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "suicune",
+    "ratings": {
+      "overall": 3837,
+      "lead": 3024,
+      "switch": 3321,
+      "closer": 5156
+    },
+    "idealMoveset": {
+      "fastMove": "ice_fang",
+      "chargeMoves": [
+        "ice_beam",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "aromatisse",
+    "ratings": {
+      "overall": 3836,
+      "lead": 4181,
+      "switch": 3528,
+      "closer": 3772
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "thunderbolt",
+        "moonblast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "aerodactyl",
+    "ratings": {
+      "overall": 3802,
+      "lead": 3400,
+      "switch": 4008,
+      "closer": 4021
+    },
+    "idealMoveset": {
+      "fastMove": "rock_throw",
+      "chargeMoves": [
+        "rock_slide",
+        "iron_head"
+      ]
+    }
+  },
+  {
+    "pokemonId": "kingdra_shadow",
+    "ratings": {
+      "overall": 3802,
+      "lead": 3875,
+      "switch": 4322,
+      "closer": 3238
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "outrage",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cacturne",
+    "ratings": {
+      "overall": 3782,
+      "lead": 3072,
+      "switch": 3808,
+      "closer": 4485
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "dynamic_punch",
+        "grass_knot"
+      ]
+    }
+  },
+  {
+    "pokemonId": "thundurus_therian",
+    "ratings": {
+      "overall": 3728,
+      "lead": 2606,
+      "switch": 3917,
+      "closer": 4701
+    },
+    "idealMoveset": {
+      "fastMove": "volt_switch",
+      "chargeMoves": [
+        "thunderbolt",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "jynx",
+    "ratings": {
+      "overall": 3698,
+      "lead": 3182,
+      "switch": 4134,
+      "closer": 3815
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "avalanche",
+        "psyshock"
+      ]
+    }
+  },
+  {
+    "pokemonId": "aerodactyl_shadow",
+    "ratings": {
+      "overall": 3672,
+      "lead": 3740,
+      "switch": 4140,
+      "closer": 3162
+    },
+    "idealMoveset": {
+      "fastMove": "rock_throw",
+      "chargeMoves": [
+        "rock_slide",
+        "iron_head"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tyrantrum",
+    "ratings": {
+      "overall": 3655,
+      "lead": 3184,
+      "switch": 3840,
+      "closer": 3964
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "stone_edge",
+        "outrage"
+      ]
+    }
+  },
+  {
+    "pokemonId": "abomasnow",
+    "ratings": {
+      "overall": 3644,
+      "lead": 3122,
+      "switch": 3431,
+      "closer": 4380
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "weather_ball_ice",
+        "outrage"
+      ]
+    }
+  },
+  {
+    "pokemonId": "noivern",
+    "ratings": {
+      "overall": 3614,
+      "lead": 2877,
+      "switch": 3362,
+      "closer": 4607
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "psychic",
+        "hurricane"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mewtwo_shadow",
+    "ratings": {
+      "overall": 3608,
+      "lead": 2960,
+      "switch": 4363,
+      "closer": 3562
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psystrike",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "togekiss",
+    "ratings": {
+      "overall": 3597,
+      "lead": 4064,
+      "switch": 3599,
+      "closer": 3117
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "flamethrower",
+        "ancient_power"
+      ]
+    }
+  },
+  {
+    "pokemonId": "pyroar",
+    "ratings": {
+      "overall": 3583,
+      "lead": 3316,
+      "switch": 3696,
+      "closer": 3749
+    },
+    "idealMoveset": {
+      "fastMove": "fire_fang",
+      "chargeMoves": [
+        "flame_charge",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "houndoom_shadow",
+    "ratings": {
+      "overall": 3580,
+      "lead": 3559,
+      "switch": 4174,
+      "closer": 3042
+    },
+    "idealMoveset": {
+      "fastMove": "fire_fang",
+      "chargeMoves": [
+        "foul_play",
+        "flamethrower"
+      ]
+    }
+  },
+  {
+    "pokemonId": "boldore",
+    "ratings": {
+      "overall": 3567,
+      "lead": 2950,
+      "switch": 3689,
+      "closer": 4086
+    },
+    "idealMoveset": {
+      "fastMove": "smack_down",
+      "chargeMoves": [
+        "rock_slide",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "garchomp",
+    "ratings": {
+      "overall": 3548,
+      "lead": 3463,
+      "switch": 3845,
+      "closer": 3358
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "outrage",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "stantler_shadow",
+    "ratings": {
+      "overall": 3548,
+      "lead": 1589,
+      "switch": 4541,
+      "closer": 4623
+    },
+    "idealMoveset": {
+      "fastMove": "tackle",
+      "chargeMoves": [
+        "wild_charge",
+        "megahorn"
+      ]
+    }
+  },
+  {
+    "pokemonId": "victreebel",
+    "ratings": {
+      "overall": 3519,
+      "lead": 3291,
+      "switch": 3653,
+      "closer": 3625
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "leaf_blade",
+        "sludge_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "slurpuff",
+    "ratings": {
+      "overall": 3504,
+      "lead": 4046,
+      "switch": 3275,
+      "closer": 3164
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "flamethrower",
+        "energy_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mr_mime",
+    "ratings": {
+      "overall": 3495,
+      "lead": 3309,
+      "switch": 3779,
+      "closer": 3418
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "shadow_ball",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "omastar",
+    "ratings": {
+      "overall": 3470,
+      "lead": 2907,
+      "switch": 3528,
+      "closer": 3994
+    },
+    "idealMoveset": {
+      "fastMove": "rock_throw",
+      "chargeMoves": [
+        "rock_slide",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "meowstic",
+    "ratings": {
+      "overall": 3456,
+      "lead": 3041,
+      "switch": 3501,
+      "closer": 3839
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "thunderbolt",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "blissey",
+    "ratings": {
+      "overall": 3442,
+      "lead": 2592,
+      "switch": 2497,
+      "closer": 5203
+    },
+    "idealMoveset": {
+      "fastMove": "zen_headbutt",
+      "chargeMoves": [
+        "psychic",
+        "hyper_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "articuno_galarian",
+    "ratings": {
+      "overall": 3419,
+      "lead": 2987,
+      "switch": 3969,
+      "closer": 3344
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "brave_bird",
+        "futuresight"
+      ]
+    }
+  },
+  {
+    "pokemonId": "shelgon_shadow",
+    "ratings": {
+      "overall": 3407,
+      "lead": 3284,
+      "switch": 3987,
+      "closer": 2987
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "flamethrower",
+        "dragon_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "entei",
+    "ratings": {
+      "overall": 3388,
+      "lead": 3157,
+      "switch": 3465,
+      "closer": 3553
+    },
+    "idealMoveset": {
+      "fastMove": "fire_fang",
+      "chargeMoves": [
+        "flame_charge",
+        "flamethrower"
+      ]
+    }
+  },
+  {
+    "pokemonId": "starmie",
+    "ratings": {
+      "overall": 3380,
+      "lead": 2412,
+      "switch": 3712,
+      "closer": 4059
+    },
+    "idealMoveset": {
+      "fastMove": "water_gun",
+      "chargeMoves": [
+        "ice_beam",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cacturne_shadow",
+    "ratings": {
+      "overall": 3355,
+      "lead": 2748,
+      "switch": 3770,
+      "closer": 3586
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "dynamic_punch",
+        "grass_knot"
+      ]
+    }
+  },
+  {
+    "pokemonId": "shelgon",
+    "ratings": {
+      "overall": 3345,
+      "lead": 2478,
+      "switch": 3687,
+      "closer": 3913
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "flamethrower",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "accelgor",
+    "ratings": {
+      "overall": 3339,
+      "lead": 2253,
+      "switch": 3456,
+      "closer": 4341
+    },
+    "idealMoveset": {
+      "fastMove": "infestation",
+      "chargeMoves": [
+        "focus_blast",
+        "bug_buzz"
+      ]
+    }
+  },
+  {
+    "pokemonId": "porygon_z",
+    "ratings": {
+      "overall": 3320,
+      "lead": 1646,
+      "switch": 4530,
+      "closer": 3895
+    },
+    "idealMoveset": {
+      "fastMove": "lock_on",
+      "chargeMoves": [
+        "return",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "entei_shadow",
+    "ratings": {
+      "overall": 3311,
+      "lead": 3542,
+      "switch": 3713,
+      "closer": 2696
+    },
+    "idealMoveset": {
+      "fastMove": "fire_fang",
+      "chargeMoves": [
+        "flame_charge",
+        "flamethrower"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hoopa",
+    "ratings": {
+      "overall": 3277,
+      "lead": 2950,
+      "switch": 3904,
+      "closer": 3023
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "shadow_ball",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "salamence_shadow",
+    "ratings": {
+      "overall": 3257,
+      "lead": 3712,
+      "switch": 3565,
+      "closer": 2500
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "outrage",
+        "draco_meteor"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gardevoir_shadow",
+    "ratings": {
+      "overall": 3254,
+      "lead": 4243,
+      "switch": 3594,
+      "closer": 1921
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "shadow_ball",
+        "synchronoise"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lycanroc_midday",
+    "ratings": {
+      "overall": 3251,
+      "lead": 2933,
+      "switch": 3824,
+      "closer": 3038
+    },
+    "idealMoveset": {
+      "fastMove": "rock_throw",
+      "chargeMoves": [
+        "drill_run",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "beartic",
+    "ratings": {
+      "overall": 3240,
+      "lead": 3776,
+      "switch": 3331,
+      "closer": 2605
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "surf",
+        "ice_punch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "porygon2_shadow",
+    "ratings": {
+      "overall": 3191,
+      "lead": 1152,
+      "switch": 4186,
+      "closer": 4343
+    },
+    "idealMoveset": {
+      "fastMove": "lock_on",
+      "chargeMoves": [
+        "hyper_beam",
+        "solar_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tornadus_therian",
+    "ratings": {
+      "overall": 3179,
+      "lead": 2925,
+      "switch": 3526,
+      "closer": 3112
+    },
+    "idealMoveset": {
+      "fastMove": "gust",
+      "chargeMoves": [
+        "psychic",
+        "focus_blast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "braviary_hisuian",
+    "ratings": {
+      "overall": 3161,
+      "lead": 2492,
+      "switch": 3602,
+      "closer": 3432
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "brave_bird",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "golbat",
+    "ratings": {
+      "overall": 3160,
+      "lead": 2558,
+      "switch": 2777,
+      "closer": 4137
+    },
+    "idealMoveset": {
+      "fastMove": "bite",
+      "chargeMoves": [
+        "poison_fang",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "whimsicott",
+    "ratings": {
+      "overall": 3147,
+      "lead": 3687,
+      "switch": 3209,
+      "closer": 2534
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "grass_knot",
+        "moonblast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "landorus_incarnate",
+    "ratings": {
+      "overall": 3144,
+      "lead": 2387,
+      "switch": 3237,
+      "closer": 3834
+    },
+    "idealMoveset": {
+      "fastMove": "rock_throw",
+      "chargeMoves": [
+        "rock_slide",
+        "outrage"
+      ]
+    }
+  },
+  {
+    "pokemonId": "golem",
+    "ratings": {
+      "overall": 3138,
+      "lead": 2807,
+      "switch": 3450,
+      "closer": 3183
+    },
+    "idealMoveset": {
+      "fastMove": "rock_throw",
+      "chargeMoves": [
+        "stone_edge",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "clawitzer",
+    "ratings": {
+      "overall": 3134,
+      "lead": 2671,
+      "switch": 3319,
+      "closer": 3433
+    },
+    "idealMoveset": {
+      "fastMove": "smack_down",
+      "chargeMoves": [
+        "dark_pulse",
+        "crabhammer"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cinccino",
+    "ratings": {
+      "overall": 3111,
+      "lead": 3052,
+      "switch": 3193,
+      "closer": 3096
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "aqua_tail",
+        "thunderbolt"
+      ]
+    }
+  },
+  {
+    "pokemonId": "abomasnow_shadow",
+    "ratings": {
+      "overall": 3108,
+      "lead": 2853,
+      "switch": 3440,
+      "closer": 3058
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "weather_ball_ice",
+        "outrage"
+      ]
+    }
+  },
+  {
+    "pokemonId": "victreebel_shadow",
+    "ratings": {
+      "overall": 3099,
+      "lead": 3095,
+      "switch": 3534,
+      "closer": 2696
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "leaf_blade",
+        "sludge_bomb"
+      ]
+    }
+  },
+  {
+    "pokemonId": "hoopa_unbound",
+    "ratings": {
+      "overall": 3093,
+      "lead": 3067,
+      "switch": 3707,
+      "closer": 2543
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "shadow_ball",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "omastar_shadow",
+    "ratings": {
+      "overall": 3083,
+      "lead": 2889,
+      "switch": 3603,
+      "closer": 2793
+    },
+    "idealMoveset": {
+      "fastMove": "rock_throw",
+      "chargeMoves": [
+        "rock_slide",
+        "hydro_pump"
+      ]
+    }
+  },
+  {
+    "pokemonId": "salamence",
+    "ratings": {
+      "overall": 3070,
+      "lead": 3211,
+      "switch": 3432,
+      "closer": 2585
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_tail",
+      "chargeMoves": [
+        "outrage",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "florges",
+    "ratings": {
+      "overall": 3047,
+      "lead": 2656,
+      "switch": 2939,
+      "closer": 3549
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "disarming_voice",
+        "moonblast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "suicune_shadow",
+    "ratings": {
+      "overall": 3009,
+      "lead": 2443,
+      "switch": 3029,
+      "closer": 3571
+    },
+    "idealMoveset": {
+      "fastMove": "ice_fang",
+      "chargeMoves": [
+        "ice_beam",
+        "hydro_pump"
+      ]
+    }
+  },
+  {
+    "pokemonId": "golem_shadow",
+    "ratings": {
+      "overall": 3007,
+      "lead": 3210,
+      "switch": 3508,
+      "closer": 2328
+    },
+    "idealMoveset": {
+      "fastMove": "rock_throw",
+      "chargeMoves": [
+        "stone_edge",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "primarina",
+    "ratings": {
+      "overall": 2950,
+      "lead": 3697,
+      "switch": 2975,
+      "closer": 2162
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "moonblast",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ambipom_shadow",
+    "ratings": {
+      "overall": 2920,
+      "lead": 3507,
+      "switch": 3111,
+      "closer": 2140
+    },
+    "idealMoveset": {
+      "fastMove": "scratch",
+      "chargeMoves": [
+        "aerial_ace",
+        "low_sweep"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gardevoir",
+    "ratings": {
+      "overall": 2904,
+      "lead": 3715,
+      "switch": 3217,
+      "closer": 1778
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "shadow_ball",
+        "synchronoise"
+      ]
+    }
+  },
+  {
+    "pokemonId": "torterra",
+    "ratings": {
+      "overall": 2902,
+      "lead": 2844,
+      "switch": 3118,
+      "closer": 2758
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "frenzy_plant",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "decidueye",
+    "ratings": {
+      "overall": 2894,
+      "lead": 3184,
+      "switch": 2971,
+      "closer": 2524
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "brave_bird",
+        "energy_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gothitelle",
+    "ratings": {
+      "overall": 2877,
+      "lead": 2972,
+      "switch": 2781,
+      "closer": 2869
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "rock_slide",
+        "futuresight"
+      ]
+    }
+  },
+  {
+    "pokemonId": "kabutops",
+    "ratings": {
+      "overall": 2774,
+      "lead": 2609,
+      "switch": 3189,
+      "closer": 2551
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "stone_edge",
+        "water_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "latias",
+    "ratings": {
+      "overall": 2771,
+      "lead": 3356,
+      "switch": 2685,
+      "closer": 2252
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "outrage",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mienshao",
+    "ratings": {
+      "overall": 2751,
+      "lead": 1744,
+      "switch": 3317,
+      "closer": 3248
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "grass_knot",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "tornadus_incarnate",
+    "ratings": {
+      "overall": 2748,
+      "lead": 2231,
+      "switch": 3066,
+      "closer": 2979
+    },
+    "idealMoveset": {
+      "fastMove": "air_slash",
+      "chargeMoves": [
+        "grass_knot",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "swanna",
+    "ratings": {
+      "overall": 2728,
+      "lead": 1766,
+      "switch": 3352,
+      "closer": 3127
+    },
+    "idealMoveset": {
+      "fastMove": "water_gun",
+      "chargeMoves": [
+        "ice_beam",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "golbat_shadow",
+    "ratings": {
+      "overall": 2695,
+      "lead": 2092,
+      "switch": 2585,
+      "closer": 3418
+    },
+    "idealMoveset": {
+      "fastMove": "bite",
+      "chargeMoves": [
+        "poison_fang",
+        "shadow_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ludicolo",
+    "ratings": {
+      "overall": 2683,
+      "lead": 2898,
+      "switch": 2733,
+      "closer": 2417
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "ice_beam",
+        "leaf_storm"
+      ]
+    }
+  },
+  {
+    "pokemonId": "latias_shadow",
+    "ratings": {
+      "overall": 2648,
+      "lead": 3392,
+      "switch": 2637,
+      "closer": 1897
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "outrage",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "porygon_z_shadow",
+    "ratings": {
+      "overall": 2611,
+      "lead": 791,
+      "switch": 4330,
+      "closer": 2860
+    },
+    "idealMoveset": {
+      "fastMove": "lock_on",
+      "chargeMoves": [
+        "blizzard",
+        "hyper_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "vileplume",
+    "ratings": {
+      "overall": 2603,
+      "lead": 2754,
+      "switch": 2809,
+      "closer": 2254
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "sludge_bomb",
+        "moonblast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "torterra_shadow",
+    "ratings": {
+      "overall": 2578,
+      "lead": 2943,
+      "switch": 2956,
+      "closer": 1848
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "frenzy_plant",
+        "stone_edge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "rampardos",
+    "ratings": {
+      "overall": 2535,
+      "lead": 2761,
+      "switch": 3321,
+      "closer": 1565
+    },
+    "idealMoveset": {
+      "fastMove": "smack_down",
+      "chargeMoves": [
+        "rock_slide",
+        "outrage"
+      ]
+    }
+  },
+  {
+    "pokemonId": "exploud_shadow",
+    "ratings": {
+      "overall": 2532,
+      "lead": 2996,
+      "switch": 2659,
+      "closer": 1937
+    },
+    "idealMoveset": {
+      "fastMove": "bite",
+      "chargeMoves": [
+        "disarming_voice",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "swanna_shadow",
+    "ratings": {
+      "overall": 2529,
+      "lead": 1748,
+      "switch": 3594,
+      "closer": 2327
+    },
+    "idealMoveset": {
+      "fastMove": "water_gun",
+      "chargeMoves": [
+        "ice_beam",
+        "hurricane"
+      ]
+    }
+  },
+  {
+    "pokemonId": "krookodile",
+    "ratings": {
+      "overall": 2512,
+      "lead": 2286,
+      "switch": 2729,
+      "closer": 2541
+    },
+    "idealMoveset": {
+      "fastMove": "mud_slap",
+      "chargeMoves": [
+        "outrage",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "pheromosa",
+    "ratings": {
+      "overall": 2484,
+      "lead": 1724,
+      "switch": 3746,
+      "closer": 2075
+    },
+    "idealMoveset": {
+      "fastMove": "bug_bite",
+      "chargeMoves": [
+        "close_combat",
+        "lunge"
+      ]
+    }
+  },
+  {
+    "pokemonId": "mesprit",
+    "ratings": {
+      "overall": 2483,
+      "lead": 2280,
+      "switch": 2864,
+      "closer": 2333
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "futuresight",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "deoxys",
+    "ratings": {
+      "overall": 2481,
+      "lead": 1675,
+      "switch": 2847,
+      "closer": 2962
+    },
+    "idealMoveset": {
+      "fastMove": "charge_beam",
+      "chargeMoves": [
+        "psycho_boost",
+        "hyper_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "octillery",
+    "ratings": {
+      "overall": 2441,
+      "lead": 1883,
+      "switch": 2822,
+      "closer": 2655
+    },
+    "idealMoveset": {
+      "fastMove": "water_gun",
+      "chargeMoves": [
+        "gunk_shot",
+        "aurora_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "vileplume_shadow",
+    "ratings": {
+      "overall": 2421,
+      "lead": 2924,
+      "switch": 2839,
+      "closer": 1511
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "sludge_bomb",
+        "moonblast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sunflora",
+    "ratings": {
+      "overall": 2417,
+      "lead": 2888,
+      "switch": 2665,
+      "closer": 1702
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "sludge_bomb",
+        "leaf_storm"
+      ]
+    }
+  },
+  {
+    "pokemonId": "throh",
+    "ratings": {
+      "overall": 2354,
+      "lead": 2115,
+      "switch": 1745,
+      "closer": 3171
+    },
+    "idealMoveset": {
+      "fastMove": "zen_headbutt",
+      "chargeMoves": [
+        "body_slam",
+        "focus_blast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "exploud",
+    "ratings": {
+      "overall": 2244,
+      "lead": 2315,
+      "switch": 2412,
+      "closer": 2014
+    },
+    "idealMoveset": {
+      "fastMove": "bite",
+      "chargeMoves": [
+        "disarming_voice",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "deoxys_attack",
+    "ratings": {
+      "overall": 2241,
+      "lead": 931,
+      "switch": 4049,
+      "closer": 1882
+    },
+    "idealMoveset": {
+      "fastMove": "poison_jab",
+      "chargeMoves": [
+        "psycho_boost",
+        "dark_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "meowstic_female",
+    "ratings": {
+      "overall": 2152,
+      "lead": 2927,
+      "switch": 2240,
+      "closer": 1275
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "shadow_ball",
+        "psychic"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cherrim_sunny",
+    "ratings": {
+      "overall": 2096,
+      "lead": 1850,
+      "switch": 2288,
+      "closer": 2167
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "weather_ball_fire",
+        "hyper_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "seadra",
+    "ratings": {
+      "overall": 2090,
+      "lead": 1652,
+      "switch": 2729,
+      "closer": 1938
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "return",
+        "dragon_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "shaymin_land",
+    "ratings": {
+      "overall": 2077,
+      "lead": 1683,
+      "switch": 1928,
+      "closer": 2622
+    },
+    "idealMoveset": {
+      "fastMove": "hidden_power",
+      "chargeMoves": [
+        "grass_knot",
+        "energy_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "fearow",
+    "ratings": {
+      "overall": 2043,
+      "lead": 1117,
+      "switch": 2394,
+      "closer": 2663
+    },
+    "idealMoveset": {
+      "fastMove": "steel_wing",
+      "chargeMoves": [
+        "drill_run",
+        "sky_attack"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gorebyss",
+    "ratings": {
+      "overall": 2028,
+      "lead": 1775,
+      "switch": 2250,
+      "closer": 2080
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "psychic",
+        "draining_kiss"
+      ]
+    }
+  },
+  {
+    "pokemonId": "seadra_shadow",
+    "ratings": {
+      "overall": 1957,
+      "lead": 1841,
+      "switch": 2894,
+      "closer": 1196
+    },
+    "idealMoveset": {
+      "fastMove": "dragon_breath",
+      "chargeMoves": [
+        "dragon_pulse",
+        "blizzard"
+      ]
+    }
+  },
+  {
+    "pokemonId": "floatzel",
+    "ratings": {
+      "overall": 1885,
+      "lead": 2083,
+      "switch": 2269,
+      "closer": 1321
+    },
+    "idealMoveset": {
+      "fastMove": "waterfall",
+      "chargeMoves": [
+        "hydro_pump",
+        "swift"
+      ]
+    }
+  },
+  {
+    "pokemonId": "gumshoos",
+    "ratings": {
+      "overall": 1855,
+      "lead": 2028,
+      "switch": 2199,
+      "closer": 1355
+    },
+    "idealMoveset": {
+      "fastMove": "bite",
+      "chargeMoves": [
+        "hyper_fang",
+        "crunch"
+      ]
+    }
+  },
+  {
+    "pokemonId": "azelf",
+    "ratings": {
+      "overall": 1744,
+      "lead": 2028,
+      "switch": 2487,
+      "closer": 754
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "futuresight",
+        "fire_blast"
+      ]
+    }
+  },
+  {
+    "pokemonId": "sliggoo",
+    "ratings": {
+      "overall": 1699,
+      "lead": 724,
+      "switch": 2001,
+      "closer": 2416
+    },
+    "idealMoveset": {
+      "fastMove": "tackle",
+      "chargeMoves": [
+        "sludge_wave",
+        "dragon_pulse"
+      ]
+    }
+  },
+  {
+    "pokemonId": "kadabra",
+    "ratings": {
+      "overall": 1686,
+      "lead": 1605,
+      "switch": 2784,
+      "closer": 735
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "shadow_ball",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "kadabra_shadow",
+    "ratings": {
+      "overall": 1616,
+      "lead": 1739,
+      "switch": 2638,
+      "closer": 528
+    },
+    "idealMoveset": {
+      "fastMove": "confusion",
+      "chargeMoves": [
+        "shadow_ball",
+        "dazzling_gleam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "reuniclus",
+    "ratings": {
+      "overall": 1576,
+      "lead": 508,
+      "switch": 2162,
+      "closer": 2121
+    },
+    "idealMoveset": {
+      "fastMove": "hidden_power",
+      "chargeMoves": [
+        "shadow_ball",
+        "futuresight"
+      ]
+    }
+  },
+  {
+    "pokemonId": "shaymin_sky",
+    "ratings": {
+      "overall": 1560,
+      "lead": 1000,
+      "switch": 1948,
+      "closer": 1768
+    },
+    "idealMoveset": {
+      "fastMove": "hidden_power",
+      "chargeMoves": [
+        "grass_knot",
+        "energy_ball"
+      ]
+    }
+  },
+  {
+    "pokemonId": "vanilluxe",
+    "ratings": {
+      "overall": 1464,
+      "lead": 1705,
+      "switch": 1738,
+      "closer": 958
+    },
+    "idealMoveset": {
+      "fastMove": "frost_breath",
+      "chargeMoves": [
+        "blizzard",
+        "flash_cannon"
+      ]
+    }
+  },
+  {
+    "pokemonId": "ambipom",
+    "ratings": {
+      "overall": 1350,
+      "lead": 1512,
+      "switch": 1745,
+      "closer": 813
+    },
+    "idealMoveset": {
+      "fastMove": "scratch",
+      "chargeMoves": [
+        "aerial_ace",
+        "return"
+      ]
+    }
+  },
+  {
+    "pokemonId": "lilligant",
+    "ratings": {
+      "overall": 1252,
+      "lead": 1799,
+      "switch": 1519,
+      "closer": 440
+    },
+    "idealMoveset": {
+      "fastMove": "charm",
+      "chargeMoves": [
+        "petal_blizzard",
+        "hyper_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "cherrim_overcast",
+    "ratings": {
+      "overall": 1195,
+      "lead": 1689,
+      "switch": 1301,
+      "closer": 590
+    },
+    "idealMoveset": {
+      "fastMove": "razor_leaf",
+      "chargeMoves": [
+        "hyper_beam",
+        "solar_beam"
+      ]
+    }
+  },
+  {
+    "pokemonId": "slaking",
+    "ratings": {
+      "overall": 1122,
+      "lead": 830,
+      "switch": 1313,
+      "closer": 1242
+    },
+    "idealMoveset": {
+      "fastMove": "yawn",
+      "chargeMoves": [
+        "body_slam",
+        "earthquake"
+      ]
+    }
+  },
+  {
+    "pokemonId": "duosion",
+    "ratings": {
+      "overall": 1087,
+      "lead": 397,
+      "switch": 1900,
+      "closer": 1030
+    },
+    "idealMoveset": {
+      "fastMove": "hidden_power",
+      "chargeMoves": [
+        "psyshock",
+        "thunder"
+      ]
+    }
+  },
+  {
+    "pokemonId": "regigigas",
+    "ratings": {
+      "overall": 974,
+      "lead": 475,
+      "switch": 1620,
+      "closer": 878
+    },
+    "idealMoveset": {
+      "fastMove": "hidden_power",
+      "chargeMoves": [
+        "thunder",
+        "focus_blast"
+      ]
+    }
+  }
+]

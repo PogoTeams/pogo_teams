@@ -53,7 +53,9 @@ void buildSnapshotReleasedIdsList() async {
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  PogoData.loadFromJson(snapshot);
+  await PogoData.init();
+  await PogoData.clear();
+  await PogoData.rebuildFromJson(snapshot);
 
   List<String> snapshotReleasedIds = [];
 

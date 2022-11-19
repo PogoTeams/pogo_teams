@@ -35,7 +35,7 @@ class TeamNode extends StatelessWidget {
 
   final Function(int) onPressed;
   final Function(int) onEmptyPressed;
-  final List<Pokemon?> pokemonTeam;
+  final List<UserPokemon?> pokemonTeam;
   final Cup cup;
 
   final bool buildHeader;
@@ -123,7 +123,7 @@ class TeamNode extends StatelessWidget {
 
   // If the focus index is provided, draw a special border
   // This indicates the current 'focus' node
-  Widget _buildFocusNode(Pokemon? pokemon, int index) {
+  Widget _buildFocusNode(UserPokemon? pokemon, int index) {
     Color _color;
 
     if (index == focusIndex) {

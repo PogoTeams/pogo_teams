@@ -55,7 +55,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
   final ScrollController _scrollController = ScrollController();
 
   // Setup the list of expansion panels given the PokemonTeam
-  void _initializeExpansionPanels(List<Pokemon> pokemonTeam) {
+  void _initializeExpansionPanels(List<UserPokemon> pokemonTeam) {
     final defenseThreatTypes =
         widget.defenseThreats.map((typeData) => typeData.a).toList();
 
@@ -104,7 +104,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
         builder: (BuildContext context) {
           return TeamSwap(
             team: _team,
-            swap: Pokemon.from(swapPokemon),
+            swap: UserPokemon.fromPokemon(swapPokemon),
           );
         },
       ),
@@ -123,8 +123,9 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
 
   void _onAddPokemon(Pokemon pokemon) {
     if (!_team.hasSpace()) return;
-    PogoData.updatePokemonSync(Pokemon.from(pokemon));
-    _team.tryAddPokemon(pokemon);
+    final userPokemon = UserPokemon.fromPokemon(pokemon);
+    PogoData.updateUserPokemonSync(userPokemon);
+    _team.tryAddPokemon(userPokemon);
     PogoData.updatePokemonTeamSync(_team);
 
     widget.onTeamChanged();
@@ -172,7 +173,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
   }
 
   // Build the list of either 3 or 6 PokemonNodes that make up this team
-  Widget _buildPokemonNodes(List<Pokemon> pokemonTeam) {
+  Widget _buildPokemonNodes(List<UserPokemon> pokemonTeam) {
     return ListView(
       shrinkWrap: true,
       children: List.generate(
@@ -185,7 +186,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
           child: PokemonNode.small(
             pokemon: pokemonTeam[index],
             onMoveChanged: () {
-              PogoData.updatePokemonSync(pokemonTeam[index]);
+              PogoData.updateUserPokemonSync(pokemonTeam[index]);
               widget.onTeamChanged();
             },
           ),

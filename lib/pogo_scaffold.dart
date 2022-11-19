@@ -29,6 +29,17 @@ class _PogoScaffoldState extends State<PogoScaffold>
   // Flag for when the app has finished the loading phase
   bool _loaded = false;
 
+  bool _forceUpdate = false;
+
+  bool get forceUpdate {
+    if (_forceUpdate) {
+      _forceUpdate = false;
+      return true;
+    }
+
+    return _forceUpdate;
+  }
+
   // Used to navigate between pages by key
   PogoPages _currentPage = PogoPages.teams;
 
@@ -86,7 +97,13 @@ class _PogoScaffoldState extends State<PogoScaffold>
   // Callback for navigating to a new page in the app
   void _onNavSelected(PogoPages page) {
     setState(() {
-      _currentPage = page;
+      if (page == PogoPages.sync) {
+        _forceUpdate = true;
+        _loaded = false;
+        _currentPage = PogoPages.teams;
+      } else {
+        _currentPage = page;
+      }
     });
   }
 
@@ -105,7 +122,9 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
     // App loading procedure
     return StreamBuilder<Pair<String, double>>(
-      stream: PogoData.loadPogoData(),
+      stream: PogoData.loadPogoData(
+        forceUpdate: forceUpdate,
+      ),
       initialData: Pair(a: 'loading...', b: 0.0),
       builder: (context, snapshot) {
         // App is finished loading
@@ -132,41 +151,38 @@ class _PogoScaffoldState extends State<PogoScaffold>
               right: Sizing.blockSizeHorizontal * 2.0,
               bottom: Sizing.blockSizeVertical * 10.0,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                // Loading message
-                Text(
-                  snapshot.data!.a,
-                  style: Theme.of(context).textTheme.headline5,
-                ),
-
-                // Spacer
-                SizedBox(
-                  height: Sizing.blockSizeVertical * 2.0,
-                ),
-
-                // Progress bar
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: Sizing.blockSizeHorizontal * 10.0,
+                right: Sizing.blockSizeHorizontal * 10.0,
+              ),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // Loading message
+                    Text(
+                      snapshot.data!.a,
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+
+                    // Loading indicator
                     SizedBox(
-                      width: Sizing.blockSizeHorizontal * 80.0,
                       child: AnimatedBuilder(
                         animation: _progressBarAnimController,
-                        builder: (context, child) => LinearProgressIndicator(
+                        builder: (context, child) => CircularProgressIndicator(
                           valueColor:
                               const AlwaysStoppedAnimation<Color>(Colors.cyan),
-                          value: _progressBarAnimController.value,
-                          semanticsLabel: 'Pogo Teams Loading Progress',
+                          semanticsLabel: 'Pogo Teams Loading Indicator',
                           semanticsValue: snapshot.data.toString(),
+                          backgroundColor: Colors.transparent,
                         ),
                       ),
                     ),
-                    PogoPages.teams.icon,
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         );

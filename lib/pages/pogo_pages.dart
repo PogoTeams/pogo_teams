@@ -7,7 +7,7 @@ import 'battle_logs.dart';
 import 'teams/teams.dart';
 import '../modules/ui/sizing.dart';
 
-enum PogoPages { teams, battleLogs, rankings }
+enum PogoPages { teams, battleLogs, rankings, sync }
 
 extension PogoPagesExt on PogoPages {
   String get displayName {
@@ -18,6 +18,8 @@ extension PogoPagesExt on PogoPages {
         return 'Battle Logs';
       case PogoPages.rankings:
         return 'Rankings';
+      case PogoPages.sync:
+        return 'Sync Pogo Data';
     }
   }
 
@@ -38,6 +40,11 @@ extension PogoPagesExt on PogoPages {
           Icons.bar_chart,
           size: Sizing.icon3,
         );
+      case PogoPages.sync:
+        return Icon(
+          Icons.sync,
+          size: Sizing.icon3,
+        );
     }
   }
 
@@ -48,6 +55,8 @@ extension PogoPagesExt on PogoPages {
       case PogoPages.battleLogs:
         return const BattleLogs();
       case PogoPages.rankings:
+        return const Rankings();
+      case PogoPages.sync:
         return const Rankings();
     }
   }

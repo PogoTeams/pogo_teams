@@ -30,7 +30,7 @@ class PokemonTeam {
   int teamSize = 3;
 
   // The list of pokemon managed by this team
-  final IsarLinks<Pokemon> pokemonTeam = IsarLinks<Pokemon>();
+  final IsarLinks<UserPokemon> pokemonTeam = IsarLinks<UserPokemon>();
 
   // A list of this pokemon team's net effectiveness
   List<double> getTeamTypeffectiveness() {
@@ -40,7 +40,7 @@ class PokemonTeam {
   // The selected PVP cup for this team
   final IsarLink<Cup> cup = IsarLink<Cup>();
 
-  IsarLinks<Pokemon> getPokemonTeam() {
+  IsarLinks<UserPokemon> getPokemonTeam() {
     if (pokemonTeam.isAttached && !pokemonTeam.isLoaded) {
       pokemonTeam.loadSync();
     }
@@ -48,16 +48,16 @@ class PokemonTeam {
     return pokemonTeam;
   }
 
-  List<Pokemon> getOrderedPokemonList() {
-    List<Pokemon> orderedPokemonList = getPokemonTeam().toList();
+  List<UserPokemon> getOrderedPokemonList() {
+    List<UserPokemon> orderedPokemonList = getPokemonTeam().toList();
     orderedPokemonList
         .sort((p1, p2) => (p1.teamIndex ?? 0) - (p2.teamIndex ?? 0));
 
     return orderedPokemonList;
   }
 
-  List<Pokemon?> getOrderedPokemonListFilled() {
-    List<Pokemon?> orderedPokemonList = List.filled(teamSize, null);
+  List<UserPokemon?> getOrderedPokemonListFilled() {
+    List<UserPokemon?> orderedPokemonList = List.filled(teamSize, null);
 
     for (int i = 0; i < teamSize; ++i) {
       orderedPokemonList[i] = getPokemon(i);
@@ -84,7 +84,7 @@ class PokemonTeam {
     cup.value = PogoData.getCupById(cupId);
   }
 
-  Pokemon? getPokemon(int index) {
+  UserPokemon? getPokemon(int index) {
     for (var pokemon in getPokemonTeam()) {
       if (pokemon.teamIndex == index) return pokemon;
     }
@@ -96,8 +96,8 @@ class PokemonTeam {
   }
 
   // Add newPokemon if there is free space in the team
-  bool tryAddPokemon(Pokemon newPokemon) {
-    final List<Pokemon> pokemonList = getOrderedPokemonList();
+  bool tryAddPokemon(UserPokemon newPokemon) {
+    final List<UserPokemon> pokemonList = getOrderedPokemonList();
     bool added = false;
     for (int i = 0; i < teamSize && !added; ++i) {
       if (pokemonList.indexWhere((pokemon) => pokemon.teamIndex == i) == -1) {

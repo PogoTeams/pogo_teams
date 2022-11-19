@@ -35,7 +35,8 @@ class TypeFilteredPokemonList extends StatelessWidget {
           RankingsCategories.overall,
           limit: 50,
         ),
-        builder: (BuildContext context, AsyncSnapshot<List<Pokemon>> snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<List<CupPokemon>> snapshot) {
           if (snapshot.hasData) {
             return Column(
               children: snapshot.data!

@@ -8,7 +8,7 @@ import 'package:isar/isar.dart';
 import 'pokemon_typing.dart';
 import 'battle_pokemon.dart';
 import '../modules/data/stats.dart';
-import '../modules/data/debug_cli.dart';
+import '../modules/data/pogo_debugging.dart';
 
 part 'move.g.dart';
 
@@ -160,7 +160,7 @@ class FastMove extends Move {
   }
 
   void debugPrint() {
-    DebugCLI.print(name, 'dpt : $dpt()  ept : $ept()  rating : $rating');
+    PogoDebugging.print(name, 'dpt : $dpt()  ept : $ept()  rating : $rating');
   }
 }
 
@@ -229,7 +229,7 @@ class ChargeMove extends Move {
   }
 
   void debugPrint() {
-    DebugCLI.print(name, 'dpe : $dpe()  rating : $rating');
+    PogoDebugging.print(name, 'dpe : $dpe()  rating : $rating');
   }
 }
 

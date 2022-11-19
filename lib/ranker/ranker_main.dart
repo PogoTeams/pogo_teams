@@ -9,7 +9,7 @@ import '../pogo_objects/battle_pokemon.dart';
 import '../pogo_objects/cup.dart';
 import '../tools/json_tools.dart';
 import '../modules/data/pogo_data.dart';
-import '../modules/data/debug_cli.dart';
+import '../modules/data/pogo_debugging.dart';
 import '../modules/data/cups.dart';
 
 /*
@@ -23,7 +23,8 @@ void generatePokemonRankings() async {
   if (snapshot == null) return;
 
   await PogoData.init();
-  await PogoData.loadFromJson(snapshot);
+  await PogoData.clear();
+  await PogoData.rebuildFromJson(snapshot);
 
   Stopwatch stopwatch = Stopwatch();
   stopwatch.start();
@@ -71,7 +72,7 @@ void generatePokemonRankings() async {
   }
 
   stopwatch.stop();
-  DebugCLI.print(
+  PogoDebugging.print(
       'rankings finished', 'elapsed minutes : ${stopwatch.elapsed.inMinutes}');
 }
 
@@ -103,7 +104,9 @@ void generatePokemonRankingsTest(
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  PogoData.loadFromJson(snapshot);
+  await PogoData.init();
+  await PogoData.clear();
+  await PogoData.rebuildFromJson(snapshot);
 
   PokemonRanker.rankTesting(selfId, opponentId, cp);
 }
@@ -113,7 +116,7 @@ void debugPrintPokemonRatings(
   RankingData rankingData,
   String cupName,
 ) {
-  DebugCLI.printMulti(
+  PogoDebugging.printMulti(
     '${pokemon.dex} | ${pokemon.name}${(pokemon.isShadow() ? ' (Shadow)' : '')}',
     [
       'overall : ${rankingData.ratings.overall}',

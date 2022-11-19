@@ -43,7 +43,7 @@ class TeamBuilder extends StatefulWidget {
 
 class _TeamBuilderState extends State<TeamBuilder> {
   late final PokemonTeam _team;
-  late List<Pokemon?> _pokemonTeam;
+  late List<UserPokemon?> _pokemonTeam;
   late Cup _cup = widget.cup;
 
   // The current index of the team the user is editing
@@ -53,10 +53,10 @@ class _TeamBuilderState extends State<TeamBuilder> {
   final TextEditingController _searchController = TextEditingController();
 
   // List of ALL Pokemon
-  List<Pokemon> _pokemon = [];
+  List<CupPokemon> _pokemon = [];
 
   // A variable list of Pokemon based on search bar text input
-  List<Pokemon> _filteredPokemon = [];
+  List<CupPokemon> _filteredPokemon = [];
 
   RankingsCategories _selectedCategory = RankingsCategories.overall;
 
@@ -72,7 +72,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
       final int termsLen = terms.length;
 
       // Callback to filter Pokemon by the search terms
-      bool filterPokemon(Pokemon pokemon) {
+      bool filterPokemon(CupPokemon pokemon) {
         bool isMatch = false;
 
         for (int i = 0; i < termsLen && !isMatch; ++i) {
@@ -146,7 +146,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
       pokemon: _filteredPokemon,
       onPokemonSelected: (pokemon) {
         setState(() {
-          _pokemonTeam[_builderIndex] = Pokemon.from(pokemon);
+          _pokemonTeam[_builderIndex] = UserPokemon.fromPokemon(pokemon);
           _updateWorkingIndex(_builderIndex + 1);
         });
       },

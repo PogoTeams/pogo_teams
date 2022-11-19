@@ -2,7 +2,7 @@
 import '../pogo_objects/battle_pokemon.dart';
 import 'battle_result.dart';
 import '../modules/data/globals.dart';
-import '../modules/data/debug_cli.dart';
+import '../modules/data/pogo_debugging.dart';
 import '../enums/battle_outcome.dart';
 
 class PokemonBattler {
@@ -391,7 +391,7 @@ class PokemonBattler {
     BattlePokemon self,
     BattlePokemon opponent,
   ) {
-    DebugCLI.printMulti(self.name, [
+    PogoDebugging.printMulti(self.name, [
       'fast    : ${self.selectedBattleFastMove.name} : ${self.selectedBattleFastMove.damage} : '
           'energy delta : ${self.selectedBattleFastMove.energyDelta}',
       'charge1 : ${self.selectedBattleChargeMoves.first.name} : ${self.selectedBattleChargeMoves.first.damage} : '
@@ -402,7 +402,7 @@ class PokemonBattler {
       'cp      : ${self.cp}',
       'ivs     : ${self.selectedIVs.atk}  ${self.selectedIVs.def}  ${self.selectedIVs.hp}'
     ]);
-    DebugCLI.printMulti(opponent.name, [
+    PogoDebugging.printMulti(opponent.name, [
       'fast : ${opponent.selectedBattleFastMove.name} : ${opponent.selectedBattleFastMove.damage} : '
           'energy delta : ${opponent.selectedBattleFastMove.energyDelta}',
       'charge1 : ${opponent.selectedBattleChargeMoves.first.name} : ${opponent.selectedBattleChargeMoves.first.damage} : '
@@ -429,16 +429,16 @@ class PokemonBattler {
         opponentOutcome = 'loss';
         break;
     }
-    DebugCLI.printHeader('Outcome');
-    DebugCLI.printMulti(results.self.name, [
+    PogoDebugging.printHeader('Outcome');
+    PogoDebugging.printMulti(results.self.name, [
       selfOutcome,
       'score : ${results.self.currentRating}',
     ]);
-    DebugCLI.printMulti(results.opponent.name, [
+    PogoDebugging.printMulti(results.opponent.name, [
       opponentOutcome,
       'score : ${results.opponent.currentRating}',
     ]);
-    DebugCLI.printFooter();
+    PogoDebugging.printFooter();
   }
 }
 
@@ -465,19 +465,19 @@ class BattleTurnSnapshot {
   final String description;
 
   void debugPrint() {
-    DebugCLI.printMulti('Turn $turn', [description]);
-    DebugCLI.printMulti(self.name, [
+    PogoDebugging.printMulti('Turn $turn', [description]);
+    PogoDebugging.printMulti(self.name, [
       'hp             : ${self.currentHp} / ${self.maxHp}',
       'energy         : ${self.energy}',
       'cooldown       : ${self.cooldown}',
-      '-' * (1 + DebugCLI.debugHeaderWidth),
+      '-' * (1 + PogoDebugging.debugHeaderWidth),
       'next charge    : ${self.nextDecidedChargeMove.name}',
     ]);
-    DebugCLI.printMulti(opponent.name, [
+    PogoDebugging.printMulti(opponent.name, [
       'hp             : ${opponent.currentHp} / ${opponent.maxHp}',
       'energy         : ${opponent.energy}',
       'cooldown       : ${opponent.cooldown}',
-      '-' * (1 + DebugCLI.debugHeaderWidth),
+      '-' * (1 + PogoDebugging.debugHeaderWidth),
       'next charge    : ${opponent.nextDecidedChargeMove.name}',
     ]);
   }

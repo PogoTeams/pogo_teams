@@ -1,7 +1,7 @@
 // Local
 import 'pokemon_battler.dart';
 import '../pogo_objects/battle_pokemon.dart';
-import '../modules/data/debug_cli.dart';
+import '../modules/data/pogo_debugging.dart';
 import '../enums/battle_outcome.dart';
 
 /*
@@ -67,7 +67,7 @@ class BattleResult {
     if (timeline == null) return;
     for (var snapshot in timeline!) {
       snapshot.debugPrint();
-      DebugCLI.breakpoint();
+      PogoDebugging.breakpoint();
     }
   }
 }

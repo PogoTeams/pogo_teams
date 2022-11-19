@@ -1,16 +1,22 @@
 class Globals {
+  // ------------------------------------------------------------------ TESTING
+  // Set to true when testing a new Pogo data source
+  static const bool testing = false;
+
+  // Set to true to force a synchronization with a Pogo data source
+  static const bool forceUpdate = false;
+  // --------------------------------------------------------------------------
+
   // The current app version
   // Displayed at the footer of the app's drawer
   static const String version = 'v1.0.0';
 
-  // True when testing a new Pogo data source
-  static const bool testing = false;
-
   // The earliest timestamp (used for initial app start up)
   static const String earliestTimestamp = '2021-01-01 00:00:00.00';
 
-  // Server url for retrieving all updates
-  static const String pogoDataSourceUrl = 'pogoteams.github.io';
+  // Server domain for retrieving all app updates
+  static const String pogoBucketDomain = 'pogoteams.github.io';
+  static const String pogoDataSourcePath = '/pogo_teams/pogo_data_source';
 
   // The number of Pokemon types in the game
   static const int typeCount = 18;

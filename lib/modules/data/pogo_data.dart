@@ -4,7 +4,7 @@ import 'dart:convert';
 // Packages
 import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:http/retry.dart';
 
@@ -27,36 +27,41 @@ import '../data/cups.dart';
 */
 
 class PogoData {
-  static late final Isar isar;
+  static late final Isar pogoIsar;
 
-  static List<Cup> get cups => isar.cups.where().findAllSync();
+  static List<Cup> get cups => pogoIsar.cups.where().findAllSync();
   static List<PokemonBase> get pokemon =>
-      isar.basePokemon.where().findAllSync();
+      pogoIsar.basePokemon.where().findAllSync();
 
   static Future<void> init() async {
-    isar = await Isar.open([
+    await Hive.initFlutter();
+    pogoIsar = await Isar.open([
       FastMoveSchema,
       ChargeMoveSchema,
       CupSchema,
       CupFilterSchema,
       PokemonBaseSchema,
-      PokemonSchema,
       EvolutionSchema,
       TempEvolutionSchema,
+      CupPokemonSchema,
+      UserPokemonSchema,
       UserPokemonTeamSchema,
       OpponentPokemonTeamSchema,
-    ]);
+    ], name: 'pogo');
+  }
+
+  static Future<void> clear() async {
+    await pogoIsar.writeTxn(() async => await pogoIsar.clear());
   }
 
   static Stream<Pair<String, double>> loadPogoData(
-      {bool forceUpdate = false}) async* {
+      {bool forceUpdate = Globals.forceUpdate}) async* {
     /*
     final Map<String, dynamic>? pogoDataJson = jsonDecode(
         await rootBundle.loadString('bin/json/niantic-snapshot.json'));
     if (pogoDataJson == null) return;
         bool update = false; // Flag for whether the local gamemaster an update
         */
-    bool update = false; // Flag for whether the local gamemaster an update
     String loadMessagePrefix = ''; // For indicating testing
 
     String pathPrefix = '/';
@@ -76,6 +81,7 @@ class PogoData {
 
     String message =
         loadMessagePrefix + 'Loading...'; // Message above progress bar
+
     final client = RetryClient(Client());
 
     try {
@@ -83,30 +89,28 @@ class PogoData {
       // make an http request for the new data
       if (await _updateAvailable(localSettings, client, pathPrefix)) {
         message = loadMessagePrefix + 'Updating Pogo Teams...';
-        yield Pair(a: message, b: .8);
 
-        update = true;
         // Retrieve gamemaster
-        String response = await client.read(Uri.https(
-            Globals.pogoDataSourceUrl, '${pathPrefix}pogo_data_source.json'));
+        String response = await client.read(Uri.https(Globals.pogoBucketDomain,
+            '${Globals.pogoDataSourcePath}${pathPrefix}pogo_data_source.json'));
 
+        yield Pair(a: message, b: .5);
         // If request was successful, load in the new gamemaster,
         final pogoDataSourceJson = jsonDecode(response);
-        await loadFromJson(pogoDataSourceJson);
+        yield Pair(a: message, b: .6);
+        await rebuildFromJson(pogoDataSourceJson);
+        yield Pair(a: message, b: .9);
       }
     }
 
     // If HTTP request or json decoding fails
     catch (error) {
-      message = loadMessagePrefix + 'No Network Connection...';
-      update = false;
-      yield Pair(a: message, b: .8);
+      message = loadMessagePrefix + 'Update Failed...';
+      yield Pair(a: message, b: .9);
     } finally {
       client.close();
       localSettings.close();
     }
-
-    yield Pair(a: message, b: .9);
 
     yield Pair(a: message, b: 1.0);
 
@@ -124,8 +128,8 @@ class PogoData {
     DateTime localTimeStamp = DateTime.parse(timestampString);
 
     // Retrieve server timestamp
-    String response = await client.read(
-        Uri.https(Globals.pogoDataSourceUrl, '${pathPrefix}timestamp.txt'));
+    String response = await client.read(Uri.https(Globals.pogoBucketDomain,
+        '${Globals.pogoDataSourcePath}${pathPrefix}timestamp.txt'));
 
     // If request is successful, compare timestamps to determine update
     final latestTimestamp = DateTime.tryParse(response);
@@ -142,25 +146,31 @@ class PogoData {
     return updateAvailable;
   }
 
-  static Future<void> loadFromJson(Map<String, dynamic> json) async {
-    await isar.writeTxn(() async {
-      await isar.clear();
+  static Future<void> rebuildFromJson(Map<String, dynamic> json) async {
+    await pogoIsar.writeTxn(() async {
+      // Clear linked relationships
+      await pogoIsar.evolutions.clear();
+      await pogoIsar.tempEvolutions.clear();
+      await pogoIsar.cupFilters.clear();
+
+      // Load Pogo data collections
       await loadFastMoves(json['fastMoves']);
       await loadChargeMoves(json['chargeMoves']);
       await loadPokemon(json['pokemon']);
+      await pogoIsar.cupPokemon.clear();
       await loadCups(json['cups']);
     });
   }
 
   static Future<void> loadFastMoves(List<dynamic> fastMovesJson) async {
     for (var moveJson in List<Map<String, dynamic>>.from(fastMovesJson)) {
-      await isar.fastMoves.put(FastMove.fromJson(moveJson));
+      await pogoIsar.fastMoves.putByMoveId(FastMove.fromJson(moveJson));
     }
   }
 
   static Future<void> loadChargeMoves(List<dynamic> chargeMovesJson) async {
     for (var moveJson in List<Map<String, dynamic>>.from(chargeMovesJson)) {
-      await isar.chargeMoves.put(ChargeMove.fromJson(moveJson));
+      await pogoIsar.chargeMoves.putByMoveId(ChargeMove.fromJson(moveJson));
     }
   }
 
@@ -176,10 +186,11 @@ class PogoData {
     PokemonBase pokemon = PokemonBase.fromJson(pokemonEntry);
     List<FastMove> fastMoves = [];
     List<ChargeMove> chargeMoves = [];
+    List<Evolution>? evolutions;
 
     if (pokemonEntry.containsKey('fastMoves')) {
       for (var moveId in List<String>.from(pokemonEntry['fastMoves'])) {
-        FastMove? move = await isar.fastMoves
+        FastMove? move = await pogoIsar.fastMoves
             .where()
             .filter()
             .moveIdEqualTo(moveId)
@@ -191,8 +202,10 @@ class PogoData {
 
     if (pokemonEntry.containsKey('chargeMoves')) {
       for (var moveId in List<String>.from(pokemonEntry['chargeMoves'])) {
-        ChargeMove? move =
-            await isar.chargeMoves.filter().moveIdEqualTo(moveId).findFirst();
+        ChargeMove? move = await pogoIsar.chargeMoves
+            .filter()
+            .moveIdEqualTo(moveId)
+            .findFirst();
 
         if (move != null) chargeMoves.add(move);
       }
@@ -201,7 +214,7 @@ class PogoData {
     if (pokemonEntry.containsKey('eliteFastMoves')) {
       for (var moveId in List<String>.from(pokemonEntry['eliteFastMoves'])) {
         FastMove? move =
-            await isar.fastMoves.filter().moveIdEqualTo(moveId).findFirst();
+            await pogoIsar.fastMoves.filter().moveIdEqualTo(moveId).findFirst();
 
         if (move != null) fastMoves.add(move);
       }
@@ -209,8 +222,10 @@ class PogoData {
 
     if (pokemonEntry.containsKey('eliteChargeMoves')) {
       for (var moveId in List<String>.from(pokemonEntry['eliteChargeMoves'])) {
-        ChargeMove? move =
-            await isar.chargeMoves.filter().moveIdEqualTo(moveId).findFirst();
+        ChargeMove? move = await pogoIsar.chargeMoves
+            .filter()
+            .moveIdEqualTo(moveId)
+            .findFirst();
 
         if (move != null) chargeMoves.add(move);
       }
@@ -218,7 +233,7 @@ class PogoData {
 
     if (pokemonEntry.containsKey('shadow') &&
         pokemonEntry['shadow']['released']) {
-      ChargeMove? move = await isar.chargeMoves
+      ChargeMove? move = await pogoIsar.chargeMoves
           .filter()
           .moveIdEqualTo(pokemonEntry['shadow']['purifiedChargeMove'])
           .findFirst();
@@ -230,12 +245,11 @@ class PogoData {
     pokemon.chargeMoves.addAll(chargeMoves);
 
     if (pokemonEntry.containsKey('evolutions')) {
-      final evolutions = List<Map<String, dynamic>>.from(
-              pokemonEntry['evolutions'])
+      evolutions = List<Map<String, dynamic>>.from(pokemonEntry['evolutions'])
           .map<Evolution>((evolutionJson) => Evolution.fromJson(evolutionJson))
           .toList();
 
-      await isar.evolutions.putAll(evolutions);
+      await pogoIsar.evolutions.putAll(evolutions);
       pokemon.evolutions.addAll(evolutions);
     }
 
@@ -246,11 +260,11 @@ class PogoData {
                   (evolutionJson) => TempEvolution.fromJson(evolutionJson))
               .toList();
 
-      await isar.tempEvolutions.putAll(evolutions);
+      await pogoIsar.tempEvolutions.putAll(evolutions);
       pokemon.tempEvolutions.addAll(evolutions);
     }
 
-    await isar.basePokemon.put(pokemon);
+    await pogoIsar.basePokemon.putByPokemonId(pokemon);
     await pokemon.evolutions.save();
     await pokemon.tempEvolutions.save();
     await pokemon.fastMoves.save();
@@ -263,15 +277,19 @@ class PogoData {
 
       shadowPokemon.fastMoves.addAll(fastMoves);
       shadowPokemon.chargeMoves.addAll(chargeMoves);
-      ChargeMove? shadowMove = await isar.chargeMoves
+      if (evolutions != null) {
+        shadowPokemon.evolutions.addAll(evolutions);
+      }
+      ChargeMove? shadowMove = await pogoIsar.chargeMoves
           .filter()
           .moveIdEqualTo(pokemonEntry['shadow']['shadowChargeMove'])
           .findFirst();
       if (shadowMove != null) shadowPokemon.chargeMoves.add(shadowMove);
 
-      await isar.basePokemon.put(shadowPokemon);
+      await pogoIsar.basePokemon.putByPokemonId(shadowPokemon);
       await shadowPokemon.fastMoves.save();
       await shadowPokemon.chargeMoves.save();
+      await shadowPokemon.evolutions.save();
     }
 
     // Temporary evolution entries
@@ -286,7 +304,7 @@ class PogoData {
         tempEvoPokemon.fastMoves.addAll(fastMoves);
         tempEvoPokemon.chargeMoves.addAll(chargeMoves);
 
-        await isar.basePokemon.put(tempEvoPokemon);
+        await pogoIsar.basePokemon.putByPokemonId(tempEvoPokemon);
         await tempEvoPokemon.fastMoves.save();
         await tempEvoPokemon.chargeMoves.save();
       }
@@ -302,7 +320,7 @@ class PogoData {
             List<Map<String, dynamic>>.from(cupEntry['include'])
                 .map<CupFilter>((filter) => CupFilter.fromJson(filter))
                 .toList();
-        await isar.cupFilters.putAll(includeFilters);
+        await pogoIsar.cupFilters.putAll(includeFilters);
         cup.includeFilters.addAll(includeFilters);
       }
 
@@ -311,7 +329,7 @@ class PogoData {
             List<Map<String, dynamic>>.from(cupEntry['exclude'])
                 .map<CupFilter>((filter) => CupFilter.fromJson(filter))
                 .toList();
-        await isar.cupFilters.putAll(excludeFilters);
+        await pogoIsar.cupFilters.putAll(excludeFilters);
         cup.excludeFilters.addAll(excludeFilters);
       }
 
@@ -321,10 +339,10 @@ class PogoData {
         cup.cp,
       );
 
-      cup.rankings.addAll(
-          (await isar.pokemon.getAll(rankingsIds)).whereType<Pokemon>());
+      cup.rankings.addAll((await pogoIsar.cupPokemon.getAll(rankingsIds))
+          .whereType<CupPokemon>());
 
-      await isar.cups.put(cup);
+      await pogoIsar.cups.putByCupId(cup);
       await cup.includeFilters.save();
       await cup.excludeFilters.save();
       await cup.rankings.save();
@@ -341,14 +359,14 @@ class PogoData {
       final List<String> selectedChargeMoveIds =
           List<String>.from(rankingsEntry['idealMoveset']['chargeMoves']);
 
-      final PokemonBase? pokemon = await isar.basePokemon
+      final PokemonBase? pokemon = await pogoIsar.basePokemon
           .filter()
           .pokemonIdEqualTo(rankingsEntry['pokemonId'])
           .findFirst();
 
       if (pokemon == null) continue;
 
-      final rankedPokemon = Pokemon(
+      final rankedPokemon = CupPokemon(
         ratings: Ratings.fromJson(rankingsEntry['ratings']),
         ivs: pokemon.getIvs(cp),
         selectedFastMoveId: rankingsEntry['idealMoveset']['fastMove'],
@@ -356,7 +374,7 @@ class PogoData {
         base: pokemon,
       );
 
-      rankingsIds.add(await isar.pokemon.put(rankedPokemon));
+      rankingsIds.add(await pogoIsar.cupPokemon.put(rankedPokemon));
       await rankedPokemon.base.save();
     }
 
@@ -364,7 +382,7 @@ class PogoData {
   }
 
   static PokemonBase getPokemonById(String pokemonId) {
-    return isar.basePokemon
+    return pogoIsar.basePokemon
             .filter()
             .pokemonIdEqualTo(pokemonId)
             .findFirstSync() ??
@@ -372,11 +390,12 @@ class PogoData {
   }
 
   static Cup getCupById(String cupId) {
-    return isar.cups.filter().cupIdEqualTo(cupId).findFirstSync() ?? cups.first;
+    return pogoIsar.cups.filter().cupIdEqualTo(cupId).findFirstSync() ??
+        cups.first;
   }
 
   static List<PokemonBase> getCupFilteredPokemonList(Cup cup) {
-    final filteredPokemonList = isar.basePokemon
+    final filteredPokemonList = pogoIsar.basePokemon
         .filter()
         .releasedEqualTo(true)
         .and()
@@ -394,13 +413,13 @@ class PogoData {
   // Get a list of Pokemon that contain one of the specified types
   // The rankings category
   // The list length will be up to the limit
-  static Future<List<Pokemon>> getFilteredRankedPokemonList(
+  static Future<List<CupPokemon>> getFilteredRankedPokemonList(
     Cup cup,
     List<PokemonType> types,
     RankingsCategories rankingsCategory, {
     int limit = 20,
   }) async {
-    List<Pokemon> rankedList = cup.getRankedPokemonList(rankingsCategory);
+    List<CupPokemon> rankedList = cup.getRankedPokemonList(rankingsCategory);
 
     // Filter the list to Pokemon that have one of the types in their typing
     // or their selected moveset
@@ -418,24 +437,24 @@ class PogoData {
     return rankedList.getRange(0, limit).toList();
   }
 
-  static void updatePokemonSync(Pokemon pokemon) {
-    isar.writeTxnSync(() => isar.pokemon.putSync(pokemon));
+  static void updateUserPokemonSync(UserPokemon pokemon) {
+    pogoIsar.writeTxnSync(() => pogoIsar.userPokemon.putSync(pokemon));
   }
 
   static UserPokemonTeam getUserPokemonTeamSync(Id id) {
-    return isar.userPokemonTeams.getSync(id) ?? UserPokemonTeam();
+    return pogoIsar.userPokemonTeams.getSync(id) ?? UserPokemonTeam();
   }
 
   static List<UserPokemonTeam> getUserPokemonTeamsSync() {
-    return isar.userPokemonTeams.where().findAllSync();
+    return pogoIsar.userPokemonTeams.where().findAllSync();
   }
 
   static void createPokemonTeamSync(PokemonTeam team) {
-    isar.writeTxnSync(() {
+    pogoIsar.writeTxnSync(() {
       if (team.runtimeType == UserPokemonTeam) {
-        isar.userPokemonTeams.putSync(team as UserPokemonTeam);
+        pogoIsar.userPokemonTeams.putSync(team as UserPokemonTeam);
       } else if (team.runtimeType == OpponentPokemonTeam) {
-        isar.opponentPokemonTeams.putSync(team as OpponentPokemonTeam);
+        pogoIsar.opponentPokemonTeams.putSync(team as OpponentPokemonTeam);
       }
     });
   }
@@ -443,26 +462,26 @@ class PogoData {
   static Id updatePokemonTeamSync(
     PokemonTeam team, {
     bool updatePokemon = true,
-    List<Pokemon?>? newPokemonTeam,
+    List<UserPokemon?>? newPokemonTeam,
   }) {
     Id id = -1;
-    isar.writeTxnSync(() {
+    pogoIsar.writeTxnSync(() {
       if (updatePokemon) {
         // Existing Pokemon Team
         if (newPokemonTeam == null) {
           for (var pokemon in team.getPokemonTeam()) {
-            isar.pokemon.putSync(pokemon);
+            pogoIsar.userPokemon.putSync(pokemon);
           }
         }
 
         // New Pokemon Team
         else {
           int i = 0;
-          List<Pokemon> links = [];
+          List<UserPokemon> links = [];
           for (var pokemon in newPokemonTeam) {
             if (pokemon != null) {
               pokemon.teamIndex = i;
-              isar.pokemon.putSync(pokemon);
+              pogoIsar.userPokemon.putSync(pokemon);
               links.add(pokemon);
             }
             ++i;
@@ -475,9 +494,9 @@ class PogoData {
       }
 
       if (team.runtimeType == UserPokemonTeam) {
-        id = isar.userPokemonTeams.putSync(team as UserPokemonTeam);
+        id = pogoIsar.userPokemonTeams.putSync(team as UserPokemonTeam);
       } else if (team.runtimeType == OpponentPokemonTeam) {
-        id = isar.opponentPokemonTeams.putSync(team as OpponentPokemonTeam);
+        id = pogoIsar.opponentPokemonTeams.putSync(team as OpponentPokemonTeam);
       }
     });
 
@@ -485,10 +504,10 @@ class PogoData {
   }
 
   static void deleteUserPokemonTeamSync(Id id) {
-    isar.writeTxnSync(() => isar.userPokemonTeams.deleteSync(id));
+    pogoIsar.writeTxnSync(() => pogoIsar.userPokemonTeams.deleteSync(id));
   }
 
   static void deleteOpponentPokemonTeamSync(Id id) {
-    isar.writeTxnSync(() => isar.opponentPokemonTeams.deleteSync(id));
+    pogoIsar.writeTxnSync(() => pogoIsar.opponentPokemonTeams.deleteSync(id));
   }
 }

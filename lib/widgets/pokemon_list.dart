@@ -25,8 +25,8 @@ class PokemonList extends StatelessWidget {
     this.rankingsCategory,
   }) : super(key: key);
 
-  final List<Pokemon> pokemon;
-  final Function(Pokemon) onPokemonSelected;
+  final List<CupPokemon> pokemon;
+  final Function(CupPokemon) onPokemonSelected;
   final bool dropdowns;
   final RankingsCategories? rankingsCategory;
 
@@ -80,7 +80,7 @@ class PokemonColumn extends StatelessWidget {
     this.dropdowns = true,
   }) : super(key: key);
 
-  final List<Pokemon> pokemon;
+  final List<CupPokemon> pokemon;
   final Function(PokemonBase) onPokemonSelected;
   final bool dropdowns;
 

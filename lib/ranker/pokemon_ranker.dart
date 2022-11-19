@@ -7,7 +7,7 @@ import '../battle/pokemon_battler.dart';
 import '../battle/battle_result.dart';
 import '../modules/data/pogo_data.dart';
 import '../modules/data/cups.dart';
-import '../modules/data/debug_cli.dart';
+import '../modules/data/pogo_debugging.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -104,7 +104,7 @@ class PokemonRanker {
 
     for (BattleTurnSnapshot snapshot in result.timeline!) {
       snapshot.debugPrint();
-      DebugCLI.breakpoint();
+      PogoDebugging.breakpoint();
     }
   }
 }

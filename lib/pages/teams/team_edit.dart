@@ -93,7 +93,7 @@ class _TeamEditState extends State<TeamEdit> {
 
     await Navigator.push(
       context,
-      MaterialPageRoute<List<Pokemon?>>(builder: (BuildContext context) {
+      MaterialPageRoute<List<CupPokemon?>>(builder: (BuildContext context) {
         return Analysis(team: _builderTeam);
       }),
     );
@@ -139,7 +139,7 @@ class _TeamEditState extends State<TeamEdit> {
 
   // Build a row of icon buttons at the bottom of a Pokemon's Node
   // If the Pokemon in question is null, this footer is also null
-  Widget? _buildNodeFooter(Pokemon? pokemon, int nodeIndex) {
+  Widget? _buildNodeFooter(UserPokemon? pokemon, int nodeIndex) {
     if (pokemon == null) return null;
 
     // Size of the footer icons

@@ -36,7 +36,7 @@ class SwapList extends StatelessWidget {
   // Either 1 or 2 footer buttons will display for a Pokemon's node.
   // If there is free space in the Pokemon team, render add and swap buttons.
   // Otherwise only render the swap button.
-  Widget _buildFooter(BuildContext context, Pokemon pokemon) {
+  Widget _buildFooter(BuildContext context, CupPokemon pokemon) {
     if (team.hasSpace()) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -88,7 +88,8 @@ class SwapList extends StatelessWidget {
           RankingsCategories.overall,
           limit: 20,
         ),
-        builder: (BuildContext context, AsyncSnapshot<List<Pokemon>> snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<List<CupPokemon>> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
               shrinkWrap: true,

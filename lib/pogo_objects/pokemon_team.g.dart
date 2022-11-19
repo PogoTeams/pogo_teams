@@ -49,7 +49,7 @@ const UserPokemonTeamSchema = CollectionSchema(
     r'pokemonTeam': LinkSchema(
       id: -8012031155153865455,
       name: r'pokemonTeam',
-      target: r'Pokemon',
+      target: r'UserPokemon',
       single: false,
     ),
     r'cup': LinkSchema(
@@ -132,7 +132,7 @@ void _userPokemonTeamAttach(
   object.opponents.attach(
       col, col.isar.collection<OpponentPokemonTeam>(), r'opponents', id);
   object.pokemonTeam
-      .attach(col, col.isar.collection<Pokemon>(), r'pokemonTeam', id);
+      .attach(col, col.isar.collection<UserPokemon>(), r'pokemonTeam', id);
   object.cup.attach(col, col.isar.collection<Cup>(), r'cup', id);
 }
 
@@ -482,7 +482,7 @@ extension UserPokemonTeamQueryLinks
   }
 
   QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition>
-      pokemonTeam(FilterQuery<Pokemon> q) {
+      pokemonTeam(FilterQuery<UserPokemon> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'pokemonTeam');
     });
@@ -752,7 +752,7 @@ const OpponentPokemonTeamSchema = CollectionSchema(
     r'pokemonTeam': LinkSchema(
       id: -2229600348423611808,
       name: r'pokemonTeam',
-      target: r'Pokemon',
+      target: r'UserPokemon',
       single: false,
     ),
     r'cup': LinkSchema(
@@ -853,7 +853,7 @@ void _opponentPokemonTeamAttach(
     IsarCollection<dynamic> col, Id id, OpponentPokemonTeam object) {
   object.id = id;
   object.pokemonTeam
-      .attach(col, col.isar.collection<Pokemon>(), r'pokemonTeam', id);
+      .attach(col, col.isar.collection<UserPokemon>(), r'pokemonTeam', id);
   object.cup.attach(col, col.isar.collection<Cup>(), r'cup', id);
 }
 
@@ -1198,7 +1198,7 @@ extension OpponentPokemonTeamQueryObject on QueryBuilder<OpponentPokemonTeam,
 extension OpponentPokemonTeamQueryLinks on QueryBuilder<OpponentPokemonTeam,
     OpponentPokemonTeam, QFilterCondition> {
   QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
-      pokemonTeam(FilterQuery<Pokemon> q) {
+      pokemonTeam(FilterQuery<UserPokemon> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'pokemonTeam');
     });

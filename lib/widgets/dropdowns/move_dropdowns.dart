@@ -90,7 +90,7 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
           child: Center(
             child: Text(
               widget.pokemon.getBase().getFormattedMoveName(move),
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
         );
@@ -189,7 +189,7 @@ class MoveDropdown extends StatelessWidget {
         // Move label
         Text(
           label,
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
 
         // Dropdown button
@@ -200,7 +200,7 @@ class MoveDropdown extends StatelessWidget {
               value: move,
               icon: const Icon(Icons.arrow_drop_down_circle),
               iconSize: Sizing.blockSizeHorizontal * 4.0,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodySmall,
               items: options,
               onChanged: onChanged,
             ),

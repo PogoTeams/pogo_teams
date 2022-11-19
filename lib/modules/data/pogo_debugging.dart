@@ -1,7 +1,7 @@
 // Dart
 import 'dart:io';
 
-class DebugCLI {
+class PogoDebugging {
   static const debugHeaderWidth = 100;
 
   static void printHeader(String title) {

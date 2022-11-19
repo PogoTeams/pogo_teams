@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 // Local Imports
 import '../pages/pogo_pages.dart';
+import '../modules/data/globals.dart';
 import '../modules/ui/sizing.dart';
 
 /*
@@ -23,9 +24,9 @@ class PogoDrawer extends StatelessWidget {
 
   final Function(PogoPages) onNavSelected;
 
-  void _launchGitHubUrl() async => await launchUrl(Uri(
-        host: 'https://github.com',
-        path: 'PogoTeams/pogo_teams',
+  void _launchGitHubUrl() async => await launchUrl(Uri.https(
+        'github.com',
+        'PogoTeams/pogo_teams',
       ));
 
   // The background gradient on the drawer
@@ -67,33 +68,6 @@ class PogoDrawer extends StatelessWidget {
                 children: [
                   // Pogo Teams Logo
                   _buildDrawerHeader(),
-
-                  /* TODO an About page for these
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // Current version
-                      Text(
-                        Globals.version,
-                        style: TextStyle(
-                          fontSize: Sizing.h2,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-
-                      // GitHub link
-                      SizedBox(
-                        width: Sizing.blockSizeHorizontal * 10.0,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: _launchGitHubUrl,
-                          icon:
-                              Image.asset('assets/GitHub-Mark-Light-64px.png'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  */
 
                   // Teams
                   ListTile(
@@ -159,6 +133,63 @@ class PogoDrawer extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+            ListTile(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: Sizing.blockSizeHorizontal * 10.0,
+                  ),
+                  // Synchronize Pogo data
+                  Text(
+                    PogoPages.sync.displayName,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  SizedBox(
+                    width: Sizing.blockSizeHorizontal * 3.0,
+                  ),
+                  PogoPages.sync.icon,
+                ],
+              ),
+              onTap: () {
+                onNavSelected(PogoPages.sync);
+                Navigator.pop(context);
+              },
+            ),
+            SizedBox(
+              height: Sizing.blockSizeHorizontal * 5.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: Sizing.blockSizeHorizontal * 10.0,
+                ),
+                // GitHub link
+                SizedBox(
+                  width: Sizing.blockSizeHorizontal * 10.0,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: _launchGitHubUrl,
+                    icon: Image.asset('assets/GitHub-Mark-Light-64px.png'),
+                  ),
+                ),
+
+                SizedBox(
+                  width: Sizing.blockSizeHorizontal * 3.0,
+                ),
+
+                // Version
+                Text(
+                  Globals.version,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
+                ),
+              ],
             ),
           ],
         ),

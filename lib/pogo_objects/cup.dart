@@ -36,6 +36,7 @@ class Cup {
 
   Id id = Isar.autoIncrement;
 
+  @Index(unique: true)
   final String cupId;
   final String name;
   final int cp;
@@ -46,9 +47,9 @@ class Cup {
 
   final IsarLinks<CupFilter> includeFilters = IsarLinks<CupFilter>();
   final IsarLinks<CupFilter> excludeFilters = IsarLinks<CupFilter>();
-  final IsarLinks<Pokemon> rankings = IsarLinks<Pokemon>();
+  final IsarLinks<CupPokemon> rankings = IsarLinks<CupPokemon>();
 
-  IsarLinks<Pokemon> getRankings() {
+  IsarLinks<CupPokemon> getRankings() {
     if (rankings.isAttached && !rankings.isLoaded) {
       rankings.loadSync();
     }
@@ -72,8 +73,8 @@ class Cup {
     return excludeFilters;
   }
 
-  List<Pokemon> getRankedPokemonList(RankingsCategories rankingsCategory) {
-    final List<Pokemon> rankedPokemonList = getRankings().toList();
+  List<CupPokemon> getRankedPokemonList(RankingsCategories rankingsCategory) {
+    final List<CupPokemon> rankedPokemonList = getRankings().toList();
 
     switch (rankingsCategory) {
       case RankingsCategories.overall:

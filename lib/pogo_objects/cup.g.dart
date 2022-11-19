@@ -58,7 +58,21 @@ const CupSchema = CollectionSchema(
   deserialize: _cupDeserialize,
   deserializeProp: _cupDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'cupId': IndexSchema(
+      id: 3722187732297776543,
+      name: r'cupId',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'cupId',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
   links: {
     r'includeFilters': LinkSchema(
       id: 7425088563612649887,
@@ -75,7 +89,7 @@ const CupSchema = CollectionSchema(
     r'rankings': LinkSchema(
       id: -7345411310555650539,
       name: r'rankings',
-      target: r'Pokemon',
+      target: r'CupPokemon',
       single: false,
     )
   },
@@ -183,7 +197,62 @@ void _cupAttach(IsarCollection<dynamic> col, Id id, Cup object) {
       .attach(col, col.isar.collection<CupFilter>(), r'includeFilters', id);
   object.excludeFilters
       .attach(col, col.isar.collection<CupFilter>(), r'excludeFilters', id);
-  object.rankings.attach(col, col.isar.collection<Pokemon>(), r'rankings', id);
+  object.rankings
+      .attach(col, col.isar.collection<CupPokemon>(), r'rankings', id);
+}
+
+extension CupByIndex on IsarCollection<Cup> {
+  Future<Cup?> getByCupId(String cupId) {
+    return getByIndex(r'cupId', [cupId]);
+  }
+
+  Cup? getByCupIdSync(String cupId) {
+    return getByIndexSync(r'cupId', [cupId]);
+  }
+
+  Future<bool> deleteByCupId(String cupId) {
+    return deleteByIndex(r'cupId', [cupId]);
+  }
+
+  bool deleteByCupIdSync(String cupId) {
+    return deleteByIndexSync(r'cupId', [cupId]);
+  }
+
+  Future<List<Cup?>> getAllByCupId(List<String> cupIdValues) {
+    final values = cupIdValues.map((e) => [e]).toList();
+    return getAllByIndex(r'cupId', values);
+  }
+
+  List<Cup?> getAllByCupIdSync(List<String> cupIdValues) {
+    final values = cupIdValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'cupId', values);
+  }
+
+  Future<int> deleteAllByCupId(List<String> cupIdValues) {
+    final values = cupIdValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'cupId', values);
+  }
+
+  int deleteAllByCupIdSync(List<String> cupIdValues) {
+    final values = cupIdValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'cupId', values);
+  }
+
+  Future<Id> putByCupId(Cup object) {
+    return putByIndex(r'cupId', object);
+  }
+
+  Id putByCupIdSync(Cup object, {bool saveLinks = true}) {
+    return putByIndexSync(r'cupId', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByCupId(List<Cup> objects) {
+    return putAllByIndex(r'cupId', objects);
+  }
+
+  List<Id> putAllByCupIdSync(List<Cup> objects, {bool saveLinks = true}) {
+    return putAllByIndexSync(r'cupId', objects, saveLinks: saveLinks);
+  }
 }
 
 extension CupQueryWhereSort on QueryBuilder<Cup, Cup, QWhere> {
@@ -257,6 +326,49 @@ extension CupQueryWhere on QueryBuilder<Cup, Cup, QWhereClause> {
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterWhereClause> cupIdEqualTo(String cupId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'cupId',
+        value: [cupId],
+      ));
+    });
+  }
+
+  QueryBuilder<Cup, Cup, QAfterWhereClause> cupIdNotEqualTo(String cupId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'cupId',
+              lower: [],
+              upper: [cupId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'cupId',
+              lower: [cupId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'cupId',
+              lower: [cupId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'cupId',
+              lower: [],
+              upper: [cupId],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }
@@ -1088,7 +1200,7 @@ extension CupQueryLinks on QueryBuilder<Cup, Cup, QFilterCondition> {
   }
 
   QueryBuilder<Cup, Cup, QAfterFilterCondition> rankings(
-      FilterQuery<Pokemon> q) {
+      FilterQuery<CupPokemon> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'rankings');
     });

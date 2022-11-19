@@ -16,28 +16,15 @@ part 'pokemon.g.dart';
 -------------------------------------------------------------------------------
 */
 
-@Collection(accessor: 'pokemon')
 class Pokemon {
   Pokemon({
     required this.ratings,
     required this.ivs,
     required this.selectedFastMoveId,
     required this.selectedChargeMoveIds,
-    this.teamIndex,
     PokemonBase? base,
   }) {
     this.base.value = base;
-  }
-
-  factory Pokemon.from(Pokemon other) {
-    return Pokemon(
-      ratings: other.ratings,
-      ivs: other.ivs,
-      selectedFastMoveId: other.selectedFastMoveId,
-      selectedChargeMoveIds: List<String>.from(other.selectedChargeMoveIds),
-      teamIndex: other.teamIndex,
-      base: other.getBase(),
-    );
   }
 
   Id id = Isar.autoIncrement;
@@ -46,7 +33,6 @@ class Pokemon {
   IVs ivs;
   String selectedFastMoveId;
   List<String> selectedChargeMoveIds;
-  int? teamIndex;
   final IsarLink<PokemonBase> base = IsarLink<PokemonBase>();
 
   PokemonBase getBase() {
@@ -64,10 +50,14 @@ class Pokemon {
   }
 
   List<ChargeMove> getSelectedChargeMoves() {
-    return getBase()
-        .getChargeMoves()
-        .where((move) => selectedChargeMoveIds.contains(move.moveId))
-        .toList();
+    return [
+      getBase().getChargeMoves().firstWhere(
+          (move) => selectedChargeMoveIds.first == move.moveId,
+          orElse: () => ChargeMove.none),
+      getBase().getChargeMoves().firstWhere(
+          (move) => selectedChargeMoveIds.last == move.moveId,
+          orElse: () => ChargeMove.none),
+    ].whereType<ChargeMove>().toList();
   }
 
   ChargeMove getSelectedChargeMoveL() {
@@ -123,4 +113,61 @@ class Pokemon {
 
     return false;
   }
+}
+
+@Collection(accessor: 'cupPokemon')
+class CupPokemon extends Pokemon {
+  CupPokemon({
+    required Ratings ratings,
+    required IVs ivs,
+    required String selectedFastMoveId,
+    required List<String> selectedChargeMoveIds,
+    PokemonBase? base,
+  }) : super(
+          ratings: ratings,
+          ivs: ivs,
+          selectedFastMoveId: selectedFastMoveId,
+          selectedChargeMoveIds: selectedChargeMoveIds,
+          base: base,
+        );
+
+  factory CupPokemon.from(CupPokemon other) {
+    return CupPokemon(
+      ratings: other.ratings,
+      ivs: other.ivs,
+      selectedFastMoveId: other.selectedFastMoveId,
+      selectedChargeMoveIds: List<String>.from(other.selectedChargeMoveIds),
+      base: other.getBase(),
+    );
+  }
+}
+
+@Collection(accessor: 'userPokemon')
+class UserPokemon extends Pokemon {
+  UserPokemon({
+    required Ratings ratings,
+    required IVs ivs,
+    required String selectedFastMoveId,
+    required List<String> selectedChargeMoveIds,
+    PokemonBase? base,
+    this.teamIndex,
+  }) : super(
+          ratings: ratings,
+          ivs: ivs,
+          selectedFastMoveId: selectedFastMoveId,
+          selectedChargeMoveIds: selectedChargeMoveIds,
+          base: base,
+        );
+
+  factory UserPokemon.fromPokemon(Pokemon other) {
+    return UserPokemon(
+      ratings: other.ratings,
+      ivs: other.ivs,
+      selectedFastMoveId: other.selectedFastMoveId,
+      selectedChargeMoveIds: List<String>.from(other.selectedChargeMoveIds),
+      base: other.getBase(),
+    );
+  }
+
+  int? teamIndex;
 }
