@@ -28,14 +28,14 @@ class UserTeamAnalysis extends StatefulWidget {
     required this.defenseThreats,
     required this.offenseCoverage,
     required this.netEffectiveness,
-    required this.recalculate,
+    required this.onTeamChanged,
   }) : super(key: key);
 
   final UserPokemonTeam team;
   final List<Pair<PokemonType, double>> defenseThreats;
   final List<Pair<PokemonType, double>> offenseCoverage;
   final List<Pair<PokemonType, double>> netEffectiveness;
-  final Function(List<Pokemon>, List<double>) recalculate;
+  final Function onTeamChanged;
 
   @override
   _UserTeamAnalysisState createState() => _UserTeamAnalysisState();
@@ -104,17 +104,13 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
         builder: (BuildContext context) {
           return TeamSwap(
             team: _team,
-            swap: swapPokemon,
+            swap: Pokemon.from(swapPokemon),
           );
         },
       ),
     );
 
-    _team = PogoData.getUserPokemonTeamSync(_team.id);
-    widget.recalculate(
-      _team.getOrderedPokemonList(),
-      _team.effectiveness,
-    );
+    widget.onTeamChanged();
 
     setState(() {
       _scrollController.animateTo(
@@ -126,22 +122,19 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
   }
 
   void _onAddPokemon(Pokemon pokemon) {
-    if (_team.tryAddPokemon(pokemon)) {
-      widget.recalculate(
-        _team.getOrderedPokemonList(),
-        _team.effectiveness,
+    if (!_team.hasSpace()) return;
+    PogoData.updatePokemonSync(Pokemon.from(pokemon));
+    _team.tryAddPokemon(pokemon);
+    PogoData.updatePokemonTeamSync(_team);
+
+    widget.onTeamChanged();
+    setState(() {
+      _scrollController.animateTo(
+        0.0,
+        duration: const Duration(seconds: 1),
+        curve: Curves.decelerate,
       );
-
-      setState(() {
-        _scrollController.animateTo(
-          0.0,
-          duration: const Duration(seconds: 1),
-          curve: Curves.decelerate,
-        );
-      });
-
-      PogoData.updatePokemonTeamSync(widget.team);
-    }
+    });
   }
 
   AppBar _buildAppBar() {
@@ -192,12 +185,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
           child: PokemonNode.small(
             pokemon: pokemonTeam[index],
             onMoveChanged: () {
-              widget.recalculate(
-                _team.getOrderedPokemonList(),
-                _team.effectiveness,
-              );
-
-              PogoData.updatePokemonTeamSync(_team);
+              PogoData.updatePokemonSync(pokemonTeam[index]);
+              widget.onTeamChanged();
             },
           ),
         ),
@@ -243,9 +232,10 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
   @override
   Widget build(BuildContext context) {
     _team = PogoData.getUserPokemonTeamSync(_team.id);
+    final orderedPokemonList = _team.getOrderedPokemonList();
 
     if (_initState) {
-      _initializeExpansionPanels(_team.getOrderedPokemonList());
+      _initializeExpansionPanels(orderedPokemonList);
       _initState = false;
     }
 
@@ -265,7 +255,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
             ),
 
             // Build the Pokemon nodes
-            _buildPokemonNodes(_team.getOrderedPokemonList()),
+            _buildPokemonNodes(orderedPokemonList),
 
             // Spacer
             SizedBox(

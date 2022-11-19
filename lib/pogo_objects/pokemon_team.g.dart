@@ -22,18 +22,13 @@ const UserPokemonTeamSchema = CollectionSchema(
       name: r'dateCreated',
       type: IsarType.dateTime,
     ),
-    r'effectiveness': PropertySchema(
-      id: 1,
-      name: r'effectiveness',
-      type: IsarType.doubleList,
-    ),
     r'locked': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'locked',
       type: IsarType.bool,
     ),
     r'teamSize': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'teamSize',
       type: IsarType.long,
     )
@@ -77,7 +72,6 @@ int _userPokemonTeamEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.effectiveness.length * 8;
   return bytesCount;
 }
 
@@ -88,9 +82,8 @@ void _userPokemonTeamSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.dateCreated);
-  writer.writeDoubleList(offsets[1], object.effectiveness);
-  writer.writeBool(offsets[2], object.locked);
-  writer.writeLong(offsets[3], object.teamSize);
+  writer.writeBool(offsets[1], object.locked);
+  writer.writeLong(offsets[2], object.teamSize);
 }
 
 UserPokemonTeam _userPokemonTeamDeserialize(
@@ -101,10 +94,9 @@ UserPokemonTeam _userPokemonTeamDeserialize(
 ) {
   final object = UserPokemonTeam();
   object.dateCreated = reader.readDateTimeOrNull(offsets[0]);
-  object.effectiveness = reader.readDoubleList(offsets[1]) ?? [];
   object.id = id;
-  object.locked = reader.readBool(offsets[2]);
-  object.teamSize = reader.readLong(offsets[3]);
+  object.locked = reader.readBool(offsets[1]);
+  object.teamSize = reader.readLong(offsets[2]);
   return object;
 }
 
@@ -118,10 +110,8 @@ P _userPokemonTeamDeserializeProp<P>(
     case 0:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 1:
-      return (reader.readDoubleList(offset) ?? []) as P;
-    case 2:
       return (reader.readBool(offset)) as P;
-    case 3:
+    case 2:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -299,161 +289,6 @@ extension UserPokemonTeamQueryFilter
         upper: upper,
         includeUpper: includeUpper,
       ));
-    });
-  }
-
-  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition>
-      effectivenessElementEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'effectiveness',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition>
-      effectivenessElementGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'effectiveness',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition>
-      effectivenessElementLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'effectiveness',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition>
-      effectivenessElementBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'effectiveness',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition>
-      effectivenessLengthEqualTo(int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'effectiveness',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition>
-      effectivenessIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'effectiveness',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition>
-      effectivenessIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'effectiveness',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition>
-      effectivenessLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'effectiveness',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition>
-      effectivenessLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'effectiveness',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition>
-      effectivenessLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'effectiveness',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
     });
   }
 
@@ -831,13 +666,6 @@ extension UserPokemonTeamQueryWhereDistinct
     });
   }
 
-  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QDistinct>
-      distinctByEffectiveness() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'effectiveness');
-    });
-  }
-
   QueryBuilder<UserPokemonTeam, UserPokemonTeam, QDistinct> distinctByLocked() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'locked');
@@ -864,13 +692,6 @@ extension UserPokemonTeamQueryProperty
       dateCreatedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dateCreated');
-    });
-  }
-
-  QueryBuilder<UserPokemonTeam, List<double>, QQueryOperations>
-      effectivenessProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'effectiveness');
     });
   }
 
@@ -910,18 +731,13 @@ const OpponentPokemonTeamSchema = CollectionSchema(
       name: r'dateCreated',
       type: IsarType.dateTime,
     ),
-    r'effectiveness': PropertySchema(
-      id: 2,
-      name: r'effectiveness',
-      type: IsarType.doubleList,
-    ),
     r'locked': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'locked',
       type: IsarType.bool,
     ),
     r'teamSize': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'teamSize',
       type: IsarType.long,
     )
@@ -959,7 +775,6 @@ int _opponentPokemonTeamEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.effectiveness.length * 8;
   return bytesCount;
 }
 
@@ -971,9 +786,8 @@ void _opponentPokemonTeamSerialize(
 ) {
   writer.writeByte(offsets[0], object.battleOutcome.index);
   writer.writeDateTime(offsets[1], object.dateCreated);
-  writer.writeDoubleList(offsets[2], object.effectiveness);
-  writer.writeBool(offsets[3], object.locked);
-  writer.writeLong(offsets[4], object.teamSize);
+  writer.writeBool(offsets[2], object.locked);
+  writer.writeLong(offsets[3], object.teamSize);
 }
 
 OpponentPokemonTeam _opponentPokemonTeamDeserialize(
@@ -987,10 +801,9 @@ OpponentPokemonTeam _opponentPokemonTeamDeserialize(
           reader.readByteOrNull(offsets[0])] ??
       BattleOutcome.win;
   object.dateCreated = reader.readDateTimeOrNull(offsets[1]);
-  object.effectiveness = reader.readDoubleList(offsets[2]) ?? [];
   object.id = id;
-  object.locked = reader.readBool(offsets[3]);
-  object.teamSize = reader.readLong(offsets[4]);
+  object.locked = reader.readBool(offsets[2]);
+  object.teamSize = reader.readLong(offsets[3]);
   return object;
 }
 
@@ -1008,10 +821,8 @@ P _opponentPokemonTeamDeserializeProp<P>(
     case 1:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 2:
-      return (reader.readDoubleList(offset) ?? []) as P;
-    case 3:
       return (reader.readBool(offset)) as P;
-    case 4:
+    case 3:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1255,161 +1066,6 @@ extension OpponentPokemonTeamQueryFilter on QueryBuilder<OpponentPokemonTeam,
         upper: upper,
         includeUpper: includeUpper,
       ));
-    });
-  }
-
-  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
-      effectivenessElementEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'effectiveness',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
-      effectivenessElementGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'effectiveness',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
-      effectivenessElementLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'effectiveness',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
-      effectivenessElementBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'effectiveness',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
-      effectivenessLengthEqualTo(int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'effectiveness',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
-      effectivenessIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'effectiveness',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
-      effectivenessIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'effectiveness',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
-      effectivenessLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'effectiveness',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
-      effectivenessLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'effectiveness',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
-      effectivenessLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'effectiveness',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
     });
   }
 
@@ -1766,13 +1422,6 @@ extension OpponentPokemonTeamQueryWhereDistinct
   }
 
   QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QDistinct>
-      distinctByEffectiveness() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'effectiveness');
-    });
-  }
-
-  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QDistinct>
       distinctByLocked() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'locked');
@@ -1806,13 +1455,6 @@ extension OpponentPokemonTeamQueryProperty
       dateCreatedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dateCreated');
-    });
-  }
-
-  QueryBuilder<OpponentPokemonTeam, List<double>, QQueryOperations>
-      effectivenessProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'effectiveness');
     });
   }
 

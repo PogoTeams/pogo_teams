@@ -155,9 +155,7 @@ class _TeamsState extends State<Teams> {
       }),
     );
 
-    setState(() {
-      PogoData.updatePokemonTeamSync(_teams[teamIndex]);
-    });
+    setState(() {});
   }
 
   void _onLogTeam(int teamIndex) async {

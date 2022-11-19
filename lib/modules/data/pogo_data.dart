@@ -4,8 +4,12 @@ import 'dart:convert';
 // Packages
 import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
+import 'package:hive/hive.dart';
+import 'package:http/http.dart';
+import 'package:http/retry.dart';
 
 // Local
+import 'globals.dart';
 import '../../enums/rankings_categories.dart';
 import '../../tools/pair.dart';
 import '../../pogo_objects/pokemon_base.dart';
@@ -44,17 +48,101 @@ class PogoData {
     ]);
   }
 
-  static Stream<Pair<String, double>> loadPogoData() async* {
+  static Stream<Pair<String, double>> loadPogoData(
+      {bool forceUpdate = false}) async* {
+    /*
     final Map<String, dynamic>? pogoDataJson = jsonDecode(
         await rootBundle.loadString('bin/json/niantic-snapshot.json'));
     if (pogoDataJson == null) return;
+        bool update = false; // Flag for whether the local gamemaster an update
+        */
+    bool update = false; // Flag for whether the local gamemaster an update
+    String loadMessagePrefix = ''; // For indicating testing
 
-    await loadFromJson(pogoDataJson);
+    String pathPrefix = '/';
+
+    // TRUE FOR TESTING ONLY
+    if (Globals.testing) {
+      pathPrefix += 'test/';
+      loadMessagePrefix = '[ TEST ]  ';
+    }
+
+    Box localSettings = await Hive.openBox('pogoSettings');
+
+    // Implicitly invoke an app update via HTTPS
+    if (forceUpdate) {
+      await localSettings.put('timestamp', Globals.earliestTimestamp);
+    }
+
+    String message =
+        loadMessagePrefix + 'Loading...'; // Message above progress bar
+    final client = RetryClient(Client());
+
+    try {
+      // If an update is available
+      // make an http request for the new data
+      if (await _updateAvailable(localSettings, client, pathPrefix)) {
+        message = loadMessagePrefix + 'Updating Pogo Teams...';
+        yield Pair(a: message, b: .8);
+
+        update = true;
+        // Retrieve gamemaster
+        String response = await client.read(Uri.https(
+            Globals.pogoDataSourceUrl, '${pathPrefix}pogo_data_source.json'));
+
+        // If request was successful, load in the new gamemaster,
+        final pogoDataSourceJson = jsonDecode(response);
+        await loadFromJson(pogoDataSourceJson);
+      }
+    }
+
+    // If HTTP request or json decoding fails
+    catch (error) {
+      message = loadMessagePrefix + 'No Network Connection...';
+      update = false;
+      yield Pair(a: message, b: .8);
+    } finally {
+      client.close();
+      localSettings.close();
+    }
+
+    yield Pair(a: message, b: .9);
+
+    yield Pair(a: message, b: 1.0);
+
+    // Just an asthetic for allowing the loading progress indicator to fill
+    await Future.delayed(const Duration(seconds: 2));
+  }
+
+  static Future<bool> _updateAvailable(
+      Box localSettings, Client client, String pathPrefix) async {
+    bool updateAvailable = false;
+
+    // Retrieve local timestamp
+    final String timestampString =
+        localSettings.get('timestamp') ?? Globals.earliestTimestamp;
+    DateTime localTimeStamp = DateTime.parse(timestampString);
+
+    // Retrieve server timestamp
+    String response = await client.read(
+        Uri.https(Globals.pogoDataSourceUrl, '${pathPrefix}timestamp.txt'));
+
+    // If request is successful, compare timestamps to determine update
+    final latestTimestamp = DateTime.tryParse(response);
+
+    if (latestTimestamp != null &&
+        !localTimeStamp.isAtSameMomentAs(latestTimestamp)) {
+      updateAvailable = true;
+      localTimeStamp = latestTimestamp;
+    }
+
+    // Store the timestamp in the local db
+    await localSettings.put('timestamp', localTimeStamp.toString());
+
+    return updateAvailable;
   }
 
   static Future<void> loadFromJson(Map<String, dynamic> json) async {
-    await isar.writeTxn(() async => await isar.clear());
-
     await isar.writeTxn(() async {
       await isar.clear();
       await loadFastMoves(json['fastMoves']);
@@ -330,6 +418,10 @@ class PogoData {
     return rankedList.getRange(0, limit).toList();
   }
 
+  static void updatePokemonSync(Pokemon pokemon) {
+    isar.writeTxnSync(() => isar.pokemon.putSync(pokemon));
+  }
+
   static UserPokemonTeam getUserPokemonTeamSync(Id id) {
     return isar.userPokemonTeams.getSync(id) ?? UserPokemonTeam();
   }
@@ -338,11 +430,22 @@ class PogoData {
     return isar.userPokemonTeams.where().findAllSync();
   }
 
-  static void updatePokemonTeamSync(
+  static void createPokemonTeamSync(PokemonTeam team) {
+    isar.writeTxnSync(() {
+      if (team.runtimeType == UserPokemonTeam) {
+        isar.userPokemonTeams.putSync(team as UserPokemonTeam);
+      } else if (team.runtimeType == OpponentPokemonTeam) {
+        isar.opponentPokemonTeams.putSync(team as OpponentPokemonTeam);
+      }
+    });
+  }
+
+  static Id updatePokemonTeamSync(
     PokemonTeam team, {
     bool updatePokemon = true,
     List<Pokemon?>? newPokemonTeam,
   }) {
+    Id id = -1;
     isar.writeTxnSync(() {
       if (updatePokemon) {
         // Existing Pokemon Team
@@ -361,22 +464,24 @@ class PogoData {
               pokemon.teamIndex = i;
               isar.pokemon.putSync(pokemon);
               links.add(pokemon);
-              ++i;
             }
+            ++i;
           }
-          team.pokemonTeam.updateSync(
-            link: links,
-            reset: true,
-          );
+          team.getPokemonTeam().updateSync(
+                link: links,
+                reset: true,
+              );
         }
       }
 
       if (team.runtimeType == UserPokemonTeam) {
-        isar.userPokemonTeams.putSync(team as UserPokemonTeam);
+        id = isar.userPokemonTeams.putSync(team as UserPokemonTeam);
       } else if (team.runtimeType == OpponentPokemonTeam) {
-        isar.opponentPokemonTeams.putSync(team as OpponentPokemonTeam);
+        id = isar.opponentPokemonTeams.putSync(team as OpponentPokemonTeam);
       }
     });
+
+    return id;
   }
 
   static void deleteUserPokemonTeamSync(Id id) {

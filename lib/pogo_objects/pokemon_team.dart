@@ -6,7 +6,6 @@ import 'pokemon.dart';
 import 'cup.dart';
 import '../modules/data/pokemon_types.dart';
 import '../modules/data/pogo_data.dart';
-import '../modules/data/globals.dart';
 import '../enums/battle_outcome.dart';
 
 part 'pokemon_team.g.dart';
@@ -34,10 +33,9 @@ class PokemonTeam {
   final IsarLinks<Pokemon> pokemonTeam = IsarLinks<Pokemon>();
 
   // A list of this pokemon team's net effectiveness
-  List<double> effectiveness = List.generate(
-    Globals.typeCount,
-    (index) => 0.0,
-  );
+  List<double> getTeamTypeffectiveness() {
+    return PokemonTypes.getNetEffectiveness(getOrderedPokemonList());
+  }
 
   // The selected PVP cup for this team
   final IsarLink<Cup> cup = IsarLink<Cup>();
@@ -53,7 +51,7 @@ class PokemonTeam {
   List<Pokemon> getOrderedPokemonList() {
     List<Pokemon> orderedPokemonList = getPokemonTeam().toList();
     orderedPokemonList
-        .sort((p1, p2) => (p2.teamIndex ?? 0) - (p1.teamIndex ?? 0));
+        .sort((p1, p2) => (p1.teamIndex ?? 0) - (p2.teamIndex ?? 0));
 
     return orderedPokemonList;
   }
@@ -95,13 +93,10 @@ class PokemonTeam {
 
   void removePokemon(int index) {
     getPokemonTeam().removeWhere((p) => p.teamIndex == index);
-    updateEffectiveness();
   }
 
   // Add newPokemon if there is free space in the team
   bool tryAddPokemon(Pokemon newPokemon) {
-    if (getPokemonTeam().length == teamSize) return false;
-
     final List<Pokemon> pokemonList = getOrderedPokemonList();
     bool added = false;
     for (int i = 0; i < teamSize && !added; ++i) {
@@ -112,10 +107,6 @@ class PokemonTeam {
       }
     }
 
-    if (added) {
-      updateEffectiveness();
-    }
-
     return added;
   }
 
@@ -124,17 +115,11 @@ class PokemonTeam {
 
   // True if one of the team refs is null
   bool hasSpace() {
-    return teamSize != getPokemonTeam().length;
+    return teamSize > getOrderedPokemonList().length;
   }
 
   // The size of the Pokemon team (1 - 3)
   int getSize() => getPokemonTeam().length;
-
-  // Update the type effectiveness of this Pokemon team
-  // Called whenever the team is changed
-  void updateEffectiveness() {
-    effectiveness = PokemonTypes.getNetEffectiveness(getOrderedPokemonList());
-  }
 
   // Toggle a lock on this team
   // When a team is locked, the team cannot be changed or removed
@@ -174,7 +159,6 @@ class UserPokemonTeam extends PokemonTeam {
         */
     }
 
-    userPokemonTeam.updateEffectiveness();
     return userPokemonTeam;
   }
 
@@ -246,7 +230,6 @@ class OpponentPokemonTeam extends PokemonTeam {
         */
     }
 
-    userPokemonTeam.updateEffectiveness();
     return userPokemonTeam;
   }
 

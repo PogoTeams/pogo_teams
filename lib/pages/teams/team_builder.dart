@@ -174,16 +174,19 @@ class _TeamBuilderState extends State<TeamBuilder> {
           ExitButton(
             key: UniqueKey(),
             onPressed: () {
-              _team.cup.value = _cup;
-              PogoData.updatePokemonTeamSync(_team,
-                  newPokemonTeam: _pokemonTeam);
-              Navigator.pop(context);
+              _saveTeam();
+              Navigator.pop(context, _team);
             },
             icon: const Icon(Icons.check),
           ),
         ],
       ),
     );
+  }
+
+  void _saveTeam() {
+    _team.cup.value = _cup;
+    PogoData.updatePokemonTeamSync(_team, newPokemonTeam: _pokemonTeam);
   }
 
   // Update the working index, will be set via a callback or

@@ -2,6 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:pogo_teams/pages/analysis/analysis.dart';
 
+// Packages
+import 'package:isar/isar.dart';
+
 // Local Imports
 import 'team_builder.dart';
 import '../../pogo_objects/pokemon_team.dart';
@@ -33,13 +36,7 @@ class BattleLog extends StatefulWidget {
 }
 
 class _BattleLogState extends State<BattleLog> {
-  late final UserPokemonTeam _team = widget.team;
-
-  void _loadLogs() async {
-    setState(() {
-      PogoData.updatePokemonTeamSync(_team);
-    });
-  }
+  late UserPokemonTeam _team = widget.team;
 
   // Build the app bar with the current page title, and icon
   AppBar _buildAppBar() {
@@ -104,7 +101,7 @@ class _BattleLogState extends State<BattleLog> {
           ),
 
           // Logged opponent teams
-          _buildLogsList(),
+          _buildOpponentsList(),
         ],
       ),
     );
@@ -130,7 +127,7 @@ class _BattleLogState extends State<BattleLog> {
   }
 
   // Build the list of TeamNodes, with the necessary callbacks
-  Widget _buildLogsList() {
+  Widget _buildOpponentsList() {
     return Expanded(
       child: ListView.builder(
         shrinkWrap: true,
@@ -373,18 +370,30 @@ class _BattleLogState extends State<BattleLog> {
 
   // Add a new empty team
   void _onAddTeam() async {
-    await Navigator.push(
+    OpponentPokemonTeam? opponent = OpponentPokemonTeam()
+      ..dateCreated = DateTime.now().toUtc()
+      ..cup.value = _team.getCup();
+    final Id opponentId = PogoData.updatePokemonTeamSync(opponent);
+
+    opponent = await Navigator.push(
       context,
-      MaterialPageRoute<bool>(builder: (BuildContext context) {
+      MaterialPageRoute<OpponentPokemonTeam>(builder: (BuildContext context) {
         return TeamBuilder(
-          team: OpponentPokemonTeam(),
+          team: opponent!,
           cup: _team.getCup(),
           focusIndex: 0,
         );
       }),
     );
 
-    setState(() {});
+    setState(() {
+      if (opponent != null) {
+        _team.opponents.add(opponent);
+        PogoData.updatePokemonTeamSync(_team);
+      } else {
+        PogoData.deleteOpponentPokemonTeamSync(opponentId);
+      }
+    });
   }
 
   // Wrapper for _onEditLogTeam
@@ -407,8 +416,9 @@ class _BattleLogState extends State<BattleLog> {
 
   void _onLockPressed(int teamIndex) {
     setState(() {
-      _team.getOpponents().elementAt(teamIndex).toggleLock();
-      PogoData.updatePokemonTeamSync(_team);
+      final opponent = _team.getOpponents().elementAt(teamIndex);
+      opponent.toggleLock();
+      PogoData.updatePokemonTeamSync(opponent);
     });
   }
 
@@ -426,13 +436,8 @@ class _BattleLogState extends State<BattleLog> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _loadLogs();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    _team = PogoData.getUserPokemonTeamSync(widget.team.id);
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildScaffoldBody(),

@@ -11,6 +11,7 @@ import '../../pogo_objects/pokemon_team.dart';
 import '../../pogo_objects/pokemon_typing.dart';
 import '../../modules/data/pokemon_types.dart';
 import '../../tools/pair.dart';
+import '../../modules/data/pogo_data.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -40,6 +41,8 @@ class Analysis extends StatefulWidget {
 }
 
 class _AnalysisState extends State<Analysis> {
+  late UserPokemonTeam _team = widget.team;
+
   // The list of expansion panels
   List<Pair<PokemonType, double>> defenseThreats = [];
   List<Pair<PokemonType, double>> offenseCoverage = [];
@@ -76,7 +79,7 @@ class _AnalysisState extends State<Analysis> {
 
     // Filter to the key values
     defenseThreats =
-        defense.where((typeData) => typeData.b > pokemonTeam.length).toList();
+        defense.where((pair) => pair.b > pokemonTeam.length).toList();
 
     offenseCoverage =
         offense.where((pair) => pair.b > pokemonTeam.length).toList();
@@ -121,7 +124,7 @@ class _AnalysisState extends State<Analysis> {
 
       // Get coverage lists
       final defense = PokemonTypes.getDefenseCoverage(
-          opponent.effectiveness, includedTypesKeys);
+          opponent.getTeamTypeffectiveness(), includedTypesKeys);
       final offense =
           PokemonTypes.getOffenseCoverage(pokemonTeam, includedTypesKeys);
 
@@ -163,7 +166,7 @@ class _AnalysisState extends State<Analysis> {
     }
 
     // Scale effectiveness to the total logged Pokemon
-    loggedPokemonCount /= widget.team.pokemonTeam.length;
+    loggedPokemonCount /= _team.pokemonTeam.length;
     void _scaleEffectiveness(typeData) => typeData.b /= loggedPokemonCount;
     netEffectiveness.forEach(_scaleEffectiveness);
   }
@@ -176,7 +179,8 @@ class _AnalysisState extends State<Analysis> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> includedTypesKeys = widget.team.getCup().includedTypeKeys();
+    _team = PogoData.getUserPokemonTeamSync(widget.team.id);
+    List<String> includedTypesKeys = _team.getCup().includedTypeKeys();
 
     // Analysis will be on all logged opponent teams
     if (widget.opponentTeams != null) {
@@ -185,7 +189,7 @@ class _AnalysisState extends State<Analysis> {
         includedTypesKeys,
       );
       return LogsAnalysis(
-        team: widget.team,
+        team: _team,
         opponents: widget.opponentTeams!,
         defenseThreats: defenseThreats,
         offenseCoverage: offenseCoverage,
@@ -197,11 +201,11 @@ class _AnalysisState extends State<Analysis> {
     else if (widget.opponentTeam != null) {
       _calculateSingleCoverage(
         widget.opponentTeam!.getOrderedPokemonList(),
-        widget.opponentTeam!.effectiveness,
+        widget.opponentTeam!.getTeamTypeffectiveness(),
         includedTypesKeys,
       );
       return OpponentTeamAnalysis(
-        team: widget.team,
+        team: _team,
         pokemonTeam: widget.opponentTeam!.getOrderedPokemonList(),
         defenseThreats: defenseThreats,
         offenseCoverage: offenseCoverage,
@@ -211,22 +215,16 @@ class _AnalysisState extends State<Analysis> {
 
     // Analysis will be on the user team
     _calculateSingleCoverage(
-      widget.team.getOrderedPokemonList(),
-      widget.team.effectiveness,
+      _team.getOrderedPokemonList(),
+      _team.getTeamTypeffectiveness(),
       includedTypesKeys,
     );
     return UserTeamAnalysis(
-      team: widget.team,
+      team: _team,
       defenseThreats: defenseThreats,
       offenseCoverage: offenseCoverage,
       netEffectiveness: netEffectiveness,
-      recalculate: (team, effectiveness) => setState(() {
-        _calculateSingleCoverage(
-          team,
-          effectiveness,
-          includedTypesKeys,
-        );
-      }),
+      onTeamChanged: () => setState(() {}),
     );
   }
 }
