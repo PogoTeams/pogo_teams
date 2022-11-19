@@ -1,3 +1,8 @@
+# ------------------------------------------
+# WARNING: INSTRUCTIONS NO LONGER APPLICABLE
+# This document needs to be updated
+# ------------------------------------------
+
 # Pogo Teams Update Instructions 
 This is the procedure for updating gamemaster and rankings data for Pogo Teams. The developer will have to manually update the gamemaster file, and perform testing which is illustrated below. All data for Pogo Teams is provided via our [bucket repo](https://github.com/PogoTeams/pogoteams.github.io). Pushing data updates to the root of this repo will invoke an update for all instances of the app. Before commiting to an update, we do our testing in the [bucket test subdirectory](https://github.com/PogoTeams/pogoteams.github.io/tree/main/test). Once the testing is approved, we can push the updates to the root.
 

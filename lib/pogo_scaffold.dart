@@ -6,6 +6,7 @@ import 'pages/pogo_pages.dart';
 import 'modules/data/pogo_data.dart';
 import 'tools/pair.dart';
 import 'modules/ui/sizing.dart';
+import 'modules/data/globals.dart';
 import 'widgets/pogo_drawer.dart';
 
 /*
@@ -29,7 +30,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
   // Flag for when the app has finished the loading phase
   bool _loaded = false;
 
-  bool _forceUpdate = false;
+  bool _forceUpdate = Globals.forceUpdate;
 
   bool get forceUpdate {
     if (_forceUpdate) {
@@ -125,7 +126,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
       stream: PogoData.loadPogoData(
         forceUpdate: forceUpdate,
       ),
-      initialData: Pair(a: 'loading...', b: 0.0),
+      initialData: Pair(a: '', b: 0.0),
       builder: (context, snapshot) {
         // App is finished loading
         if (snapshot.connectionState == ConnectionState.done) {
@@ -153,8 +154,8 @@ class _PogoScaffoldState extends State<PogoScaffold>
             ),
             child: Padding(
               padding: EdgeInsets.only(
-                left: Sizing.blockSizeHorizontal * 10.0,
-                right: Sizing.blockSizeHorizontal * 10.0,
+                left: Sizing.blockSizeHorizontal * 3.0,
+                right: Sizing.blockSizeHorizontal * 5.0,
               ),
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -164,7 +165,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
                     // Loading message
                     Text(
                       snapshot.data!.a,
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headline6,
                     ),
 
                     // Loading indicator

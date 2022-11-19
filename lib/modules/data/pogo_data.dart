@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 // Packages
-import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
@@ -33,6 +32,8 @@ class PogoData {
   static List<PokemonBase> get pokemon =>
       pogoIsar.basePokemon.where().findAllSync();
 
+  static Map<String, dynamic>? _rankingsJsonLookup;
+
   static Future<void> init() async {
     await Hive.initFlutter();
     pogoIsar = await Isar.open([
@@ -55,13 +56,7 @@ class PogoData {
   }
 
   static Stream<Pair<String, double>> loadPogoData(
-      {bool forceUpdate = Globals.forceUpdate}) async* {
-    /*
-    final Map<String, dynamic>? pogoDataJson = jsonDecode(
-        await rootBundle.loadString('bin/json/niantic-snapshot.json'));
-    if (pogoDataJson == null) return;
-        bool update = false; // Flag for whether the local gamemaster an update
-        */
+      {bool forceUpdate = false}) async* {
     String loadMessagePrefix = ''; // For indicating testing
 
     String pathPrefix = '/';
@@ -79,8 +74,7 @@ class PogoData {
       await localSettings.put('timestamp', Globals.earliestTimestamp);
     }
 
-    String message =
-        loadMessagePrefix + 'Loading...'; // Message above progress bar
+    String message = loadMessagePrefix; // Message above progress bar
 
     final client = RetryClient(Client());
 
@@ -88,7 +82,10 @@ class PogoData {
       // If an update is available
       // make an http request for the new data
       if (await _updateAvailable(localSettings, client, pathPrefix)) {
-        message = loadMessagePrefix + 'Updating Pogo Teams...';
+        message = loadMessagePrefix + 'Syncing Pogo Data...';
+
+        Stopwatch stopwatch = Stopwatch();
+        stopwatch.start();
 
         // Retrieve gamemaster
         String response = await client.read(Uri.https(Globals.pogoBucketDomain,
@@ -96,9 +93,48 @@ class PogoData {
 
         yield Pair(a: message, b: .5);
         // If request was successful, load in the new gamemaster,
-        final pogoDataSourceJson = jsonDecode(response);
+        final Map<String, dynamic> pogoDataSourceJson =
+            Map<String, dynamic>.from(jsonDecode(response));
+
+        stopwatch.stop();
+        if (stopwatch.elapsed.inSeconds < 1) {
+          await Future.delayed(
+              Duration(seconds: 1 - stopwatch.elapsed.inSeconds));
+        }
+
         yield Pair(a: message, b: .6);
+        message = loadMessagePrefix + 'Syncing Rankings...';
+
+        stopwatch.reset();
+        stopwatch.start();
+
+        await downloadRankings(
+          client,
+          pathPrefix,
+          List<Map<String, dynamic>>.from(pogoDataSourceJson['cups']),
+        );
+
+        stopwatch.stop();
+        if (stopwatch.elapsed.inSeconds < Globals.minLoadDisplaySeconds) {
+          await Future.delayed(Duration(
+              seconds:
+                  Globals.minLoadDisplaySeconds - stopwatch.elapsed.inSeconds));
+        }
+
+        stopwatch.reset();
+        stopwatch.start();
+
+        yield Pair(a: message, b: .7);
+
+        message = loadMessagePrefix + 'Syncing Local Data...';
         await rebuildFromJson(pogoDataSourceJson);
+
+        if (stopwatch.elapsed.inSeconds < Globals.minLoadDisplaySeconds) {
+          await Future.delayed(Duration(
+              seconds:
+                  Globals.minLoadDisplaySeconds - stopwatch.elapsed.inSeconds));
+        }
+
         yield Pair(a: message, b: .9);
       }
     }
@@ -106,6 +142,8 @@ class PogoData {
     // If HTTP request or json decoding fails
     catch (error) {
       message = loadMessagePrefix + 'Update Failed...';
+      await Future.delayed(
+          const Duration(seconds: Globals.minLoadDisplaySeconds));
       yield Pair(a: message, b: .9);
     } finally {
       client.close();
@@ -113,9 +151,8 @@ class PogoData {
     }
 
     yield Pair(a: message, b: 1.0);
-
-    // Just an asthetic for allowing the loading progress indicator to fill
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(
+        const Duration(seconds: Globals.minLoadDisplaySeconds));
   }
 
   static Future<bool> _updateAvailable(
@@ -144,6 +181,25 @@ class PogoData {
     await localSettings.put('timestamp', localTimeStamp.toString());
 
     return updateAvailable;
+  }
+
+  static Future<void> downloadRankings(
+    Client client,
+    String pathPrefix,
+    List<Map<String, dynamic>> cupsJsonList,
+  ) async {
+    _rankingsJsonLookup ??= {};
+    for (Map<String, dynamic> cupEntry in cupsJsonList) {
+      if (cupEntry.containsKey('cupId')) {
+        String cupId = cupEntry['cupId'];
+        try {
+          String response = await client.read(Uri.https(
+              Globals.pogoBucketDomain,
+              '${Globals.pogoDataSourcePath}${pathPrefix}rankings/$cupId.json'));
+          _rankingsJsonLookup![cupId] = jsonDecode(response);
+        } catch (_) {}
+      }
+    }
   }
 
   static Future<void> rebuildFromJson(Map<String, dynamic> json) async {
@@ -333,19 +389,25 @@ class PogoData {
         cup.excludeFilters.addAll(excludeFilters);
       }
 
-      final List<Id> rankingsIds = await _loadRankings(
-        jsonDecode(
-            await rootBundle.loadString('bin/json/rankings/${cup.cupId}.json')),
-        cup.cp,
-      );
+      if (_rankingsJsonLookup != null &&
+          _rankingsJsonLookup!.containsKey(cup.cupId)) {
+        final List<Id> rankingsIds = await _loadRankings(
+          _rankingsJsonLookup![cup.cupId],
+          cup.cp,
+        );
 
-      cup.rankings.addAll((await pogoIsar.cupPokemon.getAll(rankingsIds))
-          .whereType<CupPokemon>());
+        cup.rankings.addAll(
+          (await pogoIsar.cupPokemon.getAll(rankingsIds))
+              .whereType<CupPokemon>(),
+        );
+      }
 
       await pogoIsar.cups.putByCupId(cup);
       await cup.includeFilters.save();
       await cup.excludeFilters.save();
-      await cup.rankings.save();
+      if (_rankingsJsonLookup != null) {
+        await cup.rankings.save();
+      }
     }
   }
 

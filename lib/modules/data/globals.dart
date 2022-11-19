@@ -16,7 +16,7 @@ class Globals {
 
   // Server domain for retrieving all app updates
   static const String pogoBucketDomain = 'pogoteams.github.io';
-  static const String pogoDataSourcePath = '/pogo_teams/pogo_data_source';
+  static const String pogoDataSourcePath = 'pogo_teams/pogo_data_source';
 
   // The number of Pokemon types in the game
   static const int typeCount = 18;
@@ -35,4 +35,7 @@ class Globals {
 
   static const pokemonRatingMagnitude = 1000;
   static const winShieldMultiplier = 100;
+
+  // The minimum amount of time in seconds that a loading message can display
+  static const int minLoadDisplaySeconds = 2;
 }
