@@ -572,4 +572,22 @@ class PogoData {
   static void deleteOpponentPokemonTeamSync(Id id) {
     pogoIsar.writeTxnSync(() => pogoIsar.opponentPokemonTeams.deleteSync(id));
   }
+
+  static Future<Map<String, dynamic>> userDataToJson() async {
+    final Map<String, dynamic> userDataJson = {};
+    final List<Map<String, dynamic>> teamsJson = [];
+    final List<Map<String, dynamic>> opponentsJson = [];
+
+    for (var team in await pogoIsar.userPokemonTeams.where().findAll()) {
+      teamsJson.add(team.toJson());
+    }
+
+    for (var team in await pogoIsar.opponentPokemonTeams.where().findAll()) {
+      opponentsJson.add(team.toJson());
+    }
+
+    userDataJson['teams'] = teamsJson;
+    userDataJson['opponents'] = opponentsJson;
+    return userDataJson;
+  }
 }

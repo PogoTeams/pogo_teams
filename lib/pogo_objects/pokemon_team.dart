@@ -164,7 +164,7 @@ class UserPokemonTeam extends PokemonTeam {
 
   Map<String, dynamic> toJson() {
     return {
-      'dateCreated': dateCreated,
+      'dateCreated': dateCreated.toString(),
       'locked': locked,
       'teamSize': teamSize,
       'cup': getCup().cupId,
@@ -248,7 +248,7 @@ class OpponentPokemonTeam extends PokemonTeam {
 
   Map<String, dynamic> toJson() {
     return {
-      'dateCreated': dateCreated,
+      'dateCreated': dateCreated.toString(),
       'locked': locked,
       'teamSize': teamSize,
       'battleOutcome': battleOutcome.name,

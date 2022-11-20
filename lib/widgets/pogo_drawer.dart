@@ -58,7 +58,7 @@ class PogoDrawer extends StatelessWidget {
     return Drawer(
       child: Container(
         padding: EdgeInsets.only(
-          bottom: Sizing.blockSizeVertical * 4.0,
+          bottom: Sizing.blockSizeVertical * 2.0,
         ),
         decoration: _buildGradientDecoration(),
         child: Column(
@@ -134,15 +134,16 @@ class PogoDrawer extends StatelessWidget {
                 ],
               ),
             ),
+
+            // Synchronize Pogo data
             ListTile(
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   SizedBox(
-                    width: Sizing.blockSizeHorizontal * 10.0,
+                    width: Sizing.blockSizeHorizontal * 2.0,
                   ),
-                  // Synchronize Pogo data
                   Text(
                     PogoPages.sync.displayName,
                     style: Theme.of(context).textTheme.headline6,
@@ -158,15 +159,43 @@ class PogoDrawer extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
-            SizedBox(
-              height: Sizing.blockSizeHorizontal * 5.0,
+
+            // Google Drive
+            ListTile(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: Sizing.blockSizeHorizontal * 2.0,
+                  ),
+                  Text(
+                    PogoPages.googleDrive.displayName,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  SizedBox(
+                    width: Sizing.blockSizeHorizontal * 3.0,
+                  ),
+                  PogoPages.googleDrive.icon,
+                ],
+              ),
+              onTap: () async {
+                onNavSelected(PogoPages.googleDrive);
+                Navigator.pop(context);
+              },
             ),
+
+            SizedBox(
+              height: Sizing.blockSizeHorizontal * 3.0,
+            ),
+
+            // Footer
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 SizedBox(
-                  width: Sizing.blockSizeHorizontal * 10.0,
+                  width: Sizing.blockSizeHorizontal * 5.0,
                 ),
                 // GitHub link
                 SizedBox(
