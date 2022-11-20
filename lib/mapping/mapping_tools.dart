@@ -68,3 +68,37 @@ void buildSnapshotReleasedIdsList() async {
   await JsonTools.writeJson(
       snapshotReleasedIds, 'bin/json/released-pokemon-ids');
 }
+
+Future<void> copyGeneratedBinFiles(String dirPath) async {
+  // Pogo data source
+  final File pogoDataSource = File('bin/json/niantic-snapshot.json');
+  final File file = await pogoDataSource.copy('$dirPath/pogo_data_source.json');
+
+  stdout.writeln();
+  stdout.writeln('commit: ${file.uri}');
+  int commitCount = 1;
+
+  // Rankings
+  final Directory rankingsDir = Directory('bin/json/rankings');
+  for (var rankingsFile in rankingsDir.listSync().toList().whereType<File>()) {
+    final File copy = await rankingsFile
+        .copy('$dirPath/rankings/${rankingsFile.uri.pathSegments.last}');
+    stdout.writeln('commit: ${copy.uri}');
+    commitCount += 1;
+  }
+
+  // Timestamp
+  final String commitTimestamp = JsonTools.timestamp(utc: true);
+  final File timestampFile = File('$dirPath/timestamp.txt');
+  await timestampFile.writeAsString(commitTimestamp);
+  stdout.writeln('commit: ${timestampFile.uri}');
+  commitCount += 1;
+
+  stdout.writeln();
+  stdout.writeln(
+      'commit ${'-' * (12 + dirPath.length + commitCount.toString().length)}');
+  stdout.writeln('$commitCount files written to: $dirPath');
+  stdout.writeln('-' * (19 + dirPath.length + commitCount.toString().length));
+  stdout.writeln(commitTimestamp);
+  stdout.writeln();
+}

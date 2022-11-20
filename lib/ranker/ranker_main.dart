@@ -17,7 +17,7 @@ import '../modules/data/cups.dart';
 -------------------------------------------------------------------------------
 */
 
-void generatePokemonRankings() async {
+Future<void> generatePokemonRankings() async {
   final Map<String, dynamic>? snapshot =
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;

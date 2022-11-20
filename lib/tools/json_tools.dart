@@ -9,7 +9,7 @@ class JsonTools {
     } else {
       now = DateTime.now();
     }
-    return '${now.year}-${now.month}-${now.day} ${now.hour}:${now.minute}';
+    return '${now.year}-${now.month}-${now.day} ${now.hour}:${now.minute}:${now.second}';
   }
 
   static Future<dynamic> loadJson(String filename) async {

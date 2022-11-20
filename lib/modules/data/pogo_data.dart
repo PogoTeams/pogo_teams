@@ -3,7 +3,7 @@ import 'dart:convert';
 
 // Packages
 import 'package:isar/isar.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:http/retry.dart';
 
@@ -35,7 +35,6 @@ class PogoData {
   static Map<String, dynamic>? _rankingsJsonLookup;
 
   static Future<void> init() async {
-    await Hive.initFlutter();
     pogoIsar = await Isar.open([
       FastMoveSchema,
       ChargeMoveSchema,
