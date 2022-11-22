@@ -15,6 +15,28 @@ Pogo Teams (snapshot.json).
 alternate-forms
 Scans a Niantic data source (niantic.json) for all 'form' fields that are
 not suffixed with '_NORMAL'.
+
+pvpoke-released
+Generate a list of released Pokemon from a PvPoke gamemaster.
+
+snapshot-released
+Generate a list of released Pokemon from a niantic-snapshot.
+
+validate-snapshot-dex
+Checks to ensure there is a Pokemon entry for every dex number. This is
+expected to fail for places where there is a known gap in the snapshot.
+
+generate-rankings
+Generate rankings for all cups specified in json/live_lists/cups.json. Every
+cup will have it's own .json file in the json/rankings directory.
+
+test-generate-rankings
+Step through a battle between 2 pokemon at a specified CP.
+
+commit
+Copy json/niantic-snapshot.json and all rankings in the json/rankings directory
+to pogo_data_source or pogo_data_source/test. Timestamp.txt will be updated to
+UTC now.
 -------------------------------------------------------------------------------
 */
 
@@ -35,8 +57,8 @@ void main(List<String> arguments) async {
     case 'snapshot-released':
       buildSnapshotReleasedIdsList();
       break;
-    case 'validate-snapshot':
-      validateSnapshot();
+    case 'validate-snapshot-dex':
+      validateSnapshotDex();
       break;
     case 'generate-rankings':
       await generatePokemonRankings();

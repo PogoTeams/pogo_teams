@@ -589,4 +589,9 @@ class PogoData {
     userDataJson['opponents'] = opponentsJson;
     return userDataJson;
   }
+
+  static Future<String?> getGoogleServerAuthCode() async {
+    Box localSettings = await Hive.openBox('user');
+    return localSettings.get('googleServerAuthCode');
+  }
 }

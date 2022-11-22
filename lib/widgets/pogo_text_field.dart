@@ -17,11 +17,13 @@ class PogoTextField extends StatelessWidget {
     required this.controller,
     this.width = double.infinity,
     required this.onClear,
+    this.label,
   }) : super(key: key);
 
   final TextEditingController controller;
   final double width;
   final VoidCallback onClear;
+  final Widget? label;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class PogoTextField extends StatelessWidget {
             borderSide: const BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(100),
           ),
-          label: const Icon(Icons.search),
+          label: label ?? const Icon(Icons.search),
           suffixIcon: controller.text.isEmpty
               ? Container()
               : IconButton(

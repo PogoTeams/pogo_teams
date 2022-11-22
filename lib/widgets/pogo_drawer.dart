@@ -170,17 +170,17 @@ class PogoDrawer extends StatelessWidget {
                     width: Sizing.blockSizeHorizontal * 2.0,
                   ),
                   Text(
-                    PogoPages.googleDrive.displayName,
+                    PogoPages.importExport.displayName,
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   SizedBox(
                     width: Sizing.blockSizeHorizontal * 3.0,
                   ),
-                  PogoPages.googleDrive.icon,
+                  PogoPages.importExport.icon,
                 ],
               ),
               onTap: () async {
-                onNavSelected(PogoPages.googleDrive);
+                onNavSelected(PogoPages.importExport);
                 Navigator.pop(context);
               },
             ),

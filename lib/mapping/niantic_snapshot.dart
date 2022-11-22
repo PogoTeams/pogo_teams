@@ -124,7 +124,7 @@ bool _isReleased(String pokemonId) {
   return _releasedPokemonIds.contains(pokemonId);
 }
 
-void validateSnapshot() async {
+void validateSnapshotDex() async {
   final Map<String, dynamic>? snapshot =
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
