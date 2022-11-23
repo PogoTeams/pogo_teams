@@ -95,6 +95,12 @@ class PogoTeamsApp extends StatelessWidget {
         color: Colors.white,
       ),
       hoverColor: Colors.black,
+      selectedRowColor: const Color(0xFF02A1F9),
+      radioTheme: RadioThemeData(
+        overlayColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) => Colors.white,
+        ),
+      ),
     );
   }
 

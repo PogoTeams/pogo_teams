@@ -14,8 +14,8 @@ extension GetUserPokemonTeamCollection on Isar {
 }
 
 const UserPokemonTeamSchema = CollectionSchema(
-  name: r'UserPokemonTeam',
-  id: 3301490803187761055,
+  name: r'userPokemonTeam',
+  id: -5479592468541169356,
   properties: {
     r'dateCreated': PropertySchema(
       id: 0,
@@ -41,19 +41,19 @@ const UserPokemonTeamSchema = CollectionSchema(
   indexes: {},
   links: {
     r'opponents': LinkSchema(
-      id: 6438178243853818459,
+      id: -6942219149930783248,
       name: r'opponents',
       target: r'OpponentPokemonTeam',
       single: false,
     ),
     r'pokemonTeam': LinkSchema(
-      id: -8012031155153865455,
+      id: 9067740430645384288,
       name: r'pokemonTeam',
       target: r'UserPokemon',
       single: false,
     ),
     r'cup': LinkSchema(
-      id: 2590181316853960452,
+      id: -7458455879027562897,
       name: r'cup',
       target: r'Cup',
       single: true,

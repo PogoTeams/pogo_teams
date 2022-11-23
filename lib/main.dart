@@ -19,5 +19,9 @@ void main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await PogoData.init();
 
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+  };
+
   runApp(const PogoTeamsApp());
 }

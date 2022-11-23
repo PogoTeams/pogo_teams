@@ -46,7 +46,7 @@ class Pokemon {
   FastMove getSelectedFastMove() {
     return getBase().getFastMoves().firstWhere(
         (move) => move.moveId == selectedFastMoveId,
-        orElse: () => getBase().getFastMoves().first);
+        orElse: () => FastMove.none);
   }
 
   List<ChargeMove> getSelectedChargeMoves() {
@@ -164,7 +164,7 @@ class UserPokemon extends Pokemon {
       ratings: Ratings.fromJson(json['ratings']),
       ivs: IVs.fromJson(json['ivs']),
       selectedFastMoveId: json['selectedFastMoveId'] as String,
-      selectedChargeMoveIds: List<String>.from(json['selectedCHargeMoveIds']),
+      selectedChargeMoveIds: List<String>.from(json['selectedChargeMoveIds']),
       teamIndex: json['teamIndex'],
     );
   }

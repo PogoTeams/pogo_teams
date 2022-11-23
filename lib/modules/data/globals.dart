@@ -18,6 +18,9 @@ class Globals {
   static const String pogoBucketDomain = 'pogoteams.github.io';
   static const String pogoDataSourcePath = 'pogo_teams/pogo_data_source';
 
+  // The name of the folder where a user's backup data exists
+  static const String userBackupFolderName = 'pogo_teams_app_data';
+
   // The number of Pokemon types in the game
   static const int typeCount = 18;
 

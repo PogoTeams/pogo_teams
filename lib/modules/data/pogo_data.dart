@@ -572,26 +572,79 @@ class PogoData {
     pogoIsar.writeTxnSync(() => pogoIsar.opponentPokemonTeams.deleteSync(id));
   }
 
-  static Future<Map<String, dynamic>> userDataToJson() async {
+  static Future<Map<String, dynamic>> userDataToExportJson() async {
     final Map<String, dynamic> userDataJson = {};
     final List<Map<String, dynamic>> teamsJson = [];
-    final List<Map<String, dynamic>> opponentsJson = [];
+    //final List<Map<String, dynamic>> opponentsJson = [];
 
     for (var team in await pogoIsar.userPokemonTeams.where().findAll()) {
-      teamsJson.add(team.toJson());
+      teamsJson.add(team.toExportJson());
     }
 
+    /* TODO: support opponent teams not associated with a user team
     for (var team in await pogoIsar.opponentPokemonTeams.where().findAll()) {
-      opponentsJson.add(team.toJson());
+      opponentsJson.add(team.toExportJson());
     }
+    */
 
     userDataJson['teams'] = teamsJson;
-    userDataJson['opponents'] = opponentsJson;
+    //userDataJson['opponents'] = opponentsJson;
     return userDataJson;
+  }
+
+  static Future<void> importUserDataFromJson(Map<String, dynamic> json) async {
+    for (var teamEntry in List<Map<String, dynamic>>.from(json['teams'])) {
+      final team = UserPokemonTeam.fromJson(teamEntry);
+      final List<UserPokemon> pokemonTeam = await _processUserPokemonTeam(
+          List<Map<String, dynamic>>.from(teamEntry['pokemonTeam']));
+
+      for (var opponentEntry
+          in List<Map<String, dynamic>>.from(teamEntry['opponents'])) {
+        final opponent = OpponentPokemonTeam.fromJson(opponentEntry);
+        final List<UserPokemon> opponentPokemonTeam =
+            await _processUserPokemonTeam(
+                List<Map<String, dynamic>>.from(opponentEntry['pokemonTeam']));
+
+        createPokemonTeamSync(opponent);
+        updatePokemonTeamSync(opponent, newPokemonTeam: pokemonTeam);
+        team.opponents.add(opponent);
+      }
+
+      createPokemonTeamSync(team);
+      updatePokemonTeamSync(team, newPokemonTeam: pokemonTeam);
+    }
+  }
+
+  static Future<List<UserPokemon>> _processUserPokemonTeam(
+      List<Map<String, dynamic>> pokemonTeamJson) async {
+    List<UserPokemon> pokemonTeam = [];
+
+    for (var pokemonEntry in pokemonTeamJson) {
+      final UserPokemon pokemon = UserPokemon.fromJson(pokemonEntry);
+      pokemon.base.value = await pogoIsar.basePokemon
+          .getByPokemonId(pokemonEntry['pokemonId'] as String);
+      pokemonTeam.add(pokemon);
+    }
+
+    return pokemonTeam;
   }
 
   static Future<String?> getGoogleServerAuthCode() async {
     Box localSettings = await Hive.openBox('user');
     return localSettings.get('googleServerAuthCode');
+  }
+
+  static Future<void> updateUserGoogleDriveFolderId(
+      String userEmail, String? folderId) async {
+    final Box userBox = await Hive.openBox('googleDriveBackupIds');
+    await userBox.put(userEmail, folderId);
+    await userBox.close();
+  }
+
+  static Future<String?> getUserGoogldDriveFolderId(String userEmail) async {
+    final Box userBox = await Hive.openBox('googleDriveBackupIds');
+    final String? folderId = userBox.get(userEmail, defaultValue: null);
+    await userBox.close();
+    return folderId;
   }
 }

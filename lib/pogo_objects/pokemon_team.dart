@@ -128,59 +128,46 @@ class PokemonTeam {
   }
 
   // Build and return a json serializable list of the Pokemon Team
-  List<Map<String, dynamic>> _pokemonTeamToJson() {
-    List<Map<String, dynamic>> teamJson = List.empty(growable: true);
-
-    for (var pokemon in getPokemonTeam()) {
-      // TODO teamJson.add(pokemonTeam[i]!.toUserTeamJson(i));
-    }
-
-    return teamJson;
+  List<Map<String, dynamic>> _pokemonTeamToExportJson() {
+    return getPokemonTeam().map((pokemon) => pokemon.toExportJson()).toList();
   }
 }
 
 // A user's team
 @Collection(accessor: 'userPokemonTeams')
+@Name('userPokemonTeam')
 class UserPokemonTeam extends PokemonTeam {
   UserPokemonTeam();
 
   factory UserPokemonTeam.fromJson(Map<String, dynamic> json) {
     final userPokemonTeam = UserPokemonTeam()
-      ..dateCreated = json['dateCreated'] as DateTime?
+      ..dateCreated = DateTime.tryParse(json['dateCreated'] ?? '')
       ..locked = json['locked'] as bool
       ..teamSize = json['teamSize'] as int
       ..cup.value = PogoData.getCupById(json['cup'] as String);
 
-    for (Map<String, dynamic> pokemonEntry
-        in List<Map<String, dynamic>>.from(json['pokemonTeam'])) {
-      /* TODO
-      pokemonTeam.add(Pokemon.fromJson(pokemonEntry)
-        ..pokemonIndex = pokemonEntry['teamIndex'] as int);
-        */
-    }
-
     return userPokemonTeam;
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toExportJson() {
     return {
       'dateCreated': dateCreated.toString(),
       'locked': locked,
       'teamSize': teamSize,
       'cup': getCup().cupId,
-      'pokemonTeam': _pokemonTeamToJson(),
-      'opponents': _opponnentsToJson(),
+      'pokemonTeam': _pokemonTeamToExportJson(),
+      'opponents': _opponentsToJson(),
     };
   }
 
-  Map<String, dynamic> _opponnentsToJson() {
-    // TODO
-    return {};
+  List<Map<String, dynamic>> _opponentsToJson() {
+    return getOpponents().map((opponent) => opponent.toExportJson()).toList();
   }
 
   // A list of logged opponent teams on this team
   // The user can report wins, ties, and losses given this list
-  IsarLinks<OpponentPokemonTeam> opponents = IsarLinks<OpponentPokemonTeam>();
+  final IsarLinks<OpponentPokemonTeam> opponents =
+      IsarLinks<OpponentPokemonTeam>();
 
   IsarLinks<OpponentPokemonTeam> getOpponents() {
     if (opponents.isAttached && !opponents.isLoaded) {
@@ -216,7 +203,7 @@ class OpponentPokemonTeam extends PokemonTeam {
 
   factory OpponentPokemonTeam.fromJson(Map<String, dynamic> json) {
     final userPokemonTeam = OpponentPokemonTeam()
-      ..dateCreated = json['dateCreated'] as DateTime?
+      ..dateCreated = DateTime.tryParse(json['dateCreated'] ?? '')
       ..locked = json['locked'] as bool
       ..teamSize = json['teamSize'] as int
       ..battleOutcome = _fromOutcomeName(json['battleOutcome'])
@@ -246,14 +233,14 @@ class OpponentPokemonTeam extends PokemonTeam {
     }
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toExportJson() {
     return {
       'dateCreated': dateCreated.toString(),
       'locked': locked,
       'teamSize': teamSize,
       'battleOutcome': battleOutcome.name,
       'cup': getCup().cupId,
-      'pokemonTeam': _pokemonTeamToJson(),
+      'pokemonTeam': _pokemonTeamToExportJson(),
     };
   }
 
