@@ -159,6 +159,16 @@ class UserPokemon extends Pokemon {
           base: base,
         );
 
+  factory UserPokemon.fromJson(Map<String, dynamic> json) {
+    return UserPokemon(
+      ratings: Ratings.fromJson(json['ratings']),
+      ivs: IVs.fromJson(json['ivs']),
+      selectedFastMoveId: json['selectedFastMoveId'] as String,
+      selectedChargeMoveIds: List<String>.from(json['selectedCHargeMoveIds']),
+      teamIndex: json['teamIndex'],
+    );
+  }
+
   factory UserPokemon.fromPokemon(Pokemon other) {
     return UserPokemon(
       ratings: other.ratings,
@@ -167,6 +177,17 @@ class UserPokemon extends Pokemon {
       selectedChargeMoveIds: List<String>.from(other.selectedChargeMoveIds),
       base: other.getBase(),
     );
+  }
+
+  Map<String, dynamic> toExportJson() {
+    return {
+      'pokemonId': getBase().pokemonId,
+      'ratings': ratings.toJson(),
+      'ivs': ivs.toJson(),
+      'selectedFastMoveId': selectedFastMoveId,
+      'selectedChargeMoveIds': selectedChargeMoveIds,
+      'teamIndex': teamIndex,
+    };
   }
 
   int? teamIndex;
