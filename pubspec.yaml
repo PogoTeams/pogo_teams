@@ -44,6 +44,7 @@ dependencies:
   hive_flutter: ^1.1.0
   googleapis: ^9.2.0
   google_sign_in: ^5.4.2
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

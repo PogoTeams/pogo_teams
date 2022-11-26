@@ -19,7 +19,10 @@ class Globals {
   static const String pogoDataSourcePath = 'pogo_teams/pogo_data_source';
 
   // The name of the folder where a user's backup data exists
-  static const String userBackupFolderName = 'pogo_teams_app_data';
+  static const String driveBackupFolderName = 'pogo_teams_app_data';
+
+  static const String driveBackupFolderGuid =
+      'pgtb86b4-b462-4711-85d6-b875ae3bdef6';
 
   // The number of Pokemon types in the game
   static const int typeCount = 18;

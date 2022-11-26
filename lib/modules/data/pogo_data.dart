@@ -628,23 +628,4 @@ class PogoData {
 
     return pokemonTeam;
   }
-
-  static Future<String?> getGoogleServerAuthCode() async {
-    Box localSettings = await Hive.openBox('user');
-    return localSettings.get('googleServerAuthCode');
-  }
-
-  static Future<void> updateUserGoogleDriveFolderId(
-      String userEmail, String? folderId) async {
-    final Box userBox = await Hive.openBox('googleDriveBackupIds');
-    await userBox.put(userEmail, folderId);
-    await userBox.close();
-  }
-
-  static Future<String?> getUserGoogldDriveFolderId(String userEmail) async {
-    final Box userBox = await Hive.openBox('googleDriveBackupIds');
-    final String? folderId = userBox.get(userEmail, defaultValue: null);
-    await userBox.close();
-    return folderId;
-  }
 }
