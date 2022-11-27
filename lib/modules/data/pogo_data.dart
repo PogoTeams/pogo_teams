@@ -628,4 +628,12 @@ class PogoData {
 
     return pokemonTeam;
   }
+
+  static Future<void> clearUserData() async {
+    await pogoIsar.writeTxn(() async {
+      await pogoIsar.userPokemonTeams.clear();
+      await pogoIsar.userPokemon.clear();
+      await pogoIsar.opponentPokemonTeams.clear();
+    });
+  }
 }

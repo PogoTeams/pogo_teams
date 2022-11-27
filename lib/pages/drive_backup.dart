@@ -12,6 +12,7 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 // Local Imports
+import '../widgets/dialogs.dart';
 import '../modules/data/globals.dart';
 import '../modules/data/pogo_data.dart';
 import '../modules/ui/sizing.dart';
@@ -74,7 +75,7 @@ class _DriveBackupState extends State<DriveBackup> {
 
   void _import() async {
     if (_selectedBackupFile == null || _selectedBackupFile?.id == null) return;
-    if (await _getConfirmation('Download Backup',
+    if (await getConfirmation(context, 'Download Backup',
         'All data will be imported from ${_selectedBackupFile?.name ?? 'this file'}.')) {
       setState(() {
         _refreshBackupsList = true;
@@ -160,7 +161,7 @@ class _DriveBackupState extends State<DriveBackup> {
 
   void _onClearBackup(drive_api.File file) async {
     if (file.id == null) return;
-    if (await _getConfirmation('Delete Backup',
+    if (await getConfirmation(context, 'Delete Backup',
         '${file.name ?? 'This file'} will be permanently deleted.')) {
       final drive =
           drive_api.DriveApi(GoogleAuthClient(await _account!.authHeaders));
@@ -418,7 +419,7 @@ class _DriveBackupState extends State<DriveBackup> {
             width: Sizing.blockSizeHorizontal * 5.0,
           ),
           Icon(
-            _signedIn ? Icons.logout : Icons.login,
+            Icons.login,
             size: Sizing.blockSizeHorizontal * 7.0,
           ),
         ],
@@ -482,73 +483,22 @@ class _DriveBackupState extends State<DriveBackup> {
             onDone: () async {
               final userDataJson = jsonDecode(serializedUserDataJson);
               await PogoData.importUserDataFromJson(userDataJson);
+              String message;
+              if (file.name == null) {
+                message = 'The import was successfully completed.';
+              } else {
+                message = 'The import from '
+                    '${file.name ?? 'the backup file'}'
+                    ' was successfully completed.';
+              }
+              await processFinished(
+                context,
+                'Import Complete',
+                message,
+              );
             },
           );
     }
-  }
-
-  Future<bool> _getConfirmation(
-    String title,
-    String message,
-  ) async {
-    bool confirmation = false;
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          titlePadding: EdgeInsets.zero,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: Sizing.blockSizeVertical * 2.0,
-                  left: Sizing.blockSizeHorizontal * 5.0,
-                ),
-                child: Text(
-                  title,
-                  style: Theme.of(context).textTheme.headline6?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ),
-              IconButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.clear),
-              ),
-            ],
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          content: Text(
-            message,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          actions: <Widget>[
-            Center(
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: Theme.of(context).textTheme.headline6,
-                ),
-                child: Text(
-                  'Continue',
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-                onPressed: () {
-                  confirmation = true;
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-          ],
-        );
-      },
-    );
-    return confirmation;
   }
 
   void _displayError(String error) async {

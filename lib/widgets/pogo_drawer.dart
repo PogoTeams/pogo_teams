@@ -185,6 +185,31 @@ class PogoDrawer extends StatelessWidget {
               },
             ),
 
+            // Settings
+            ListTile(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: Sizing.blockSizeHorizontal * 2.0,
+                  ),
+                  Text(
+                    PogoPages.settings.displayName,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  SizedBox(
+                    width: Sizing.blockSizeHorizontal * 3.0,
+                  ),
+                  PogoPages.settings.icon,
+                ],
+              ),
+              onTap: () async {
+                onNavSelected(PogoPages.settings);
+                Navigator.pop(context);
+              },
+            ),
+
             SizedBox(
               height: Sizing.blockSizeHorizontal * 3.0,
             ),

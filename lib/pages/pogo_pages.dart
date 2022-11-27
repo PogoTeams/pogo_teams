@@ -6,9 +6,10 @@ import 'rankings.dart';
 import 'battle_logs.dart';
 import 'teams/teams.dart';
 import 'drive_backup.dart';
+import 'settings.dart';
 import '../modules/ui/sizing.dart';
 
-enum PogoPages { teams, battleLogs, rankings, sync, driveBackup }
+enum PogoPages { teams, battleLogs, rankings, sync, driveBackup, settings }
 
 extension PogoPagesExt on PogoPages {
   String get displayName {
@@ -23,6 +24,8 @@ extension PogoPagesExt on PogoPages {
         return 'Sync Pogo Data';
       case PogoPages.driveBackup:
         return 'Google Drive Backup';
+      case PogoPages.settings:
+        return 'Settings';
     }
   }
 
@@ -53,6 +56,11 @@ extension PogoPagesExt on PogoPages {
           Icons.drive_file_move,
           size: Sizing.icon3,
         );
+      case PogoPages.settings:
+        return Icon(
+          Icons.settings,
+          size: Sizing.icon3,
+        );
     }
   }
 
@@ -68,6 +76,8 @@ extension PogoPagesExt on PogoPages {
         return const Rankings();
       case PogoPages.driveBackup:
         return const DriveBackup();
+      case PogoPages.settings:
+        return const Settings();
     }
   }
 }
