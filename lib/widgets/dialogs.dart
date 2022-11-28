@@ -112,3 +112,44 @@ Future<void> processFinished(
     },
   );
 }
+
+void displayError(BuildContext context, String error) async {
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          'Error',
+          style: Theme.of(context).textTheme.headline6?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'An unexpected error occurred:\n$error',
+              style: Theme.of(context).textTheme.bodyLarge,
+            )
+          ],
+        ),
+        actions: [
+          Center(
+            child: TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.headline6,
+              ),
+              child: Text(
+                'OK',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}

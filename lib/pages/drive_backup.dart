@@ -477,70 +477,36 @@ class _DriveBackupState extends State<DriveBackup> {
               serializedUserDataJson += event;
             },
             onError: (error) {
-              _displayError(error);
+              displayError(context, error.toString());
             },
             cancelOnError: true,
             onDone: () async {
-              final userDataJson = jsonDecode(serializedUserDataJson);
-              await PogoData.importUserDataFromJson(userDataJson);
-              String message;
-              if (file.name == null) {
-                message = 'The import was successfully completed.';
-              } else {
-                message = 'The import from '
-                    '${file.name ?? 'the backup file'}'
-                    ' was successfully completed.';
+              try {
+                final userDataJson = jsonDecode(serializedUserDataJson);
+                if (userDataJson == null) {
+                  throw Exception('Failed to decode backup json due to '
+                      'improper formatting');
+                }
+                await PogoData.importUserDataFromJson(userDataJson);
+                String message;
+                if (file.name == null) {
+                  message = 'The import was successfully completed.';
+                } else {
+                  message = 'The import from '
+                      '${file.name ?? 'the backup file'}'
+                      ' was successfully completed.';
+                }
+                await processFinished(
+                  context,
+                  'Import Complete',
+                  message,
+                );
+              } catch (error) {
+                displayError(context, error.toString());
               }
-              await processFinished(
-                context,
-                'Import Complete',
-                message,
-              );
             },
           );
     }
-  }
-
-  void _displayError(String error) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          titlePadding: EdgeInsets.zero,
-          title: Text(
-            'Import Error',
-            style: Theme.of(context).textTheme.headline6?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'An unexpected error occured on import:\n$error',
-                style: Theme.of(context).textTheme.bodyLarge,
-              )
-            ],
-          ),
-          actions: [
-            Center(
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: Theme.of(context).textTheme.headline6,
-                ),
-                child: Text(
-                  'OK',
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
