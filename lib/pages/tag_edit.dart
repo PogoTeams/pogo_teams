@@ -20,9 +20,11 @@ class TagEdit extends StatefulWidget {
   const TagEdit({
     Key? key,
     this.tag,
+    this.create = false,
   }) : super(key: key);
 
   final Tag? tag;
+  final bool create;
 
   @override
   _TagEditState createState() => _TagEditState();
@@ -30,7 +32,7 @@ class TagEdit extends StatefulWidget {
 
 class _TagEditState extends State<TagEdit> {
   final TextEditingController _textController = TextEditingController();
-  Color _selectedColor = Colors.black;
+  late Color _selectedColor;
 
   Widget _buildFloatingActionButtons() {
     return SizedBox(
@@ -59,7 +61,7 @@ class _TagEditState extends State<TagEdit> {
   }
 
   void _onSave() async {
-    if (PogoData.tagNameExists(_textController.text)) {
+    if (widget.create && PogoData.tagNameExists(_textController.text)) {
       displayMessageOK(
         context,
         'Invalid Tag Name',
@@ -69,8 +71,21 @@ class _TagEditState extends State<TagEdit> {
       PogoData.updateTagSync(Tag(
         name: _textController.text,
         uiColor: _selectedColor.value.toRadixString(10),
+        dateCreated: widget.create ? DateTime.now() : null,
       ));
       Navigator.pop(context);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.tag != null) {
+      _textController.text = widget.tag!.name;
+      _selectedColor = Color(int.parse(widget.tag!.uiColor));
+    } else {
+      _selectedColor = Colors.black;
     }
   }
 
@@ -127,7 +142,7 @@ class _TagEditState extends State<TagEdit> {
               colorPickerWidth: Sizing.screenWidth,
               pickerAreaBorderRadius: BorderRadius.circular(10),
               labelTypes: const [],
-              pickerColor: Colors.black,
+              pickerColor: _selectedColor,
               onColorChanged: (color) => _selectedColor = color,
             ),
           ],

@@ -501,7 +501,7 @@ class _DriveBackupState extends State<DriveBackup> {
                   message = 'The import was successfully completed.';
                 } else {
                   message = 'The import from '
-                      '${file.name ?? 'the backup file'}'
+                      '${file.name?.replaceFirst('.json', '') ?? 'the backup file'}'
                       ' was successfully completed.';
                 }
                 await processFinished(

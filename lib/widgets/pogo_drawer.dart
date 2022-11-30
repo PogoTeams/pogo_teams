@@ -90,6 +90,28 @@ class PogoDrawer extends StatelessWidget {
                     },
                   ),
 
+                  // Tags
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          PogoPages.tags.displayName,
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
+                        SizedBox(
+                          width: Sizing.blockSizeHorizontal * 3.0,
+                        ),
+                        PogoPages.tags.icon,
+                      ],
+                    ),
+                    onTap: () async {
+                      onNavSelected(PogoPages.tags);
+                      Navigator.pop(context);
+                    },
+                  ),
+
                   // Battle logs
                   ListTile(
                     title: Row(

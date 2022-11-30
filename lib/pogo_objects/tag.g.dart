@@ -17,13 +17,18 @@ const TagSchema = CollectionSchema(
   name: r'Tag',
   id: 4007045862261149568,
   properties: {
-    r'name': PropertySchema(
+    r'dateCreated': PropertySchema(
       id: 0,
+      name: r'dateCreated',
+      type: IsarType.dateTime,
+    ),
+    r'name': PropertySchema(
+      id: 1,
       name: r'name',
       type: IsarType.string,
     ),
     r'uiColor': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'uiColor',
       type: IsarType.string,
     )
@@ -73,8 +78,9 @@ void _tagSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.name);
-  writer.writeString(offsets[1], object.uiColor);
+  writer.writeDateTime(offsets[0], object.dateCreated);
+  writer.writeString(offsets[1], object.name);
+  writer.writeString(offsets[2], object.uiColor);
 }
 
 Tag _tagDeserialize(
@@ -84,8 +90,9 @@ Tag _tagDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Tag(
-    name: reader.readString(offsets[0]),
-    uiColor: reader.readString(offsets[1]),
+    dateCreated: reader.readDateTimeOrNull(offsets[0]),
+    name: reader.readString(offsets[1]),
+    uiColor: reader.readString(offsets[2]),
   );
   object.id = id;
   return object;
@@ -99,8 +106,10 @@ P _tagDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 1:
+      return (reader.readString(offset)) as P;
+    case 2:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -292,6 +301,75 @@ extension TagQueryWhere on QueryBuilder<Tag, Tag, QWhereClause> {
 }
 
 extension TagQueryFilter on QueryBuilder<Tag, Tag, QFilterCondition> {
+  QueryBuilder<Tag, Tag, QAfterFilterCondition> dateCreatedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'dateCreated',
+      ));
+    });
+  }
+
+  QueryBuilder<Tag, Tag, QAfterFilterCondition> dateCreatedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'dateCreated',
+      ));
+    });
+  }
+
+  QueryBuilder<Tag, Tag, QAfterFilterCondition> dateCreatedEqualTo(
+      DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'dateCreated',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Tag, Tag, QAfterFilterCondition> dateCreatedGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'dateCreated',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Tag, Tag, QAfterFilterCondition> dateCreatedLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'dateCreated',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Tag, Tag, QAfterFilterCondition> dateCreatedBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'dateCreated',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Tag, Tag, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -606,6 +684,18 @@ extension TagQueryObject on QueryBuilder<Tag, Tag, QFilterCondition> {}
 extension TagQueryLinks on QueryBuilder<Tag, Tag, QFilterCondition> {}
 
 extension TagQuerySortBy on QueryBuilder<Tag, Tag, QSortBy> {
+  QueryBuilder<Tag, Tag, QAfterSortBy> sortByDateCreated() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateCreated', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Tag, Tag, QAfterSortBy> sortByDateCreatedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateCreated', Sort.desc);
+    });
+  }
+
   QueryBuilder<Tag, Tag, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -632,6 +722,18 @@ extension TagQuerySortBy on QueryBuilder<Tag, Tag, QSortBy> {
 }
 
 extension TagQuerySortThenBy on QueryBuilder<Tag, Tag, QSortThenBy> {
+  QueryBuilder<Tag, Tag, QAfterSortBy> thenByDateCreated() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateCreated', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Tag, Tag, QAfterSortBy> thenByDateCreatedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateCreated', Sort.desc);
+    });
+  }
+
   QueryBuilder<Tag, Tag, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -670,6 +772,12 @@ extension TagQuerySortThenBy on QueryBuilder<Tag, Tag, QSortThenBy> {
 }
 
 extension TagQueryWhereDistinct on QueryBuilder<Tag, Tag, QDistinct> {
+  QueryBuilder<Tag, Tag, QDistinct> distinctByDateCreated() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'dateCreated');
+    });
+  }
+
   QueryBuilder<Tag, Tag, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -689,6 +797,12 @@ extension TagQueryProperty on QueryBuilder<Tag, Tag, QQueryProperty> {
   QueryBuilder<Tag, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Tag, DateTime?, QQueryOperations> dateCreatedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'dateCreated');
     });
   }
 

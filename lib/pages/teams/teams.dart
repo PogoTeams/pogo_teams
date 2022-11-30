@@ -56,7 +56,7 @@ class _TeamsState extends State<Teams> {
                 pokemonTeam: _teams[index].getOrderedPokemonListFilled(),
                 cup: _teams[index].getCup(),
                 tag: _teams[index].tag.value,
-                onTapPressed: () => _onTagTeam(index),
+                onTagPressed: () => _onTagTeam(index),
                 buildHeader: true,
                 winRate: _teams[index].getWinRate(),
                 footer: _buildTeamNodeFooter(index),
@@ -76,7 +76,7 @@ class _TeamsState extends State<Teams> {
           pokemonTeam: _teams[index].getOrderedPokemonListFilled(),
           cup: _teams[index].getCup(),
           tag: _teams[index].tag.value,
-          onTapPressed: () => _onTagTeam(index),
+          onTagPressed: () => _onTagTeam(index),
           buildHeader: true,
           winRate: _teams[index].getWinRate(),
           footer: _buildTeamNodeFooter(index),
@@ -112,6 +112,15 @@ class _TeamsState extends State<Teams> {
           onPressed: () => _onEditTeam(teamIndex),
           icon: const Icon(Icons.build_circle),
           tooltip: 'Edit Team',
+          iconSize: iconSize,
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
+        ),
+
+        // Tag team
+        IconButton(
+          onPressed: () => _onTagTeam(teamIndex),
+          icon: const Icon(Icons.tag),
+          tooltip: 'Tag Team',
           iconSize: iconSize,
           splashRadius: Sizing.blockSizeHorizontal * 5.0,
         ),

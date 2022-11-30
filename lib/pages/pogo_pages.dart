@@ -7,15 +7,26 @@ import 'battle_logs.dart';
 import 'teams/teams.dart';
 import 'drive_backup.dart';
 import 'settings.dart';
+import 'tags.dart';
 import '../modules/ui/sizing.dart';
 
-enum PogoPages { teams, battleLogs, rankings, sync, driveBackup, settings }
+enum PogoPages {
+  teams,
+  tags,
+  battleLogs,
+  rankings,
+  sync,
+  driveBackup,
+  settings,
+}
 
 extension PogoPagesExt on PogoPages {
   String get displayName {
     switch (this) {
       case PogoPages.teams:
         return 'Teams';
+      case PogoPages.tags:
+        return 'Tags';
       case PogoPages.battleLogs:
         return 'Battle Logs';
       case PogoPages.rankings:
@@ -34,6 +45,11 @@ extension PogoPagesExt on PogoPages {
       case PogoPages.teams:
         return Icon(
           Icons.catching_pokemon,
+          size: Sizing.icon3,
+        );
+      case PogoPages.tags:
+        return Icon(
+          Icons.tag,
           size: Sizing.icon3,
         );
       case PogoPages.battleLogs:
@@ -68,6 +84,8 @@ extension PogoPagesExt on PogoPages {
     switch (this) {
       case PogoPages.teams:
         return const Teams();
+      case PogoPages.tags:
+        return const Tags();
       case PogoPages.battleLogs:
         return const BattleLogs();
       case PogoPages.rankings:

@@ -13,9 +13,11 @@ class ColorDot extends StatelessWidget {
   const ColorDot({
     Key? key,
     required this.color,
+    this.onPressed,
   }) : super(key: key);
 
   final Color color;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,11 @@ class ColorDot extends StatelessWidget {
       ),
       height: Sizing.blockSizeHorizontal * 7.0,
       width: Sizing.blockSizeHorizontal * 7.0,
+      child: onPressed == null
+          ? Container()
+          : MaterialButton(
+              onPressed: onPressed,
+            ),
     );
   }
 }

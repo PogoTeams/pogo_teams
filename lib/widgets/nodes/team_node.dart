@@ -27,7 +27,7 @@ class TeamNode extends StatelessWidget {
     required this.pokemonTeam,
     required this.cup,
     this.tag,
-    this.onTapPressed,
+    this.onTagPressed,
     this.buildHeader = false,
     this.winRate,
     this.footer,
@@ -42,7 +42,7 @@ class TeamNode extends StatelessWidget {
   final List<UserPokemon?> pokemonTeam;
   final Cup cup;
   final Tag? tag;
-  final void Function()? onTapPressed;
+  final void Function()? onTagPressed;
 
   final bool buildHeader;
   final String? winRate;
@@ -78,15 +78,11 @@ class TeamNode extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           if (tag != null)
-            MaterialButton(
-              minWidth: 0,
-              padding: EdgeInsets.zero,
-              onPressed: onTapPressed,
-              child: ColorDot(
-                color: Color(
-                  int.parse(tag!.uiColor),
-                ),
+            ColorDot(
+              color: Color(
+                int.parse(tag!.uiColor),
               ),
+              onPressed: onTagPressed,
             ),
         ],
       ),

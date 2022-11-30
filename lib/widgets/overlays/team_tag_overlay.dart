@@ -33,11 +33,11 @@ class TeamTagOverlay extends StatefulWidget {
 class _TeamTagOverlayState extends State<TeamTagOverlay> {
   Tag? _selectedTag;
 
-  void _onNewTag() async {
+  void _onAddTag() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => const TagEdit(),
+        builder: (BuildContext context) => const TagEdit(create: true),
       ),
     );
 
@@ -80,12 +80,12 @@ class _TeamTagOverlayState extends State<TeamTagOverlay> {
 
             // Create New Tag
             MaterialButton(
-              onPressed: _onNewTag,
+              onPressed: _onAddTag,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Add New Tag',
+                    'Add Tag',
                     style: Theme.of(context).textTheme.headline5,
                   ),
                   SizedBox(

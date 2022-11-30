@@ -1,13 +1,11 @@
 // Flutter
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 // Local Imports
+import '../pogo_objects/tag.dart';
 import '../modules/ui/sizing.dart';
-import '../pogo_objects/cup.dart';
-import '../widgets/dropdowns/cup_dropdown.dart';
-import '../modules/data/pogo_data.dart';
+import '../widgets/buttons/tag_filter_button.dart';
+import '../widgets/buttons/gradient_button.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -22,46 +20,17 @@ class BattleLogs extends StatefulWidget {
 }
 
 class _RankingsState extends State<BattleLogs> {
-  late Cup cup;
-
-  void _onCupChanged(String? newCupId) {
-    if (newCupId == null) return;
-
-    setState(() {
-      //cup = PogoData.getCupById(newCupId);
-    });
-  }
-
-  Widget _buildDropdowns() {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: Sizing.blockSizeHorizontal * 1.0,
-        right: Sizing.blockSizeHorizontal * 1.0,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Dropdown for pvp cup selection
-          CupDropdown(
-            cup: cup,
-            onCupChanged: _onCupChanged,
-            width: Sizing.screenWidth * .7,
-          ),
-        ],
-      ),
-    );
-  }
+  Tag? _selectedTag;
 
   Widget _buildLoggedBattles() {
     return Container();
   }
 
-  // Setup the input controller
+  void _onAddLog() {}
+
   @override
   void initState() {
     super.initState();
-
-    cup = PogoData.getCupsSync().first;
   }
 
   @override
@@ -70,15 +39,50 @@ class _RankingsState extends State<BattleLogs> {
       padding: EdgeInsets.only(
         top: Sizing.blockSizeVertical * 2.0,
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Dropdowns for selecting a cup and a category
-          _buildDropdowns(),
-
-          // Logged battles list
-          _buildLoggedBattles(),
-        ],
+      child: Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Logged battles list
+            _buildLoggedBattles(),
+          ],
+        ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            GradientButton(
+              onPressed: _onAddLog,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Add Battle Log',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  SizedBox(
+                    width: Sizing.blockSizeHorizontal * 5.0,
+                  ),
+                  Icon(
+                    Icons.add,
+                    size: Sizing.blockSizeHorizontal * 7.0,
+                  ),
+                ],
+              ),
+              width: Sizing.screenWidth * .6,
+              height: Sizing.blockSizeVertical * 8.5,
+            ),
+            TagFilterButton(
+              tag: _selectedTag,
+              onTagChanged: (tag) {
+                setState(() {
+                  _selectedTag = tag;
+                });
+              },
+              width: Sizing.blockSizeHorizontal * .85,
+            ),
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }
