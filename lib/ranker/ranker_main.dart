@@ -29,7 +29,7 @@ Future<void> generatePokemonRankings() async {
   Stopwatch stopwatch = Stopwatch();
   stopwatch.start();
 
-  for (Cup cup in PogoData.cups) {
+  for (Cup cup in PogoData.getCupsSync()) {
     int bestOverallRating = 0;
     int bestLeadRating = 0;
     int bestSwitchRating = 0;

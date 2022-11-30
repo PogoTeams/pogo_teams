@@ -101,6 +101,10 @@ class PogoTeamsApp extends StatelessWidget {
           (Set<MaterialState> states) => Colors.white,
         ),
       ),
+      bottomAppBarColor: Colors.black,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color.fromARGB(255, 19, 19, 19),
+      ),
     );
   }
 

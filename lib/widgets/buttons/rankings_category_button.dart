@@ -13,8 +13,8 @@ PVP related categories.
 -------------------------------------------------------------------------------
 */
 
-class FilterButton extends StatelessWidget {
-  const FilterButton({
+class RankingsCategoryButton extends StatelessWidget {
+  const RankingsCategoryButton({
     Key? key,
     required this.onSelected,
     required this.selectedCategory,

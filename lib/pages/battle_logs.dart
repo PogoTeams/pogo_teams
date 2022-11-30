@@ -61,7 +61,7 @@ class _RankingsState extends State<BattleLogs> {
   void initState() {
     super.initState();
 
-    cup = PogoData.cups.first;
+    cup = PogoData.getCupsSync().first;
   }
 
   @override

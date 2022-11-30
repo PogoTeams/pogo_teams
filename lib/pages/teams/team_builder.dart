@@ -13,7 +13,7 @@ import '../../widgets/pogo_text_field.dart';
 import '../../widgets/dropdowns/cup_dropdown.dart';
 import '../../widgets/dropdowns/team_size_dropdown.dart';
 import '../../widgets/dropdowns/win_loss_dropdown.dart';
-import '../../widgets/buttons/filter_button.dart';
+import '../../widgets/buttons/rankings_category_button.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../enums/rankings_categories.dart';
 
@@ -311,7 +311,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                   ),
 
                   // Filter by ranking category
-                  FilterButton(
+                  RankingsCategoryButton(
                     onSelected: _filterCategory,
                     selectedCategory: _selectedCategory,
                     size: Sizing.blockSizeHorizontal * 12.0,

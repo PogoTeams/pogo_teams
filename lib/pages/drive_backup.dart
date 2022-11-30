@@ -136,19 +136,22 @@ class _DriveBackupState extends State<DriveBackup> {
                     borderSide: BorderSide(color: Colors.white),
                   ),
                   suffixIcon: IconButton(
-                      icon: const Icon(Icons.upload),
-                      onPressed: () {
-                        final text = _textController.text.trim();
-                        if (text.isNotEmpty) {
-                          Navigator.of(context).pop();
-                          setState(() {
+                    icon: const Icon(Icons.upload),
+                    onPressed: () {
+                      final text = _textController.text.trim();
+                      if (text.isNotEmpty) {
+                        Navigator.of(context).pop();
+                        setState(
+                          () {
                             _refreshBackupsList = true;
                             _beforeLoadBackups =
                                 () => _writeBackupFileToDrive(text);
                             _textController.clear();
-                          });
-                        }
-                      }),
+                          },
+                        );
+                      }
+                    },
+                  ),
                   label: const Text('Export File Name'),
                 ),
               ),
@@ -298,7 +301,12 @@ class _DriveBackupState extends State<DriveBackup> {
         itemCount: _backupFiles.length,
         itemBuilder: (context, index) {
           return RadioListTile<String?>(
-            contentPadding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            contentPadding: EdgeInsets.only(
+              bottom: Sizing.blockSizeVertical * 1.0,
+            ),
             selected: _selectedBackupFile?.id == _backupFiles[index].id,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

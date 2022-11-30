@@ -4,6 +4,7 @@ import 'package:isar/isar.dart';
 // Local Imports
 import 'pokemon.dart';
 import 'cup.dart';
+import 'tag.dart';
 import '../modules/data/pokemon_types.dart';
 import '../modules/data/pogo_data.dart';
 import '../enums/battle_outcome.dart';
@@ -31,6 +32,19 @@ class PokemonTeam {
 
   // The list of pokemon managed by this team
   final IsarLinks<UserPokemon> pokemonTeam = IsarLinks<UserPokemon>();
+
+  final IsarLink<Tag> tag = IsarLink<Tag>();
+
+  Tag? getTag() {
+    if (tag.isAttached && tag.value == null || !tag.isLoaded) {
+      tag.loadSync();
+    }
+    return tag.value;
+  }
+
+  void setTag(Tag newTag) {
+    tag.value = newTag;
+  }
 
   // A list of this pokemon team's net effectiveness
   List<double> getTeamTypeffectiveness() {
@@ -71,7 +85,7 @@ class PokemonTeam {
       cup.loadSync();
     }
 
-    return cup.value ?? PogoData.cups.first;
+    return cup.value ?? PogoData.getCupsSync().first;
   }
 
   Future<void> saveSync() async {
@@ -150,7 +164,7 @@ class UserPokemonTeam extends PokemonTeam {
   }
 
   Map<String, dynamic> toExportJson() {
-    return {
+    final json = {
       'dateCreated': dateCreated.toString(),
       'locked': locked,
       'teamSize': teamSize,
@@ -158,6 +172,12 @@ class UserPokemonTeam extends PokemonTeam {
       'pokemonTeam': _pokemonTeamToExportJson(),
       'opponents': _opponentsToJson(),
     };
+
+    if (getTag() != null) {
+      json['tag'] = tag.value!.toExportJson();
+    }
+
+    return json;
   }
 
   List<Map<String, dynamic>> _opponentsToJson() {
@@ -190,7 +210,7 @@ class UserPokemonTeam extends PokemonTeam {
       winRate = 100 * winRate / getOpponents().length;
     }
 
-    return winRate.toStringAsFixed(2);
+    return winRate.toStringAsFixed(0);
   }
 }
 
@@ -234,7 +254,7 @@ class OpponentPokemonTeam extends PokemonTeam {
   }
 
   Map<String, dynamic> toExportJson() {
-    return {
+    final json = {
       'dateCreated': dateCreated.toString(),
       'locked': locked,
       'teamSize': teamSize,
@@ -242,6 +262,12 @@ class OpponentPokemonTeam extends PokemonTeam {
       'cup': getCup().cupId,
       'pokemonTeam': _pokemonTeamToExportJson(),
     };
+
+    if (getTag() != null) {
+      json['tag'] = getTag()!;
+    }
+
+    return json;
   }
 
   // For logging opponent teams, this value can either be :

@@ -114,6 +114,7 @@ class _BattleLogState extends State<BattleLog> {
       onEmptyPressed: (_) {},
       pokemonTeam: _team.getOrderedPokemonListFilled(),
       cup: _team.getCup(),
+      tag: _team.getTag(),
       buildHeader: true,
       winRate: _team.getWinRate(),
       emptyTransparent: true,

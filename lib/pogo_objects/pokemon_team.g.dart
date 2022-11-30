@@ -52,6 +52,12 @@ const UserPokemonTeamSchema = CollectionSchema(
       target: r'UserPokemon',
       single: false,
     ),
+    r'tag': LinkSchema(
+      id: 4797332565433667862,
+      name: r'tag',
+      target: r'Tag',
+      single: true,
+    ),
     r'cup': LinkSchema(
       id: -7458455879027562897,
       name: r'cup',
@@ -123,7 +129,7 @@ Id _userPokemonTeamGetId(UserPokemonTeam object) {
 }
 
 List<IsarLinkBase<dynamic>> _userPokemonTeamGetLinks(UserPokemonTeam object) {
-  return [object.opponents, object.pokemonTeam, object.cup];
+  return [object.opponents, object.pokemonTeam, object.tag, object.cup];
 }
 
 void _userPokemonTeamAttach(
@@ -133,6 +139,7 @@ void _userPokemonTeamAttach(
       col, col.isar.collection<OpponentPokemonTeam>(), r'opponents', id);
   object.pokemonTeam
       .attach(col, col.isar.collection<UserPokemon>(), r'pokemonTeam', id);
+  object.tag.attach(col, col.isar.collection<Tag>(), r'tag', id);
   object.cup.attach(col, col.isar.collection<Cup>(), r'cup', id);
 }
 
@@ -542,6 +549,20 @@ extension UserPokemonTeamQueryLinks
     });
   }
 
+  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition> tag(
+      FilterQuery<Tag> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'tag');
+    });
+  }
+
+  QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition>
+      tagIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'tag', 0, true, 0, true);
+    });
+  }
+
   QueryBuilder<UserPokemonTeam, UserPokemonTeam, QAfterFilterCondition> cup(
       FilterQuery<Cup> q) {
     return QueryBuilder.apply(this, (query) {
@@ -755,6 +776,12 @@ const OpponentPokemonTeamSchema = CollectionSchema(
       target: r'UserPokemon',
       single: false,
     ),
+    r'tag': LinkSchema(
+      id: -4497787828428869604,
+      name: r'tag',
+      target: r'Tag',
+      single: true,
+    ),
     r'cup': LinkSchema(
       id: -5672612436795726436,
       name: r'cup',
@@ -846,7 +873,7 @@ Id _opponentPokemonTeamGetId(OpponentPokemonTeam object) {
 
 List<IsarLinkBase<dynamic>> _opponentPokemonTeamGetLinks(
     OpponentPokemonTeam object) {
-  return [object.pokemonTeam, object.cup];
+  return [object.pokemonTeam, object.tag, object.cup];
 }
 
 void _opponentPokemonTeamAttach(
@@ -854,6 +881,7 @@ void _opponentPokemonTeamAttach(
   object.id = id;
   object.pokemonTeam
       .attach(col, col.isar.collection<UserPokemon>(), r'pokemonTeam', id);
+  object.tag.attach(col, col.isar.collection<Tag>(), r'tag', id);
   object.cup.attach(col, col.isar.collection<Cup>(), r'cup', id);
 }
 
@@ -1255,6 +1283,20 @@ extension OpponentPokemonTeamQueryLinks on QueryBuilder<OpponentPokemonTeam,
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'pokemonTeam', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
+      tag(FilterQuery<Tag> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'tag');
+    });
+  }
+
+  QueryBuilder<OpponentPokemonTeam, OpponentPokemonTeam, QAfterFilterCondition>
+      tagIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'tag', 0, true, 0, true);
     });
   }
 

@@ -1,4 +1,6 @@
 // Flutter
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 // Local Imports
@@ -8,8 +10,11 @@ import 'team_builder.dart';
 import '../analysis/analysis.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
+import '../../widgets/buttons/tag_filter_button.dart';
+import '../../widgets/overlays/team_tag_overlay.dart';
 import '../../modules/ui/sizing.dart';
 import '../../pogo_objects/pokemon_team.dart';
+import '../../pogo_objects/tag.dart';
 import '../../modules/data/pogo_data.dart';
 
 /*
@@ -33,6 +38,7 @@ class Teams extends StatefulWidget {
 
 class _TeamsState extends State<Teams> {
   late List<UserPokemonTeam> _teams;
+  Tag? _selectedTag;
 
   // Build the list of TeamNodes, with the necessary callbacks
   Widget _buildTeamsList(BuildContext context) {
@@ -49,6 +55,8 @@ class _TeamsState extends State<Teams> {
                 onPressed: (_) {},
                 pokemonTeam: _teams[index].getOrderedPokemonListFilled(),
                 cup: _teams[index].getCup(),
+                tag: _teams[index].tag.value,
+                onTapPressed: () => _onTagTeam(index),
                 buildHeader: true,
                 winRate: _teams[index].getWinRate(),
                 footer: _buildTeamNodeFooter(index),
@@ -67,6 +75,8 @@ class _TeamsState extends State<Teams> {
           onPressed: (_) {},
           pokemonTeam: _teams[index].getOrderedPokemonListFilled(),
           cup: _teams[index].getCup(),
+          tag: _teams[index].tag.value,
+          onTapPressed: () => _onTagTeam(index),
           buildHeader: true,
           winRate: _teams[index].getWinRate(),
           footer: _buildTeamNodeFooter(index),
@@ -88,15 +98,23 @@ class _TeamsState extends State<Teams> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Remove team option if the team is unlocked
-        _teams[teamIndex].locked
-            ? Container()
-            : IconButton(
-                onPressed: () => _onClearTeam(teamIndex),
-                icon: const Icon(Icons.clear),
-                tooltip: 'Remove Team',
-                iconSize: iconSize,
-                splashRadius: Sizing.blockSizeHorizontal * 5.0,
-              ),
+        if (!_teams[teamIndex].locked)
+          IconButton(
+            onPressed: () => _onClearTeam(teamIndex),
+            icon: const Icon(Icons.clear),
+            tooltip: 'Remove Team',
+            iconSize: iconSize,
+            splashRadius: Sizing.blockSizeHorizontal * 5.0,
+          ),
+
+        // Edit team
+        IconButton(
+          onPressed: () => _onEditTeam(teamIndex),
+          icon: const Icon(Icons.build_circle),
+          tooltip: 'Edit Team',
+          iconSize: iconSize,
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
+        ),
 
         // Analyze team
         IconButton(
@@ -116,19 +134,10 @@ class _TeamsState extends State<Teams> {
           splashRadius: Sizing.blockSizeHorizontal * 5.0,
         ),
 
-        // Edit team
-        IconButton(
-          onPressed: () => _onEditTeam(teamIndex),
-          icon: const Icon(Icons.build_circle),
-          tooltip: 'Edit Team',
-          iconSize: iconSize,
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
-        ),
-
         IconButton(
           onPressed: () => _onLockTeam(teamIndex),
           icon: Icon(lockIcon),
-          tooltip: 'Unlock Team',
+          tooltip: 'Toggle Team Lock',
           iconSize: iconSize,
           splashRadius: Sizing.blockSizeHorizontal * 5.0,
         )
@@ -171,6 +180,35 @@ class _TeamsState extends State<Teams> {
     setState(() {});
   }
 
+  void _onTagTeam(teamIndex) async {
+    final selectedTag = await showDialog<Tag>(
+      context: context,
+      builder: (BuildContext context) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Dialog(
+            insetPadding: EdgeInsets.only(
+              left: Sizing.blockSizeHorizontal * 2.0,
+              right: Sizing.blockSizeHorizontal * 2.0,
+            ),
+            backgroundColor: Colors.transparent,
+            child: TeamTagOverlay(
+              team: _teams[teamIndex],
+              winRate: _teams[teamIndex].getWinRate(),
+            ),
+          ),
+        );
+      },
+    );
+
+    if (selectedTag != null) {
+      setState(() {
+        _teams[teamIndex].setTag(selectedTag);
+        PogoData.updatePokemonTeamSync(_teams[teamIndex]);
+      });
+    }
+  }
+
   // Edit the team at specified index
   void _onEditTeam(int teamIndex) async {
     await Navigator.push(
@@ -196,7 +234,7 @@ class _TeamsState extends State<Teams> {
     setState(() {
       UserPokemonTeam newTeam = UserPokemonTeam()
         ..dateCreated = DateTime.now().toUtc()
-        ..cup.value = PogoData.cups.first;
+        ..cup.value = PogoData.getCupsSync().first;
       PogoData.updatePokemonTeamSync(newTeam);
     });
   }
@@ -220,6 +258,12 @@ class _TeamsState extends State<Teams> {
     setState(() {});
   }
 
+  void _onTagChanged(Tag? tag) {
+    setState(() {
+      _selectedTag = tag;
+    });
+  }
+
   // Ensure the widget is mounted before setState
   @override
   void setState(fn) {
@@ -230,32 +274,40 @@ class _TeamsState extends State<Teams> {
 
   @override
   Widget build(BuildContext context) {
-    _teams = PogoData.getUserPokemonTeamsSync();
+    _teams = PogoData.getUserPokemonTeamsSync(tag: _selectedTag);
 
     return Scaffold(
       body: _buildTeamsList(context),
-
-      // Add team FAB
-      floatingActionButton: GradientButton(
-        onPressed: _onAddTeam,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Add Team',
-              style: Theme.of(context).textTheme.headline6,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          GradientButton(
+            onPressed: _onAddTeam,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Add Team',
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+                SizedBox(
+                  width: Sizing.blockSizeHorizontal * 5.0,
+                ),
+                Icon(
+                  Icons.add,
+                  size: Sizing.blockSizeHorizontal * 7.0,
+                ),
+              ],
             ),
-            SizedBox(
-              width: Sizing.blockSizeHorizontal * 5.0,
-            ),
-            Icon(
-              Icons.add,
-              size: Sizing.blockSizeHorizontal * 7.0,
-            ),
-          ],
-        ),
-        width: Sizing.screenWidth * .85,
-        height: Sizing.blockSizeVertical * 8.5,
+            width: Sizing.screenWidth * .6,
+            height: Sizing.blockSizeVertical * 8.5,
+          ),
+          TagFilterButton(
+            tag: _selectedTag,
+            onTagChanged: _onTagChanged,
+            width: Sizing.blockSizeHorizontal * .85,
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

@@ -17,6 +17,7 @@ import '../../pogo_objects/pokemon_typing.dart';
 import '../../pogo_objects/move.dart';
 import '../../pogo_objects/ratings.dart';
 import '../../pogo_objects/cup.dart';
+import '../../pogo_objects/tag.dart';
 import '../../pogo_objects/pokemon_team.dart';
 import '../data/cups.dart';
 
@@ -27,10 +28,6 @@ import '../data/cups.dart';
 
 class PogoData {
   static late final Isar pogoIsar;
-
-  static List<Cup> get cups => pogoIsar.cups.where().findAllSync();
-  static List<PokemonBase> get pokemon =>
-      pogoIsar.basePokemon.where().findAllSync();
 
   static Map<String, dynamic>? _rankingsJsonLookup;
 
@@ -47,6 +44,7 @@ class PogoData {
       UserPokemonSchema,
       UserPokemonTeamSchema,
       OpponentPokemonTeamSchema,
+      TagSchema,
     ], name: 'pogo');
   }
 
@@ -442,6 +440,10 @@ class PogoData {
     return rankingsIds;
   }
 
+  static List<PokemonBase> getPokemonSync() {
+    return pogoIsar.basePokemon.where().findAllSync();
+  }
+
   static PokemonBase getPokemonById(String pokemonId) {
     return pogoIsar.basePokemon
             .filter()
@@ -450,9 +452,30 @@ class PogoData {
         PokemonBase.missingNo();
   }
 
+  static List<Cup> getCupsSync() {
+    return pogoIsar.cups.where().findAllSync();
+  }
+
   static Cup getCupById(String cupId) {
     return pogoIsar.cups.filter().cupIdEqualTo(cupId).findFirstSync() ??
-        cups.first;
+        getCupsSync().first;
+  }
+
+  static List<Tag> getTagsSync() {
+    return pogoIsar.tags.where().findAllSync();
+  }
+
+  static bool tagNameExists(String tagName) {
+    return pogoIsar.tags.where().nameEqualTo(tagName).findFirstSync() != null;
+  }
+
+  static Id updateTagSync(Tag tag) {
+    Id id = -1;
+    pogoIsar.writeTxnSync(() {
+      id = pogoIsar.tags.putByNameSync(tag);
+    });
+
+    return id;
   }
 
   static List<PokemonBase> getCupFilteredPokemonList(Cup cup) {
@@ -506,8 +529,19 @@ class PogoData {
     return pogoIsar.userPokemonTeams.getSync(id) ?? UserPokemonTeam();
   }
 
-  static List<UserPokemonTeam> getUserPokemonTeamsSync() {
-    return pogoIsar.userPokemonTeams.where().findAllSync();
+  static List<UserPokemonTeam> getUserPokemonTeamsSync({Tag? tag}) {
+    if (tag == null) {
+      return pogoIsar.userPokemonTeams
+          .where()
+          .sortByDateCreatedDesc()
+          .findAllSync();
+    }
+
+    return pogoIsar.userPokemonTeams
+        .filter()
+        .tag((q) => q.nameEqualTo(tag.name))
+        .sortByDateCreatedDesc()
+        .findAllSync();
   }
 
   static void createPokemonTeamSync(PokemonTeam team) {
@@ -611,6 +645,10 @@ class PogoData {
       }
 
       createPokemonTeamSync(team);
+      if (teamEntry.containsKey('tag')) {
+        final Id tagId = updateTagSync(Tag.fromJson(teamEntry['tag']));
+        team.tag.value = pogoIsar.tags.getSync(tagId);
+      }
       updatePokemonTeamSync(team, newPokemonTeam: pokemonTeam);
     }
   }

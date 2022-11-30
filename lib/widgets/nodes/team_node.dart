@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'pokemon_node.dart';
 import '../../pogo_objects/cup.dart';
 import '../../pogo_objects/pokemon.dart';
+import '../../pogo_objects/tag.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/ui/pogo_colors.dart';
+import '../color_dot.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -24,6 +26,8 @@ class TeamNode extends StatelessWidget {
     required this.onEmptyPressed,
     required this.pokemonTeam,
     required this.cup,
+    this.tag,
+    this.onTapPressed,
     this.buildHeader = false,
     this.winRate,
     this.footer,
@@ -37,6 +41,8 @@ class TeamNode extends StatelessWidget {
   final Function(int) onEmptyPressed;
   final List<UserPokemon?> pokemonTeam;
   final Cup cup;
+  final Tag? tag;
+  final void Function()? onTapPressed;
 
   final bool buildHeader;
   final String? winRate;
@@ -62,13 +68,26 @@ class TeamNode extends StatelessWidget {
             style: Theme.of(context).textTheme.headline6?.apply(
                   fontStyle: FontStyle.italic,
                 ),
+            overflow: TextOverflow.ellipsis,
           ),
           Text(
-            'Win Rate : ${winRate ?? 0.toStringAsFixed(2)} %',
+            'Win Rate : ${winRate ?? 0.toStringAsFixed(0)} %',
             style: Theme.of(context).textTheme.bodyLarge?.apply(
                   fontStyle: FontStyle.italic,
                 ),
+            overflow: TextOverflow.ellipsis,
           ),
+          if (tag != null)
+            MaterialButton(
+              minWidth: 0,
+              padding: EdgeInsets.zero,
+              onPressed: onTapPressed,
+              child: ColorDot(
+                color: Color(
+                  int.parse(tag!.uiColor),
+                ),
+              ),
+            ),
         ],
       ),
     );

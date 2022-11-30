@@ -33,11 +33,8 @@ class CupDropdown extends StatefulWidget {
 
 class _CupDropdownState extends State<CupDropdown>
     with AutomaticKeepAliveClientMixin {
-  // List of pvp cups
-  final List<Cup> cups = PogoData.cups;
-
   // List of dropdown menu items
-  late final cupOptions = PogoData.cups.map<DropdownMenuItem<String>>(
+  late final cupOptions = PogoData.getCupsSync().map<DropdownMenuItem<String>>(
     (Cup cup) {
       return DropdownMenuItem(
         value: cup.cupId,

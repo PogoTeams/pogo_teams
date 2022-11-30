@@ -10,7 +10,7 @@ import '../pogo_objects/cup.dart';
 import '../widgets/pokemon_list.dart';
 import '../widgets/pogo_text_field.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
-import '../widgets/buttons/filter_button.dart';
+import '../widgets/buttons/rankings_category_button.dart';
 import '../modules/data/pogo_data.dart';
 import '../enums/rankings_categories.dart';
 
@@ -107,7 +107,7 @@ class _RankingsState extends State<Rankings> {
           ),
 
           // Category filter dropdown
-          FilterButton(
+          RankingsCategoryButton(
             onSelected: _filterCategory,
             selectedCategory: _selectedCategory,
             size: Sizing.blockSizeHorizontal * 12.0,
@@ -122,7 +122,7 @@ class _RankingsState extends State<Rankings> {
   void initState() {
     super.initState();
 
-    cup = PogoData.cups.first;
+    cup = PogoData.getCupsSync().first;
     _filterCategory(_selectedCategory);
 
     // Start listening to changes.

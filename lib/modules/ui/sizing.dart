@@ -14,6 +14,7 @@ class Sizing {
   static late double screenHeight;
   static late double blockSizeHorizontal;
   static late double blockSizeVertical;
+  static late double icon2;
   static late double icon3;
 
   void init(BuildContext context) {
@@ -33,6 +34,7 @@ class Sizing {
       blockSizeVertical = screenHeight / 100;
     }
 
+    icon2 = blockSizeHorizontal * 8;
     icon3 = blockSizeHorizontal * 6;
   }
 
