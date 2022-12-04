@@ -8,7 +8,7 @@ import '../../pogo_objects/pokemon.dart';
 import '../../pogo_objects/tag.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/ui/pogo_colors.dart';
-import '../color_dot.dart';
+import '../tag_dot.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -77,13 +77,10 @@ class TeamNode extends StatelessWidget {
                 ),
             overflow: TextOverflow.ellipsis,
           ),
-          if (tag != null)
-            ColorDot(
-              color: Color(
-                int.parse(tag!.uiColor),
-              ),
-              onPressed: onTagPressed,
-            ),
+          TagDot(
+            tag: tag,
+            onPressed: onTagPressed,
+          ),
         ],
       ),
     );

@@ -179,7 +179,7 @@ class _AnalysisState extends State<Analysis> {
 
   @override
   Widget build(BuildContext context) {
-    _team = PogoData.getUserPokemonTeamSync(widget.team.id);
+    _team = PogoData.getUserTeamSync(widget.team.id);
     List<String> includedTypesKeys = _team.getCup().includedTypeKeys();
 
     // Analysis will be on all logged opponent teams

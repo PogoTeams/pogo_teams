@@ -9,7 +9,7 @@ import '../../modules/ui/sizing.dart';
 import '../../pages/tag_edit.dart';
 import '../buttons/exit_button.dart';
 import '../nodes/team_node.dart';
-import '../color_dot.dart';
+import '../tag_dot.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -132,8 +132,8 @@ class _TeamTagOverlayState extends State<TeamTagOverlay> {
                                 style: Theme.of(context).textTheme.headline6,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              ColorDot(
-                                color: Color(int.parse(tags[index].uiColor)),
+                              TagDot(
+                                tag: tags[index],
                               ),
                             ],
                           ),

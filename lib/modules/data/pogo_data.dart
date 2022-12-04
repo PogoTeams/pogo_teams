@@ -52,6 +52,10 @@ class PogoData {
     await pogoIsar.writeTxn(() async => await pogoIsar.clear());
   }
 
+  // --------------------------------------------------------------------------
+  // Pogo Data Source Synchronization
+  // --------------------------------------------------------------------------
+
   static Stream<Pair<String, double>> loadPogoData(
       {bool forceUpdate = false}) async* {
     String loadMessagePrefix = ''; // For indicating testing
@@ -198,6 +202,10 @@ class PogoData {
       }
     }
   }
+
+  // --------------------------------------------------------------------------
+  // JSON Initialization
+  // --------------------------------------------------------------------------
 
   static Future<void> rebuildFromJson(Map<String, dynamic> json) async {
     await pogoIsar.writeTxn(() async {
@@ -440,6 +448,77 @@ class PogoData {
     return rankingsIds;
   }
 
+  // --------------------------------------------------------------------------
+  // Import / Export
+  // --------------------------------------------------------------------------
+
+  static Future<Map<String, dynamic>> exportUserDataToJson() async {
+    final Map<String, dynamic> userDataJson = {};
+    final List<Map<String, dynamic>> teamsJson = [];
+    final List<Map<String, dynamic>> tagsJson = [];
+
+    for (var team in await pogoIsar.userPokemonTeams.where().findAll()) {
+      teamsJson.add(team.toExportJson());
+    }
+
+    for (var tag in await pogoIsar.tags.where().findAll()) {
+      tagsJson.add(tag.toExportJson());
+    }
+
+    userDataJson['teams'] = teamsJson;
+    userDataJson['tags'] = tagsJson;
+    return userDataJson;
+  }
+
+  static Future<void> importUserDataFromJson(Map<String, dynamic> json) async {
+    for (var tagEntry in List<Map<String, dynamic>>.from(json['tags'])) {
+      updateTagSync(Tag.fromJson(tagEntry));
+    }
+
+    for (var teamEntry in List<Map<String, dynamic>>.from(json['teams'])) {
+      final team = UserPokemonTeam.fromJson(teamEntry);
+      final List<UserPokemon> pokemonTeam = await _processUserPokemonTeam(
+          List<Map<String, dynamic>>.from(teamEntry['pokemonTeam']));
+
+      for (var opponentEntry
+          in List<Map<String, dynamic>>.from(teamEntry['opponents'])) {
+        final opponent = OpponentPokemonTeam.fromJson(opponentEntry);
+        final List<UserPokemon> opponentPokemonTeam =
+            await _processUserPokemonTeam(
+                List<Map<String, dynamic>>.from(opponentEntry['pokemonTeam']));
+
+        createPokemonTeamSync(opponent);
+        updatePokemonTeamSync(opponent, newPokemonTeam: opponentPokemonTeam);
+        team.opponents.add(opponent);
+      }
+
+      createPokemonTeamSync(team);
+      if (teamEntry.containsKey('tag')) {
+        final Id tagId = updateTagSync(Tag.fromJson(teamEntry['tag']));
+        team.tag.value = pogoIsar.tags.getSync(tagId);
+      }
+      updatePokemonTeamSync(team, newPokemonTeam: pokemonTeam);
+    }
+  }
+
+  static Future<List<UserPokemon>> _processUserPokemonTeam(
+      List<Map<String, dynamic>> pokemonTeamJson) async {
+    List<UserPokemon> pokemonTeam = [];
+
+    for (var pokemonEntry in pokemonTeamJson) {
+      final UserPokemon pokemon = UserPokemon.fromJson(pokemonEntry);
+      pokemon.base.value = await pogoIsar.basePokemon
+          .getByPokemonId(pokemonEntry['pokemonId'] as String);
+      pokemonTeam.add(pokemon);
+    }
+
+    return pokemonTeam;
+  }
+
+  // --------------------------------------------------------------------------
+  // Data Access
+  // --------------------------------------------------------------------------
+
   static List<PokemonBase> getPokemonSync() {
     return pogoIsar.basePokemon.where().findAllSync();
   }
@@ -529,11 +608,11 @@ class PogoData {
     pogoIsar.writeTxnSync(() => pogoIsar.userPokemon.putSync(pokemon));
   }
 
-  static UserPokemonTeam getUserPokemonTeamSync(Id id) {
+  static UserPokemonTeam getUserTeamSync(Id id) {
     return pogoIsar.userPokemonTeams.getSync(id) ?? UserPokemonTeam();
   }
 
-  static List<UserPokemonTeam> getUserPokemonTeamsSync({Tag? tag}) {
+  static List<UserPokemonTeam> getUserTeamsSync({Tag? tag}) {
     if (tag == null) {
       return pogoIsar.userPokemonTeams
           .where()
@@ -542,6 +621,21 @@ class PogoData {
     }
 
     return pogoIsar.userPokemonTeams
+        .filter()
+        .tag((q) => q.nameEqualTo(tag.name))
+        .sortByDateCreatedDesc()
+        .findAllSync();
+  }
+
+  static List<OpponentPokemonTeam> getOpponentTeamsSync({Tag? tag}) {
+    if (tag == null) {
+      return pogoIsar.opponentPokemonTeams
+          .where()
+          .sortByDateCreatedDesc()
+          .findAllSync();
+    }
+
+    return pogoIsar.opponentPokemonTeams
         .filter()
         .tag((q) => q.nameEqualTo(tag.name))
         .sortByDateCreatedDesc()
@@ -608,76 +702,6 @@ class PogoData {
 
   static void deleteOpponentPokemonTeamSync(Id id) {
     pogoIsar.writeTxnSync(() => pogoIsar.opponentPokemonTeams.deleteSync(id));
-  }
-
-  static Future<Map<String, dynamic>> userDataToExportJson() async {
-    final Map<String, dynamic> userDataJson = {};
-    final List<Map<String, dynamic>> teamsJson = [];
-    //final List<Map<String, dynamic>> opponentsJson = [];
-    final List<Map<String, dynamic>> tagsJson = [];
-
-    for (var team in await pogoIsar.userPokemonTeams.where().findAll()) {
-      teamsJson.add(team.toExportJson());
-    }
-
-    /* TODO: support opponent teams not associated with a user team
-    for (var team in await pogoIsar.opponentPokemonTeams.where().findAll()) {
-      opponentsJson.add(team.toExportJson());
-    }
-    */
-
-    for (var tag in await pogoIsar.tags.where().findAll()) {
-      tagsJson.add(tag.toExportJson());
-    }
-
-    userDataJson['teams'] = teamsJson;
-    //userDataJson['opponents'] = opponentsJson;
-    userDataJson['tags'] = tagsJson;
-    return userDataJson;
-  }
-
-  static Future<void> importUserDataFromJson(Map<String, dynamic> json) async {
-    for (var tagEntry in List<Map<String, dynamic>>.from(json['tags'])) {
-      updateTagSync(Tag.fromJson(tagEntry));
-    }
-    for (var teamEntry in List<Map<String, dynamic>>.from(json['teams'])) {
-      final team = UserPokemonTeam.fromJson(teamEntry);
-      final List<UserPokemon> pokemonTeam = await _processUserPokemonTeam(
-          List<Map<String, dynamic>>.from(teamEntry['pokemonTeam']));
-
-      for (var opponentEntry
-          in List<Map<String, dynamic>>.from(teamEntry['opponents'])) {
-        final opponent = OpponentPokemonTeam.fromJson(opponentEntry);
-        final List<UserPokemon> opponentPokemonTeam =
-            await _processUserPokemonTeam(
-                List<Map<String, dynamic>>.from(opponentEntry['pokemonTeam']));
-
-        createPokemonTeamSync(opponent);
-        updatePokemonTeamSync(opponent, newPokemonTeam: pokemonTeam);
-        team.opponents.add(opponent);
-      }
-
-      createPokemonTeamSync(team);
-      if (teamEntry.containsKey('tag')) {
-        final Id tagId = updateTagSync(Tag.fromJson(teamEntry['tag']));
-        team.tag.value = pogoIsar.tags.getSync(tagId);
-      }
-      updatePokemonTeamSync(team, newPokemonTeam: pokemonTeam);
-    }
-  }
-
-  static Future<List<UserPokemon>> _processUserPokemonTeam(
-      List<Map<String, dynamic>> pokemonTeamJson) async {
-    List<UserPokemon> pokemonTeam = [];
-
-    for (var pokemonEntry in pokemonTeamJson) {
-      final UserPokemon pokemon = UserPokemon.fromJson(pokemonEntry);
-      pokemon.base.value = await pogoIsar.basePokemon
-          .getByPokemonId(pokemonEntry['pokemonId'] as String);
-      pokemonTeam.add(pokemon);
-    }
-
-    return pokemonTeam;
   }
 
   static Future<void> clearUserData() async {

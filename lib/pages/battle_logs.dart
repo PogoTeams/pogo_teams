@@ -2,10 +2,15 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
+import '../pogo_objects/pokemon_team.dart';
 import '../pogo_objects/tag.dart';
 import '../modules/ui/sizing.dart';
+import '../modules/data/pogo_data.dart';
+import '../widgets/tag_dot.dart';
 import '../widgets/buttons/tag_filter_button.dart';
 import '../widgets/buttons/gradient_button.dart';
+import '../widgets/nodes/team_node.dart';
+import '../widgets/nodes/win_loss_node.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -23,10 +28,60 @@ class _RankingsState extends State<BattleLogs> {
   Tag? _selectedTag;
 
   Widget _buildLoggedBattles() {
-    return Container();
+    final opponents = PogoData.getOpponentTeamsSync(tag: _selectedTag);
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: opponents.length,
+      itemBuilder: (context, index) {
+        if (index == opponents.length - 1) {
+          return Column(
+            children: [
+              TeamNode(
+                onEmptyPressed: (_) => {},
+                onPressed: (_) {},
+                pokemonTeam: opponents[index].getOrderedPokemonListFilled(),
+                cup: opponents[index].getCup(),
+                footer: _buildTeamNodeFooter(opponents[index]),
+              ),
+
+              // Spacer to give last node in the list more scroll room
+              SizedBox(
+                height: Sizing.blockSizeVertical * 10.0,
+              ),
+            ],
+          );
+        }
+
+        return TeamNode(
+          onEmptyPressed: (_) => {},
+          onPressed: (_) {},
+          pokemonTeam: opponents[index].getOrderedPokemonListFilled(),
+          cup: opponents[index].getCup(),
+          tag: opponents[index].tag.value,
+          footer: _buildTeamNodeFooter(opponents[index]),
+        );
+      },
+      physics: const BouncingScrollPhysics(),
+    );
   }
 
-  void _onAddLog() {}
+  Widget _buildTeamNodeFooter(OpponentPokemonTeam opponent) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TagDot(
+          tag: opponent.getTag(),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            top: Sizing.blockSizeVertical,
+            bottom: Sizing.blockSizeVertical,
+          ),
+          child: WinLossNode(outcome: opponent.battleOutcome),
+        ),
+      ],
+    );
+  }
 
   @override
   void initState() {
@@ -47,40 +102,14 @@ class _RankingsState extends State<BattleLogs> {
             _buildLoggedBattles(),
           ],
         ),
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GradientButton(
-              onPressed: _onAddLog,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Add Battle Log',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  SizedBox(
-                    width: Sizing.blockSizeHorizontal * 5.0,
-                  ),
-                  Icon(
-                    Icons.add,
-                    size: Sizing.blockSizeHorizontal * 7.0,
-                  ),
-                ],
-              ),
-              width: Sizing.screenWidth * .6,
-              height: Sizing.blockSizeVertical * 8.5,
-            ),
-            TagFilterButton(
-              tag: _selectedTag,
-              onTagChanged: (tag) {
-                setState(() {
-                  _selectedTag = tag;
-                });
-              },
-              width: Sizing.blockSizeHorizontal * .85,
-            ),
-          ],
+        floatingActionButton: TagFilterButton(
+          tag: _selectedTag,
+          onTagChanged: (tag) {
+            setState(() {
+              _selectedTag = tag;
+            });
+          },
+          width: Sizing.blockSizeHorizontal * .85,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../pogo_objects/tag.dart';
 import '../modules/data/pogo_data.dart';
 import '../modules/ui/sizing.dart';
-import '../widgets/color_dot.dart';
+import '../widgets/tag_dot.dart';
 import '../widgets/dialogs.dart';
 import '../widgets/buttons/gradient_button.dart';
 import 'tag_edit.dart';
@@ -34,8 +34,8 @@ class _TagsState extends State<Tags> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ColorDot(
-                color: Color(int.parse(tag.uiColor)),
+              TagDot(
+                tag: tag,
               ),
               Text(
                 tag.name,
@@ -82,7 +82,7 @@ class _TagsState extends State<Tags> {
   }
 
   void _onRemoveTag(Tag tag) async {
-    int affectedTeamsCount = PogoData.getUserPokemonTeamsSync(tag: tag).length;
+    int affectedTeamsCount = PogoData.getUserTeamsSync(tag: tag).length;
     if (affectedTeamsCount > 0 &&
         !await getConfirmation(
           context,

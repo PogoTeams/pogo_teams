@@ -283,7 +283,7 @@ class _TeamsState extends State<Teams> {
 
   @override
   Widget build(BuildContext context) {
-    _teams = PogoData.getUserPokemonTeamsSync(tag: _selectedTag);
+    _teams = PogoData.getUserTeamsSync(tag: _selectedTag);
 
     return Scaffold(
       body: _buildTeamsList(context),

@@ -240,7 +240,7 @@ class _TeamEditState extends State<TeamEdit> {
 
   @override
   Widget build(BuildContext context) {
-    _builderTeam = PogoData.getUserPokemonTeamSync(_builderTeam.id);
+    _builderTeam = PogoData.getUserTeamSync(_builderTeam.id);
 
     return Scaffold(
       appBar: _buildAppBar(),

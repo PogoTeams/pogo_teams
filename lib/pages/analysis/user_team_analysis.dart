@@ -232,7 +232,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
 
   @override
   Widget build(BuildContext context) {
-    _team = PogoData.getUserPokemonTeamSync(_team.id);
+    _team = PogoData.getUserTeamSync(_team.id);
     final orderedPokemonList = _team.getOrderedPokemonList();
 
     if (_initState) {

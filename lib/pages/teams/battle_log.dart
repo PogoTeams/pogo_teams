@@ -373,7 +373,8 @@ class _BattleLogState extends State<BattleLog> {
   void _onAddTeam() async {
     OpponentPokemonTeam? opponent = OpponentPokemonTeam()
       ..dateCreated = DateTime.now().toUtc()
-      ..cup.value = _team.getCup();
+      ..cup.value = _team.getCup()
+      ..tag.value = _team.getTag();
     final Id opponentId = PogoData.updatePokemonTeamSync(opponent);
 
     opponent = await Navigator.push(
@@ -438,7 +439,7 @@ class _BattleLogState extends State<BattleLog> {
 
   @override
   Widget build(BuildContext context) {
-    _team = PogoData.getUserPokemonTeamSync(widget.team.id);
+    _team = PogoData.getUserTeamSync(widget.team.id);
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildScaffoldBody(),

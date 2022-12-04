@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../pogo_objects/tag.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/data/pogo_data.dart';
-import '../color_dot.dart';
+import '../tag_dot.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -57,8 +57,8 @@ class TagFilterButton extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline6,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  ColorDot(
-                    color: Color(int.parse(tag.uiColor)),
+                  TagDot(
+                    tag: tag,
                   ),
                 ],
               ),

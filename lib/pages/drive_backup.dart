@@ -190,7 +190,7 @@ class _DriveBackupState extends State<DriveBackup> {
     writeFile.parents = [_backupFolderId!];
 
     final Map<String, dynamic> userExportJson =
-        await PogoData.userDataToExportJson();
+        await PogoData.exportUserDataToJson();
     final String userExportJsonEncoded = jsonEncode(userExportJson);
 
     final stream = Future.value(userExportJsonEncoded.codeUnits)
