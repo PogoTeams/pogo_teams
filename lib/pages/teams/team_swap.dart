@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/data/pogo_data.dart';
 import '../../pogo_objects/pokemon.dart';
-import '../../widgets/buttons/exit_button.dart';
+import '../../widgets/buttons/gradient_button.dart';
 import '../../widgets/buttons/pokemon_action_button.dart';
 import '../../widgets/nodes/pokemon_node.dart';
 import '../../pogo_objects/pokemon_team.dart';
@@ -34,12 +34,10 @@ class TeamSwap extends StatefulWidget {
 class _TeamSwapState extends State<TeamSwap> {
   late List<UserPokemon> _pokemonTeam;
   late UserPokemon _swap;
-  bool _changed = false;
 
   Widget _buildFooter(BuildContext context, int index) {
     void _onSwap(Pokemon swapPokemon) {
       setState(() {
-        _changed = true;
         _pokemonTeam[index] = _swap;
         _swap = swapPokemon as UserPokemon;
       });
@@ -54,6 +52,28 @@ class _TeamSwapState extends State<TeamSwap> {
         color: Colors.white,
       ),
       onPressed: _onSwap,
+    );
+  }
+
+  Widget _buildFloatingActionButton() {
+    return GradientButton(
+      onPressed: () {
+        _saveTeam();
+        Navigator.pop(context);
+      },
+      child: Icon(
+        Icons.clear,
+        size: Sizing.icon2,
+      ),
+      width: Sizing.screenWidth * .85,
+      height: Sizing.blockSizeVertical * 8.5,
+    );
+  }
+
+  void _saveTeam() {
+    PogoData.updatePokemonTeamSync(
+      widget.team,
+      newPokemonTeam: _pokemonTeam,
     );
   }
 
@@ -122,41 +142,7 @@ class _TeamSwapState extends State<TeamSwap> {
           ],
         ),
       ),
-
-      // Exit to Team Builder button
-      floatingActionButton: SizedBox(
-        width: Sizing.screenWidth * .87,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Cancel exit button
-            ExitButton(
-              key: UniqueKey(),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              backgroundColor: const Color.fromARGB(255, 239, 83, 80),
-            ),
-
-            // Confirm exit button
-            ExitButton(
-              key: UniqueKey(),
-              onPressed: () {
-                if (_changed) {
-                  PogoData.updatePokemonTeamSync(
-                    widget.team,
-                    newPokemonTeam: _pokemonTeam,
-                  );
-                  Navigator.pop(context);
-                } else {
-                  Navigator.pop(context);
-                }
-              },
-              icon: const Icon(Icons.check),
-            ),
-          ],
-        ),
-      ),
+      floatingActionButton: _buildFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

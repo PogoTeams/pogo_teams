@@ -38,7 +38,7 @@ class CoverageGrids extends StatelessWidget {
       children: [
         SizedBox(
           child: Container(
-            padding: EdgeInsets.all(Sizing.blockSizeHorizontal * 2.0),
+            padding: const EdgeInsets.all(12.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               gradient: const LinearGradient(
@@ -59,9 +59,11 @@ class CoverageGrids extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'DEFENSE THREATS',
+                      'Defense Threats',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headline6?.apply(
+                            fontStyle: FontStyle.italic,
+                          ),
                     ),
                     Text(
                       '${defenseThreats.length} / ${includedTypesKeys.length}',
@@ -119,8 +121,10 @@ class CoverageGrids extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'OFFENSE COVERAGE',
-                      style: Theme.of(context).textTheme.headline5,
+                      'Offense Coverage',
+                      style: Theme.of(context).textTheme.headline6?.apply(
+                            fontStyle: FontStyle.italic,
+                          ),
                     ),
                     Text(
                       '${offenseCoverage.length} / ${includedTypesKeys.length}',

@@ -1,15 +1,14 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:pogo_teams/widgets/buttons/gradient_button.dart';
 
 // Local Imports
 import 'team_builder.dart';
-import '../analysis/analysis.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/data/pogo_data.dart';
 import '../../widgets/nodes/pokemon_node.dart';
 import '../../widgets/dropdowns/cup_dropdown.dart';
 import '../../widgets/dropdowns/team_size_dropdown.dart';
-import '../../widgets/buttons/gradient_button.dart';
 import '../../pogo_objects/pokemon_team.dart';
 import '../../pogo_objects/pokemon.dart';
 import '../../pogo_objects/cup.dart';
@@ -29,7 +28,7 @@ class TeamEdit extends StatefulWidget {
     required this.team,
   }) : super(key: key);
 
-  final UserPokemonTeam team;
+  final PokemonTeam team;
 
   @override
   _TeamEditState createState() => _TeamEditState();
@@ -37,7 +36,7 @@ class TeamEdit extends StatefulWidget {
 
 class _TeamEditState extends State<TeamEdit> {
   // The working copy of this team
-  late UserPokemonTeam _builderTeam = widget.team;
+  late PokemonTeam _builderTeam = widget.team;
 
   // SETTER CALLBACKS
   void _onCupChanged(String? newCup) {
@@ -84,57 +83,6 @@ class _TeamEditState extends State<TeamEdit> {
     );
 
     setState(() {});
-  }
-
-  // Scroll to the analysis portion of the screen
-  void _onAnalyzePressed() async {
-    // If the team is empty, no action will be taken
-    if (_builderTeam.isEmpty()) return;
-
-    await Navigator.push(
-      context,
-      MaterialPageRoute<List<CupPokemon?>>(builder: (BuildContext context) {
-        return Analysis(team: _builderTeam);
-      }),
-    );
-
-    PogoData.updatePokemonTeamSync(_builderTeam);
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      // Upon navigating back, return the updated team ref
-      leading: IconButton(
-        onPressed: () => Navigator.pop(
-          context,
-          _builderTeam,
-        ),
-        icon: const Icon(Icons.arrow_back_ios),
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          // Page title
-          Text(
-            'Team Edit',
-            style: Theme.of(context).textTheme.headline5?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
-          ),
-
-          // Spacer
-          SizedBox(
-            width: Sizing.blockSizeHorizontal * 3.0,
-          ),
-
-          // Page icon
-          Icon(
-            Icons.build_circle,
-            size: Sizing.icon3,
-          ),
-        ],
-      ),
-    );
   }
 
   // Build a row of icon buttons at the bottom of a Pokemon's Node
@@ -187,54 +135,33 @@ class _TeamEditState extends State<TeamEdit> {
 
   // Build the list of either 3 or 6 PokemonNodes that make up this team
   Widget _buildTeamNodes() {
-    return ListView(
-      shrinkWrap: true,
-      children: List.generate(
-        _builderTeam.teamSize,
-        (index) => Padding(
-          padding: EdgeInsets.only(
-            top: Sizing.blockSizeVertical * 1.1,
-            bottom: Sizing.blockSizeVertical * 1.1,
+    return Expanded(
+      child: ListView(
+        shrinkWrap: true,
+        children: List.generate(
+          _builderTeam.teamSize,
+          (index) => Padding(
+            padding: EdgeInsets.only(
+              top: Sizing.blockSizeVertical * 1.0,
+              bottom: Sizing.blockSizeVertical * 1.0,
+              left: Sizing.blockSizeHorizontal * 2.0,
+              right: Sizing.blockSizeHorizontal * 2.0,
+            ),
+            child: PokemonNode.large(
+              pokemon: _builderTeam.getPokemon(index),
+              onEmptyPressed: () => _onSearchPressed(index),
+              onMoveChanged: _onPokemonMoveChanged,
+              cup: _builderTeam.getCup(),
+              footer: _buildNodeFooter(_builderTeam.getPokemon(index), index),
+              padding: EdgeInsets.only(
+                top: Sizing.blockSizeVertical * .7,
+                left: Sizing.blockSizeHorizontal * 2.0,
+                right: Sizing.blockSizeHorizontal * 2.0,
+              ),
+            ),
           ),
-          child: (index == _builderTeam.teamSize - 1)
-              ? Column(
-                  children: [
-                    PokemonNode.large(
-                      pokemon: _builderTeam.getPokemon(index),
-                      onEmptyPressed: () => _onSearchPressed(index),
-                      onMoveChanged: _onPokemonMoveChanged,
-                      cup: _builderTeam.getCup(),
-                      footer: _buildNodeFooter(
-                          _builderTeam.getPokemon(index), index),
-                      padding: EdgeInsets.only(
-                        top: Sizing.blockSizeVertical * .7,
-                        left: Sizing.blockSizeHorizontal * 2.0,
-                        right: Sizing.blockSizeHorizontal * 2.0,
-                      ),
-                    ),
-
-                    // Spacer to give last node in the list more scroll room
-                    SizedBox(
-                      height: Sizing.blockSizeVertical * 10.0,
-                    ),
-                  ],
-                )
-              : PokemonNode.large(
-                  pokemon: _builderTeam.getPokemon(index),
-                  onEmptyPressed: () => _onSearchPressed(index),
-                  onMoveChanged: _onPokemonMoveChanged,
-                  cup: _builderTeam.getCup(),
-                  footer:
-                      _buildNodeFooter(_builderTeam.getPokemon(index), index),
-                  padding: EdgeInsets.only(
-                    top: Sizing.blockSizeVertical * .7,
-                    left: Sizing.blockSizeHorizontal * 2.0,
-                    right: Sizing.blockSizeHorizontal * 2.0,
-                  ),
-                ),
         ),
       ),
-      physics: const NeverScrollableScrollPhysics(),
     );
   }
 
@@ -242,58 +169,33 @@ class _TeamEditState extends State<TeamEdit> {
   Widget build(BuildContext context) {
     _builderTeam = PogoData.getUserTeamSync(_builderTeam.id);
 
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: Padding(
-        padding: EdgeInsets.only(
-          top: Sizing.blockSizeVertical * 2.0,
-          left: Sizing.blockSizeHorizontal * 2.0,
-          right: Sizing.blockSizeHorizontal * 2.0,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // Cup and team size dropdown menus at the top of the page
+        Padding(
+          padding: EdgeInsets.only(
+            top: Sizing.blockSizeVertical * 2.0,
+            bottom: Sizing.blockSizeVertical * 2.0,
+            left: Sizing.blockSizeHorizontal * 2.0,
+            right: Sizing.blockSizeHorizontal * 2.0,
+          ),
+          child: _buildHeaderDropdowns(_builderTeam.getCup()),
         ),
-        child: ListView(
-          children: [
-            // Cup and team size dropdown menus at the top of the page
-            _buildHeaderDropdowns(_builderTeam.getCup()),
-
-            // Spacer
-            SizedBox(
-              height: Sizing.blockSizeVertical * 1.0,
+        _buildTeamNodes(),
+        MaterialButton(
+          padding: EdgeInsets.zero,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          onPressed: () => Navigator.pop(context),
+          height: Sizing.blockSizeVertical * 7.0,
+          child: Center(
+            child: Icon(
+              Icons.clear,
+              size: Sizing.icon2,
             ),
-
-            // The list of team nodes
-            _buildTeamNodes(),
-
-            // Spacer
-            SizedBox(
-              height: Sizing.blockSizeVertical * 2.0,
-            ),
-          ],
+          ),
         ),
-      ),
-      floatingActionButton: _builderTeam.isEmpty()
-          ? Container()
-          : GradientButton(
-              onPressed: _onAnalyzePressed,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Analyze Team',
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                  SizedBox(
-                    width: Sizing.blockSizeHorizontal * 5.0,
-                  ),
-                  Icon(
-                    Icons.analytics,
-                    size: Sizing.blockSizeHorizontal * 7.0,
-                  ),
-                ],
-              ),
-              width: Sizing.screenWidth * .85,
-              height: Sizing.blockSizeVertical * 8.5,
-            ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      ],
     );
   }
 }

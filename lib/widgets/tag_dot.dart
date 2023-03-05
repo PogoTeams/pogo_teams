@@ -32,8 +32,8 @@ class TagDot extends StatelessWidget {
             width: 1.0,
           ),
         ),
-        height: Sizing.blockSizeHorizontal * 7.0,
-        width: Sizing.blockSizeHorizontal * 7.0,
+        height: Sizing.blockSizeHorizontal * 6.5,
+        width: Sizing.blockSizeHorizontal * 6.5,
         child: onPressed == null
             ? Container()
             : MaterialButton(
@@ -47,10 +47,11 @@ class TagDot extends StatelessWidget {
         color: Color(
           int.parse(tag!.uiColor),
         ),
+        //borderRadius: BorderRadius.circular(100),
         borderRadius: BorderRadius.circular(100),
       ),
-      height: Sizing.blockSizeHorizontal * 7.0,
-      width: Sizing.blockSizeHorizontal * 7.0,
+      height: Sizing.blockSizeHorizontal * 6.5,
+      width: Sizing.blockSizeHorizontal * 6.5,
       child: onPressed == null
           ? Container()
           : MaterialButton(

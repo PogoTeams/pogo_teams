@@ -3,19 +3,14 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import 'pokemon_node.dart';
-import '../../pogo_objects/cup.dart';
+import '../tag_dot.dart';
 import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/tag.dart';
+import '../../pogo_objects/pokemon_team.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/ui/pogo_colors.dart';
-import '../tag_dot.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
-A top level view of a Pokemon team. Each Pokemon (or lack there of) is
-displayed in a square node, any null space in the team is a button that will
-call onEmptyPressed. Every team is provided an index, via the TeamBuilder,
-which allows for any team changes, to be reflected at the provider level.
 -------------------------------------------------------------------------------
 */
 
@@ -24,77 +19,35 @@ class TeamNode extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.onEmptyPressed,
-    required this.pokemonTeam,
-    required this.cup,
-    this.tag,
+    required this.team,
     this.onTagPressed,
-    this.buildHeader = false,
-    this.winRate,
+    this.header,
     this.footer,
     this.focusIndex,
     this.emptyTransparent = false,
     this.collapsible = false,
-    this.padding,
   }) : super(key: key);
 
   final Function(int) onPressed;
   final Function(int) onEmptyPressed;
-  final List<UserPokemon?> pokemonTeam;
-  final Cup cup;
-  final Tag? tag;
+  final PokemonTeam team;
   final void Function()? onTagPressed;
 
-  final bool buildHeader;
-  final String? winRate;
+  final Widget? header;
   final Widget? footer;
   final int? focusIndex;
   final bool emptyTransparent;
   final bool collapsible;
-  final EdgeInsets? padding;
-
-  Widget _buildHeader(BuildContext context) {
-    // Only applicable to user Pokemon teams
-    return Padding(
-      padding: EdgeInsets.only(
-        left: Sizing.blockSizeHorizontal * 2.0,
-        right: Sizing.blockSizeHorizontal * 2.0,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            cup.name,
-            style: Theme.of(context).textTheme.headline6?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text(
-            'Win Rate : ${winRate ?? 0.toStringAsFixed(0)} %',
-            style: Theme.of(context).textTheme.bodyLarge?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          TagDot(
-            tag: tag,
-            onPressed: onTagPressed,
-          ),
-        ],
-      ),
-    );
-  }
 
   bool _pokemonTeamIsEmpty() {
-    for (var pokemon in pokemonTeam) {
+    for (var pokemon in team.getOrderedPokemonListFilled()) {
       if (pokemon != null) return false;
     }
     return true;
   }
 
   // Build the grid view of the current Pokemon team
-  Widget _buildPokemonNodes() {
+  Widget _buildPokemonNodes(BuildContext context) {
     if (collapsible && _pokemonTeamIsEmpty()) return Container();
 
     if (focusIndex != null) {
@@ -108,10 +61,11 @@ class TeamNode extends StatelessWidget {
         crossAxisCount: 3,
       ),
       shrinkWrap: true,
-      itemCount: pokemonTeam.length,
+      itemCount: team.teamSize,
       itemBuilder: (context, index) => PokemonNode.square(
         onEmptyPressed: () => onEmptyPressed(index),
-        pokemon: pokemonTeam[index],
+        onPressed: () => onPressed(index),
+        pokemon: team.getPokemon(index),
         emptyTransparent: emptyTransparent,
       ),
       physics: const NeverScrollableScrollPhysics(),
@@ -126,9 +80,9 @@ class TeamNode extends StatelessWidget {
         crossAxisCount: 3,
       ),
       shrinkWrap: true,
-      itemCount: pokemonTeam.length,
+      itemCount: team.teamSize,
       itemBuilder: (context, index) =>
-          _buildFocusNode(pokemonTeam[index], index),
+          _buildFocusNode(team.getPokemon(index), index),
       physics: const NeverScrollableScrollPhysics(),
     );
   }
@@ -171,12 +125,11 @@ class TeamNode extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: PogoColors.getCupColor(cup),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomRight,
             colors: [
-              PogoColors.getCupColor(cup),
+              PogoColors.getCupColor(team.getCup()),
               const Color(0xBF29F19C),
             ],
             tileMode: TileMode.clamp,
@@ -185,33 +138,239 @@ class TeamNode extends StatelessWidget {
         ),
 
         // The contents of the team node (Square Nodes and icons)
-        child: Padding(
-          padding: padding ??
-              EdgeInsets.only(
-                top: Sizing.blockSizeVertical * 1.0,
-                left: Sizing.blockSizeHorizontal * 3.0,
-                right: Sizing.blockSizeHorizontal * 3.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Optional header build
+            if (header != null) header!,
+
+            // A gridview of the Pokemon in this team
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: MediaQuery.removePadding(
+                removeBottom: true,
+                context: context,
+                child: _buildPokemonNodes(context),
               ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
+
+            // Icon buttons for team operations
+            if (footer != null) footer!,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UserTeamNodeHeader extends StatelessWidget {
+  const UserTeamNodeHeader({
+    Key? key,
+    required this.team,
+    required this.onTagTeam,
+  }) : super(key: key);
+
+  final UserPokemonTeam team;
+  final Function(UserPokemonTeam) onTagTeam;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 10.0,
+        left: 22.0,
+        right: 22.0,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Optional header build
-              buildHeader ? _buildHeader(context) : Container(),
-
-              // A gridview of the Pokemon in this team
               Padding(
-                padding: EdgeInsets.only(
-                  top: Sizing.blockSizeVertical,
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child: Text(
+                  team.getCup().name,
+                  style: Theme.of(context).textTheme.headline6?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-                child: _buildPokemonNodes(),
               ),
+              Text(
+                'Win Rate : ${team.getWinRate()} %',
+                style: Theme.of(context).textTheme.bodyLarge,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+          // Tag
+          Row(
+            children: [
+              if (team.getTag() != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: 5.0),
+                  child: Text(
+                    team.getTag()!.name,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              TagDot(
+                tag: team.getTag(),
+                onPressed: () => onTagTeam(team),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-              // Icon buttons for team operations
-              footer ?? Container(),
+class UserTeamNodeFooter extends StatelessWidget {
+  const UserTeamNodeFooter({
+    Key? key,
+    required this.team,
+    required this.onClear,
+    required this.onBuild,
+    required this.onTag,
+    required this.onLog,
+    required this.onLock,
+    required this.onAnalyze,
+  }) : super(key: key);
+
+  final UserPokemonTeam team;
+  final Function(UserPokemonTeam) onClear;
+  final Function(UserPokemonTeam) onBuild;
+  final Function(UserPokemonTeam) onTag;
+  final Function(UserPokemonTeam) onLog;
+  final Function(UserPokemonTeam) onLock;
+  final Function(UserPokemonTeam) onAnalyze;
+
+  // The icon buttons at the footer of each TeamNode
+  Widget _buildIconButtons() {
+    final IconData lockIcon = team.locked ? Icons.lock : Icons.lock_open;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Remove team option if the team is unlocked
+        if (!team.locked)
+          IconButton(
+            onPressed: () => onClear(team),
+            icon: Icon(
+              Icons.clear,
+              size: Sizing.icon3,
+            ),
+            tooltip: 'Remove Team',
+            splashRadius: Sizing.blockSizeHorizontal * 5.0,
+          ),
+
+        // Edit team
+        IconButton(
+          onPressed: () => onBuild(team),
+          icon: Icon(
+            Icons.build_circle,
+            size: Sizing.icon3,
+          ),
+          tooltip: 'Edit Team',
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
+        ),
+
+        // Tag team
+        IconButton(
+          onPressed: () => onTag(team),
+          icon: Icon(
+            Icons.tag,
+            size: Sizing.icon3,
+          ),
+          tooltip: 'Tag Team',
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
+        ),
+
+        // Log team
+        IconButton(
+          onPressed: () => onLog(team),
+          icon: Icon(
+            Icons.query_stats,
+            size: Sizing.icon3,
+          ),
+          tooltip: 'Log Team',
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
+        ),
+
+        IconButton(
+          onPressed: () => onLock(team),
+          icon: Icon(
+            lockIcon,
+            size: Sizing.icon3,
+          ),
+          tooltip: 'Toggle Team Lock',
+          splashRadius: Sizing.blockSizeHorizontal * 5.0,
+        )
+      ],
+    );
+  }
+
+  Widget _buildAnalysisFooter(BuildContext context) {
+    return MaterialButton(
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      padding: EdgeInsets.zero,
+      onPressed: () => onAnalyze(team),
+      child: Container(
+        height: Sizing.blockSizeVertical * 5.0,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              PogoColors.getPokemonTypeColor('fire'),
+              PogoColors.getPokemonTypeColor('ice'),
+            ],
+            tileMode: TileMode.clamp,
+          ),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(5),
+            topRight: Radius.circular(5),
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: Sizing.blockSizeHorizontal * 2.0,
+            right: Sizing.blockSizeHorizontal * 2.0,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.analytics,
+                size: Sizing.icon3,
+              ),
+              SizedBox(
+                width: Sizing.blockSizeHorizontal * 2.0,
+              ),
+              Text(
+                'Analysis',
+                style: Theme.of(context).textTheme.headline6,
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _buildIconButtons(),
+        _buildAnalysisFooter(context),
+      ],
     );
   }
 }

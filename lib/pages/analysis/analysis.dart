@@ -43,7 +43,6 @@ class Analysis extends StatefulWidget {
 class _AnalysisState extends State<Analysis> {
   late UserPokemonTeam _team = widget.team;
 
-  // The list of expansion panels
   List<Pair<PokemonType, double>> defenseThreats = [];
   List<Pair<PokemonType, double>> offenseCoverage = [];
   List<Pair<PokemonType, double>> netEffectiveness = [];
@@ -61,6 +60,22 @@ class _AnalysisState extends State<Analysis> {
 
     final offense =
         PokemonTypes.getOffenseCoverage(pokemonTeam, includedTypesKeys);
+
+    // Get an overall effectiveness for the bar graph display
+    netEffectiveness = PokemonTypes.getMovesWeightedEffectiveness(
+      defense,
+      offense,
+      includedTypesKeys,
+    );
+
+    if (_team.teamSize > 3) {
+      int teamLengthFactor = _team.teamSize ~/ 3;
+      if (teamLengthFactor > 0) {
+        for (var pair in netEffectiveness) {
+          pair.b / teamLengthFactor;
+        }
+      }
+    }
 
     // Sort the coveraages from high to low
     defense.sort((prev, curr) => ((curr.b - prev.b) * 1000).toInt());
@@ -84,12 +99,15 @@ class _AnalysisState extends State<Analysis> {
     offenseCoverage =
         offense.where((pair) => pair.b > pokemonTeam.length).toList();
 
-    // Get an overall effectiveness for the bar graph display
-    netEffectiveness = PokemonTypes.getMovesWeightedEffectiveness(
-      defense,
-      offense,
-      includedTypesKeys,
-    );
+    // Remove any threats that are covered offensively
+    for (var offCoverage in offenseCoverage) {
+      int i =
+          defenseThreats.indexWhere((pair) => pair.a.isSameType(offCoverage.a));
+
+      if (i != -1 && i < defenseThreats.length) {
+        defenseThreats.removeAt(i);
+      }
+    }
 
     // Scale effectiveness to non-effectiveness
     // TBH, this is convoluted, but hey it works...

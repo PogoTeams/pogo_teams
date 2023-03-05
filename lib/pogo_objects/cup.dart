@@ -73,7 +73,7 @@ class Cup {
     return excludeFilters;
   }
 
-  List<CupPokemon> getRankedPokemonList(RankingsCategories rankingsCategory) {
+  List<CupPokemon> getCupPokemonList(RankingsCategories rankingsCategory) {
     final List<CupPokemon> rankedPokemonList = getRankings().toList();
 
     switch (rankingsCategory) {
@@ -91,6 +91,9 @@ class Cup {
       case RankingsCategories.closers:
         rankedPokemonList
             .sort((p1, p2) => p2.ratings.closer - p1.ratings.closer);
+        break;
+      case RankingsCategories.dex:
+        rankedPokemonList.sort((p1, p2) => p1.getBase().dex - p2.getBase().dex);
         break;
       default:
         rankedPokemonList

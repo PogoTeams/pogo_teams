@@ -145,31 +145,35 @@ class _SquareNodeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        // Pokemon name
-        FormattedPokemonName(
-          name: pokemon.getBase().name,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline6,
-          suffixStyle: Theme.of(context).textTheme.bodyMedium,
-        ),
+    return Padding(
+      padding: EdgeInsets.only(
+        top: Sizing.blockSizeVertical * 1.0,
+        bottom: Sizing.blockSizeVertical * 1.0,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Pokemon name
+          FittedBox(
+            child: FormattedPokemonName(
+              pokemon: pokemon.getBase(),
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline6,
+              suffixStyle: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
 
-        // A line divider
-        Divider(
-          color: Colors.white,
-          thickness: Sizing.blockSizeHorizontal * 0.2,
-        ),
+          TraitsIcons(
+            pokemon: pokemon.getBase(),
+            scale: .7,
+          ),
 
-        TraitsIcons(
-          pokemon: pokemon.getBase(),
-          scale: .7,
-        ),
-
-        MoveDots(
-            moveColors: PogoColors.getPokemonMovesetColors(pokemon.moveset())),
-      ],
+          MoveDots(
+              moveColors:
+                  PogoColors.getPokemonMovesetColors(pokemon.moveset())),
+        ],
+      ),
     );
   }
 }
@@ -196,9 +200,14 @@ class _SmallNodeBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Pokemon name
-          Text(
-            pokemon.getBase().name,
-            style: Theme.of(context).textTheme.headline5,
+          FittedBox(
+            child: FormattedPokemonName(
+              pokemon: pokemon.getBase(),
+              suffixDivider: '  ',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline6,
+              suffixStyle: Theme.of(context).textTheme.bodyMedium,
+            ),
           ),
 
           // Traits Icons
@@ -228,9 +237,14 @@ class _SmallNodeBody extends StatelessWidget {
         ),
 
         // Pokemon name
-        Text(
-          pokemon.getBase().name,
-          style: Theme.of(context).textTheme.headline5,
+        FittedBox(
+          child: FormattedPokemonName(
+            pokemon: pokemon.getBase(),
+            suffixDivider: '  ',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headline6,
+            suffixStyle: Theme.of(context).textTheme.bodyMedium,
+          ),
         ),
 
         // Traits Icons
@@ -265,7 +279,7 @@ class _SmallNodeBody extends StatelessWidget {
           // A line divider
           Divider(
             color: Colors.white,
-            thickness: Sizing.blockSizeHorizontal * 0.2,
+            thickness: Sizing.blockSizeHorizontal * 0.4,
           ),
 
           // The dropdowns for the Pokemon's moves
@@ -302,9 +316,14 @@ class _LargeNodeBody extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Pokemon name
-        Text(
-          pokemon.getBase().name,
-          style: Theme.of(context).textTheme.headline5,
+        FittedBox(
+          child: FormattedPokemonName(
+            pokemon: pokemon.getBase(),
+            suffixDivider: '\n',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headline6,
+            suffixStyle: Theme.of(context).textTheme.bodyMedium,
+          ),
         ),
 
         // Traits Icons
@@ -348,7 +367,7 @@ class _LargeNodeBody extends StatelessWidget {
           // A line divider
           Divider(
             color: Colors.white,
-            thickness: Sizing.blockSizeHorizontal * 0.2,
+            thickness: Sizing.blockSizeHorizontal * 0.4,
           ),
 
           // The dropdowns for the Pokemon's moves

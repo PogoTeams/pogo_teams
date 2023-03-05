@@ -61,19 +61,46 @@ class _TagEditState extends State<TagEdit> {
   }
 
   void _onSave() async {
-    if (widget.create && PogoData.tagNameExists(_textController.text)) {
-      displayMessageOK(
-        context,
-        'Invalid Tag Name',
-        'The tag name "${_textController.text}" already exists.',
-      );
-    } else {
-      PogoData.updateTagSync(Tag(
-        name: _textController.text,
-        uiColor: _selectedColor.value.toRadixString(10),
-        dateCreated: widget.create ? DateTime.now() : null,
-      ));
-      Navigator.pop(context);
+    // Create tag
+    if (widget.create) {
+      if (PogoData.tagNameExists(_textController.text)) {
+        displayMessageOK(
+          context,
+          'Invalid Tag Name',
+          'The tag name "${_textController.text}" already exists.',
+        );
+      } else {
+        PogoData.updateTagSync(
+          Tag(
+            name: _textController.text,
+            uiColor: _selectedColor.value.toRadixString(10),
+            dateCreated: widget.create ? DateTime.now() : null,
+          ),
+        );
+        Navigator.pop(context);
+      }
+    }
+
+    // Update tag
+    else {
+      if (widget.tag!.name != _textController.text &&
+          PogoData.tagNameExists(_textController.text)) {
+        displayMessageOK(
+          context,
+          'Invalid Tag Name',
+          'The tag name "${_textController.text}" already exists.',
+        );
+      } else {
+        PogoData.updateTagSync(
+          Tag(
+            name: _textController.text,
+            uiColor: _selectedColor.value.toRadixString(10),
+            dateCreated: widget.tag!.dateCreated,
+          )..id = widget.tag!.id,
+        );
+
+        Navigator.pop(context);
+      }
     }
   }
 

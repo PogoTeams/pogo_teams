@@ -8,8 +8,8 @@ import '../../pogo_objects/cup.dart';
 import '../../modules/data/pogo_data.dart';
 import '../../modules/ui/sizing.dart';
 import '../../widgets/pokemon_list.dart';
-import '../../widgets/buttons/exit_button.dart';
 import '../../widgets/pogo_text_field.dart';
+import '../../widgets/buttons/gradient_button.dart';
 import '../../widgets/dropdowns/cup_dropdown.dart';
 import '../../widgets/dropdowns/team_size_dropdown.dart';
 import '../../widgets/dropdowns/win_loss_dropdown.dart';
@@ -43,7 +43,6 @@ class TeamBuilder extends StatefulWidget {
 
 class _TeamBuilderState extends State<TeamBuilder> {
   late final PokemonTeam _team;
-  late List<UserPokemon?> _pokemonTeam;
   late Cup _cup = widget.cup;
 
   // The current index of the team the user is editing
@@ -69,15 +68,15 @@ class _TeamBuilderState extends State<TeamBuilder> {
     setState(() {
       // Split any comma seperated list into individual search terms
       final List<String> terms = input.split(', ');
-      final int termsLen = terms.length;
 
       // Callback to filter Pokemon by the search terms
       bool filterPokemon(CupPokemon pokemon) {
         bool isMatch = false;
 
-        for (int i = 0; i < termsLen && !isMatch; ++i) {
-          isMatch = pokemon.getBase().name.toLowerCase().startsWith(terms[i]) ||
-              pokemon.getBase().typing.containsTypeId(terms[i]);
+        for (String term in terms) {
+          isMatch = pokemon.getBase().name.toLowerCase().startsWith(term) ||
+              pokemon.getBase().typing.containsTypeId(term) ||
+              term == 'shadow' && pokemon.getBase().isShadow();
         }
 
         return isMatch;
@@ -93,13 +92,14 @@ class _TeamBuilderState extends State<TeamBuilder> {
     return TeamNode(
       onPressed: _updateWorkingIndex,
       onEmptyPressed: _updateWorkingIndex,
-      pokemonTeam: _pokemonTeam,
-      cup: _cup,
+      team: _team,
       focusIndex: _builderIndex,
       emptyTransparent: true,
       footer: Padding(
-        padding: EdgeInsets.only(
-          bottom: Sizing.blockSizeVertical * 2.0,
+        padding: const EdgeInsets.only(
+          bottom: 12.0,
+          left: 12.0,
+          right: 12.0,
         ),
         child: _buildTeamNodeFooter(),
       ),
@@ -144,49 +144,39 @@ class _TeamBuilderState extends State<TeamBuilder> {
   Widget _buildPokemonList() {
     return PokemonList(
       pokemon: _filteredPokemon,
-      onPokemonSelected: (pokemon) {
+      onPokemonSelected: (Pokemon pokemon) {
         setState(() {
-          _pokemonTeam[_builderIndex] = UserPokemon.fromPokemon(pokemon);
+          UserPokemon userPokemon = UserPokemon.fromPokemon(pokemon);
+          userPokemon.id = PogoData.updateUserPokemonSync(userPokemon);
+          _team.setPokemonAt(_builderIndex, userPokemon);
+          PogoData.updatePokemonTeamSync(_team, updatePokemon: true);
           _updateWorkingIndex(_builderIndex + 1);
         });
       },
     );
   }
 
-  // Two floating action buttons at the footer of the scaffold
-  // One to discard the changes, and another to confirm
-  Widget _buildFloatingActionButtons() {
-    return SizedBox(
-      width: Sizing.screenWidth * .87,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Cancel exit button
-          ExitButton(
-            key: UniqueKey(),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            backgroundColor: const Color.fromARGB(255, 239, 83, 80),
-          ),
-
-          // Confirm exit button
-          ExitButton(
-            key: UniqueKey(),
-            onPressed: () {
-              _saveTeam();
-              Navigator.pop(context, _team);
-            },
-            icon: const Icon(Icons.check),
-          ),
-        ],
+  Widget _buildFloatingActionButton() {
+    return GradientButton(
+      onPressed: () {
+        _saveTeam();
+        Navigator.pop(context, _team);
+      },
+      child: Icon(
+        Icons.clear,
+        size: Sizing.icon2,
       ),
+      width: Sizing.screenWidth * .85,
+      height: Sizing.blockSizeVertical * 8.5,
     );
   }
 
   void _saveTeam() {
-    _team.cup.value = _cup;
-    PogoData.updatePokemonTeamSync(_team, newPokemonTeam: _pokemonTeam);
+    _team.setCupById(_cup.cupId);
+    PogoData.updatePokemonTeamSync(
+      _team,
+      newPokemonTeam: _team.getOrderedPokemonListFilled(),
+    );
   }
 
   // Update the working index, will be set via a callback or
@@ -216,13 +206,8 @@ class _TeamBuilderState extends State<TeamBuilder> {
         _builderIndex = newSize - 1;
       }
 
-      if (_pokemonTeam.length != newSize) {
-        final newTeam = List.generate(
-            newSize, (i) => i < _pokemonTeam.length ? _pokemonTeam[i] : null);
-        _pokemonTeam = newTeam;
-      }
-
-      _team.teamSize = newSize;
+      _team.setTeamSize(newSize);
+      PogoData.updatePokemonTeamSync(_team, updatePokemon: true);
     });
   }
 
@@ -231,13 +216,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
   void _filterCategory(RankingsCategories rankingsCategory) async {
     _selectedCategory = rankingsCategory;
 
-    // Dex is a special case where all Pokemon are in the list
-    // Otherwise get the list from the ratings category
-    if (RankingsCategories.dex == _selectedCategory) {
-      //_pokemon = PogoData.pokemonList;
-    } else {
-      _pokemon = _cup.getRankedPokemonList(rankingsCategory);
-    }
+    _pokemon = _cup.getCupPokemonList(rankingsCategory);
 
     _filterPokemonList();
   }
@@ -255,8 +234,6 @@ class _TeamBuilderState extends State<TeamBuilder> {
     else {
       _team = widget.team as OpponentPokemonTeam;
     }
-
-    _pokemonTeam = _team.getOrderedPokemonListFilled();
 
     // Set the starting index of the team edit
     _builderIndex = widget.focusIndex;
@@ -330,8 +307,8 @@ class _TeamBuilderState extends State<TeamBuilder> {
           ),
         ),
       ),
-      floatingActionButton: _buildFloatingActionButtons(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

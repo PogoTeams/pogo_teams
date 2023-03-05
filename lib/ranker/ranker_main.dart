@@ -42,7 +42,7 @@ Future<void> generatePokemonRankings() async {
       BattlePokemon battlePokemon = BattlePokemon.fromPokemon(pokemon);
       battlePokemon.initializeStats(cup.cp);
       if (battlePokemon.cp >= Cups.cpMinimums[cup.cp]!) {
-        RankingData rankingData = PokemonRanker.rank(
+        RankingData rankingData = PokemonRanker.rankSync(
           battlePokemon,
           cup,
           cupPokemonList,
@@ -60,6 +60,21 @@ Future<void> generatePokemonRankings() async {
     }
 
     rankings.sort((r1, r2) => r2.ratings.overall - r1.ratings.overall);
+
+    // Normalize ratings to the scale of 0 - 100
+    for (var ranking in rankings) {
+      ranking.ratings.overall =
+          (ranking.ratings.overall / bestOverallRating * 100).floor();
+
+      ranking.ratings.lead =
+          (ranking.ratings.lead / bestLeadRating * 100).floor();
+
+      ranking.ratings.switchRating =
+          (ranking.ratings.switchRating / bestSwitchRating * 100).floor();
+
+      ranking.ratings.closer =
+          (ranking.ratings.closer / bestCloserRating * 100).floor();
+    }
 
     writeRankings(
       rankings,
@@ -85,11 +100,11 @@ void writeRankings(
   String cupId,
 ) {
   for (RankingData r in rankings) {
-    r.ratings.overall = (r.ratings.overall / bestOverallRating * 10000).floor();
-    r.ratings.lead = (r.ratings.lead / bestLeadRating * 10000).floor();
+    r.ratings.overall = (r.ratings.overall / bestOverallRating * 100).floor();
+    r.ratings.lead = (r.ratings.lead / bestLeadRating * 100).floor();
     r.ratings.switchRating =
-        (r.ratings.switchRating / bestSwitchRating * 10000).floor();
-    r.ratings.closer = (r.ratings.closer / bestCloserRating * 10000).floor();
+        (r.ratings.switchRating / bestSwitchRating * 100).floor();
+    r.ratings.closer = (r.ratings.closer / bestCloserRating * 100).floor();
   }
 
   JsonTools.writeJson(

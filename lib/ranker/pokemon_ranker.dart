@@ -1,5 +1,7 @@
 // Local
 import 'ranking_data.dart';
+import '../tools/pair.dart';
+import '../pogo_objects/pokemon.dart';
 import '../pogo_objects/pokemon_base.dart';
 import '../pogo_objects/battle_pokemon.dart';
 import '../pogo_objects/cup.dart';
@@ -15,7 +17,7 @@ import '../modules/data/pogo_debugging.dart';
 */
 
 class PokemonRanker {
-  static RankingData rank(
+  static RankingData rankSync(
     BattlePokemon self,
     Cup cup,
     List<PokemonBase> opponents,
@@ -27,8 +29,8 @@ class PokemonRanker {
         BattlePokemon opponent = BattlePokemon.fromPokemon(opponentPokemon);
 
         opponent.initializeStats(cup.cp);
-        self.selectMoveset((opponent));
-        opponent.selectMoveset(self);
+        self.initializeMoveset(opponent, true);
+        opponent.initializeMoveset(self, true);
 
         self.selectedBattleFastMove.usage += 1;
         self.selectedBattleChargeMoves.first.usage += 1;
@@ -56,9 +58,44 @@ class PokemonRanker {
     }
 
     // Calculate final ratings for this pokemon
-    rankingData.averageRatings();
+    rankingData.finalizeResults();
 
     return rankingData;
+  }
+
+  static Stream<Pair<String, double>> rankAsync(
+    BattlePokemon self,
+    Cup cup,
+    List<CupPokemon> opponents,
+    RankingData rankingData,
+  ) async* {
+    for (CupPokemon opponentPokemon in opponents) {
+      BattlePokemon opponent = BattlePokemon.fromCupPokemon(opponentPokemon);
+
+      opponent.initializeStats(cup.cp);
+      self.initializeMoveset(opponent, false);
+      opponent.initializeMoveset(self, false);
+
+      PokemonBattler.resetPokemon(self, opponent);
+
+      if (opponent.cp >= Cups.cpMinimums[cup.cp]!) {
+        // Lead shield scenario
+        rankingData.addLeadResult(battle(self, opponent, [2, 2]));
+
+        // Switch shield scenarios
+        for (List<int> shields in RankingData.switchShieldScenarios) {
+          rankingData.addSwitchResult(battle(self, opponent, shields), shields);
+        }
+
+        // Closer shield scenarios
+        for (List<int> shields in RankingData.closerShieldScenarios) {
+          rankingData.addCloserResult(battle(self, opponent, shields), shields);
+        }
+      }
+    }
+
+    // Calculate final ratings for this pokemon
+    rankingData.finalizeResults();
   }
 
   static BattleResult battle(
@@ -91,8 +128,8 @@ class PokemonRanker {
 
     self.initializeStats(cp);
     opponent.initializeStats(cp);
-    self.selectMoveset((opponent));
-    opponent.selectMoveset(self);
+    self.initializeMoveset(opponent, true);
+    opponent.initializeMoveset(self, true);
 
     PokemonBattler.resetPokemon(self, opponent);
 

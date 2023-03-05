@@ -22,12 +22,14 @@ class TypeCoverage extends StatelessWidget {
     required this.defenseThreats,
     required this.offenseCoverage,
     required this.includedTypesKeys,
+    required this.teamSize,
   }) : super(key: key);
 
   final List<Pair<PokemonType, double>> netEffectiveness;
   final List<Pair<PokemonType, double>> defenseThreats;
   final List<Pair<PokemonType, double>> offenseCoverage;
   final List<String> includedTypesKeys;
+  final int teamSize;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,10 @@ class TypeCoverage extends StatelessWidget {
           height: Sizing.blockSizeVertical * 2.5,
         ),
 
-        CoverageGraph(netEffectiveness: netEffectiveness),
+        CoverageGraph(
+          netEffectiveness: netEffectiveness,
+          teamSize: teamSize,
+        ),
       ],
     );
   }

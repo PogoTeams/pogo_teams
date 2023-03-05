@@ -87,10 +87,18 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
       (Move move) {
         return DropdownMenuItem<Move>(
           value: move,
-          child: Center(
-            child: Text(
-              widget.pokemon.getBase().getFormattedMoveName(move),
-              style: Theme.of(context).textTheme.bodySmall,
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: Sizing.blockSizeHorizontal * 2.0,
+              right: Sizing.blockSizeHorizontal * 2.0,
+            ),
+            child: Center(
+              child: FittedBox(
+                child: Text(
+                  widget.pokemon.getBase().getFormattedMoveName(move),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
             ),
           ),
         );
@@ -187,9 +195,11 @@ class MoveDropdown extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Move label
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall,
+        FittedBox(
+          child: Text(
+            label,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ),
 
         // Dropdown button

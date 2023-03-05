@@ -487,16 +487,19 @@ class PogoData {
             await _processUserPokemonTeam(
                 List<Map<String, dynamic>>.from(opponentEntry['pokemonTeam']));
 
+        if (opponentEntry.containsKey('tag')) {
+          opponent.tag.value = pogoIsar.tags.getByNameSync(teamEntry['tag']);
+        }
+
         createPokemonTeamSync(opponent);
         updatePokemonTeamSync(opponent, newPokemonTeam: opponentPokemonTeam);
         team.opponents.add(opponent);
       }
 
-      createPokemonTeamSync(team);
       if (teamEntry.containsKey('tag')) {
-        final Id tagId = updateTagSync(Tag.fromJson(teamEntry['tag']));
-        team.tag.value = pogoIsar.tags.getSync(tagId);
+        team.tag.value = pogoIsar.tags.getByNameSync(teamEntry['tag']);
       }
+      createPokemonTeamSync(team);
       updatePokemonTeamSync(team, newPokemonTeam: pokemonTeam);
     }
   }
@@ -551,7 +554,7 @@ class PogoData {
   static Id updateTagSync(Tag tag) {
     Id id = -1;
     pogoIsar.writeTxnSync(() {
-      id = pogoIsar.tags.putByNameSync(tag);
+      id = pogoIsar.tags.putSync(tag);
     });
 
     return id;
@@ -580,13 +583,13 @@ class PogoData {
   // Get a list of Pokemon that contain one of the specified types
   // The rankings category
   // The list length will be up to the limit
-  static Future<List<CupPokemon>> getFilteredRankedPokemonList(
+  static Future<List<CupPokemon>> getFilteredCupPokemonList(
     Cup cup,
     List<PokemonType> types,
     RankingsCategories rankingsCategory, {
     int limit = 20,
   }) async {
-    List<CupPokemon> rankedList = cup.getRankedPokemonList(rankingsCategory);
+    List<CupPokemon> rankedList = cup.getCupPokemonList(rankingsCategory);
 
     // Filter the list to Pokemon that have one of the types in their typing
     // or their selected moveset
@@ -604,8 +607,11 @@ class PogoData {
     return rankedList.getRange(0, limit).toList();
   }
 
-  static void updateUserPokemonSync(UserPokemon pokemon) {
-    pogoIsar.writeTxnSync(() => pogoIsar.userPokemon.putSync(pokemon));
+  static Id updateUserPokemonSync(UserPokemon pokemon) {
+    Id id = -1;
+    pogoIsar.writeTxnSync(() => id = pogoIsar.userPokemon.putSync(pokemon));
+
+    return id;
   }
 
   static UserPokemonTeam getUserTeamSync(Id id) {
@@ -659,6 +665,12 @@ class PogoData {
   }) {
     Id id = -1;
     pogoIsar.writeTxnSync(() {
+      if (team.runtimeType == UserPokemonTeam) {
+        id = pogoIsar.userPokemonTeams.putSync(team as UserPokemonTeam);
+      } else if (team.runtimeType == OpponentPokemonTeam) {
+        id = pogoIsar.opponentPokemonTeams.putSync(team as OpponentPokemonTeam);
+      }
+
       if (updatePokemon) {
         // Existing Pokemon Team
         if (newPokemonTeam == null) {
@@ -685,19 +697,18 @@ class PogoData {
               );
         }
       }
-
-      if (team.runtimeType == UserPokemonTeam) {
-        id = pogoIsar.userPokemonTeams.putSync(team as UserPokemonTeam);
-      } else if (team.runtimeType == OpponentPokemonTeam) {
-        id = pogoIsar.opponentPokemonTeams.putSync(team as OpponentPokemonTeam);
-      }
     });
 
     return id;
   }
 
-  static void deleteUserPokemonTeamSync(Id id) {
-    pogoIsar.writeTxnSync(() => pogoIsar.userPokemonTeams.deleteSync(id));
+  static void deleteUserPokemonTeamSync(UserPokemonTeam userTeam) {
+    for (OpponentPokemonTeam opponentTeam in userTeam.opponents) {
+      deleteOpponentPokemonTeamSync(opponentTeam.id);
+    }
+
+    pogoIsar
+        .writeTxnSync(() => pogoIsar.userPokemonTeams.deleteSync(userTeam.id));
   }
 
   static void deleteOpponentPokemonTeamSync(Id id) {

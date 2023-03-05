@@ -28,7 +28,7 @@ class Tag {
     return {
       'name': name,
       'uiColor': uiColor,
-      'dateCreated': dateCreated.toString(),
+      'dateCreated': dateCreated?.toString(),
     };
   }
 

@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Local
+import 'pokemon.dart';
 import 'pokemon_base.dart';
 import 'pokemon_typing.dart';
 import 'move.dart';
@@ -84,6 +85,12 @@ class BattlePokemon extends PokemonBase {
           .addAll(other.getFastMoves().map((move) => FastMove.from(move)))
       ..battleChargeMoves
           .addAll(other.getChargeMoves().map((move) => ChargeMove.from(move)));
+  }
+
+  factory BattlePokemon.fromCupPokemon(CupPokemon other) {
+    return BattlePokemon.fromPokemon(other.getBase())
+      ..selectedBattleFastMove = other.getSelectedFastMove()
+      ..selectedBattleChargeMoves = other.getSelectedChargeMoves();
   }
 
   factory BattlePokemon.from(
@@ -258,7 +265,7 @@ class BattlePokemon extends PokemonBase {
     cooldown = selectedBattleFastMove.duration + modifier;
   }
 
-  void selectMoveset(BattlePokemon opponent) {
+  void initializeMoveset(BattlePokemon opponent, bool selectBestMoveset) {
     if (battleFastMoves.isEmpty || battleChargeMoves.isEmpty) return;
 
     // Find the charge move with highest damage per energy
@@ -322,10 +329,12 @@ class BattlePokemon extends PokemonBase {
 
     _sortByRating(battleFastMoves);
 
-    selectedBattleFastMove = battleFastMoves.first;
-    selectedBattleChargeMoves.first = battleChargeMoves[0];
-    if (battleChargeMoves.length > 1) {
-      selectedBattleChargeMoves.last = battleChargeMoves[1];
+    if (selectBestMoveset) {
+      selectedBattleFastMove = battleFastMoves.first;
+      selectedBattleChargeMoves.first = battleChargeMoves[0];
+      if (battleChargeMoves.length > 1) {
+        selectedBattleChargeMoves.last = battleChargeMoves[1];
+      }
     }
   }
 

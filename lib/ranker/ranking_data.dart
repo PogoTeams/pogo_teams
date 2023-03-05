@@ -1,3 +1,6 @@
+// Dart
+import 'dart:math';
+
 // Local
 import '../pogo_objects/battle_pokemon.dart';
 import '../pogo_objects/move.dart';
@@ -34,33 +37,32 @@ class RankingData {
   final BattlePokemon pokemon;
 
   Ratings ratings = Ratings();
-  //KeyMatchups keyLeads = KeyMatchups();
-  //KeyMatchups keySwitches = KeyMatchups();
-  //KeyMatchups keyClosers = KeyMatchups();
+  KeyMatchups keyLeads = KeyMatchups();
+  KeyMatchups keySwitches = KeyMatchups();
+  KeyMatchups keyClosers = KeyMatchups();
   int leadBattleCount = 0;
   int switchBattleCount = 0;
   int closerBattleCount = 0;
+  FastMove? idealFastMove;
+  ChargeMove? idealChargeMoveL;
+  ChargeMove? idealChargeMoveR;
 
   Map<String, dynamic> toJson() {
-    FastMove idealFastMove = pokemon.getFastMoves().reduce((move1, move2) {
-      return (move1.usage > move2.usage ? move1 : move2);
-    });
-    //pokemon.chargeMoves.sort((move1, move2) => move2.usage - move1.usage);
-
     return {
       'pokemonId': pokemon.pokemonId,
       'ratings': ratings.toJson(),
       'idealMoveset': {
-        'fastMove': idealFastMove.moveId,
-        /*
-        'chargeMoves': (pokemon.chargeMoves.length > 1
-            ? [pokemon.chargeMoves[0].moveId, pokemon.chargeMoves[1].moveId]
-            : [pokemon.chargeMoves[0].moveId])
-            */
+        'fastMove': idealFastMove?.moveId,
+        'chargeMoves': (idealChargeMoveR == null
+            ? [idealChargeMoveL?.moveId]
+            : [
+                idealChargeMoveL?.moveId,
+                idealChargeMoveR!.moveId,
+              ]),
       },
-      //'keyLeads': keyLeads.toJson(),
-      //'keySwitches': keySwitches.toJson(),
-      //'keyClosers': keyClosers.toJson(),
+      'keyLeads': keyLeads.toJson(),
+      'keySwitches': keySwitches.toJson(),
+      'keyClosers': keyClosers.toJson(),
     };
   }
 
@@ -71,7 +73,7 @@ class RankingData {
             .floor();
 
     ratings.lead += leadRating;
-    //keyLeads.update(result);
+    keyLeads.update(result);
     ++leadBattleCount;
   }
 
@@ -87,7 +89,7 @@ class RankingData {
         .floor();
 
     ratings.switchRating += switchRating;
-    //keySwitches.update(result);
+    keySwitches.update(result);
     ++switchBattleCount;
   }
 
@@ -98,7 +100,7 @@ class RankingData {
             .floor();
 
     ratings.closer += closerRating;
-    //keyClosers.update(result);
+    keyClosers.update(result);
     ++closerBattleCount;
   }
 
@@ -112,7 +114,7 @@ class RankingData {
         result.self.currentShields * Globals.winShieldMultiplier;
   }
 
-  void averageRatings() {
+  void finalizeResults() {
     if (leadBattleCount != 0) {
       ratings.lead = (.25 * ratings.lead / leadBattleCount).floor();
     }
@@ -128,6 +130,28 @@ class RankingData {
 
     ratings.overall =
         ((ratings.lead + ratings.switchRating + ratings.closer) / 3).floor();
+
+    // Determine the best moveset based on usage
+    idealFastMove = pokemon.battleFastMoves.reduce((move1, move2) {
+      return (move1.usage > move2.usage ? move1 : move2);
+    });
+
+    idealChargeMoveL = pokemon.battleChargeMoves.reduce((move1, move2) {
+      return (move1.usage > move2.usage ? move1 : move2);
+    });
+
+    if (idealChargeMoveL != null && pokemon.battleChargeMoves.length > 1) {
+      idealChargeMoveR = pokemon.battleChargeMoves
+          .where((move) => !move.isSameMove(idealChargeMoveL!))
+          .reduce((move1, move2) {
+        return (move1.usage > move2.usage ? move1 : move2);
+      });
+    }
+
+    // Determine the best and worst matchups
+    keyLeads.finalizeResults();
+    keySwitches.finalizeResults();
+    keyClosers.finalizeResults();
   }
 }
 
@@ -146,24 +170,26 @@ class KeyMatchups {
 
   void update(BattleResult result) {
     if (result.outcome == BattleOutcome.win) {
-      shelfResult(winShelf, result,
-          (r1, r2) => (r2.self.currentRating > r1.self.currentRating ? -1 : 1));
+      winShelf.add(result);
     } else if (result.outcome == BattleOutcome.loss) {
-      shelfResult(
-          lossShelf,
-          result,
-          (r1, r2) =>
-              (r2.opponent.currentRating > r1.opponent.currentRating ? -1 : 1));
+      lossShelf.add(result);
     }
   }
 
-  static void shelfResult(
-    List<BattleResult> shelf,
-    BattleResult result,
-    int Function(BattleResult, BattleResult) sort,
-  ) {
-    shelf.add(result);
-    shelf.sort(sort);
-    if (shelf.length > shelfSize) shelf.removeLast();
+  void finalizeResults() {
+    if (winShelf.isNotEmpty) {
+      winShelf.sort(
+          (r1, r2) => (r2.self.currentRating > r1.self.currentRating ? -1 : 1));
+
+      winShelf = winShelf.getRange(0, shelfSize).toList();
+    }
+
+    if (lossShelf.isNotEmpty) {
+      lossShelf.sort(
+          (r1, r2) => (r2.self.currentRating > r1.self.currentRating ? -1 : 1));
+
+      lossShelf =
+          lossShelf.getRange(0, min(lossShelf.length, shelfSize)).toList();
+    }
   }
 }

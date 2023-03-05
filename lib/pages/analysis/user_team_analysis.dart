@@ -1,7 +1,9 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:pogo_teams/enums/rankings_categories.dart';
+import 'package:pogo_teams/pogo_objects/battle_pokemon.dart';
 
-// Local Imports
+// Local
 import '../../widgets/analysis/swap_list.dart';
 import '../../widgets/analysis/type_coverage.dart';
 import '../../widgets/nodes/pokemon_node.dart';
@@ -13,6 +15,8 @@ import '../../modules/data/pokemon_types.dart';
 import '../../modules/data/pogo_data.dart';
 import '../../modules/ui/sizing.dart';
 import '../../tools/pair.dart';
+import '../../ranker/pokemon_ranker.dart';
+import '../../ranker/ranking_data.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -43,14 +47,13 @@ class UserTeamAnalysis extends StatefulWidget {
 
 class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
   late UserPokemonTeam _team = widget.team;
-  bool _initState = true;
 
   // The included type keys of the team's given cup
   late final List<String> includedTypesKeys =
       widget.team.getCup().includedTypeKeys();
 
   // The list of expansion panels
-  List<PanelStates> _expansionPanels = [];
+  final List<PanelStates> _expansionPanels = [];
 
   final ScrollController _scrollController = ScrollController();
 
@@ -62,7 +65,42 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
     final List<PokemonType> threatCounterTypes =
         PokemonTypes.getCounterTypes(defenseThreatTypes, includedTypesKeys);
 
-    _expansionPanels = [
+    _expansionPanels.clear();
+
+    _expansionPanels.addAll([
+      // Pokemon Team
+      PanelStates(
+        headerValue: Text(
+          'Team',
+          style: Theme.of(context).textTheme.headline5,
+        ),
+        expandedValue: _buildPokemonNodes(pokemonTeam),
+        isExpanded: true,
+      ),
+      // Team Ranking
+      /*
+      PanelStates(
+        headerValue: _buildTeamRankingPanel(),
+        expandedValue: Container(),
+      ),
+      */
+
+      // Type Coverage
+      PanelStates(
+        headerValue: Text(
+          'Type Coverage',
+          style: Theme.of(context).textTheme.headline5,
+        ),
+        expandedValue: TypeCoverage(
+          netEffectiveness: widget.netEffectiveness,
+          defenseThreats: widget.defenseThreats,
+          offenseCoverage: widget.offenseCoverage,
+          includedTypesKeys: includedTypesKeys,
+          teamSize: _team.teamSize,
+        ),
+        isExpanded: true,
+      ),
+
       // Meta Threats
       PanelStates(
         headerValue: Text(
@@ -92,7 +130,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
         ),
         isExpanded: true,
       ),
-    ];
+    ]);
   }
 
   // When the team is changed from a swap page, animate to the top of to
@@ -113,11 +151,13 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
     widget.onTeamChanged();
 
     setState(() {
+      /*
       _scrollController.animateTo(
         0.0,
         duration: const Duration(seconds: 1),
         curve: Curves.decelerate,
       );
+      */
     });
   }
 
@@ -198,6 +238,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
 
   Widget _buildPanelList() {
     return ExpansionPanelList(
+      dividerColor: Colors.transparent,
       elevation: 0.0,
       expansionCallback: (int index, bool isExpanded) {
         setState(() {
@@ -224,6 +265,32 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
     );
   }
 
+  Stream<Pair<String, double>> _rankUserTeam(
+      List<UserPokemon> pokemonTeam) async* {
+    List<CupPokemon> opponents = await PogoData.getFilteredCupPokemonList(
+      _team.getCup(),
+      PokemonTypes.typeList,
+      RankingsCategories.overall,
+      limit: 100,
+    );
+
+    for (UserPokemon pokemon in pokemonTeam) {
+      BattlePokemon battlePokemon = BattlePokemon.fromPokemon(pokemon.getBase())
+        ..selectedBattleFastMove = pokemon.getSelectedFastMove()
+        ..selectedBattleChargeMoves = pokemon.getSelectedChargeMoves();
+
+      battlePokemon.initializeStats(_team.getCup().cp);
+      RankingData rankingData = RankingData(pokemon: battlePokemon);
+
+      PokemonRanker.rankAsync(
+        battlePokemon,
+        _team.getCup(),
+        opponents,
+        rankingData,
+      );
+    }
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -235,10 +302,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
     _team = PogoData.getUserTeamSync(_team.id);
     final orderedPokemonList = _team.getOrderedPokemonList();
 
-    if (_initState) {
-      _initializeExpansionPanels(orderedPokemonList);
-      _initState = false;
-    }
+    _initializeExpansionPanels(orderedPokemonList);
 
     return Scaffold(
       appBar: _buildAppBar(),
@@ -250,37 +314,6 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
         child: ListView(
           controller: _scrollController,
           children: [
-            // Spacer
-            SizedBox(
-              height: Sizing.blockSizeVertical * 1.0,
-            ),
-
-            // Build the Pokemon nodes
-            _buildPokemonNodes(orderedPokemonList),
-
-            // Spacer
-            SizedBox(
-              height: Sizing.blockSizeVertical * 2.0,
-            ),
-
-            Text(
-              'Type Coverage',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline5,
-            ),
-
-            // Spacer
-            SizedBox(
-              height: Sizing.blockSizeVertical * 2.0,
-            ),
-
-            TypeCoverage(
-              netEffectiveness: widget.netEffectiveness,
-              defenseThreats: widget.defenseThreats,
-              offenseCoverage: widget.offenseCoverage,
-              includedTypesKeys: includedTypesKeys,
-            ),
-
             // Collapsible Pokemon threats and counters
             _buildPanelList(),
           ],
@@ -293,12 +326,12 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis> {
 // Expansion panel state information container
 class PanelStates {
   PanelStates({
-    required this.expandedValue,
     required this.headerValue,
+    required this.expandedValue,
     this.isExpanded = false,
   });
 
-  Widget expandedValue;
   Widget headerValue;
+  Widget expandedValue;
   bool isExpanded;
 }

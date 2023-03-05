@@ -57,7 +57,7 @@ class _RankingsState extends State<Rankings> {
   void _filterCategory(RankingsCategories rankingsCategory) async {
     _selectedCategory = rankingsCategory;
 
-    _pokemon = cup.getRankedPokemonList(rankingsCategory);
+    _pokemon = cup.getCupPokemonList(rankingsCategory);
 
     _filterPokemonList();
   }

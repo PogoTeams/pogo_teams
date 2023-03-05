@@ -29,7 +29,7 @@ class TypeFilteredPokemonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: PogoData.getFilteredRankedPokemonList(
+        future: PogoData.getFilteredCupPokemonList(
           cup,
           types,
           RankingsCategories.overall,

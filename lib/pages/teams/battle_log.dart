@@ -112,17 +112,12 @@ class _BattleLogState extends State<BattleLog> {
     return TeamNode(
       onPressed: (_) {},
       onEmptyPressed: (_) {},
-      pokemonTeam: _team.getOrderedPokemonListFilled(),
-      cup: _team.getCup(),
-      tag: _team.getTag(),
-      buildHeader: true,
-      winRate: _team.getWinRate(),
+      team: _team,
       emptyTransparent: true,
       collapsible: true,
-      padding: EdgeInsets.only(
-        top: Sizing.blockSizeHorizontal * 2.0,
-        left: Sizing.blockSizeHorizontal * 3.0,
-        right: Sizing.blockSizeHorizontal * 3.0,
+      header: UserTeamNodeHeader(
+        team: _team,
+        onTagTeam: (_) {},
       ),
     );
   }
@@ -141,11 +136,7 @@ class _BattleLogState extends State<BattleLog> {
                   onEmptyPressed: (nodeIndex) =>
                       _onEmptyPressed(index, nodeIndex),
                   onPressed: (_) {},
-                  pokemonTeam: _team
-                      .getOpponents()
-                      .elementAt(index)
-                      .getOrderedPokemonListFilled(),
-                  cup: _team.getCup(),
+                  team: _team.getOpponents().elementAt(index),
                   footer: _buildTeamNodeFooter(index),
                 ),
                 SizedBox(
@@ -158,11 +149,7 @@ class _BattleLogState extends State<BattleLog> {
           return TeamNode(
             onEmptyPressed: (nodeIndex) => _onEmptyPressed(index, nodeIndex),
             onPressed: (_) {},
-            pokemonTeam: _team
-                .getOpponents()
-                .elementAt(index)
-                .getOrderedPokemonListFilled(),
-            cup: _team.getCup(),
+            team: _team.getOpponents().elementAt(index),
             footer: _buildTeamNodeFooter(index),
           );
         },
@@ -180,56 +167,65 @@ class _BattleLogState extends State<BattleLog> {
     final opponent = _team.getOpponents().elementAt(teamIndex);
     final IconData lockIcon = opponent.locked ? Icons.lock : Icons.lock_open;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Remove team option if the team is unlocked
-        opponent.locked
-            ? Container()
-            : IconButton(
-                onPressed: () => _onClearTeam(teamIndex),
-                icon: const Icon(Icons.clear),
-                tooltip: 'Remove Team',
-                iconSize: iconSize,
-                splashRadius: Sizing.blockSizeHorizontal * 5.0,
-              ),
+    return Padding(
+      padding: const EdgeInsets.only(
+        right: 12.0,
+        bottom: 12.0,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Remove team option if the team is unlocked
+                opponent.locked
+                    ? Container()
+                    : IconButton(
+                        onPressed: () => _onClearTeam(teamIndex),
+                        icon: const Icon(Icons.clear),
+                        tooltip: 'Remove Team',
+                        iconSize: iconSize,
+                        splashRadius: Sizing.blockSizeHorizontal * 5.0,
+                      ),
 
-        // Analyze team
-        IconButton(
-          onPressed: () => _onAnalyzeLogTeam(teamIndex),
-          icon: const Icon(Icons.analytics),
-          tooltip: 'Analyze Team',
-          iconSize: iconSize,
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
-        ),
+                // Analyze team
+                IconButton(
+                  onPressed: () => _onAnalyzeLogTeam(teamIndex),
+                  icon: const Icon(Icons.analytics),
+                  tooltip: 'Analyze Team',
+                  iconSize: iconSize,
+                  splashRadius: Sizing.blockSizeHorizontal * 5.0,
+                ),
 
-        // Edit team
-        IconButton(
-          onPressed: () => _onEditLogTeam(teamIndex),
-          icon: const Icon(Icons.build_circle),
-          tooltip: 'Edit Team',
-          iconSize: iconSize,
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
-        ),
+                // Edit team
+                IconButton(
+                  onPressed: () => _onEditLogTeam(teamIndex),
+                  icon: const Icon(Icons.build_circle),
+                  tooltip: 'Edit Team',
+                  iconSize: iconSize,
+                  splashRadius: Sizing.blockSizeHorizontal * 5.0,
+                ),
 
-        // Lock team
-        IconButton(
-          onPressed: () => _onLockPressed(teamIndex),
-          icon: Icon(lockIcon),
-          tooltip: 'Unlock Team',
-          iconSize: iconSize,
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
-        ),
-
-        // Win, tie, loss indicator
-        Padding(
-          padding: EdgeInsets.only(
-            top: Sizing.blockSizeVertical,
-            bottom: Sizing.blockSizeVertical,
+                // Lock team
+                IconButton(
+                  onPressed: () => _onLockPressed(teamIndex),
+                  icon: Icon(lockIcon),
+                  tooltip: 'Unlock Team',
+                  iconSize: iconSize,
+                  splashRadius: Sizing.blockSizeHorizontal * 5.0,
+                ),
+              ],
+            ),
           ),
-          child: WinLossNode(outcome: opponent.battleOutcome),
-        ),
-      ],
+
+          // Win, tie, loss indicator
+          WinLossNode(outcome: opponent.battleOutcome),
+        ],
+      ),
     );
   }
 

@@ -1,17 +1,18 @@
-// Flutter
+// Dart
 import 'dart:ui';
 
+// Packages
 import 'package:flutter/material.dart';
 
-// Local Imports
+// Local
 import 'battle_log.dart';
 import 'team_edit.dart';
 import 'team_builder.dart';
+import 'tag_team.dart';
 import '../analysis/analysis.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../widgets/buttons/tag_filter_button.dart';
-import '../../widgets/overlays/team_tag_overlay.dart';
 import '../../modules/ui/sizing.dart';
 import '../../pogo_objects/pokemon_team.dart';
 import '../../pogo_objects/tag.dart';
@@ -19,13 +20,6 @@ import '../../modules/data/pogo_data.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
-A list view of the user's pvp teams is displayed. Each team is a TeamNode,
-containing the following functionality :
-
-- remove a team
-- analyze a team
-- edit a team log
-- edit a team
 -------------------------------------------------------------------------------
 */
 
@@ -47,141 +41,67 @@ class _TeamsState extends State<Teams> {
       itemCount: _teams.length,
       itemBuilder: (context, index) {
         if (index == _teams.length - 1) {
-          return Column(
-            children: [
-              TeamNode(
-                onEmptyPressed: (nodeIndex) =>
-                    _onEmptyPressed(index, nodeIndex),
-                onPressed: (_) {},
-                pokemonTeam: _teams[index].getOrderedPokemonListFilled(),
-                cup: _teams[index].getCup(),
-                tag: _teams[index].tag.value,
-                onTagPressed: () => _onTagTeam(index),
-                buildHeader: true,
-                winRate: _teams[index].getWinRate(),
-                footer: _buildTeamNodeFooter(index),
-              ),
-
-              // Spacer to give last node in the list more scroll room
-              SizedBox(
-                height: Sizing.blockSizeVertical * 10.0,
-              ),
-            ],
+          return Padding(
+            padding: EdgeInsets.only(bottom: Sizing.blockSizeVertical * 11.0),
+            child: _buildTeamNode(_teams[index]),
           );
         }
 
-        return TeamNode(
-          onEmptyPressed: (nodeIndex) => _onEmptyPressed(index, nodeIndex),
-          onPressed: (_) {},
-          pokemonTeam: _teams[index].getOrderedPokemonListFilled(),
-          cup: _teams[index].getCup(),
-          tag: _teams[index].tag.value,
-          onTagPressed: () => _onTagTeam(index),
-          buildHeader: true,
-          winRate: _teams[index].getWinRate(),
-          footer: _buildTeamNodeFooter(index),
-        );
+        return _buildTeamNode(_teams[index]);
       },
       physics: const BouncingScrollPhysics(),
     );
   }
 
-  // The icon buttons at the footer of each TeamNode
-  Widget _buildTeamNodeFooter(int teamIndex) {
-    // Size of the footer icons
-    final double iconSize = Sizing.blockSizeHorizontal * 6.0;
-
-    final IconData lockIcon =
-        _teams[teamIndex].locked ? Icons.lock : Icons.lock_open;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Remove team option if the team is unlocked
-        if (!_teams[teamIndex].locked)
-          IconButton(
-            onPressed: () => _onClearTeam(teamIndex),
-            icon: const Icon(Icons.clear),
-            tooltip: 'Remove Team',
-            iconSize: iconSize,
-            splashRadius: Sizing.blockSizeHorizontal * 5.0,
-          ),
-
-        // Edit team
-        IconButton(
-          onPressed: () => _onEditTeam(teamIndex),
-          icon: const Icon(Icons.build_circle),
-          tooltip: 'Edit Team',
-          iconSize: iconSize,
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
-        ),
-
-        // Tag team
-        IconButton(
-          onPressed: () => _onTagTeam(teamIndex),
-          icon: const Icon(Icons.tag),
-          tooltip: 'Tag Team',
-          iconSize: iconSize,
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
-        ),
-
-        // Analyze team
-        IconButton(
-          onPressed: () => _onAnalyzeTeam(teamIndex),
-          icon: const Icon(Icons.analytics),
-          tooltip: 'Analyze Team',
-          iconSize: iconSize,
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
-        ),
-
-        // Log team
-        IconButton(
-          onPressed: () => _onLogTeam(teamIndex),
-          icon: const Icon(Icons.query_stats),
-          tooltip: 'Log Team',
-          iconSize: iconSize,
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
-        ),
-
-        IconButton(
-          onPressed: () => _onLockTeam(teamIndex),
-          icon: Icon(lockIcon),
-          tooltip: 'Toggle Team Lock',
-          iconSize: iconSize,
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
-        )
-      ],
+  Widget _buildTeamNode(UserPokemonTeam team) {
+    return TeamNode(
+      onEmptyPressed: (nodeIndex) => _onEmptyPressed(team, nodeIndex),
+      onPressed: (_) => _onEditTeam(context, team),
+      team: team,
+      header: UserTeamNodeHeader(
+        team: team,
+        onTagTeam: _onTagTeam,
+      ),
+      footer: UserTeamNodeFooter(
+        team: team,
+        onClear: _onClearTeam,
+        onBuild: _onBuildTeam,
+        onTag: _onTagTeam,
+        onLog: _onLogTeam,
+        onLock: _onLockTeam,
+        onAnalyze: _onAnalyzeTeam,
+      ),
     );
   }
 
   // Remove the team at specified index
-  void _onClearTeam(int teamIndex) {
+  void _onClearTeam(UserPokemonTeam team) {
     setState(() {
-      PogoData.deleteUserPokemonTeamSync(_teams[teamIndex].id);
+      PogoData.deleteUserPokemonTeamSync(team);
     });
   }
 
   // Scroll to the analysis portion of the screen
-  void _onAnalyzeTeam(int teamIndex) async {
+  void _onAnalyzeTeam(UserPokemonTeam team) async {
     // If the team is empty, no action will be taken
-    if (_teams[teamIndex].isEmpty()) return;
+    if (team.isEmpty()) return;
 
     await Navigator.push(
       context,
       MaterialPageRoute<bool>(builder: (BuildContext context) {
-        return Analysis(team: _teams[teamIndex]);
+        return Analysis(team: team);
       }),
     );
 
     setState(() {});
   }
 
-  void _onLogTeam(int teamIndex) async {
+  void _onLogTeam(UserPokemonTeam team) async {
     await Navigator.push(
       context,
       MaterialPageRoute<bool>(
         builder: (BuildContext context) => BattleLog(
-          team: _teams[teamIndex],
+          team: team,
         ),
       ),
     );
@@ -189,7 +109,7 @@ class _TeamsState extends State<Teams> {
     setState(() {});
   }
 
-  void _onTagTeam(teamIndex) async {
+  void _onTagTeam(UserPokemonTeam team) async {
     final selectedTag = await showDialog<Tag>(
       context: context,
       builder: (BuildContext context) {
@@ -201,9 +121,8 @@ class _TeamsState extends State<Teams> {
               right: Sizing.blockSizeHorizontal * 2.0,
             ),
             backgroundColor: Colors.transparent,
-            child: TeamTagOverlay(
-              team: _teams[teamIndex],
-              winRate: _teams[teamIndex].getWinRate(),
+            child: TagTeam(
+              team: team,
             ),
           ),
         );
@@ -212,47 +131,79 @@ class _TeamsState extends State<Teams> {
 
     if (selectedTag != null) {
       setState(() {
-        _teams[teamIndex].setTag(selectedTag);
-        PogoData.updatePokemonTeamSync(_teams[teamIndex]);
+        team.setTag(selectedTag);
+        PogoData.updatePokemonTeamSync(team);
       });
     }
   }
 
   // Edit the team at specified index
-  void _onEditTeam(int teamIndex) async {
+  void _onBuildTeam(UserPokemonTeam team) async {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => TeamEdit(team: _teams[teamIndex]),
+        builder: (BuildContext context) => TeamBuilder(
+          team: team,
+          cup: team.getCup(),
+          focusIndex: 0,
+        ),
       ),
     );
 
     setState(() {});
   }
 
+  void _onEditTeam(BuildContext context, UserPokemonTeam team) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Dialog(
+            insetPadding: EdgeInsets.zero,
+            backgroundColor: Colors.transparent,
+            child: TeamEdit(
+              team: team,
+            ),
+          ),
+        );
+      },
+    );
+
+    setState(() {});
+  }
+
   // On locking a team, the clear option is removed
-  void _onLockTeam(int teamIndex) {
+  void _onLockTeam(UserPokemonTeam team) {
     setState(() {
-      _teams[teamIndex].toggleLock();
-      PogoData.updatePokemonTeamSync(_teams[teamIndex]);
+      team.toggleLock();
+      PogoData.updatePokemonTeamSync(team);
     });
   }
 
   // Add a new empty team
   void _onAddTeam() async {
-    setState(() {
-      UserPokemonTeam newTeam = UserPokemonTeam()
-        ..dateCreated = DateTime.now().toUtc()
-        ..cup.value = PogoData.getCupsSync().first;
-      PogoData.updatePokemonTeamSync(newTeam);
-    });
+    UserPokemonTeam newTeam = UserPokemonTeam()
+      ..dateCreated = DateTime.now().toUtc()
+      ..cup.value = PogoData.getCupsSync().first;
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => TeamBuilder(
+          team: newTeam,
+          cup: newTeam.getCup(),
+          focusIndex: 0,
+        ),
+      ),
+    );
+
+    setState(() {});
   }
 
   // Navigate to the team build search page, with focus on the specified
   // nodeIndex
-  void _onEmptyPressed(int teamIndex, int nodeIndex) async {
-    final team = _teams[teamIndex];
-
+  void _onEmptyPressed(UserPokemonTeam team, int nodeIndex) async {
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (BuildContext context) {

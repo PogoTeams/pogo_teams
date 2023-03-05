@@ -13,10 +13,6 @@ part 'pokemon_team.g.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
-The Pokemon Team data model contains a list of 3 nullable Pokemon references
-and a Cup reference. This collection represents a single Pokemon PVP Team.
-This Pokemon Team can then be used to compute various information throughout
-the app.
 -------------------------------------------------------------------------------
 */
 
@@ -96,6 +92,9 @@ class PokemonTeam {
   // Switch to a different cup with the specified cupTitle
   void setCupById(String cupId) {
     cup.value = PogoData.getCupById(cupId);
+    for (UserPokemon pokemon in getPokemonTeam()) {
+      pokemon.initializeStats(getCup().cp);
+    }
   }
 
   UserPokemon? getPokemon(int index) {
@@ -122,6 +121,20 @@ class PokemonTeam {
     }
 
     return added;
+  }
+
+  void setPokemonAt(int index, UserPokemon newPokemon) {
+    removePokemon(index);
+    newPokemon.teamIndex = index;
+    getPokemonTeam().add(newPokemon);
+  }
+
+  void setTeamSize(int newSize) {
+    if (teamSize == newSize) return;
+
+    getPokemonTeam().where((UserPokemon pokemon) =>
+        pokemon.teamIndex == null || pokemon.teamIndex! >= newSize);
+    teamSize = newSize;
   }
 
   // True if there are no Pokemon on the team
@@ -164,7 +177,7 @@ class UserPokemonTeam extends PokemonTeam {
   }
 
   Map<String, dynamic> toExportJson() {
-    final json = {
+    final Map<String, dynamic> json = {
       'dateCreated': dateCreated.toString(),
       'locked': locked,
       'teamSize': teamSize,
@@ -174,7 +187,7 @@ class UserPokemonTeam extends PokemonTeam {
     };
 
     if (getTag() != null) {
-      json['tag'] = tag.value!.toExportJson();
+      json['tag'] = tag.value!.name;
     }
 
     return json;
@@ -229,14 +242,6 @@ class OpponentPokemonTeam extends PokemonTeam {
       ..battleOutcome = _fromOutcomeName(json['battleOutcome'])
       ..cup.value = PogoData.getCupById(json['cup'] as String);
 
-    for (Map<String, dynamic> pokemonEntry
-        in List<Map<String, dynamic>>.from(json['pokemonTeam'])) {
-      /* TODO
-      pokemonTeam.add(Pokemon.fromJson(pokemonEntry)
-        ..pokemonIndex = pokemonEntry['teamIndex'] as int);
-        */
-    }
-
     return userPokemonTeam;
   }
 
@@ -264,7 +269,7 @@ class OpponentPokemonTeam extends PokemonTeam {
     };
 
     if (getTag() != null) {
-      json['tag'] = getTag()!;
+      json['tag'] = tag.value!.name;
     }
 
     return json;

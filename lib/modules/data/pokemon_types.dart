@@ -3,7 +3,6 @@ import '../../pogo_objects/pokemon_typing.dart';
 import '../../pogo_objects/pokemon.dart';
 import '../../pogo_objects/move.dart';
 import '../../tools/pair.dart';
-import '../../tools/logic.dart';
 import 'globals.dart';
 
 /*
@@ -184,8 +183,7 @@ class PokemonTypes {
         generateTypeValuePairedList(includedTypesKeys);
 
     for (int i = 0; i < movesWeightedEffectiveness.length; ++i) {
-      movesWeightedEffectiveness[i].b =
-          normalize(offense[i].b / defense[i].b, 0.1, 1.6);
+      movesWeightedEffectiveness[i].b = offense[i].b / defense[i].b;
     }
 
     return movesWeightedEffectiveness;

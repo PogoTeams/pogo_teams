@@ -8,7 +8,6 @@ import '../modules/ui/sizing.dart';
 import '../modules/data/pogo_data.dart';
 import '../widgets/tag_dot.dart';
 import '../widgets/buttons/tag_filter_button.dart';
-import '../widgets/buttons/gradient_button.dart';
 import '../widgets/nodes/team_node.dart';
 import '../widgets/nodes/win_loss_node.dart';
 
@@ -27,41 +26,40 @@ class BattleLogs extends StatefulWidget {
 class _RankingsState extends State<BattleLogs> {
   Tag? _selectedTag;
 
-  Widget _buildLoggedBattles() {
-    final opponents = PogoData.getOpponentTeamsSync(tag: _selectedTag);
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: opponents.length,
-      itemBuilder: (context, index) {
-        if (index == opponents.length - 1) {
-          return Column(
-            children: [
-              TeamNode(
-                onEmptyPressed: (_) => {},
-                onPressed: (_) {},
-                pokemonTeam: opponents[index].getOrderedPokemonListFilled(),
-                cup: opponents[index].getCup(),
-                footer: _buildTeamNodeFooter(opponents[index]),
-              ),
+  Widget _buildLoggedBattles(List<OpponentPokemonTeam> opponents) {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: opponents.length,
+        itemBuilder: (context, index) {
+          if (index == opponents.length - 1) {
+            return Column(
+              children: [
+                TeamNode(
+                  onEmptyPressed: (_) => {},
+                  emptyTransparent: true,
+                  onPressed: (_) {},
+                  team: opponents[index],
+                  footer: _buildTeamNodeFooter(opponents[index]),
+                ),
 
-              // Spacer to give last node in the list more scroll room
-              SizedBox(
-                height: Sizing.blockSizeVertical * 10.0,
-              ),
-            ],
+                // Spacer to give last node in the list more scroll room
+                SizedBox(
+                  height: Sizing.blockSizeVertical * 10.0,
+                ),
+              ],
+            );
+          }
+
+          return TeamNode(
+            onEmptyPressed: (_) => {},
+            emptyTransparent: true,
+            onPressed: (_) {},
+            team: opponents[index],
+            footer: _buildTeamNodeFooter(opponents[index]),
           );
-        }
-
-        return TeamNode(
-          onEmptyPressed: (_) => {},
-          onPressed: (_) {},
-          pokemonTeam: opponents[index].getOrderedPokemonListFilled(),
-          cup: opponents[index].getCup(),
-          tag: opponents[index].tag.value,
-          footer: _buildTeamNodeFooter(opponents[index]),
-        );
-      },
-      physics: const BouncingScrollPhysics(),
+        },
+        physics: const BouncingScrollPhysics(),
+      ),
     );
   }
 
@@ -69,8 +67,23 @@ class _RankingsState extends State<BattleLogs> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        TagDot(
-          tag: opponent.getTag(),
+        Row(
+          children: [
+            TagDot(
+              tag: opponent.getTag(),
+              onPressed: () {},
+            ),
+            if (opponent.getTag() != null)
+              SizedBox(
+                width: Sizing.blockSizeHorizontal * 2.0,
+              ),
+            if (opponent.getTag() != null)
+              Text(
+                opponent.getTag()!.name,
+                style: Theme.of(context).textTheme.bodyLarge,
+                overflow: TextOverflow.ellipsis,
+              ),
+          ],
         ),
         Padding(
           padding: EdgeInsets.only(
@@ -90,17 +103,59 @@ class _RankingsState extends State<BattleLogs> {
 
   @override
   Widget build(BuildContext context) {
+    final List<OpponentPokemonTeam> opponents =
+        PogoData.getOpponentTeamsSync(tag: _selectedTag);
+
+    double winRate = 0.0;
+    if (opponents.isNotEmpty) {
+      winRate =
+          100 * opponents.where((opp) => opp.isWin()).length / opponents.length;
+    }
+
     return Padding(
       padding: EdgeInsets.only(
         top: Sizing.blockSizeVertical * 2.0,
       ),
       child: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Logged battles list
-            _buildLoggedBattles(),
-          ],
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  left: Sizing.blockSizeHorizontal * 2.0,
+                  right: Sizing.blockSizeHorizontal * 2.0,
+                  bottom: Sizing.blockSizeVertical * 2.0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _selectedTag == null
+                        ? Text(
+                            'All Teams',
+                            style: Theme.of(context).textTheme.headline6,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : Row(
+                            children: [
+                              Text(
+                                _selectedTag!.name,
+                                style: Theme.of(context).textTheme.headline6,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            ],
+                          ),
+                    Text(
+                      'Win Rate : ${winRate.toStringAsFixed(0)} %',
+                      style: Theme.of(context).textTheme.headline6,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              _buildLoggedBattles(opponents),
+            ],
+          ),
         ),
         floatingActionButton: TagFilterButton(
           tag: _selectedTag,

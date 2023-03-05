@@ -9,7 +9,7 @@ import '../../enums/battle_outcome.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
-All color association is handled by the maps that are implemented here.
+All color association is handled by the mappings that are implemented here.
 -------------------------------------------------------------------------------
 */
 
@@ -37,8 +37,6 @@ class PogoColors {
 
   static Color get defaultTypeColor => Colors.black;
   static Color get defaultCupColor => Colors.cyan;
-
-  static final Map<String, Color> _cupColors = {};
 
   static Color getPokemonTypeColor(String typeId) =>
       _typeColors[typeId] ?? defaultTypeColor;
