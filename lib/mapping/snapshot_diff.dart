@@ -4,6 +4,14 @@ import 'package:collection/collection.dart';
 // Local
 import '../tools/json_tools.dart';
 
+/*
+-------------------------------------------------------------------- @PogoTeams
+An algorithm to determine the differences between two JSON mappings. This is
+helpful for determining the new changes introduced by Niantic's latest
+gamemaster JSON.
+-------------------------------------------------------------------------------
+*/
+
 Future<int> generateNianticSnapshotDiff(
     Map<String, dynamic> newSnapshot) async {
   Map<String, dynamic>? oldSnapshot =

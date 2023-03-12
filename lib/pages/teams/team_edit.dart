@@ -1,6 +1,5 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:pogo_teams/widgets/buttons/gradient_button.dart';
 
 // Local Imports
 import 'team_builder.dart';
@@ -134,7 +133,7 @@ class _TeamEditState extends State<TeamEdit> {
   }
 
   // Build the list of either 3 or 6 PokemonNodes that make up this team
-  Widget _buildTeamNodes() {
+  Widget _buildPokemonNodes() {
     return Expanded(
       child: ListView(
         shrinkWrap: true,
@@ -158,6 +157,7 @@ class _TeamEditState extends State<TeamEdit> {
                 left: Sizing.blockSizeHorizontal * 2.0,
                 right: Sizing.blockSizeHorizontal * 2.0,
               ),
+              lead: index == 0,
             ),
           ),
         ),
@@ -182,7 +182,7 @@ class _TeamEditState extends State<TeamEdit> {
           ),
           child: _buildHeaderDropdowns(_builderTeam.getCup()),
         ),
-        _buildTeamNodes(),
+        _buildPokemonNodes(),
         MaterialButton(
           padding: EdgeInsets.zero,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

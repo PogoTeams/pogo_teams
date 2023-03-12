@@ -33,8 +33,11 @@ class FormattedPokemonName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!pokemon.form.contains('normal')) {
-      final String form =
-          pokemon.form.replaceFirst('${pokemon.name.toLowerCase()}_', '');
+      String form = pokemon.form;
+
+      if (form.length > 1) {
+        form = '${form[0].toUpperCase()}${form.substring(1)}';
+      }
 
       return RichText(
         textAlign: textAlign,

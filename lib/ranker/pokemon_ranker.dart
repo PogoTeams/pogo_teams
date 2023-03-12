@@ -1,6 +1,5 @@
 // Local
 import 'ranking_data.dart';
-import '../tools/pair.dart';
 import '../pogo_objects/pokemon.dart';
 import '../pogo_objects/pokemon_base.dart';
 import '../pogo_objects/battle_pokemon.dart';
@@ -17,7 +16,7 @@ import '../modules/data/pogo_debugging.dart';
 */
 
 class PokemonRanker {
-  static RankingData rankSync(
+  static RankingData rankCli(
     BattlePokemon self,
     Cup cup,
     List<PokemonBase> opponents,
@@ -29,8 +28,8 @@ class PokemonRanker {
         BattlePokemon opponent = BattlePokemon.fromPokemon(opponentPokemon);
 
         opponent.initializeStats(cup.cp);
-        self.initializeMoveset(opponent, true);
-        opponent.initializeMoveset(self, true);
+        self.initializeMoveset(opponent);
+        opponent.initializeMoveset(self);
 
         self.selectedBattleFastMove.usage += 1;
         self.selectedBattleChargeMoves.first.usage += 1;
@@ -63,18 +62,35 @@ class PokemonRanker {
     return rankingData;
   }
 
-  static Stream<Pair<String, double>> rankAsync(
+  static Future<RankingData> rankApp(
     BattlePokemon self,
     Cup cup,
     List<CupPokemon> opponents,
-    RankingData rankingData,
-  ) async* {
+  ) async {
+    RankingData rankingData = RankingData(
+      pokemon: self,
+      traceOutcomes: true,
+    );
+
     for (CupPokemon opponentPokemon in opponents) {
-      BattlePokemon opponent = BattlePokemon.fromCupPokemon(opponentPokemon);
+      BattlePokemon opponent =
+          await BattlePokemon.fromCupPokemonAsync(opponentPokemon)
+            ..selectedBattleFastMove =
+                await opponentPokemon.getSelectedFastMoveAsync()
+            ..selectedBattleChargeMoves =
+                await opponentPokemon.getSelectedChargeMovesAsync();
 
       opponent.initializeStats(cup.cp);
-      self.initializeMoveset(opponent, false);
-      opponent.initializeMoveset(self, false);
+      self.initializeMoveset(
+        opponent,
+        selectedFastMoveOverride: self.selectedBattleFastMove,
+        selectedChargeMoveOverrides: self.selectedBattleChargeMoves,
+      );
+      opponent.initializeMoveset(
+        self,
+        selectedFastMoveOverride: opponent.selectedBattleFastMove,
+        selectedChargeMoveOverrides: opponent.selectedBattleChargeMoves,
+      );
 
       PokemonBattler.resetPokemon(self, opponent);
 
@@ -96,6 +112,8 @@ class PokemonRanker {
 
     // Calculate final ratings for this pokemon
     rankingData.finalizeResults();
+
+    return rankingData;
   }
 
   static BattleResult battle(
@@ -128,8 +146,8 @@ class PokemonRanker {
 
     self.initializeStats(cp);
     opponent.initializeStats(cp);
-    self.initializeMoveset(opponent, true);
-    opponent.initializeMoveset(self, true);
+    self.initializeMoveset(opponent);
+    opponent.initializeMoveset(self);
 
     PokemonBattler.resetPokemon(self, opponent);
 

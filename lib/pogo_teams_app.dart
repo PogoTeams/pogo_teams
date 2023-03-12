@@ -90,7 +90,6 @@ class PogoTeamsApp extends StatelessWidget {
           ),
         ),
       ),
-      highlightColor: Colors.transparent,
       iconTheme: const IconThemeData(
         color: Colors.white,
       ),

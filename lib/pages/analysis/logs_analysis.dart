@@ -69,7 +69,7 @@ class LogsAnalysis extends StatelessWidget {
   ) async {
     final counterTypes = defenseThreats.map((typeData) => typeData.a).toList();
 
-    List<CupPokemon> counters = await PogoData.getFilteredCupPokemonList(
+    List<CupPokemon> counters = await PogoData.getCupPokemon(
       team.getCup(),
       counterTypes,
       RankingsCategories.overall,

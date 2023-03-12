@@ -77,6 +77,13 @@ class _TeamSwapState extends State<TeamSwap> {
     );
   }
 
+  Widget _buildPokemonNode(int index) {
+    return PokemonNode.large(
+      pokemon: _pokemonTeam[index],
+      footer: _buildFooter(context, index),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -87,59 +94,67 @@ class _TeamSwapState extends State<TeamSwap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(
-          top: Sizing.blockSizeVertical * 1.0,
-          left: Sizing.blockSizeHorizontal * 2.0,
-          right: Sizing.blockSizeHorizontal * 2.0,
-        ),
-        child: ListView(
-          children: [
-            // The Pokemon to swap out
-            PokemonNode.small(pokemon: _swap),
-
-            SizedBox(
-              height: Sizing.blockSizeVertical * 2.0,
-            ),
-
-            Center(
-              child: Text(
-                'Team Swap',
-                style: Theme.of(context).textTheme.headline5,
+      body: SafeArea(
+        bottom: false,
+        left: false,
+        right: false,
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: Sizing.blockSizeHorizontal * 2.0,
+            right: Sizing.blockSizeHorizontal * 2.0,
+          ),
+          child: Column(
+            children: [
+              // The Pokemon to swap out
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 12.0,
+                  bottom: 12.0,
+                ),
+                child: PokemonNode.small(pokemon: _swap),
               ),
-            ),
-
-            // Horizontal divider
-            Divider(
-              height: Sizing.blockSizeVertical * 5.0,
-              thickness: Sizing.blockSizeHorizontal * 1.0,
-              indent: Sizing.blockSizeHorizontal * 5.0,
-              endIndent: Sizing.blockSizeHorizontal * 5.0,
-            ),
-
-            // List of the current selected team
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: _pokemonTeam.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    top: Sizing.blockSizeVertical * .5,
-                    bottom: Sizing.blockSizeVertical * .5,
-                  ),
-                  child: PokemonNode.large(
-                    pokemon: _pokemonTeam[index],
-                    footer: _buildFooter(context, index),
-                  ),
-                );
-              },
-              physics: const NeverScrollableScrollPhysics(),
-            ),
-
-            SizedBox(
-              height: Sizing.blockSizeVertical * 5.0,
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 12.0,
+                ),
+                child: Text(
+                  'Team Swap',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  children: [
+                    // List of the current selected team
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _pokemonTeam.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            top: Sizing.blockSizeVertical * .5,
+                            bottom: Sizing.blockSizeVertical * .5,
+                          ),
+                          child: Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 12.0,
+                              ),
+                              child: index == _pokemonTeam.length - 1
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom:
+                                              Sizing.blockSizeVertical * 11.0),
+                                      child: _buildPokemonNode(index))
+                                  : _buildPokemonNode(index)),
+                        );
+                      },
+                      physics: const NeverScrollableScrollPhysics(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: _buildFloatingActionButton(),

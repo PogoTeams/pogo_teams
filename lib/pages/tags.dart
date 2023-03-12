@@ -12,6 +12,8 @@ import 'tag_edit.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+A list view of all tags created by the user. The user can create, edit, and
+delete tags from here.
 -------------------------------------------------------------------------------
 */
 

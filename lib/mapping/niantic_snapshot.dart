@@ -7,6 +7,13 @@ import '../pogo_objects/pokemon_stats.dart';
 import '../modules/data/stats.dart';
 import '../tools/json_tools.dart';
 
+/*
+-------------------------------------------------------------------- @PogoTeams
+All JSON mapping from Niantic's raw gamemaster to Pogo Team's data source is
+handled here.
+-------------------------------------------------------------------------------
+*/
+
 // pattern matching for mapping from Niantic's data source
 final RegExp _fastMoveRegex = RegExp(r'COMBAT_.*MOVE_(.*)_FAST');
 final RegExp _chargeMoveRegex = RegExp(r'COMBAT_.*MOVE_(.*)');
@@ -46,6 +53,16 @@ void mapNianticToSnapshot() async {
 
   for (var entry in nianticGamemaster) {
     _processGamemasterEntry(entry);
+  }
+
+  for (var pokemonSrc in _pokemonOutput) {
+    // remove Pokemon name from the form
+    String form = pokemonSrc['form'];
+    form = form
+        .replaceAll('_', ' ')
+        .replaceFirst('${pokemonSrc['name'].toString().toLowerCase()} ', '');
+    if (form == 'alola') form = 'alolan';
+    pokemonSrc['form'] = form;
   }
 
   final List<dynamic>? cups =
@@ -355,10 +372,10 @@ void _mapPokemon(Map<String, dynamic> pokemonSrc, String templateId) {
         Map<String, dynamic> evoEntry = {};
         evoEntry['pokemonId'] =
             (evolution['evolution'] as String).toLowerCase();
-        evoEntry['candyCost'] = evolution['candyCost'] as int;
+        evoEntry['candyCost'] = evolution['candyCost'] ?? 0;
         if (evolution.containsKey('form')) {
           String evoForm = (evolution['form'] as String).toLowerCase();
-          // normal formal evolution doesn't need specification
+          // normal form evolution doesn't need specification
           if (!evoForm.contains('_normal')) {
             evoEntry['form'] = evoForm;
           }

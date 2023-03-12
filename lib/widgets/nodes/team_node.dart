@@ -62,12 +62,9 @@ class TeamNode extends StatelessWidget {
       ),
       shrinkWrap: true,
       itemCount: team.teamSize,
-      itemBuilder: (context, index) => PokemonNode.square(
-        onEmptyPressed: () => onEmptyPressed(index),
-        onPressed: () => onPressed(index),
-        pokemon: team.getPokemon(index),
-        emptyTransparent: emptyTransparent,
-      ),
+      itemBuilder: (context, index) {
+        return _buildPokemonNode(index);
+      },
       physics: const NeverScrollableScrollPhysics(),
     );
   }
@@ -106,13 +103,17 @@ class TeamNode extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(25),
       ),
-      child: PokemonNode.square(
-        onPressed: () => onPressed(index),
-        onEmptyPressed: () => onEmptyPressed(index),
-        pokemon: pokemon,
-        emptyTransparent: emptyTransparent,
-        padding: EdgeInsets.zero,
-      ),
+      child: _buildPokemonNode(index),
+    );
+  }
+
+  Widget _buildPokemonNode(int index) {
+    return PokemonNode.square(
+      onEmptyPressed: () => onEmptyPressed(index),
+      onPressed: () => onPressed(index),
+      pokemon: team.getPokemon(index),
+      emptyTransparent: emptyTransparent,
+      lead: index == 0,
     );
   }
 

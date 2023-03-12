@@ -34,9 +34,9 @@ class WinLossNode extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: Sizing.blockSizeHorizontal * .5,
+          width: Sizing.blockSizeHorizontal * .4,
         ),
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(15.0),
         color: PogoColors.getBattleOutcomeColor(outcome),
       ),
 

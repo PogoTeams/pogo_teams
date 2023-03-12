@@ -20,6 +20,8 @@ import '../widgets/buttons/gradient_button.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+A Google drive integration allowing the user to backup and restore their data
+using a Google account.
 -------------------------------------------------------------------------------
 */
 

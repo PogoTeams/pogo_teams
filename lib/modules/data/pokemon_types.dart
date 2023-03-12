@@ -7,6 +7,7 @@ import 'globals.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+This modules manages all information and calculations about Pokemon types.
 -------------------------------------------------------------------------------
 */
 

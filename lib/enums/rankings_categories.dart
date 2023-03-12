@@ -1,3 +1,9 @@
+/*
+-------------------------------------------------------------------- @PogoTeams
+This enum expresses different categories for how Pokemon are ranked in a cup.
+-------------------------------------------------------------------------------
+*/
+
 enum RankingsCategories { overall, leads, switches, closers, dex }
 
 extension RankingsCategoriesExt on RankingsCategories {

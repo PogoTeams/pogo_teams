@@ -59,9 +59,7 @@ class PokemonList extends StatelessWidget {
                   child: PokemonNode.small(
                     pokemon: pokemon[index],
                     dropdowns: dropdowns,
-                    rating: rankingsCategory == null
-                        ? null
-                        : pokemon[index].getRating(rankingsCategory!),
+                    rating: rankingsCategory == null ? null : '#${index + 1}',
                   ),
                 ),
               );

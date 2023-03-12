@@ -34,7 +34,7 @@ class TypeCoverage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Graph row mapping
-    return Column(
+    return ListView(
       children: [
         CoverageGrids(
           defenseThreats: defenseThreats,

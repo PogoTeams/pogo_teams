@@ -6,7 +6,7 @@ import '../../pogo_objects/pokemon_stats.dart';
 import 'globals.dart';
 
 /*
------------------------------ C P - F O R M U L A -----------------------------
+----------------------------- C P - F O R M U L A ------------------ @PogoTeams
 CP = Floor( Max( 10, ATK * DEF^0.5 * HP^0.5 * CP_MUL[LVL]^2) / 10 ) )
 -------------------------------------------------------------------------------
 ATK : atk stat + atk iv

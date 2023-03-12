@@ -20,6 +20,8 @@ import '../../modules/data/pogo_data.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+A list view of all the user created teams. The user can create, edit, and
+delete teams from here.
 -------------------------------------------------------------------------------
 */
 

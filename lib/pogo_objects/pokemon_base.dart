@@ -10,6 +10,8 @@ part 'pokemon_base.g.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+This is the base class for several Pokemon abstractions. All information that
+isn't related to state is managed here.
 -------------------------------------------------------------------------------
 */
 
@@ -181,6 +183,22 @@ class PokemonBase {
   IsarLinks<ChargeMove> getChargeMoves() {
     if (chargeMoves.isAttached && !chargeMoves.isLoaded) {
       chargeMoves.loadSync();
+    }
+
+    return chargeMoves;
+  }
+
+  Future<IsarLinks<FastMove>> getFastMovesAsync() async {
+    if (fastMoves.isAttached && !fastMoves.isLoaded) {
+      await fastMoves.load();
+    }
+
+    return fastMoves;
+  }
+
+  Future<IsarLinks<ChargeMove>> getChargeMovesAsync() async {
+    if (chargeMoves.isAttached && !chargeMoves.isLoaded) {
+      await chargeMoves.load();
     }
 
     return chargeMoves;

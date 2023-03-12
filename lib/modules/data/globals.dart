@@ -1,3 +1,9 @@
+/*
+-------------------------------------------------------------------- @PogoTeams
+Global variables used by the Pogo Teams app and CLI.
+-------------------------------------------------------------------------------
+*/
+
 class Globals {
   // ------------------------------------------------------------------ TESTING
   // Set to true when testing a new Pogo data source

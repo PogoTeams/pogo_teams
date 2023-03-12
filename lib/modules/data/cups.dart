@@ -1,5 +1,11 @@
 import '../../pogo_objects/pokemon_base.dart';
 
+/*
+-------------------------------------------------------------------- @PogoTeams
+Additional static Cup-related data.
+-------------------------------------------------------------------------------
+*/
+
 class Cups {
   static const Map<int, int> cpMinimums = {
     500: 300,

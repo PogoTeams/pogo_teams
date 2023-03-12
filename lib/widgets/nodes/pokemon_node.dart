@@ -31,6 +31,7 @@ class PokemonNode extends StatelessWidget {
     this.onEmptyPressed,
     this.emptyTransparent = false,
     this.padding,
+    this.lead = false,
   }) : super(key: key) {
     width = Sizing.blockSizeHorizontal * 25.0;
     height = Sizing.blockSizeHorizontal * 25.0;
@@ -52,6 +53,7 @@ class PokemonNode extends StatelessWidget {
     this.padding,
     this.dropdowns = true,
     this.rating,
+    this.lead = false,
   }) : super(key: key) {
     width = double.infinity;
     height = Sizing.blockSizeVertical * 15.0;
@@ -74,6 +76,7 @@ class PokemonNode extends StatelessWidget {
     this.footer,
     this.emptyTransparent = false,
     this.padding,
+    this.lead = false,
   }) : super(key: key) {
     width = double.infinity;
     height = Sizing.blockSizeVertical * 22.0;
@@ -104,33 +107,73 @@ class PokemonNode extends StatelessWidget {
   late final double height;
   late final bool dropdowns;
   late final String? rating;
+  late final bool lead;
+
+  Widget _buildPokemonNode() {
+    return pokemon == null
+        ? EmptyNode(
+            onPressed: onEmptyPressed,
+            emptyTransparent: emptyTransparent,
+          )
+        : ColoredContainer(
+            padding: padding ??
+                EdgeInsets.only(
+                  top: Sizing.blockSizeVertical * .5,
+                  left: Sizing.blockSizeHorizontal * 2.0,
+                  right: Sizing.blockSizeHorizontal * 2.0,
+                  bottom: Sizing.blockSizeVertical * .5,
+                ),
+            pokemon: pokemon!.getBase(),
+            child: onPressed == null
+                ? body
+                : MaterialButton(
+                    onPressed: onPressed,
+                    child: body,
+                  ),
+          );
+  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
       height: height,
-      child: pokemon == null
-          ? EmptyNode(
-              onPressed: onEmptyPressed,
-              emptyTransparent: emptyTransparent,
+      child: lead
+          ? Stack(
+              fit: StackFit.passthrough,
+              children: [
+                _buildPokemonNode(),
+                Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: Container(
+                      width: Sizing.blockSizeHorizontal * 5,
+                      height: Sizing.blockSizeHorizontal * 15.0,
+                      decoration: const BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(2),
+                          bottomRight: Radius.circular(2),
+                          bottomLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
+                      child: Center(
+                        child: RotatedBox(
+                          quarterTurns: 3,
+                          child: Text(
+                            'Lead',
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: Colors.black,
+                                    ),
+                          ),
+                        ),
+                      ),
+                    )),
+              ],
             )
-          : ColoredContainer(
-              padding: padding ??
-                  EdgeInsets.only(
-                    top: Sizing.blockSizeVertical * .5,
-                    left: Sizing.blockSizeHorizontal * 2.0,
-                    right: Sizing.blockSizeHorizontal * 2.0,
-                    bottom: Sizing.blockSizeVertical * .5,
-                  ),
-              pokemon: pokemon!.getBase(),
-              child: onPressed == null
-                  ? body
-                  : MaterialButton(
-                      onPressed: onPressed,
-                      child: body,
-                    ),
-            ),
+          : _buildPokemonNode(),
     );
   }
 }

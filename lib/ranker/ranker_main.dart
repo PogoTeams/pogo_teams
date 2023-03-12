@@ -42,7 +42,7 @@ Future<void> generatePokemonRankings() async {
       BattlePokemon battlePokemon = BattlePokemon.fromPokemon(pokemon);
       battlePokemon.initializeStats(cup.cp);
       if (battlePokemon.cp >= Cups.cpMinimums[cup.cp]!) {
-        RankingData rankingData = PokemonRanker.rankSync(
+        RankingData rankingData = PokemonRanker.rankCli(
           battlePokemon,
           cup,
           cupPokemonList,
@@ -61,22 +61,7 @@ Future<void> generatePokemonRankings() async {
 
     rankings.sort((r1, r2) => r2.ratings.overall - r1.ratings.overall);
 
-    // Normalize ratings to the scale of 0 - 100
-    for (var ranking in rankings) {
-      ranking.ratings.overall =
-          (ranking.ratings.overall / bestOverallRating * 100).floor();
-
-      ranking.ratings.lead =
-          (ranking.ratings.lead / bestLeadRating * 100).floor();
-
-      ranking.ratings.switchRating =
-          (ranking.ratings.switchRating / bestSwitchRating * 100).floor();
-
-      ranking.ratings.closer =
-          (ranking.ratings.closer / bestCloserRating * 100).floor();
-    }
-
-    writeRankings(
+    await writeRankings(
       rankings,
       bestOverallRating,
       bestLeadRating,
@@ -84,6 +69,7 @@ Future<void> generatePokemonRankings() async {
       bestCloserRating,
       cup.cupId,
     );
+    break;
   }
 
   stopwatch.stop();
@@ -91,14 +77,14 @@ Future<void> generatePokemonRankings() async {
       'rankings finished', 'elapsed minutes : ${stopwatch.elapsed.inMinutes}');
 }
 
-void writeRankings(
+Future<void> writeRankings(
   List<RankingData> rankings,
   int bestOverallRating,
   int bestLeadRating,
   int bestSwitchRating,
   int bestCloserRating,
   String cupId,
-) {
+) async {
   for (RankingData r in rankings) {
     r.ratings.overall = (r.ratings.overall / bestOverallRating * 100).floor();
     r.ratings.lead = (r.ratings.lead / bestLeadRating * 100).floor();
@@ -107,7 +93,7 @@ void writeRankings(
     r.ratings.closer = (r.ratings.closer / bestCloserRating * 100).floor();
   }
 
-  JsonTools.writeJson(
+  await JsonTools.writeJson(
     rankings.map((ranking) => ranking.toJson()).toList(),
     'bin/json/rankings/$cupId',
   );

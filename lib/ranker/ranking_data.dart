@@ -1,6 +1,3 @@
-// Dart
-import 'dart:math';
-
 // Local
 import '../pogo_objects/battle_pokemon.dart';
 import '../pogo_objects/move.dart';
@@ -16,7 +13,16 @@ import '../modules/data/pokemon_types.dart';
 */
 
 class RankingData {
-  RankingData({required this.pokemon});
+  RankingData({
+    required this.pokemon,
+    bool traceOutcomes = false,
+  }) {
+    if (traceOutcomes) {
+      leadOutcomes = BattleOutcomes();
+      switchOutcomes = BattleOutcomes();
+      closerOutcomes = BattleOutcomes();
+    }
+  }
 
   static const List<int> leadShieldScenario = [2, 2];
 
@@ -37,9 +43,9 @@ class RankingData {
   final BattlePokemon pokemon;
 
   Ratings ratings = Ratings();
-  KeyMatchups keyLeads = KeyMatchups();
-  KeyMatchups keySwitches = KeyMatchups();
-  KeyMatchups keyClosers = KeyMatchups();
+  BattleOutcomes? leadOutcomes;
+  BattleOutcomes? switchOutcomes;
+  BattleOutcomes? closerOutcomes;
   int leadBattleCount = 0;
   int switchBattleCount = 0;
   int closerBattleCount = 0;
@@ -60,9 +66,9 @@ class RankingData {
                 idealChargeMoveR!.moveId,
               ]),
       },
-      'keyLeads': keyLeads.toJson(),
-      'keySwitches': keySwitches.toJson(),
-      'keyClosers': keyClosers.toJson(),
+      'keyLeads': leadOutcomes?.toJson(),
+      'keySwitches': switchOutcomes?.toJson(),
+      'keyClosers': closerOutcomes?.toJson(),
     };
   }
 
@@ -73,7 +79,7 @@ class RankingData {
             .floor();
 
     ratings.lead += leadRating;
-    keyLeads.update(result);
+    leadOutcomes?.update(result);
     ++leadBattleCount;
   }
 
@@ -89,7 +95,7 @@ class RankingData {
         .floor();
 
     ratings.switchRating += switchRating;
-    keySwitches.update(result);
+    switchOutcomes?.update(result);
     ++switchBattleCount;
   }
 
@@ -100,7 +106,7 @@ class RankingData {
             .floor();
 
     ratings.closer += closerRating;
-    keyClosers.update(result);
+    closerOutcomes?.update(result);
     ++closerBattleCount;
   }
 
@@ -128,8 +134,11 @@ class RankingData {
       ratings.closer = (ratings.closer / closerBattleCount).floor();
     }
 
-    ratings.overall =
-        ((ratings.lead + ratings.switchRating + ratings.closer) / 3).floor();
+    ratings.overall = ((ratings.lead +
+                (ratings.switchRating / switchShieldScenarios.length) +
+                (ratings.closer / closerShieldScenarios.length)) /
+            3)
+        .floor();
 
     // Determine the best moveset based on usage
     idealFastMove = pokemon.battleFastMoves.reduce((move1, move2) {
@@ -149,47 +158,40 @@ class RankingData {
     }
 
     // Determine the best and worst matchups
-    keyLeads.finalizeResults();
-    keySwitches.finalizeResults();
-    keyClosers.finalizeResults();
+    leadOutcomes?.finalizeResults();
+    switchOutcomes?.finalizeResults();
+    closerOutcomes?.finalizeResults();
   }
 }
 
-class KeyMatchups {
-  static const shelfSize = 10;
-
-  List<BattleResult> lossShelf = [];
-  List<BattleResult> winShelf = [];
+class BattleOutcomes {
+  List<BattleResult> losses = [];
+  List<BattleResult> wins = [];
 
   Map<String, dynamic> toJson() {
     return {
-      'wins': winShelf.map((result) => result.toJson()).toList(),
-      'losses': lossShelf.map((result) => result.toJson()).toList(),
+      'wins': wins.map((result) => result.toJson()).toList(),
+      'losses': losses.map((result) => result.toJson()).toList(),
     };
   }
 
   void update(BattleResult result) {
     if (result.outcome == BattleOutcome.win) {
-      winShelf.add(result);
+      wins.add(result);
     } else if (result.outcome == BattleOutcome.loss) {
-      lossShelf.add(result);
+      losses.add(result);
     }
   }
 
   void finalizeResults() {
-    if (winShelf.isNotEmpty) {
-      winShelf.sort(
+    if (wins.isNotEmpty) {
+      wins.sort(
           (r1, r2) => (r2.self.currentRating > r1.self.currentRating ? -1 : 1));
-
-      winShelf = winShelf.getRange(0, shelfSize).toList();
     }
 
-    if (lossShelf.isNotEmpty) {
-      lossShelf.sort(
-          (r1, r2) => (r2.self.currentRating > r1.self.currentRating ? -1 : 1));
-
-      lossShelf =
-          lossShelf.getRange(0, min(lossShelf.length, shelfSize)).toList();
+    if (losses.isNotEmpty) {
+      losses.sort((r1, r2) =>
+          (r2.opponent.currentRating > r1.opponent.currentRating ? -1 : 1));
     }
   }
 }

@@ -6,6 +6,12 @@ import '../modules/data/globals.dart';
 
 part 'pokemon_stats.g.dart';
 
+/*
+-------------------------------------------------------------------- @PogoTeams
+All data related to a Pokemon's stats are managed here.
+-------------------------------------------------------------------------------
+*/
+
 class PokemonStats {
   PokemonStats({
     required this.baseStats,

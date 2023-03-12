@@ -13,6 +13,8 @@ part 'pokemon_team.g.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+A Pokemon team can be a User Pokemon Team or an Opponent Pokemon Team. These
+abstractions manage the data that a user creates and modifies in the app.
 -------------------------------------------------------------------------------
 */
 
@@ -58,8 +60,25 @@ class PokemonTeam {
     return pokemonTeam;
   }
 
+  Future<IsarLinks<UserPokemon>> getPokemonTeamAsync() async {
+    if (pokemonTeam.isAttached && !pokemonTeam.isLoaded) {
+      await pokemonTeam.load();
+    }
+
+    return pokemonTeam;
+  }
+
   List<UserPokemon> getOrderedPokemonList() {
     List<UserPokemon> orderedPokemonList = getPokemonTeam().toList();
+    orderedPokemonList
+        .sort((p1, p2) => (p1.teamIndex ?? 0) - (p2.teamIndex ?? 0));
+
+    return orderedPokemonList;
+  }
+
+  Future<List<UserPokemon>> getOrderedPokemonListAsync() async {
+    List<UserPokemon> orderedPokemonList =
+        (await getPokemonTeamAsync()).toList();
     orderedPokemonList
         .sort((p1, p2) => (p1.teamIndex ?? 0) - (p2.teamIndex ?? 0));
 
@@ -79,6 +98,14 @@ class PokemonTeam {
   Cup getCup() {
     if (cup.isAttached && (cup.value == null || !cup.isLoaded)) {
       cup.loadSync();
+    }
+
+    return cup.value ?? PogoData.getCupsSync().first;
+  }
+
+  Future<Cup> getCupAsync() async {
+    if (cup.isAttached && (cup.value == null || !cup.isLoaded)) {
+      await cup.load();
     }
 
     return cup.value ?? PogoData.getCupsSync().first;

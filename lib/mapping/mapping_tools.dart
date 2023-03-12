@@ -5,6 +5,12 @@ import 'dart:io';
 import '../modules/data/pogo_data.dart';
 import '../tools/json_tools.dart';
 
+/*
+-------------------------------------------------------------------- @PogoTeams
+JSON mapping and Pogo Teams data source management tools.
+-------------------------------------------------------------------------------
+*/
+
 void buildAlternateFormsList() async {
   final List<dynamic>? nianticGamemaster =
       await JsonTools.loadJson('bin/json/niantic');

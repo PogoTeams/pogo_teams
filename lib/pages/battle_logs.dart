@@ -13,6 +13,8 @@ import '../widgets/nodes/win_loss_node.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+A list of all battles logged on all of the user's teams, which can be filtered
+by tag.
 -------------------------------------------------------------------------------
 */
 
@@ -64,35 +66,38 @@ class _RankingsState extends State<BattleLogs> {
   }
 
   Widget _buildTeamNodeFooter(OpponentPokemonTeam opponent) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            TagDot(
-              tag: opponent.getTag(),
-              onPressed: () {},
-            ),
-            if (opponent.getTag() != null)
-              SizedBox(
-                width: Sizing.blockSizeHorizontal * 2.0,
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              TagDot(
+                tag: opponent.getTag(),
+                onPressed: () {},
               ),
-            if (opponent.getTag() != null)
-              Text(
-                opponent.getTag()!.name,
-                style: Theme.of(context).textTheme.bodyLarge,
-                overflow: TextOverflow.ellipsis,
-              ),
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.only(
-            top: Sizing.blockSizeVertical,
-            bottom: Sizing.blockSizeVertical,
+              if (opponent.getTag() != null)
+                SizedBox(
+                  width: Sizing.blockSizeHorizontal * 2.0,
+                ),
+              if (opponent.getTag() != null)
+                Text(
+                  opponent.getTag()!.name,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  overflow: TextOverflow.ellipsis,
+                ),
+            ],
           ),
-          child: WinLossNode(outcome: opponent.battleOutcome),
-        ),
-      ],
+          Padding(
+            padding: EdgeInsets.only(
+              top: Sizing.blockSizeVertical,
+              bottom: Sizing.blockSizeVertical,
+            ),
+            child: WinLossNode(outcome: opponent.battleOutcome),
+          ),
+        ],
+      ),
     );
   }
 

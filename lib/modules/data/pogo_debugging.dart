@@ -1,6 +1,12 @@
 // Dart
 import 'dart:io';
 
+/*
+-------------------------------------------------------------------- @PogoTeams
+CLI debbuging module.
+-------------------------------------------------------------------------------
+*/
+
 class PogoDebugging {
   static const debugHeaderWidth = 100;
 

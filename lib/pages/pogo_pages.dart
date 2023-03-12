@@ -10,6 +10,12 @@ import 'settings.dart';
 import 'tags.dart';
 import '../modules/ui/sizing.dart';
 
+/*
+-------------------------------------------------------------------- @PogoTeams
+An enumeration to express the identity of all top-level pages in the app.
+-------------------------------------------------------------------------------
+*/
+
 enum PogoPages {
   teams,
   tags,

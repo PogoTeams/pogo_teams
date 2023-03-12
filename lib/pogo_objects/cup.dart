@@ -10,6 +10,12 @@ import '../enums/cup_filter_type.dart';
 
 part 'cup.g.dart';
 
+/*
+-------------------------------------------------------------------- @PogoTeams
+All data related to a cup or "league".
+-------------------------------------------------------------------------------
+*/
+
 @Collection(accessor: 'cups')
 class Cup {
   Cup({
@@ -57,6 +63,14 @@ class Cup {
     return rankings;
   }
 
+  Future<IsarLinks<CupPokemon>> getRankingsAsync() async {
+    if (rankings.isAttached && !rankings.isLoaded) {
+      await rankings.load();
+    }
+
+    return rankings;
+  }
+
   IsarLinks<CupFilter> getIncludeFilters() {
     if (includeFilters.isAttached && !includeFilters.isLoaded) {
       includeFilters.loadSync();
@@ -75,33 +89,43 @@ class Cup {
 
   List<CupPokemon> getCupPokemonList(RankingsCategories rankingsCategory) {
     final List<CupPokemon> rankedPokemonList = getRankings().toList();
+    _sortRankingsByCategory(rankedPokemonList, rankingsCategory);
 
-    switch (rankingsCategory) {
+    return rankedPokemonList;
+  }
+
+  Future<List<CupPokemon>> getCupPokemonListAsync(
+      RankingsCategories rankingsCategory) async {
+    final List<CupPokemon> rankedPokemonList =
+        (await getRankingsAsync()).toList();
+    _sortRankingsByCategory(rankedPokemonList, rankingsCategory);
+
+    return rankedPokemonList;
+  }
+
+  void _sortRankingsByCategory(
+      List<CupPokemon> rankings, RankingsCategories category) {
+    switch (category) {
       case RankingsCategories.overall:
-        rankedPokemonList
-            .sort((p1, p2) => p2.ratings.overall - p1.ratings.overall);
+        rankings.sort((p1, p2) => p2.ratings.overall - p1.ratings.overall);
         break;
       case RankingsCategories.leads:
-        rankedPokemonList.sort((p1, p2) => p2.ratings.lead - p1.ratings.lead);
+        rankings.sort((p1, p2) => p2.ratings.lead - p1.ratings.lead);
         break;
       case RankingsCategories.switches:
-        rankedPokemonList.sort(
+        rankings.sort(
             (p1, p2) => p2.ratings.switchRating - p1.ratings.switchRating);
         break;
       case RankingsCategories.closers:
-        rankedPokemonList
-            .sort((p1, p2) => p2.ratings.closer - p1.ratings.closer);
+        rankings.sort((p1, p2) => p2.ratings.closer - p1.ratings.closer);
         break;
       case RankingsCategories.dex:
-        rankedPokemonList.sort((p1, p2) => p1.getBase().dex - p2.getBase().dex);
+        rankings.sort((p1, p2) => p1.getBase().dex - p2.getBase().dex);
         break;
       default:
-        rankedPokemonList
-            .sort((p1, p2) => p2.ratings.overall - p1.ratings.overall);
+        rankings.sort((p1, p2) => p2.ratings.overall - p1.ratings.overall);
         break;
     }
-
-    return rankedPokemonList;
   }
 
   bool pokemonIsAllowed(PokemonBase pokemon) {

@@ -13,6 +13,11 @@ import '../modules/data/pogo_debugging.dart';
 part 'move.g.dart';
 
 /*
+-------------------------------------------------------------------- @PogoTeams
+All data related to Pokemon moves are managed here. A move can be a Fast Move
+or a Charge Move.
+-------------------------------------------------------------------------------
+
 ------------------------- D A M A G E - F O R M U L A -------------------------
 FLOOR(0.5 * POWER * (SELF_ATK / OPP_DEF) * STAB * EFFECTIVENESS * BONUS) + 1
 -------------------------------------------------------------------------------

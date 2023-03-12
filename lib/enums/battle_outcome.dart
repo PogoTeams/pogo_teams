@@ -1,3 +1,9 @@
+/*
+-------------------------------------------------------------------- @PogoTeams
+This enum expresses the outcome of a Pokemon battle.
+-------------------------------------------------------------------------------
+*/
+
 enum BattleOutcome { win, loss, tie }
 
 extension BattleOutcomeExt on BattleOutcome {

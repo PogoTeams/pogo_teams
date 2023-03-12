@@ -61,7 +61,7 @@ class MoveNode extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: 1.5,
+          width: 1.1,
         ),
         borderRadius: BorderRadius.circular(100.0),
         color: PogoColors.getPokemonTypeColor(move.type.typeId),
@@ -81,7 +81,7 @@ class MoveDots extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: moveColors
           .map(
             (color) => Container(

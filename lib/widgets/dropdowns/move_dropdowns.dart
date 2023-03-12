@@ -226,7 +226,7 @@ class MoveDropdown extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.white,
-              width: 1.5,
+              width: 1.1,
             ),
             borderRadius: BorderRadius.circular(100),
             color: PogoColors.getPokemonTypeColor(move.type.typeId),

@@ -82,7 +82,7 @@ class SwapList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: PogoData.getFilteredCupPokemonList(
+        future: PogoData.getCupPokemon(
           team.getCup(),
           types,
           RankingsCategories.overall,

@@ -23,6 +23,7 @@ import '../data/cups.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+All Isar database interaction is managed by this module.
 -------------------------------------------------------------------------------
 */
 
@@ -583,13 +584,14 @@ class PogoData {
   // Get a list of Pokemon that contain one of the specified types
   // The rankings category
   // The list length will be up to the limit
-  static Future<List<CupPokemon>> getFilteredCupPokemonList(
+  static Future<List<CupPokemon>> getCupPokemon(
     Cup cup,
     List<PokemonType> types,
     RankingsCategories rankingsCategory, {
     int limit = 20,
   }) async {
-    List<CupPokemon> rankedList = cup.getCupPokemonList(rankingsCategory);
+    List<CupPokemon> rankedList =
+        await cup.getCupPokemonListAsync(rankingsCategory);
 
     // Filter the list to Pokemon that have one of the types in their typing
     // or their selected moveset

@@ -36,8 +36,8 @@ class CoverageGraph extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 5.5,
-            right: Sizing.blockSizeHorizontal * 5.5,
+            left: Sizing.blockSizeHorizontal * 7.0,
+            right: Sizing.blockSizeHorizontal * 5.0,
             bottom: 4.0,
           ),
           child: Row(
@@ -62,7 +62,7 @@ class CoverageGraph extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 5.0,
+            left: Sizing.blockSizeHorizontal * 7.0,
             right: Sizing.blockSizeHorizontal * 5.0,
             bottom: 10.0,
           ),

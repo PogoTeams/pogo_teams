@@ -12,6 +12,8 @@ import '../modules/data/globals.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+All data related to a battle is managed by this abstraction. This is used
+exclusively for battle simulations.
 -------------------------------------------------------------------------------
 */
 
@@ -135,6 +137,37 @@ class BattlePokemon extends PokemonBase {
     }
 
     return copy;
+  }
+
+  static Future<BattlePokemon> fromPokemonAsync(PokemonBase other) async {
+    return BattlePokemon(
+      dex: other.dex,
+      pokemonId: other.pokemonId,
+      name: other.name,
+      typing: other.typing,
+      stats: other.stats,
+      eliteFastMoveIds: other.eliteFastMoveIds,
+      eliteChargeMoveIds: other.eliteChargeMoveIds,
+      thirdMoveCost: other.thirdMoveCost,
+      shadow: other.shadow,
+      form: other.form,
+      familyId: other.familyId,
+      released: other.released,
+      tags: other.tags,
+      littleCupIVs: other.littleCupIVs,
+      greatLeagueIVs: other.greatLeagueIVs,
+      ultraLeagueIVs: other.ultraLeagueIVs,
+    )
+      ..battleFastMoves.addAll(
+          (await other.getFastMovesAsync()).map((move) => FastMove.from(move)))
+      ..battleChargeMoves.addAll((await other.getChargeMovesAsync())
+          .map((move) => ChargeMove.from(move)));
+  }
+
+  static Future<BattlePokemon> fromCupPokemonAsync(CupPokemon other) async {
+    return (await BattlePokemon.fromPokemonAsync(await other.getBaseAsync()))
+      ..selectedBattleFastMove = await other.getSelectedFastMoveAsync()
+      ..selectedBattleChargeMoves = await other.getSelectedChargeMovesAsync();
   }
 
   late final num maxHp;
@@ -265,7 +298,11 @@ class BattlePokemon extends PokemonBase {
     cooldown = selectedBattleFastMove.duration + modifier;
   }
 
-  void initializeMoveset(BattlePokemon opponent, bool selectBestMoveset) {
+  void initializeMoveset(
+    BattlePokemon opponent, {
+    FastMove? selectedFastMoveOverride,
+    List<ChargeMove>? selectedChargeMoveOverrides,
+  }) {
     if (battleFastMoves.isEmpty || battleChargeMoves.isEmpty) return;
 
     // Find the charge move with highest damage per energy
@@ -329,11 +366,26 @@ class BattlePokemon extends PokemonBase {
 
     _sortByRating(battleFastMoves);
 
-    if (selectBestMoveset) {
+    if (selectedFastMoveOverride == null) {
       selectedBattleFastMove = battleFastMoves.first;
+    } else {
+      selectedBattleFastMove = battleFastMoves
+          .firstWhere((move) => move.moveId == selectedFastMoveOverride.moveId);
+    }
+
+    if (selectedChargeMoveOverrides == null) {
       selectedBattleChargeMoves.first = battleChargeMoves[0];
       if (battleChargeMoves.length > 1) {
         selectedBattleChargeMoves.last = battleChargeMoves[1];
+      }
+    } else {
+      selectedBattleChargeMoves.first = battleChargeMoves.firstWhere(
+          (move) => move.moveId == selectedChargeMoveOverrides.first.moveId);
+
+      if (battleChargeMoves.length > 1 &&
+          selectedChargeMoveOverrides.length > 1) {
+        selectedBattleChargeMoves.last = battleChargeMoves.firstWhere(
+            (move) => move.moveId == selectedChargeMoveOverrides.last.moveId);
       }
     }
   }

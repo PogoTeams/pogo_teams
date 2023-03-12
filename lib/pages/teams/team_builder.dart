@@ -76,6 +76,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
         for (String term in terms) {
           isMatch = pokemon.getBase().name.toLowerCase().startsWith(term) ||
               pokemon.getBase().typing.containsTypeId(term) ||
+              pokemon.getBase().form == term ||
               term == 'shadow' && pokemon.getBase().isShadow();
         }
 

@@ -6,6 +6,8 @@ import '../enums/battle_outcome.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+The result of a simulated battle, including the ratings, the selected movesets,
+and the timeline of each turn.
 -------------------------------------------------------------------------------
 */
 
@@ -15,10 +17,8 @@ class BattleResult {
     required this.opponent,
     required this.timeline,
   }) {
-    double selfRating =
-        self.currentHpRatio * self.chargeDPE + opponent.damageRecievedRatio;
-    double opponentRating =
-        opponent.currentHpRatio * opponent.chargeDPE + self.damageRecievedRatio;
+    double selfRating = self.currentHpRatio * opponent.damageRecievedRatio;
+    double opponentRating = opponent.currentHpRatio * self.damageRecievedRatio;
 
     if (self.currentHp > 0) {
       outcome = BattleOutcome.win;
@@ -59,8 +59,8 @@ class BattleResult {
   BattleOutcome outcome = BattleOutcome.win;
   List<BattleTurnSnapshot>? timeline;
 
-  num get ratingDifference {
-    return self.currentRating - opponent.currentRating;
+  num get hpRatioDifference {
+    return (self.currentHpRatio - opponent.currentHpRatio).abs();
   }
 
   void debugPrintTimeline() {

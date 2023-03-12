@@ -7,12 +7,17 @@ import 'pokemon_typing.dart';
 import 'move.dart';
 import 'ratings.dart';
 import 'pokemon_stats.dart';
+import 'battle_pokemon.dart';
 import '../enums/rankings_categories.dart';
 
 part 'pokemon.g.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
+A instance of a Pokemon, holding information that is specific to a Cup. Cup
+Pokemon are displayed to the user in various places throughout the app. They
+can choose to add Cup Pokemon to their team. An instance of the User Pokemon
+is added to a user's team.
 -------------------------------------------------------------------------------
 */
 
@@ -55,6 +60,31 @@ class Pokemon {
           (move) => selectedChargeMoveIds.first == move.moveId,
           orElse: () => ChargeMove.none),
       getBase().getChargeMoves().firstWhere(
+          (move) => selectedChargeMoveIds.last == move.moveId,
+          orElse: () => ChargeMove.none),
+    ].whereType<ChargeMove>().toList();
+  }
+
+  Future<PokemonBase> getBaseAsync() async {
+    if (base.isAttached && (base.value == null || !base.isLoaded)) {
+      await base.load();
+    }
+
+    return base.value ?? PokemonBase.missingNo();
+  }
+
+  Future<FastMove> getSelectedFastMoveAsync() async {
+    return (await (await getBaseAsync()).getFastMovesAsync()).firstWhere(
+        (move) => move.moveId == selectedFastMoveId,
+        orElse: () => FastMove.none);
+  }
+
+  Future<List<ChargeMove>> getSelectedChargeMovesAsync() async {
+    return [
+      (await (await getBaseAsync()).getChargeMovesAsync()).firstWhere(
+          (move) => selectedChargeMoveIds.first == move.moveId,
+          orElse: () => ChargeMove.none),
+      (await (await getBaseAsync()).getChargeMovesAsync()).firstWhere(
           (move) => selectedChargeMoveIds.last == move.moveId,
           orElse: () => ChargeMove.none),
     ].whereType<ChargeMove>().toList();
@@ -138,6 +168,19 @@ class CupPokemon extends Pokemon {
       selectedFastMoveId: other.selectedFastMoveId,
       selectedChargeMoveIds: List<String>.from(other.selectedChargeMoveIds),
       base: other.getBase(),
+    );
+  }
+
+  factory CupPokemon.fromBattlePokemon(BattlePokemon other, PokemonBase base) {
+    return CupPokemon(
+      ratings: Ratings(),
+      ivs: other.selectedIVs,
+      selectedFastMoveId: other.selectedBattleFastMove.moveId,
+      selectedChargeMoveIds: [
+        other.selectedBattleChargeMoves.first.moveId,
+        other.selectedBattleChargeMoves.last.moveId,
+      ],
+      base: base,
     );
   }
 }

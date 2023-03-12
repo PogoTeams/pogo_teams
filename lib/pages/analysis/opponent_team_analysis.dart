@@ -78,6 +78,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
           child: PokemonNode.small(
             pokemon: pokemonTeam[index],
             dropdowns: false,
+            lead: ((pokemonTeam[index].teamIndex ?? -1) == 0),
           ),
         ),
       ),
@@ -90,7 +91,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
       List<Pair<PokemonType, double>> defenseThreats) async {
     final counterTypes = defenseThreats.map((typeData) => typeData.a).toList();
 
-    List<CupPokemon> counters = await PogoData.getFilteredCupPokemonList(
+    List<CupPokemon> counters = await PogoData.getCupPokemon(
       team.getCup(),
       counterTypes,
       RankingsCategories.overall,

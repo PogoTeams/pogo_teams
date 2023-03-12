@@ -36,6 +36,7 @@ class PokemonActionButton extends StatelessWidget {
         bottom: Sizing.blockSizeVertical * .5,
       ),
       child: MaterialButton(
+        padding: EdgeInsets.zero,
         onPressed: () => onPressed(pokemon),
         child: Container(
           height: Sizing.blockSizeVertical * 4.0,

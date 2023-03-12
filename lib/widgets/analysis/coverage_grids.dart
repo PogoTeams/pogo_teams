@@ -28,10 +28,7 @@ class CoverageGrids extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Row length for the coverage grid views
-    int crossAxisCount = defenseThreats.length < 6 ? defenseThreats.length : 6;
-
-    if (crossAxisCount < 3) crossAxisCount = 3;
+    int crossAxisCount = 9;
 
     // List of top defensiveThreats
     return Column(
@@ -73,22 +70,20 @@ class CoverageGrids extends StatelessWidget {
                   ],
                 ),
 
-                // Spacer
-                SizedBox(
-                  height: Sizing.blockSizeVertical * 2.5,
-                ),
-
-                // Threat type Icons
-                GridView.count(
-                  shrinkWrap: true,
-                  crossAxisSpacing: Sizing.blockSizeHorizontal * .1,
-                  mainAxisSpacing: Sizing.blockSizeVertical * .5,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: crossAxisCount,
-                  children: defenseThreats
-                      .map(
-                          (pair) => PogoIcons.getPokemonTypeIcon(pair.a.typeId))
-                      .toList(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 7.0),
+                  // Threat type Icons
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    crossAxisSpacing: Sizing.blockSizeHorizontal * .1,
+                    mainAxisSpacing: Sizing.blockSizeVertical * .5,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: crossAxisCount,
+                    children: defenseThreats
+                        .map((pair) =>
+                            PogoIcons.getPokemonTypeIcon(pair.a.typeId))
+                        .toList(),
+                  ),
                 ),
               ],
             ),
@@ -103,7 +98,7 @@ class CoverageGrids extends StatelessWidget {
         // List of coverage
         SizedBox(
           child: Container(
-            padding: EdgeInsets.all(Sizing.blockSizeHorizontal * 2.0),
+            padding: const EdgeInsets.all(12.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               gradient: LinearGradient(
@@ -134,22 +129,20 @@ class CoverageGrids extends StatelessWidget {
                   ],
                 ),
 
-                // Spacer
-                SizedBox(
-                  height: Sizing.blockSizeVertical * 2.5,
-                ),
-
                 // Coverage type Icons
-                GridView.count(
-                  shrinkWrap: true,
-                  crossAxisSpacing: Sizing.blockSizeHorizontal * .1,
-                  mainAxisSpacing: Sizing.blockSizeVertical * .5,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: crossAxisCount,
-                  children: offenseCoverage
-                      .map(
-                          (pair) => PogoIcons.getPokemonTypeIcon(pair.a.typeId))
-                      .toList(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 7.0),
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    crossAxisSpacing: Sizing.blockSizeHorizontal * .1,
+                    mainAxisSpacing: Sizing.blockSizeVertical * .5,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: crossAxisCount,
+                    children: offenseCoverage
+                        .map((pair) =>
+                            PogoIcons.getPokemonTypeIcon(pair.a.typeId))
+                        .toList(),
+                  ),
                 ),
               ],
             ),

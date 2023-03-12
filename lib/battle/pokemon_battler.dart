@@ -5,6 +5,14 @@ import '../modules/data/globals.dart';
 import '../modules/data/pogo_debugging.dart';
 import '../enums/battle_outcome.dart';
 
+/*
+-------------------------------------------------------------------- @PogoTeams
+All battle simulations are managed here. The battle algorithm recursively
+explores every possibility of every turn in a battle to determine the closest
+matchup for the owner's Pokemon [self].
+-------------------------------------------------------------------------------
+*/
+
 class PokemonBattler {
   static const List<int> shieldScenarios = [0, 1, 2];
 
@@ -211,26 +219,31 @@ class PokemonBattler {
     BattleResult? selfClosestWin;
     BattleResult? opponentClosestWin;
 
+    // Gather all of the wins and losses
     List<BattleResult> wins =
         results.where((result) => result.outcome == BattleOutcome.win).toList();
     List<BattleResult> losses = results
         .where((result) => result.outcome == BattleOutcome.loss)
         .toList();
 
+    // Find the closest win and loss by comparing the difference in self and
+    // opponent hp ratios.
     if (wins.isNotEmpty) {
       selfClosestWin = wins.reduce((rating1, rating2) =>
-          (rating1.ratingDifference > rating2.ratingDifference
+          (rating1.hpRatioDifference < rating2.hpRatioDifference
               ? rating1
               : rating2));
     }
-
     if (losses.isNotEmpty) {
       opponentClosestWin = losses.reduce((rating1, rating2) =>
-          (rating1.ratingDifference > rating2.ratingDifference
+          (rating1.hpRatioDifference < rating2.hpRatioDifference
               ? rating1
               : rating2));
     }
 
+    // Return the win or loss that resulted in the highest rating. This result
+    // in theory will be the best outcome for self or the opponent for the
+    // win or loss respectively.
     if (selfClosestWin == null) {
       return opponentClosestWin;
     } else if (opponentClosestWin == null) {
