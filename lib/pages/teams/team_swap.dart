@@ -36,7 +36,7 @@ class _TeamSwapState extends State<TeamSwap> {
   late UserPokemon _swap;
 
   Widget _buildFooter(BuildContext context, int index) {
-    void _onSwap(Pokemon swapPokemon) {
+    void onSwap(Pokemon swapPokemon) {
       setState(() {
         _pokemonTeam[index] = _swap;
         _swap = swapPokemon as UserPokemon;
@@ -51,7 +51,7 @@ class _TeamSwapState extends State<TeamSwap> {
         size: Sizing.blockSizeHorizontal * 5.0,
         color: Colors.white,
       ),
-      onPressed: _onSwap,
+      onPressed: onSwap,
     );
   }
 
@@ -61,12 +61,12 @@ class _TeamSwapState extends State<TeamSwap> {
         _saveTeam();
         Navigator.pop(context);
       },
+      width: Sizing.screenWidth * .85,
+      height: Sizing.blockSizeVertical * 8.5,
       child: Icon(
         Icons.clear,
         size: Sizing.icon2,
       ),
-      width: Sizing.screenWidth * .85,
-      height: Sizing.blockSizeVertical * 8.5,
     );
   }
 
@@ -119,7 +119,7 @@ class _TeamSwapState extends State<TeamSwap> {
                 ),
                 child: Text(
                   'Team Swap',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
               Expanded(

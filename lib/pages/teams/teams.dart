@@ -245,12 +245,14 @@ class _TeamsState extends State<Teams> {
         children: [
           GradientButton(
             onPressed: _onAddTeam,
+            width: Sizing.screenWidth * .6,
+            height: Sizing.blockSizeVertical * 8.5,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'Add Team',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(
                   width: Sizing.blockSizeHorizontal * 5.0,
@@ -261,8 +263,6 @@ class _TeamsState extends State<Teams> {
                 ),
               ],
             ),
-            width: Sizing.screenWidth * .6,
-            height: Sizing.blockSizeVertical * 8.5,
           ),
           TagFilterButton(
             tag: _selectedTag,

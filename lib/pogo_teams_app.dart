@@ -27,12 +27,13 @@ class PogoTeamsApp extends StatelessWidget {
     BuildContext context,
   ) {
     return ThemeData(
-      colorScheme: const ColorScheme.dark(),
-      backgroundColor: const Color.fromARGB(255, 25, 25, 25),
+      colorScheme: const ColorScheme.dark().copyWith(
+        background: const Color.fromARGB(255, 25, 25, 25),
+        error: Colors.deepOrange,
+      ),
       scaffoldBackgroundColor: const Color.fromARGB(255, 25, 25, 25),
       canvasColor: const Color.fromARGB(255, 25, 25, 25),
       cardColor: const Color.fromARGB(255, 25, 25, 25),
-      errorColor: Colors.deepOrange,
       hintColor: const Color.fromARGB(155, 2, 162, 249),
       disabledColor: Colors.white70,
       snackBarTheme: const SnackBarThemeData(
@@ -94,13 +95,11 @@ class PogoTeamsApp extends StatelessWidget {
         color: Colors.white,
       ),
       hoverColor: Colors.black,
-      selectedRowColor: const Color(0xFF02A1F9),
       radioTheme: RadioThemeData(
         overlayColor: MaterialStateProperty.resolveWith<Color?>(
           (Set<MaterialState> states) => Colors.white,
         ),
       ),
-      bottomAppBarColor: Colors.black,
       appBarTheme: const AppBarTheme(
         backgroundColor: Color.fromARGB(255, 19, 19, 19),
       ),

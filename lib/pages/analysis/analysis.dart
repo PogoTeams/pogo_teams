@@ -114,8 +114,8 @@ class _AnalysisState extends State<Analysis> {
     // The big complication is the net coverage of all logged opponents also
     // uses this abstraction.
     final double teamLength = pokemonTeam.length * PokemonTypes.notEffective;
-    void _scaleEffectiveness(typeData) => typeData.b *= teamLength;
-    netEffectiveness.forEach(_scaleEffectiveness);
+    void scaleEffectiveness(typeData) => typeData.b *= teamLength;
+    netEffectiveness.forEach(scaleEffectiveness);
   }
 
   // For the logged opponent teams, calculate the net coverage
@@ -136,7 +136,7 @@ class _AnalysisState extends State<Analysis> {
 
     // Foreach callback
     // Get the effectiveness of a single log, and accumulate it to the coverage
-    void _accumulateLog(OpponentPokemonTeam opponent) {
+    void accumulateLog(OpponentPokemonTeam opponent) {
       final List<UserPokemon> pokemonTeam = opponent.getOrderedPokemonList();
       loggedPokemonCount += pokemonTeam.length;
 
@@ -160,7 +160,7 @@ class _AnalysisState extends State<Analysis> {
       }
     }
 
-    opponents.forEach(_accumulateLog);
+    opponents.forEach(accumulateLog);
 
     // Filter to the key values
     defenseThreats = defenseThreats
@@ -185,8 +185,8 @@ class _AnalysisState extends State<Analysis> {
 
     // Scale effectiveness to the total logged Pokemon
     loggedPokemonCount /= _team.pokemonTeam.length;
-    void _scaleEffectiveness(typeData) => typeData.b /= loggedPokemonCount;
-    netEffectiveness.forEach(_scaleEffectiveness);
+    void scaleEffectiveness(typeData) => typeData.b /= loggedPokemonCount;
+    netEffectiveness.forEach(scaleEffectiveness);
   }
 
   @override

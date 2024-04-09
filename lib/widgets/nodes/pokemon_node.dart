@@ -202,7 +202,7 @@ class _SquareNodeBody extends StatelessWidget {
             child: FormattedPokemonName(
               pokemon: pokemon.getBase(),
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
               suffixStyle: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
@@ -248,7 +248,7 @@ class _SmallNodeBody extends StatelessWidget {
               pokemon: pokemon.getBase(),
               suffixDivider: '  ',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
               suffixStyle: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
@@ -276,7 +276,7 @@ class _SmallNodeBody extends StatelessWidget {
         // Used for the ratings pages
         Text(
           rating!,
-          style: Theme.of(context).textTheme.headline5,
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
 
         // Pokemon name
@@ -285,7 +285,7 @@ class _SmallNodeBody extends StatelessWidget {
             pokemon: pokemon.getBase(),
             suffixDivider: '  ',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
             suffixStyle: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
@@ -364,7 +364,7 @@ class _LargeNodeBody extends StatelessWidget {
             pokemon: pokemon.getBase(),
             suffixDivider: '\n',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
             suffixStyle: Theme.of(context).textTheme.bodyMedium,
           ),
         ),

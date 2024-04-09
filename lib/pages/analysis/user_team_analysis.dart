@@ -151,7 +151,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
           // Page title
           Text(
             'Team Analysis',
-            style: Theme.of(context).textTheme.headline5?.apply(
+            style: Theme.of(context).textTheme.headlineSmall?.apply(
                   fontStyle: FontStyle.italic,
                 ),
           ),
@@ -176,6 +176,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
     return ListView(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       children: List.generate(
         pokemonTeam.length,
         (index) => Padding(
@@ -193,7 +194,6 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
           ),
         ),
       ),
-      physics: const NeverScrollableScrollPhysics(),
     );
   }
 
@@ -323,7 +323,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
                     padding: const EdgeInsets.only(left: 12.0),
                     child: Text(
                       'Team',
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ),
                 );

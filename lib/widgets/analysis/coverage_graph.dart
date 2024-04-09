@@ -46,14 +46,14 @@ class CoverageGraph extends StatelessWidget {
               Text(
                 'Poor',
                 textAlign: TextAlign.left,
-                style: Theme.of(context).textTheme.headline6?.apply(
+                style: Theme.of(context).textTheme.titleLarge?.apply(
                       fontStyle: FontStyle.italic,
                     ),
               ),
               Text(
                 'Excellent',
                 textAlign: TextAlign.right,
-                style: Theme.of(context).textTheme.headline6?.apply(
+                style: Theme.of(context).textTheme.titleLarge?.apply(
                       fontStyle: FontStyle.italic,
                     ),
               ),

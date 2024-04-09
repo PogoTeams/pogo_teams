@@ -38,8 +38,8 @@ class GradientButton extends StatelessWidget {
       width: width,
       height: height,
       child: MaterialButton(
-        child: child,
         onPressed: onPressed,
+        child: child,
       ),
     );
   }

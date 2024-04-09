@@ -74,7 +74,7 @@ class _TagTeamState extends State<TagTeam> {
               children: [
                 Text(
                   'Add Tag',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 SizedBox(
                   width: Sizing.blockSizeHorizontal * 2.0,
@@ -116,7 +116,7 @@ class _TagTeamState extends State<TagTeam> {
                       children: [
                         Text(
                           tags[index].name,
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.titleLarge,
                           overflow: TextOverflow.ellipsis,
                         ),
                         TagDot(
@@ -132,7 +132,8 @@ class _TagTeamState extends State<TagTeam> {
                         widget.team.tag.value = _selectedTag;
                       });
                     },
-                    selectedTileColor: Theme.of(context).selectedRowColor,
+                    // TODO: move color into ThemeData
+                    selectedTileColor: const Color(0xFF02A1F9),
                   ),
                 );
               },

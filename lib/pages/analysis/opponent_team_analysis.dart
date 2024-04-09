@@ -44,7 +44,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
           // Page title
           Text(
             'Opponent Team Analysis',
-            style: Theme.of(context).textTheme.headline5?.apply(
+            style: Theme.of(context).textTheme.headlineSmall?.apply(
                   fontStyle: FontStyle.italic,
                 ),
           ),
@@ -68,6 +68,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
   Widget _buildPokemonNodes(List<UserPokemon> pokemonTeam) {
     return ListView(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       children: List.generate(
         pokemonTeam.length,
         (index) => Padding(
@@ -82,7 +83,6 @@ class OpponentTeamAnalysis extends StatelessWidget {
           ),
         ),
       ),
-      physics: const NeverScrollableScrollPhysics(),
     );
   }
 
@@ -145,7 +145,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
             Text(
               'Top Counters',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
 
             Divider(

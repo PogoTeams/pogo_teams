@@ -6,6 +6,7 @@ import 'package:isar/isar.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:http/retry.dart';
+import 'package:path_provider/path_provider.dart';
 
 // Local
 import 'globals.dart';
@@ -33,6 +34,7 @@ class PogoData {
   static Map<String, dynamic>? _rankingsJsonLookup;
 
   static Future<void> init() async {
+    final dir = await getApplicationDocumentsDirectory();
     pogoIsar = await Isar.open([
       FastMoveSchema,
       ChargeMoveSchema,
@@ -46,7 +48,7 @@ class PogoData {
       UserPokemonTeamSchema,
       OpponentPokemonTeamSchema,
       TagSchema,
-    ], name: 'pogo');
+    ], directory: dir.path);
   }
 
   static Future<void> clear() async {
@@ -84,7 +86,7 @@ class PogoData {
       // If an update is available
       // make an http request for the new data
       if (await _updateAvailable(localSettings, client, pathPrefix)) {
-        message = loadMessagePrefix + 'Syncing Pogo Data...';
+        message = '${loadMessagePrefix}Syncing Pogo Data...';
 
         Stopwatch stopwatch = Stopwatch();
         stopwatch.start();
@@ -105,7 +107,7 @@ class PogoData {
         }
 
         yield Pair(a: message, b: .6);
-        message = loadMessagePrefix + 'Syncing Rankings...';
+        message = '${loadMessagePrefix}Syncing Rankings...';
 
         stopwatch.reset();
         stopwatch.start();
@@ -128,7 +130,7 @@ class PogoData {
 
         yield Pair(a: message, b: .7);
 
-        message = loadMessagePrefix + 'Syncing Local Data...';
+        message = '${loadMessagePrefix}Syncing Local Data...';
         await rebuildFromJson(pogoDataSourceJson);
 
         if (stopwatch.elapsed.inSeconds < Globals.minLoadDisplaySeconds) {
@@ -143,7 +145,7 @@ class PogoData {
 
     // If HTTP request or json decoding fails
     catch (error) {
-      message = loadMessagePrefix + 'Update Failed...';
+      message = '${loadMessagePrefix}Update Failed...';
       await Future.delayed(
           const Duration(seconds: Globals.minLoadDisplaySeconds));
       yield Pair(a: message, b: .9);

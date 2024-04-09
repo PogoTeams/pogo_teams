@@ -43,7 +43,7 @@ class LogsAnalysis extends StatelessWidget {
           // Page title
           Text(
             'Logged Opponents Net Analysis',
-            style: Theme.of(context).textTheme.headline6?.apply(
+            style: Theme.of(context).textTheme.titleLarge?.apply(
                   fontStyle: FontStyle.italic,
                 ),
           ),
@@ -112,7 +112,7 @@ class LogsAnalysis extends StatelessWidget {
             Text(
               'Top Counters',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
 
             Divider(

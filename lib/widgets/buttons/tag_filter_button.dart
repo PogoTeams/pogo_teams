@@ -54,7 +54,7 @@ class TagFilterButton extends StatelessWidget {
                 children: [
                   Text(
                     tag.name,
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.titleLarge,
                     overflow: TextOverflow.ellipsis,
                   ),
                   TagDot(
@@ -70,7 +70,7 @@ class TagFilterButton extends StatelessWidget {
                 onTap: () => onTagChanged(null),
                 child: Text(
                   'All Teams',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

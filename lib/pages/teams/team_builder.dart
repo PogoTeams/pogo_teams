@@ -163,12 +163,12 @@ class _TeamBuilderState extends State<TeamBuilder> {
         _saveTeam();
         Navigator.pop(context, _team);
       },
+      width: Sizing.screenWidth * .85,
+      height: Sizing.blockSizeVertical * 8.5,
       child: Icon(
         Icons.clear,
         size: Sizing.icon2,
       ),
-      width: Sizing.screenWidth * .85,
-      height: Sizing.blockSizeVertical * 8.5,
     );
   }
 

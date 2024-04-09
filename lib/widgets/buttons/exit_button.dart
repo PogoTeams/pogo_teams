@@ -39,15 +39,15 @@ class ExitButton extends StatelessWidget {
       ),
       child: FloatingActionButton(
         heroTag: key,
-        child: Icon(
-          icon.icon,
-          size: Sizing.blockSizeHorizontal * 5.0,
-        ),
         foregroundColor: Colors.white,
         backgroundColor: backgroundColor,
 
         // Callback
         onPressed: onPressed,
+        child: Icon(
+          icon.icon,
+          size: Sizing.blockSizeHorizontal * 5.0,
+        ),
       ),
     );
   }

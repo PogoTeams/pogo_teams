@@ -26,12 +26,15 @@ class _SettingsState extends State<Settings> {
       children: [
         GradientButton(
           onPressed: _clearUserData,
+          width: Sizing.screenWidth * .85,
+          height: Sizing.blockSizeVertical * 8.5,
+          borderRadius: BorderRadius.circular(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Clear All Local Data',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               SizedBox(
                 width: Sizing.blockSizeHorizontal * 5.0,
@@ -42,9 +45,6 @@ class _SettingsState extends State<Settings> {
               ),
             ],
           ),
-          width: Sizing.screenWidth * .85,
-          height: Sizing.blockSizeVertical * 8.5,
-          borderRadius: BorderRadius.circular(10),
         ),
       ],
     );

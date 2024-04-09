@@ -58,14 +58,14 @@ class CoverageGrids extends StatelessWidget {
                     Text(
                       'Defense Threats',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline6?.apply(
+                      style: Theme.of(context).textTheme.titleLarge?.apply(
                             fontStyle: FontStyle.italic,
                           ),
                     ),
                     Text(
                       '${defenseThreats.length} / ${includedTypesKeys.length}',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   ],
                 ),
@@ -117,14 +117,14 @@ class CoverageGrids extends StatelessWidget {
                   children: [
                     Text(
                       'Offense Coverage',
-                      style: Theme.of(context).textTheme.headline6?.apply(
+                      style: Theme.of(context).textTheme.titleLarge?.apply(
                             fontStyle: FontStyle.italic,
                           ),
                     ),
                     Text(
                       '${offenseCoverage.length} / ${includedTypesKeys.length}',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   ],
                 ),

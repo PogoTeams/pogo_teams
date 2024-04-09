@@ -41,7 +41,7 @@ class _CupDropdownState extends State<CupDropdown>
         child: Center(
           child: Text(
             cup.name,
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
       );
@@ -55,7 +55,7 @@ class _CupDropdownState extends State<CupDropdown>
   Widget build(BuildContext context) {
     super.build(context);
 
-    final _selectedCup = widget.cup;
+    final selectedCup = widget.cup;
 
     return Container(
       alignment: Alignment.center,
@@ -73,7 +73,7 @@ class _CupDropdownState extends State<CupDropdown>
           begin: Alignment.bottomCenter,
           end: Alignment.centerRight,
           colors: [
-            PogoColors.getCupColor(_selectedCup),
+            PogoColors.getCupColor(selectedCup),
             Colors.transparent,
           ],
           tileMode: TileMode.clamp,
@@ -85,7 +85,7 @@ class _CupDropdownState extends State<CupDropdown>
         child: DropdownButton(
           borderRadius: BorderRadius.circular(5),
           isExpanded: true,
-          value: _selectedCup.cupId,
+          value: selectedCup.cupId,
           icon: Icon(
             Icons.arrow_drop_down_circle,
             size: Sizing.blockSizeVertical * 3.0,

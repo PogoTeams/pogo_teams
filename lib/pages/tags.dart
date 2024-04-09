@@ -41,7 +41,7 @@ class _TagsState extends State<Tags> {
               ),
               Text(
                 tag.name,
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
                 overflow: TextOverflow.ellipsis,
               ),
               Row(
@@ -120,12 +120,14 @@ class _TagsState extends State<Tags> {
         body: _buildTagsListView(),
         floatingActionButton: GradientButton(
           onPressed: _onEditTag,
+          width: Sizing.screenWidth * .85,
+          height: Sizing.blockSizeVertical * 8.5,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Add Tag',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               SizedBox(
                 width: Sizing.blockSizeHorizontal * 5.0,
@@ -136,8 +138,6 @@ class _TagsState extends State<Tags> {
               ),
             ],
           ),
-          width: Sizing.screenWidth * .85,
-          height: Sizing.blockSizeVertical * 8.5,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),

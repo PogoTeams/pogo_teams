@@ -204,17 +204,6 @@ class MoveDropdown extends StatelessWidget {
 
         // Dropdown button
         Container(
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton(
-              isExpanded: true,
-              value: move,
-              icon: const Icon(Icons.arrow_drop_down_circle),
-              iconSize: Sizing.blockSizeHorizontal * 4.0,
-              style: Theme.of(context).textTheme.bodySmall,
-              items: options,
-              onChanged: onChanged,
-            ),
-          ),
           padding: EdgeInsets.only(
             right: Sizing.blockSizeVertical * .7,
           ),
@@ -230,6 +219,17 @@ class MoveDropdown extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(100),
             color: PogoColors.getPokemonTypeColor(move.type.typeId),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton(
+              isExpanded: true,
+              value: move,
+              icon: const Icon(Icons.arrow_drop_down_circle),
+              iconSize: Sizing.blockSizeHorizontal * 4.0,
+              style: Theme.of(context).textTheme.bodySmall,
+              items: options,
+              onChanged: onChanged,
+            ),
           ),
         ),
       ],

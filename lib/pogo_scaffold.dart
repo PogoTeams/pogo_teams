@@ -78,7 +78,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
           // Page title
           Text(
             _currentPage.displayName,
-            style: Theme.of(context).textTheme.headline5?.apply(
+            style: Theme.of(context).textTheme.headlineSmall?.apply(
                   fontStyle: FontStyle.italic,
                 ),
           ),
@@ -165,7 +165,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
                     // Loading message
                     Text(
                       snapshot.data!.a,
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
 
                     // Loading indicator

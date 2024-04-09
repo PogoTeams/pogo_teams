@@ -103,7 +103,7 @@ class _DriveBackupState extends State<DriveBackup> {
                 ),
                 child: Text(
                   'Export',
-                  style: Theme.of(context).textTheme.headline6?.copyWith(
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
@@ -217,7 +217,7 @@ class _DriveBackupState extends State<DriveBackup> {
           children: [
             Text(
               _account!.email,
-              style: Theme.of(context).textTheme.headline6?.copyWith(
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontStyle: FontStyle.italic,
                   ),
               overflow: TextOverflow.ellipsis,
@@ -247,7 +247,7 @@ class _DriveBackupState extends State<DriveBackup> {
         children: [
           Text(
             'Backups',
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headlineSmall,
             textAlign: TextAlign.center,
           ),
           SizedBox(
@@ -315,7 +315,7 @@ class _DriveBackupState extends State<DriveBackup> {
               children: [
                 Text(
                   _backupFiles[index].name?.replaceAll('.json', '') ?? '',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                   overflow: TextOverflow.ellipsis,
                 ),
                 IconButton(
@@ -344,7 +344,8 @@ class _DriveBackupState extends State<DriveBackup> {
                 _selectedBackupFile = _backupFiles[index];
               });
             },
-            selectedTileColor: Theme.of(context).selectedRowColor,
+            // TODO: move color into ThemeData
+            selectedTileColor: const Color(0xFF02A1F9),
           );
         },
       ),
@@ -359,12 +360,20 @@ class _DriveBackupState extends State<DriveBackup> {
           // Import
           GradientButton(
             onPressed: _import,
+            width: Sizing.screenWidth * .4,
+            height: Sizing.blockSizeVertical * 8.5,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(50),
+              topRight: Radius.circular(10),
+              bottomRight: Radius.circular(10),
+              bottomLeft: Radius.circular(50),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'Import',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(
                   width: Sizing.blockSizeHorizontal * 5.0,
@@ -375,25 +384,25 @@ class _DriveBackupState extends State<DriveBackup> {
                 ),
               ],
             ),
-            width: Sizing.screenWidth * .4,
-            height: Sizing.blockSizeVertical * 8.5,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(50),
-              topRight: Radius.circular(10),
-              bottomRight: Radius.circular(10),
-              bottomLeft: Radius.circular(50),
-            ),
           ),
 
           // Export
           GradientButton(
             onPressed: _export,
+            width: Sizing.screenWidth * .4,
+            height: Sizing.blockSizeVertical * 8.5,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(50),
+              bottomRight: Radius.circular(50),
+              bottomLeft: Radius.circular(10),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'New',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(
                   width: Sizing.blockSizeHorizontal * 5.0,
@@ -404,26 +413,21 @@ class _DriveBackupState extends State<DriveBackup> {
                 ),
               ],
             ),
-            width: Sizing.screenWidth * .4,
-            height: Sizing.blockSizeVertical * 8.5,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(50),
-              bottomRight: Radius.circular(50),
-              bottomLeft: Radius.circular(10),
-            ),
           ),
         ],
       );
     }
     return GradientButton(
       onPressed: _signIn,
+      width: Sizing.screenWidth * .85,
+      height: Sizing.blockSizeVertical * 8.5,
+      borderRadius: BorderRadius.circular(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             'Sign In',
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           SizedBox(
             width: Sizing.blockSizeHorizontal * 5.0,
@@ -434,9 +438,6 @@ class _DriveBackupState extends State<DriveBackup> {
           ),
         ],
       ),
-      width: Sizing.screenWidth * .85,
-      height: Sizing.blockSizeVertical * 8.5,
-      borderRadius: BorderRadius.circular(10),
     );
   }
 

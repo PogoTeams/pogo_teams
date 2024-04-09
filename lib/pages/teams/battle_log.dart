@@ -52,7 +52,7 @@ class _BattleLogState extends State<BattleLog> {
           // Page title
           Text(
             'Battle Log',
-            style: Theme.of(context).textTheme.headline5?.apply(
+            style: Theme.of(context).textTheme.headlineSmall?.apply(
                   fontStyle: FontStyle.italic,
                 ),
           ),
@@ -92,7 +92,7 @@ class _BattleLogState extends State<BattleLog> {
 
           Text(
             '- Opponent Teams -',
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
 
           // Spacer
@@ -236,12 +236,14 @@ class _BattleLogState extends State<BattleLog> {
     if (_team.getOpponents().isEmpty) {
       return GradientButton(
         onPressed: _onAddTeam,
+        width: Sizing.screenWidth * .85,
+        height: Sizing.blockSizeVertical * 8.5,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'Log Opponent Team',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             SizedBox(
               width: Sizing.blockSizeHorizontal * 5.0,
@@ -252,8 +254,6 @@ class _BattleLogState extends State<BattleLog> {
             ),
           ],
         ),
-        width: Sizing.screenWidth * .85,
-        height: Sizing.blockSizeVertical * 8.5,
       );
     }
 
@@ -263,12 +263,20 @@ class _BattleLogState extends State<BattleLog> {
         // Analyze button
         GradientButton(
           onPressed: _onAnalyzeLogs,
+          width: Sizing.screenWidth * .44,
+          height: Sizing.blockSizeVertical * 8.5,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(50),
+            topRight: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+            bottomLeft: Radius.circular(50),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Analyze',
-                style: Theme.of(context).textTheme.headline5,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
               SizedBox(
                 width: Sizing.blockSizeHorizontal * 4.0,
@@ -279,25 +287,25 @@ class _BattleLogState extends State<BattleLog> {
               ),
             ],
           ),
-          width: Sizing.screenWidth * .44,
-          height: Sizing.blockSizeVertical * 8.5,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(20),
-            bottomRight: Radius.circular(20),
-            bottomLeft: Radius.circular(50),
-          ),
         ),
 
         // Log button
         GradientButton(
           onPressed: _onAddTeam,
+          width: Sizing.screenWidth * .44,
+          height: Sizing.blockSizeVertical * 8.5,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(50),
+            bottomRight: Radius.circular(50),
+            bottomLeft: Radius.circular(20),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Log',
-                style: Theme.of(context).textTheme.headline5,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
               SizedBox(
                 width: Sizing.blockSizeHorizontal * 4.0,
@@ -307,14 +315,6 @@ class _BattleLogState extends State<BattleLog> {
                 size: Sizing.blockSizeHorizontal * 7.0,
               ),
             ],
-          ),
-          width: Sizing.screenWidth * .44,
-          height: Sizing.blockSizeVertical * 8.5,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(50),
-            bottomRight: Radius.circular(50),
-            bottomLeft: Radius.circular(20),
           ),
         ),
       ],

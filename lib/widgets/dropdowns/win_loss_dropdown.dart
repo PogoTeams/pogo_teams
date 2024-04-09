@@ -39,7 +39,7 @@ class _WinLossDropdownState extends State<WinLossDropdown>
           child: Center(
             child: Text(
               outcome.name,
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
           ),
         );

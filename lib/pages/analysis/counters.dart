@@ -58,12 +58,12 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
       onPressed: () {
         Navigator.pop(context);
       },
+      width: Sizing.screenWidth * .85,
+      height: Sizing.blockSizeVertical * 8.5,
       child: Icon(
         Icons.clear,
         size: Sizing.icon2,
       ),
-      width: Sizing.screenWidth * .85,
-      height: Sizing.blockSizeVertical * 8.5,
     );
   }
 
@@ -121,7 +121,7 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
                 ),
                 child: Text(
                   'Counters',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
               Expanded(

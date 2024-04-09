@@ -87,19 +87,19 @@ class TeamNode extends StatelessWidget {
   // If the focus index is provided, draw a special border
   // This indicates the current 'focus' node
   Widget _buildFocusNode(UserPokemon? pokemon, int index) {
-    Color _color;
+    Color color;
 
     if (index == focusIndex) {
-      _color = Colors.amber;
+      color = Colors.amber;
     } else {
-      _color = Colors.transparent;
+      color = Colors.transparent;
     }
 
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
           width: Sizing.blockSizeHorizontal * 1.0,
-          color: _color,
+          color: color,
         ),
         borderRadius: BorderRadius.circular(25),
       ),
@@ -193,7 +193,7 @@ class UserTeamNodeHeader extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 5.0),
                 child: Text(
                   team.getCup().name,
-                  style: Theme.of(context).textTheme.headline6?.copyWith(
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                   overflow: TextOverflow.ellipsis,
@@ -356,7 +356,7 @@ class UserTeamNodeFooter extends StatelessWidget {
               ),
               Text(
                 'Analysis',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
           ),

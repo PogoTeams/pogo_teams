@@ -28,7 +28,7 @@ Future<bool> getConfirmation(
               ),
               child: Text(
                 title,
-                style: Theme.of(context).textTheme.headline6?.copyWith(
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -53,11 +53,11 @@ Future<bool> getConfirmation(
           Center(
             child: TextButton(
               style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.headline6,
+                textStyle: Theme.of(context).textTheme.titleLarge,
               ),
               child: Text(
                 'Continue',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               onPressed: () {
                 confirmation = true;
@@ -83,7 +83,7 @@ Future<void> processFinished(
       return AlertDialog(
         title: Text(
           title,
-          style: Theme.of(context).textTheme.headline6?.copyWith(
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
@@ -120,7 +120,7 @@ void displayError(BuildContext context, String error) async {
       return AlertDialog(
         title: Text(
           'Error',
-          style: Theme.of(context).textTheme.headline6?.copyWith(
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
@@ -137,11 +137,11 @@ void displayError(BuildContext context, String error) async {
           Center(
             child: TextButton(
               style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.headline6,
+                textStyle: Theme.of(context).textTheme.titleLarge,
               ),
               child: Text(
                 'OK',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -165,7 +165,7 @@ void displayMessageOK(
       return AlertDialog(
         title: Text(
           title,
-          style: Theme.of(context).textTheme.headline6?.copyWith(
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
@@ -182,11 +182,11 @@ void displayMessageOK(
           Center(
             child: TextButton(
               style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.headline6,
+                textStyle: Theme.of(context).textTheme.titleLarge,
               ),
               child: Text(
                 'OK',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               onPressed: () {
                 Navigator.of(context).pop();

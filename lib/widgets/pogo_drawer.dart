@@ -76,7 +76,7 @@ class PogoDrawer extends StatelessWidget {
                       children: [
                         Text(
                           PogoPages.teams.displayName,
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         SizedBox(
                           width: Sizing.blockSizeHorizontal * 3.0,
@@ -98,7 +98,7 @@ class PogoDrawer extends StatelessWidget {
                       children: [
                         Text(
                           PogoPages.tags.displayName,
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         SizedBox(
                           width: Sizing.blockSizeHorizontal * 3.0,
@@ -119,7 +119,7 @@ class PogoDrawer extends StatelessWidget {
                       children: [
                         Text(
                           PogoPages.battleLogs.displayName,
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         SizedBox(
                           width: Sizing.blockSizeHorizontal * 3.0,
@@ -140,7 +140,7 @@ class PogoDrawer extends StatelessWidget {
                       children: [
                         Text(
                           PogoPages.rankings.displayName,
-                          style: Theme.of(context).textTheme.headline5,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         SizedBox(
                           width: Sizing.blockSizeHorizontal * 3.0,
@@ -168,7 +168,7 @@ class PogoDrawer extends StatelessWidget {
                   ),
                   Text(
                     PogoPages.sync.displayName,
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   SizedBox(
                     width: Sizing.blockSizeHorizontal * 3.0,
@@ -193,7 +193,7 @@ class PogoDrawer extends StatelessWidget {
                   ),
                   Text(
                     PogoPages.driveBackup.displayName,
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   SizedBox(
                     width: Sizing.blockSizeHorizontal * 3.0,
@@ -218,7 +218,7 @@ class PogoDrawer extends StatelessWidget {
                   ),
                   Text(
                     PogoPages.settings.displayName,
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   SizedBox(
                     width: Sizing.blockSizeHorizontal * 3.0,

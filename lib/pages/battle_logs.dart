@@ -138,21 +138,21 @@ class _RankingsState extends State<BattleLogs> {
                     _selectedTag == null
                         ? Text(
                             'All Teams',
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.titleLarge,
                             overflow: TextOverflow.ellipsis,
                           )
                         : Row(
                             children: [
                               Text(
                                 _selectedTag!.name,
-                                style: Theme.of(context).textTheme.headline6,
+                                style: Theme.of(context).textTheme.titleLarge,
                                 overflow: TextOverflow.ellipsis,
                               )
                             ],
                           ),
                     Text(
                       'Win Rate : ${winRate.toStringAsFixed(0)} %',
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],

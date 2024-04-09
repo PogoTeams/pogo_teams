@@ -47,12 +47,6 @@ class MoveNode extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      child: FittedBox(
-        child: Text(
-          move.name,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ),
       margin: EdgeInsets.only(
         top: Sizing.blockSizeVertical * .7,
       ),
@@ -65,6 +59,12 @@ class MoveNode extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(100.0),
         color: PogoColors.getPokemonTypeColor(move.type.typeId),
+      ),
+      child: FittedBox(
+        child: Text(
+          move.name,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
       ),
     );
   }

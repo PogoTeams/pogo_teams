@@ -137,7 +137,7 @@ class _TagEditState extends State<TagEdit> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Name', style: Theme.of(context).textTheme.headline6),
+            Text('Name', style: Theme.of(context).textTheme.titleLarge),
 
             SizedBox(
               height: Sizing.blockSizeVertical * 2.0,
@@ -157,7 +157,7 @@ class _TagEditState extends State<TagEdit> {
               height: Sizing.blockSizeVertical * 2.0,
             ),
 
-            Text('Color', style: Theme.of(context).textTheme.headline6),
+            Text('Color', style: Theme.of(context).textTheme.titleLarge),
 
             SizedBox(
               height: Sizing.blockSizeVertical * 2.0,
