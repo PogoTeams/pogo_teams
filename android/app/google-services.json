@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "651397027693-6r5uor5g0g05j3toljtet2g3gh0dudo0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pogoteams",
+            "certificate_hash": "eeb3b080d62a6edc9c25b843f283147181cffb2a"
+          }
+        },
+        {
           "client_id": "651397027693-6nk9vo8hmjaoh9i7esa32da2llttqrid.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -31,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "651397027693-649b4052jfrovmlcuk0ms6site64vpmu.apps.googleusercontent.com",
+              "client_id": "651397027693-8b92ibdav424rhio9avm994fokuk1qoo.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.pogoteamsGamemasterPush"
+                "bundle_id": "com.pogoteams"
               }
             }
           ]
