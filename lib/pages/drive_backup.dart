@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 import '../widgets/dialogs.dart';
 import '../modules/data/globals.dart';
 import '../modules/data/pogo_data.dart';
+import '../modules/data/user_data.dart';
 import '../modules/ui/sizing.dart';
 import '../widgets/buttons/gradient_button.dart';
 
@@ -34,20 +35,11 @@ class DriveBackup extends StatefulWidget {
 
 class _DriveBackupState extends State<DriveBackup> {
   final TextEditingController _textController = TextEditingController();
-  String? _backupFolderId;
-  drive_api.File? _selectedBackupFile;
-  List<drive_api.File> _backupFiles = [];
   bool _refreshBackupsList = false;
   Function()? _beforeLoadBackups;
 
-  GoogleSignInAccount? _account;
-  bool get _signedIn => _account != null;
-
   void _trySignInSilently() async {
-    final googleSignIn =
-        GoogleSignIn.standard(scopes: [drive_api.DriveApi.driveFileScope]);
-    _account = await googleSignIn.signInSilently();
-    if (_signedIn) {
+    if (await UserData.trySignInSilently()) {
       setState(() {
         _refreshBackupsList = true;
       });
@@ -55,10 +47,7 @@ class _DriveBackupState extends State<DriveBackup> {
   }
 
   void _signIn() async {
-    final googleSignIn =
-        GoogleSignIn.standard(scopes: [drive_api.DriveApi.driveFileScope]);
-    _account = await googleSignIn.signIn();
-    if (_signedIn) {
+    if (await UserData.signIn()) {
       setState(() {
         _refreshBackupsList = true;
       });
@@ -66,28 +55,26 @@ class _DriveBackupState extends State<DriveBackup> {
   }
 
   void _signOut() async {
+    await UserData.signOut();
     setState(() {
-      _backupFiles.clear();
       _refreshBackupsList = false;
-      _account = null;
-      _selectedBackupFile = null;
-      _backupFolderId = null;
     });
   }
 
   void _import() async {
-    if (_selectedBackupFile == null || _selectedBackupFile?.id == null) return;
+    if (UserData.selectedBackupFile == null ||
+        UserData.selectedBackupFile?.id == null) return;
     if (await getConfirmation(context, 'Download Backup',
-        'All data will be imported from ${_selectedBackupFile?.name ?? 'this file'}.')) {
+        'All data will be imported from ${UserData.selectedBackupFile?.name ?? 'this file'}.')) {
       setState(() {
         _refreshBackupsList = true;
-        _beforeLoadBackups = () => _importBackup(_selectedBackupFile!);
+        _beforeLoadBackups = () => _importBackup(UserData.selectedBackupFile!);
       });
     }
   }
 
   void _export() async {
-    if (_account == null) return;
+    if (!UserData.isSignedIn) return;
     await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -147,7 +134,7 @@ class _DriveBackupState extends State<DriveBackup> {
                           () {
                             _refreshBackupsList = true;
                             _beforeLoadBackups =
-                                () => _writeBackupFileToDrive(text);
+                                () => UserData.createBackup(text);
                             _textController.clear();
                           },
                         );
@@ -168,55 +155,22 @@ class _DriveBackupState extends State<DriveBackup> {
     if (file.id == null) return;
     if (await getConfirmation(context, 'Delete Backup',
         '${file.name ?? 'This file'} will be permanently deleted.')) {
-      final drive =
-          drive_api.DriveApi(GoogleAuthClient(await _account!.authHeaders));
-      _beforeLoadBackups = () => drive.files.delete(file.id!);
+      _beforeLoadBackups = () => UserData.deleteFile(file);
       setState(() {
-        _selectedBackupFile = null;
         _refreshBackupsList = true;
       });
     }
   }
 
-  void _writeBackupFileToDrive(String filename) async {
-    if (_account == null) return;
-    final drive =
-        drive_api.DriveApi(GoogleAuthClient(await _account!.authHeaders));
-
-    await _loadOrCreateBackupFolder(drive);
-    if (_backupFolderId == null) return;
-
-    drive_api.File writeFile = drive_api.File()
-      ..createdTime = DateTime.now()
-      ..name = '$filename.json';
-    writeFile.parents = [_backupFolderId!];
-
-    final Map<String, dynamic> userExportJson =
-        await PogoData.exportUserDataToJson();
-    final String userExportJsonEncoded = jsonEncode(userExportJson);
-
-    final stream = Future.value(userExportJsonEncoded.codeUnits)
-        .asStream()
-        .asBroadcastStream();
-
-    await drive.files.create(
-      writeFile,
-      uploadMedia: drive_api.Media(
-        stream,
-        userExportJsonEncoded.length,
-      ),
-    );
-  }
-
   Widget _buildScaffoldBody() {
-    if (!_signedIn) return Container();
+    if (!UserData.isSignedIn) return Container();
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              _account!.email,
+              UserData.account!.email,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontStyle: FontStyle.italic,
                   ),
@@ -275,24 +229,14 @@ class _DriveBackupState extends State<DriveBackup> {
   }
 
   Future<void> _loadBackupFilesFromDrive() async {
-    if (_account == null) return;
+    if (!UserData.isSignedIn) return;
 
     if (_beforeLoadBackups != null) {
       await _beforeLoadBackups!();
       _beforeLoadBackups = null;
     }
 
-    final drive =
-        drive_api.DriveApi(GoogleAuthClient(await _account!.authHeaders));
-    if (_backupFolderId != null || await _tryFindDriveFolder(drive)) {
-      _selectedBackupFile = null;
-      _backupFiles = (await drive.files.list(
-                  q: '\'$_backupFolderId\' in parents',
-                  $fields: 'files(id,name,createdTime)',
-                  orderBy: 'createdTime'))
-              .files ??
-          [];
-    }
+    await UserData.loadBackups();
 
     _refreshBackupsList = false;
   }
@@ -300,7 +244,7 @@ class _DriveBackupState extends State<DriveBackup> {
   Widget _buildBackupFilesListView() {
     return Expanded(
       child: ListView.builder(
-        itemCount: _backupFiles.length,
+        itemCount: UserData.backupFiles.length,
         itemBuilder: (context, index) {
           return RadioListTile<String?>(
             shape: RoundedRectangleBorder(
@@ -309,17 +253,19 @@ class _DriveBackupState extends State<DriveBackup> {
             contentPadding: EdgeInsets.only(
               bottom: Sizing.blockSizeVertical * 1.0,
             ),
-            selected: _selectedBackupFile?.id == _backupFiles[index].id,
+            selected: UserData.selectedBackupFile?.id ==
+                UserData.backupFiles[index].id,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  _backupFiles[index].name?.replaceAll('.json', '') ?? '',
+                  UserData.backupFiles[index].name?.replaceAll('.json', '') ??
+                      '',
                   style: Theme.of(context).textTheme.titleLarge,
                   overflow: TextOverflow.ellipsis,
                 ),
                 IconButton(
-                  onPressed: () => _onClearBackup(_backupFiles[index]),
+                  onPressed: () => _onClearBackup(UserData.backupFiles[index]),
                   icon: Icon(
                     Icons.clear,
                     size: Sizing.icon3,
@@ -328,20 +274,20 @@ class _DriveBackupState extends State<DriveBackup> {
               ],
             ),
             subtitle: Text(
-              _backupFiles[index].createdTime == null
+              UserData.backupFiles[index].createdTime == null
                   ? ''
                   : DateFormat.yMMMMd()
-                      .format(_backupFiles[index].createdTime!),
+                      .format(UserData.backupFiles[index].createdTime!),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontStyle: FontStyle.italic,
                   ),
             ),
-            value: _backupFiles[index].id,
-            groupValue: _selectedBackupFile?.id,
+            value: UserData.backupFiles[index].id,
+            groupValue: UserData.selectedBackupFile?.id,
             onChanged: (String? id) {
               setState(() {
                 _refreshBackupsList = false;
-                _selectedBackupFile = _backupFiles[index];
+                UserData.selectedBackupFile = UserData.backupFiles[index];
               });
             },
             // TODO: move color into ThemeData
@@ -353,7 +299,7 @@ class _DriveBackupState extends State<DriveBackup> {
   }
 
   Widget _buildFloatingActionButtons() {
-    if (_signedIn) {
+    if (UserData.isSignedIn) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -441,49 +387,11 @@ class _DriveBackupState extends State<DriveBackup> {
     );
   }
 
-  Future<bool> _tryFindDriveFolder(drive_api.DriveApi drive) async {
-    final List<drive_api.File>? files = (await drive.files.list(
-      q: 'appProperties has { key=\'pogo_teams_backup_id\' and'
-          ' value=\'${Globals.driveBackupFolderGuid}\' }',
-    ))
-        .files;
-
-    if (files != null && files.isNotEmpty) {
-      _backupFolderId = files.first.id;
-    }
-
-    return _backupFolderId != null;
-  }
-
-  Future<void> _loadOrCreateBackupFolder(drive_api.DriveApi drive) async {
-    if (!await _tryFindDriveFolder(drive)) {
-      // Create a new backup folder
-      final drive_api.File driveFolder = drive_api.File()
-        ..createdTime = DateTime.now()
-        ..name = Globals.driveBackupFolderName
-        ..appProperties = {
-          'pogo_teams_backup_id': Globals.driveBackupFolderGuid,
-        }
-        ..mimeType = 'application/vnd.google-apps.folder';
-      final drive_api.File createdFolder =
-          await drive.files.create(driveFolder);
-      _backupFolderId = createdFolder.id;
-    }
-  }
-
   Future<void> _importBackup(drive_api.File file) async {
-    if (_account == null) return;
-    final drive =
-        drive_api.DriveApi(GoogleAuthClient(await _account!.authHeaders));
-    final drive_api.Media? result = await drive.files.get(
-      file.id!,
-      downloadOptions: drive_api.DownloadOptions.fullMedia,
-    ) as drive_api.Media?;
-    if (result != null) {
+    final media = await UserData.getBackup(file);
+    if (media != null) {
       String serializedUserDataJson = '';
-      result.stream
-          .map((asciiCodes) => String.fromCharCodes(asciiCodes))
-          .listen(
+      media.stream.map((asciiCodes) => String.fromCharCodes(asciiCodes)).listen(
             (event) {
               serializedUserDataJson += event;
             },
@@ -507,13 +415,17 @@ class _DriveBackupState extends State<DriveBackup> {
                       '${file.name?.replaceFirst('.json', '') ?? 'the backup file'}'
                       ' was successfully completed.';
                 }
-                await processFinished(
-                  context,
-                  'Import Complete',
-                  message,
-                );
+                if (mounted) {
+                  await processFinished(
+                    context,
+                    'Import Complete',
+                    message,
+                  );
+                }
               } catch (error) {
-                displayError(context, error.toString());
+                if (mounted) {
+                  displayError(context, error.toString());
+                }
               }
             },
           );
