@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 // Packages
 import 'package:googleapis/drive/v3.dart' as drive_api;
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 // Local Imports
@@ -503,30 +502,11 @@ class _DriveBackupsState extends State<DriveBackups> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 2.0,
-        left: Sizing.blockSizeHorizontal * 2.0,
-        right: Sizing.blockSizeHorizontal * 2.0,
-      ),
-      child: Scaffold(
-        body: _buildScaffoldBody(),
-        floatingActionButton: _buildFloatingActionButtons(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      ),
+    return Column(
+      children: [
+        _buildScaffoldBody(),
+        _buildFloatingActionButtons(),
+      ],
     );
-  }
-}
-
-class GoogleAuthClient extends BaseClient {
-  final Map<String, String> _headers;
-
-  final Client _client = Client();
-
-  GoogleAuthClient(this._headers);
-
-  @override
-  Future<StreamedResponse> send(BaseRequest request) {
-    return _client.send(request..headers.addAll(_headers));
   }
 }

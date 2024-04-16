@@ -13,8 +13,8 @@ import 'modules/data/google_drive_repository.dart';
 // ----------------------------------------------------------------- @PogoTeams
 
 void main() async {
-  await Hive.initFlutter();
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
 
   // Restrict view orientation to portrait only
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
