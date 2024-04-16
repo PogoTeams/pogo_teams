@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import 'pages/pogo_pages.dart';
-import 'modules/data/pogo_data.dart';
+import 'modules/data/pogo_repository.dart';
 import 'tools/pair.dart';
 import 'modules/ui/sizing.dart';
 import 'modules/data/globals.dart';
@@ -123,7 +123,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
     // App loading procedure
     return StreamBuilder<Pair<String, double>>(
-      stream: PogoData.loadPogoData(
+      stream: PogoRepository.loadPogoData(
         forceUpdate: forceUpdate,
       ),
       initialData: Pair(a: '', b: 0.0),

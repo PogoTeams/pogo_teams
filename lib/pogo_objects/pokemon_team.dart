@@ -6,7 +6,7 @@ import 'pokemon.dart';
 import 'cup.dart';
 import 'tag.dart';
 import '../modules/data/pokemon_types.dart';
-import '../modules/data/pogo_data.dart';
+import '../modules/data/pogo_repository.dart';
 import '../enums/battle_outcome.dart';
 
 part 'pokemon_team.g.dart';
@@ -100,7 +100,7 @@ class PokemonTeam {
       cup.loadSync();
     }
 
-    return cup.value ?? PogoData.getCupsSync().first;
+    return cup.value ?? PogoRepository.getCupsSync().first;
   }
 
   Future<Cup> getCupAsync() async {
@@ -108,7 +108,7 @@ class PokemonTeam {
       await cup.load();
     }
 
-    return cup.value ?? PogoData.getCupsSync().first;
+    return cup.value ?? PogoRepository.getCupsSync().first;
   }
 
   Future<void> saveSync() async {
@@ -118,7 +118,7 @@ class PokemonTeam {
 
   // Switch to a different cup with the specified cupTitle
   void setCupById(String cupId) {
-    cup.value = PogoData.getCupById(cupId);
+    cup.value = PogoRepository.getCupById(cupId);
     for (UserPokemon pokemon in getPokemonTeam()) {
       pokemon.initializeStats(getCup().cp);
     }
@@ -198,7 +198,7 @@ class UserPokemonTeam extends PokemonTeam {
       ..dateCreated = DateTime.tryParse(json['dateCreated'] ?? '')
       ..locked = json['locked'] as bool
       ..teamSize = json['teamSize'] as int
-      ..cup.value = PogoData.getCupById(json['cup'] as String);
+      ..cup.value = PogoRepository.getCupById(json['cup'] as String);
 
     return userPokemonTeam;
   }
@@ -267,7 +267,7 @@ class OpponentPokemonTeam extends PokemonTeam {
       ..locked = json['locked'] as bool
       ..teamSize = json['teamSize'] as int
       ..battleOutcome = _fromOutcomeName(json['battleOutcome'])
-      ..cup.value = PogoData.getCupById(json['cup'] as String);
+      ..cup.value = PogoRepository.getCupById(json['cup'] as String);
 
     return userPokemonTeam;
   }

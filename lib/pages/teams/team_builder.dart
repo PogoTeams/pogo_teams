@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../pogo_objects/pokemon.dart';
 import '../../pogo_objects/pokemon_team.dart';
 import '../../pogo_objects/cup.dart';
-import '../../modules/data/pogo_data.dart';
+import '../../modules/data/pogo_repository.dart';
 import '../../modules/ui/sizing.dart';
 import '../../widgets/pokemon_list.dart';
 import '../../widgets/pogo_text_field.dart';
@@ -148,9 +148,9 @@ class _TeamBuilderState extends State<TeamBuilder> {
       onPokemonSelected: (Pokemon pokemon) {
         setState(() {
           UserPokemon userPokemon = UserPokemon.fromPokemon(pokemon);
-          userPokemon.id = PogoData.updateUserPokemonSync(userPokemon);
+          userPokemon.id = PogoRepository.updateUserPokemonSync(userPokemon);
           _team.setPokemonAt(_builderIndex, userPokemon);
-          PogoData.updatePokemonTeamSync(_team, updatePokemon: true);
+          PogoRepository.updatePokemonTeamSync(_team, updatePokemon: true);
           _updateWorkingIndex(_builderIndex + 1);
         });
       },
@@ -174,7 +174,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
 
   void _saveTeam() {
     _team.setCupById(_cup.cupId);
-    PogoData.updatePokemonTeamSync(
+    PogoRepository.updatePokemonTeamSync(
       _team,
       newPokemonTeam: _team.getOrderedPokemonListFilled(),
     );
@@ -194,7 +194,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
     if (newCup == null) return;
 
     setState(() {
-      _cup = PogoData.getCupById(newCup);
+      _cup = PogoRepository.getCupById(newCup);
       _filterCategory(_selectedCategory);
     });
   }
@@ -208,7 +208,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
       }
 
       _team.setTeamSize(newSize);
-      PogoData.updatePokemonTeamSync(_team, updatePokemon: true);
+      PogoRepository.updatePokemonTeamSync(_team, updatePokemon: true);
     });
   }
 

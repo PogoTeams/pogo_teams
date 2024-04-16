@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../pogo_objects/tag.dart';
-import '../modules/data/pogo_data.dart';
+import '../modules/data/pogo_repository.dart';
 import '../modules/ui/sizing.dart';
 import '../widgets/tag_dot.dart';
 import '../widgets/dialogs.dart';
@@ -27,7 +27,7 @@ class Tags extends StatefulWidget {
 class _TagsState extends State<Tags> {
   Widget _buildTagsListView() {
     return ListView(
-      children: PogoData.getTagsSync().map((tag) {
+      children: PogoRepository.getTagsSync().map((tag) {
         return ListTile(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -84,7 +84,7 @@ class _TagsState extends State<Tags> {
   }
 
   void _onRemoveTag(Tag tag) async {
-    int affectedTeamsCount = PogoData.getUserTeamsSync(tag: tag).length;
+    int affectedTeamsCount = PogoRepository.getUserTeamsSync(tag: tag).length;
     if (affectedTeamsCount > 0 &&
         !await getConfirmation(
           context,
@@ -94,7 +94,7 @@ class _TagsState extends State<Tags> {
       return;
     }
     setState(() {
-      PogoData.deleteTagSync(tag.id);
+      PogoRepository.deleteTagSync(tag.id);
     });
   }
 

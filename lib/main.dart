@@ -7,8 +7,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 // Local Imports
 import 'pogo_teams_app.dart';
-import 'modules/data/pogo_data.dart';
-import 'modules/data/user_data.dart';
+import 'modules/data/pogo_repository.dart';
+import 'modules/data/google_drive_repository.dart';
 
 // ----------------------------------------------------------------- @PogoTeams
 
@@ -18,8 +18,8 @@ void main() async {
 
   // Restrict view orientation to portrait only
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  await PogoData.init();
-  await UserData.init();
+  await PogoRepository.init();
+  await GoogleDriveRepository.init();
 
   FlutterError.onError = (details) {
     FlutterError.presentError(details);

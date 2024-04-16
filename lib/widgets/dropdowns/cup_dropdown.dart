@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../pogo_objects/cup.dart';
 import '../../modules/ui/sizing.dart';
 import '../../modules/ui/pogo_colors.dart';
-import '../../modules/data/pogo_data.dart';
+import '../../modules/data/pogo_repository.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -34,7 +34,8 @@ class CupDropdown extends StatefulWidget {
 class _CupDropdownState extends State<CupDropdown>
     with AutomaticKeepAliveClientMixin {
   // List of dropdown menu items
-  late final cupOptions = PogoData.getCupsSync().map<DropdownMenuItem<String>>(
+  late final cupOptions =
+      PogoRepository.getCupsSync().map<DropdownMenuItem<String>>(
     (Cup cup) {
       return DropdownMenuItem(
         value: cup.cupId,

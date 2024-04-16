@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // Local Imports
 import '../../pogo_objects/pokemon_team.dart';
 import '../../pogo_objects/tag.dart';
-import '../../modules/data/pogo_data.dart';
+import '../../modules/data/pogo_repository.dart';
 import '../../modules/ui/sizing.dart';
 import '../tag_edit.dart';
 import '../../widgets/nodes/team_node.dart';
@@ -53,7 +53,7 @@ class _TagTeamState extends State<TagTeam> {
 
   @override
   Widget build(BuildContext context) {
-    final tags = PogoData.getTagsSync();
+    final tags = PogoRepository.getTagsSync();
 
     return Align(
       alignment: Alignment.bottomCenter,

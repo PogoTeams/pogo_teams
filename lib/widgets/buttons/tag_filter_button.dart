@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // Local Imports
 import '../../pogo_objects/tag.dart';
 import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_data.dart';
+import '../../modules/data/pogo_repository.dart';
 import '../tag_dot.dart';
 
 /*
@@ -46,7 +46,7 @@ class TagFilterButton extends StatelessWidget {
       child: PopupMenuButton<Tag?>(
         onSelected: onTagChanged,
         itemBuilder: (context) {
-          return PogoData.getTagsSync().map<PopupMenuItem<Tag?>>((tag) {
+          return PogoRepository.getTagsSync().map<PopupMenuItem<Tag?>>((tag) {
             return PopupMenuItem<Tag?>(
               value: tag,
               child: Row(

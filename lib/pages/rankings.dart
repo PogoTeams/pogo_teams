@@ -11,7 +11,7 @@ import '../widgets/pokemon_list.dart';
 import '../widgets/pogo_text_field.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
 import '../widgets/buttons/rankings_category_button.dart';
-import '../modules/data/pogo_data.dart';
+import '../modules/data/pogo_repository.dart';
 import '../enums/rankings_categories.dart';
 
 /*
@@ -45,7 +45,7 @@ class _RankingsState extends State<Rankings> {
   void _onCupChanged(String? newCupId) async {
     if (newCupId == null) return;
 
-    cup = PogoData.getCupById(newCupId);
+    cup = PogoRepository.getCupById(newCupId);
 
     setState(() {
       _filterCategory(_selectedCategory);
@@ -122,7 +122,7 @@ class _RankingsState extends State<Rankings> {
   void initState() {
     super.initState();
 
-    cup = PogoData.getCupsSync().first;
+    cup = PogoRepository.getCupsSync().first;
     _filterCategory(_selectedCategory);
 
     // Start listening to changes.

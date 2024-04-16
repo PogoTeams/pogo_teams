@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'rankings.dart';
 import 'battle_logs.dart';
 import 'teams/teams.dart';
-import 'drive_backup.dart';
+import 'drive_backups.dart';
 import 'settings.dart';
 import 'tags.dart';
 import '../modules/ui/sizing.dart';
@@ -99,7 +99,7 @@ extension PogoPagesExt on PogoPages {
       case PogoPages.sync:
         return const Rankings();
       case PogoPages.driveBackup:
-        return const DriveBackup();
+        return const DriveBackups();
       case PogoPages.settings:
         return const Settings();
     }

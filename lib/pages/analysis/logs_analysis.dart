@@ -7,7 +7,7 @@ import '../../widgets/pokemon_list.dart';
 import '../../pogo_objects/pokemon.dart';
 import '../../pogo_objects/pokemon_team.dart';
 import '../../pogo_objects/pokemon_typing.dart';
-import '../../modules/data/pogo_data.dart';
+import '../../modules/data/pogo_repository.dart';
 import '../../modules/ui/sizing.dart';
 import '../../tools/pair.dart';
 import '../../enums/rankings_categories.dart';
@@ -69,7 +69,7 @@ class LogsAnalysis extends StatelessWidget {
   ) async {
     final counterTypes = defenseThreats.map((typeData) => typeData.a).toList();
 
-    List<CupPokemon> counters = await PogoData.getCupPokemon(
+    List<CupPokemon> counters = await PogoRepository.getCupPokemon(
       team.getCup(),
       counterTypes,
       RankingsCategories.overall,

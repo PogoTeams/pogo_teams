@@ -11,7 +11,7 @@ import '../../pogo_objects/pokemon_team.dart';
 import '../../pogo_objects/pokemon_typing.dart';
 import '../../modules/data/pokemon_types.dart';
 import '../../tools/pair.dart';
-import '../../modules/data/pogo_data.dart';
+import '../../modules/data/pogo_repository.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -197,7 +197,7 @@ class _AnalysisState extends State<Analysis> {
 
   @override
   Widget build(BuildContext context) {
-    _team = PogoData.getUserTeamSync(widget.team.id);
+    _team = PogoRepository.getUserTeamSync(widget.team.id);
     List<String> includedTypesKeys = _team.getCup().includedTypeKeys();
 
     // Analysis will be on all logged opponent teams

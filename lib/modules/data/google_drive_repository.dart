@@ -1,6 +1,5 @@
 // Dart
 import 'dart:async';
-import 'dart:convert';
 
 // Packages
 import 'package:googleapis/drive/v3.dart' as drive_api;
@@ -10,25 +9,51 @@ import 'package:hive/hive.dart';
 
 // Local Imports
 import 'globals.dart';
-import 'pogo_repository.dart';
 
-class UserData {
-  static late final Box localUserSettings;
+class GoogleDriveRepository {
+  static late final Box _cache;
 
   static List<drive_api.File> backupFiles = [];
 
   static GoogleSignInAccount? account;
   static bool get isSignedIn => account != null;
 
-  static Future<drive_api.DriveApi> getDrive() async {
-    return drive_api.DriveApi(GoogleAuthClient(await account!.authHeaders));
+  static drive_api.File? _linkedBackupFile;
+  static drive_api.File? get linkedBackupFile {
+    return _linkedBackupFile;
   }
 
-  static drive_api.File? selectedBackupFile;
+  static set linkedBackupFile(drive_api.File? value) {
+    _linkedBackupFile = value;
+    putLinkedBackupFile();
+  }
+
   static String? backupFolderId;
 
   static Future<void> init() async {
-    localUserSettings = await Hive.openBox('localUserSettings');
+    _cache = await Hive.openBox('googleDriveRepositoryCache');
+  }
+
+  static Future<void> tryLoadLinkedBackupFile() async {
+    if (!isSignedIn || backupFiles.isEmpty) return;
+
+    String? id = await _cache.get('${account?.id}_linked_backup_file_id');
+
+    if (id != null) {
+      _linkedBackupFile = backupFiles.firstWhere((file) => file.id == id,
+          orElse: () => backupFiles.first);
+    }
+  }
+
+  static Future<void> putLinkedBackupFile() async {
+    if (!isSignedIn) return;
+
+    await _cache.put(
+        '${account?.id}_linked_backup_file_id', _linkedBackupFile?.id);
+  }
+
+  static Future<drive_api.DriveApi> getDrive() async {
+    return drive_api.DriveApi(GoogleAuthClient(await account!.authHeaders));
   }
 
   static Future<bool> trySignInSilently() async {
@@ -50,18 +75,8 @@ class UserData {
   static Future<void> signOut() async {
     account = null;
     backupFiles.clear();
-    selectedBackupFile = null;
+    _linkedBackupFile = null;
     backupFolderId = null;
-  }
-
-  static Future<drive_api.Media?> getBackup(drive_api.File file) async {
-    if (!isSignedIn) return null;
-
-    final drive = await getDrive();
-    return await drive.files.get(
-      file.id!,
-      downloadOptions: drive_api.DownloadOptions.fullMedia,
-    ) as drive_api.Media?;
   }
 
   static Future<bool> tryFindDriveFolder() async {
@@ -72,6 +87,7 @@ class UserData {
     ))
         .files;
 
+    // TODO: let the user choose a folder from their drive
     if (files != null && files.isNotEmpty) {
       backupFolderId = files.first.id;
     }
@@ -97,20 +113,43 @@ class UserData {
     }
   }
 
-  static Future<void> createBackup(String filename) async {
-    await UserData.loadOrCreateBackupFolder();
-    if (UserData.backupFolderId == null) return;
+  static Future<void> loadBackups() async {
+    if (backupFolderId != null || await tryFindDriveFolder()) {
+      final drive = await getDrive();
+      backupFiles = (await drive.files.list(
+                  q: '\'$backupFolderId\' in parents',
+                  $fields: 'files(id,name,createdTime)',
+                  orderBy: 'createdTime'))
+              .files ??
+          [];
+
+      await tryLoadLinkedBackupFile();
+    }
+  }
+
+  static Future<drive_api.Media?> getBackup(String id) async {
+    if (!isSignedIn) return null;
+
+    final drive = await getDrive();
+    return await drive.files.get(
+      id,
+      downloadOptions: drive_api.DownloadOptions.fullMedia,
+    ) as drive_api.Media?;
+  }
+
+  static Future<void> createBackup(
+    String filename,
+    String backupJsonEncoded,
+  ) async {
+    await GoogleDriveRepository.loadOrCreateBackupFolder();
+    if (GoogleDriveRepository.backupFolderId == null) return;
 
     drive_api.File writeFile = drive_api.File()
       ..createdTime = DateTime.now()
       ..name = '$filename.json';
-    writeFile.parents = [UserData.backupFolderId!];
+    writeFile.parents = [GoogleDriveRepository.backupFolderId!];
 
-    final Map<String, dynamic> userExportJson =
-        await PogoRepository.exportUserDataToJson();
-    final String userExportJsonEncoded = jsonEncode(userExportJson);
-
-    final stream = Future.value(userExportJsonEncoded.codeUnits)
+    final stream = Future.value(backupJsonEncoded.codeUnits)
         .asStream()
         .asBroadcastStream();
 
@@ -119,29 +158,15 @@ class UserData {
       writeFile,
       uploadMedia: drive_api.Media(
         stream,
-        userExportJsonEncoded.length,
+        backupJsonEncoded.length,
       ),
     );
   }
 
-  static Future<void> deleteFile(drive_api.File file) async {
+  static Future<void> deleteBackup(String id) async {
     final drive = await getDrive();
-    await drive.files.delete(file.id!);
-    selectedBackupFile = null;
-  }
-
-  static Future<void> loadBackups() async {
-    if (backupFolderId != null || await tryFindDriveFolder()) {
-      selectedBackupFile = null;
-
-      final drive = await getDrive();
-      backupFiles = (await drive.files.list(
-                  q: '\'$backupFolderId\' in parents',
-                  $fields: 'files(id,name,createdTime)',
-                  orderBy: 'createdTime'))
-              .files ??
-          [];
-    }
+    await drive.files.delete(id);
+    linkedBackupFile = null;
   }
 }
 

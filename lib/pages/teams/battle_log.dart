@@ -11,7 +11,7 @@ import '../../pogo_objects/pokemon_team.dart';
 import '../../../widgets/nodes/team_node.dart';
 import '../../../widgets/buttons/gradient_button.dart';
 import '../../../widgets/nodes/win_loss_node.dart';
-import '../../modules/data/pogo_data.dart';
+import '../../modules/data/pogo_repository.dart';
 import '../../modules/ui/sizing.dart';
 
 /*
@@ -324,7 +324,7 @@ class _BattleLogState extends State<BattleLog> {
   // Remove the team at specified index
   void _onClearTeam(int teamIndex) {
     setState(() {
-      PogoData.deleteOpponentPokemonTeamSync(
+      PogoRepository.deleteOpponentPokemonTeamSync(
           _team.getOpponents().elementAt(teamIndex).id);
     });
   }
@@ -371,7 +371,7 @@ class _BattleLogState extends State<BattleLog> {
       ..dateCreated = DateTime.now().toUtc()
       ..cup.value = _team.getCup()
       ..tag.value = _team.getTag();
-    final Id opponentId = PogoData.updatePokemonTeamSync(opponent);
+    final Id opponentId = PogoRepository.updatePokemonTeamSync(opponent);
 
     opponent = await Navigator.push(
       context,
@@ -387,9 +387,9 @@ class _BattleLogState extends State<BattleLog> {
     setState(() {
       if (opponent != null) {
         _team.opponents.add(opponent);
-        PogoData.updatePokemonTeamSync(_team);
+        PogoRepository.updatePokemonTeamSync(_team);
       } else {
-        PogoData.deleteOpponentPokemonTeamSync(opponentId);
+        PogoRepository.deleteOpponentPokemonTeamSync(opponentId);
       }
     });
   }
@@ -416,7 +416,7 @@ class _BattleLogState extends State<BattleLog> {
     setState(() {
       final opponent = _team.getOpponents().elementAt(teamIndex);
       opponent.toggleLock();
-      PogoData.updatePokemonTeamSync(opponent);
+      PogoRepository.updatePokemonTeamSync(opponent);
     });
   }
 
@@ -435,7 +435,7 @@ class _BattleLogState extends State<BattleLog> {
 
   @override
   Widget build(BuildContext context) {
-    _team = PogoData.getUserTeamSync(widget.team.id);
+    _team = PogoRepository.getUserTeamSync(widget.team.id);
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildScaffoldBody(),

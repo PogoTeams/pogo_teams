@@ -28,7 +28,7 @@ All Isar database interaction is managed by this module.
 -------------------------------------------------------------------------------
 */
 
-class PogoData {
+class PogoRepository {
   static late final Isar pogoIsar;
 
   static Map<String, dynamic>? _rankingsJsonLookup;

@@ -2,7 +2,7 @@
 import 'dart:io';
 
 // Local
-import '../modules/data/pogo_data.dart';
+import '../modules/data/pogo_repository.dart';
 import '../tools/json_tools.dart';
 
 /*
@@ -59,13 +59,13 @@ void buildSnapshotReleasedIdsList() async {
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  await PogoData.init();
-  await PogoData.clear();
-  await PogoData.rebuildFromJson(snapshot);
+  await PogoRepository.init();
+  await PogoRepository.clear();
+  await PogoRepository.rebuildFromJson(snapshot);
 
   List<String> snapshotReleasedIds = [];
 
-  for (var pokemon in PogoData.getPokemonSync()) {
+  for (var pokemon in PogoRepository.getPokemonSync()) {
     if (pokemon.released) {
       snapshotReleasedIds.add(pokemon.pokemonId);
     }

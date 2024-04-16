@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_data.dart';
+import '../../modules/data/pogo_repository.dart';
 import '../../pogo_objects/pokemon.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../widgets/buttons/pokemon_action_button.dart';
@@ -71,7 +71,7 @@ class _TeamSwapState extends State<TeamSwap> {
   }
 
   void _saveTeam() {
-    PogoData.updatePokemonTeamSync(
+    PogoRepository.updatePokemonTeamSync(
       widget.team,
       newPokemonTeam: _pokemonTeam,
     );

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_data.dart';
+import '../../modules/data/pogo_repository.dart';
 import '../../pogo_objects/pokemon.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../widgets/buttons/pokemon_action_button.dart';
@@ -91,7 +91,7 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
 
   @override
   Widget build(BuildContext context) {
-    _team = PogoData.getUserTeamSync(_team.id);
+    _team = PogoRepository.getUserTeamSync(_team.id);
 
     return Scaffold(
       body: SafeArea(

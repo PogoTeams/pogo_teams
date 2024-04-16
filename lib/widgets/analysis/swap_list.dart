@@ -7,7 +7,7 @@ import '../../pogo_objects/pokemon.dart';
 import '../../pogo_objects/pokemon_typing.dart';
 import '../nodes/pokemon_node.dart';
 import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_data.dart';
+import '../../modules/data/pogo_repository.dart';
 import '../buttons/pokemon_action_button.dart';
 import '../../enums/rankings_categories.dart';
 
@@ -82,7 +82,7 @@ class SwapList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: PogoData.getCupPokemon(
+        future: PogoRepository.getCupPokemon(
           team.getCup(),
           types,
           RankingsCategories.overall,

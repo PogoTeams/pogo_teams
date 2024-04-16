@@ -7,7 +7,7 @@ import '../../pogo_objects/pokemon.dart';
 import '../../pogo_objects/cup.dart';
 import '../nodes/pokemon_node.dart';
 import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_data.dart';
+import '../../modules/data/pogo_repository.dart';
 import '../../enums/rankings_categories.dart';
 
 /*
@@ -29,7 +29,7 @@ class TypeFilteredPokemonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: PogoData.getCupPokemon(
+        future: PogoRepository.getCupPokemon(
           cup,
           types,
           RankingsCategories.overall,

@@ -8,7 +8,7 @@ import '../pogo_objects/pokemon_base.dart';
 import '../pogo_objects/battle_pokemon.dart';
 import '../pogo_objects/cup.dart';
 import '../tools/json_tools.dart';
-import '../modules/data/pogo_data.dart';
+import '../modules/data/pogo_repository.dart';
 import '../modules/data/pogo_debugging.dart';
 import '../modules/data/cups.dart';
 
@@ -22,21 +22,22 @@ Future<void> generatePokemonRankings() async {
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  await PogoData.init();
-  await PogoData.clear();
-  await PogoData.rebuildFromJson(snapshot);
+  await PogoRepository.init();
+  await PogoRepository.clear();
+  await PogoRepository.rebuildFromJson(snapshot);
 
   Stopwatch stopwatch = Stopwatch();
   stopwatch.start();
 
-  for (Cup cup in PogoData.getCupsSync()) {
+  for (Cup cup in PogoRepository.getCupsSync()) {
     int bestOverallRating = 0;
     int bestLeadRating = 0;
     int bestSwitchRating = 0;
     int bestCloserRating = 0;
 
     List<RankingData> rankings = [];
-    List<PokemonBase> cupPokemonList = PogoData.getCupFilteredPokemonList(cup);
+    List<PokemonBase> cupPokemonList =
+        PogoRepository.getCupFilteredPokemonList(cup);
 
     for (PokemonBase pokemon in cupPokemonList) {
       BattlePokemon battlePokemon = BattlePokemon.fromPokemon(pokemon);
@@ -105,9 +106,9 @@ void generatePokemonRankingsTest(
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  await PogoData.init();
-  await PogoData.clear();
-  await PogoData.rebuildFromJson(snapshot);
+  await PogoRepository.init();
+  await PogoRepository.clear();
+  await PogoRepository.rebuildFromJson(snapshot);
 
   PokemonRanker.rankTesting(selfId, opponentId, cp);
 }

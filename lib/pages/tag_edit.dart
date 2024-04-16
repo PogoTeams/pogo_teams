@@ -9,7 +9,7 @@ import '../modules/ui/sizing.dart';
 import '../pogo_objects/tag.dart';
 import '../widgets/buttons/exit_button.dart';
 import '../widgets/dialogs.dart';
-import '../modules/data/pogo_data.dart';
+import '../modules/data/pogo_repository.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -64,14 +64,14 @@ class _TagEditState extends State<TagEdit> {
   void _onSave() async {
     // Create tag
     if (widget.create) {
-      if (PogoData.tagNameExists(_textController.text)) {
+      if (PogoRepository.tagNameExists(_textController.text)) {
         displayMessageOK(
           context,
           'Invalid Tag Name',
           'The tag name "${_textController.text}" already exists.',
         );
       } else {
-        PogoData.updateTagSync(
+        PogoRepository.updateTagSync(
           Tag(
             name: _textController.text,
             uiColor: _selectedColor.value.toRadixString(10),
@@ -85,14 +85,14 @@ class _TagEditState extends State<TagEdit> {
     // Update tag
     else {
       if (widget.tag!.name != _textController.text &&
-          PogoData.tagNameExists(_textController.text)) {
+          PogoRepository.tagNameExists(_textController.text)) {
         displayMessageOK(
           context,
           'Invalid Tag Name',
           'The tag name "${_textController.text}" already exists.',
         );
       } else {
-        PogoData.updateTagSync(
+        PogoRepository.updateTagSync(
           Tag(
             name: _textController.text,
             uiColor: _selectedColor.value.toRadixString(10),

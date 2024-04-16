@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../widgets/dialogs.dart';
-import '../modules/data/pogo_data.dart';
+import '../modules/data/pogo_repository.dart';
 import '../modules/ui/sizing.dart';
 import '../widgets/buttons/gradient_button.dart';
 
@@ -56,7 +56,7 @@ class _SettingsState extends State<Settings> {
       'Clear All',
       'All local data will be removed from this device.',
     )) {
-      await PogoData.clearUserData();
+      await PogoRepository.clearUserData();
 
       processFinished(
         context,

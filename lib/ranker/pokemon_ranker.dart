@@ -6,7 +6,7 @@ import '../pogo_objects/battle_pokemon.dart';
 import '../pogo_objects/cup.dart';
 import '../battle/pokemon_battler.dart';
 import '../battle/battle_result.dart';
-import '../modules/data/pogo_data.dart';
+import '../modules/data/pogo_repository.dart';
 import '../modules/data/cups.dart';
 import '../modules/data/pogo_debugging.dart';
 
@@ -140,9 +140,9 @@ class PokemonRanker {
     int cp,
   ) {
     BattlePokemon self =
-        BattlePokemon.fromPokemon(PogoData.getPokemonById(selfId));
+        BattlePokemon.fromPokemon(PogoRepository.getPokemonById(selfId));
     BattlePokemon opponent =
-        BattlePokemon.fromPokemon(PogoData.getPokemonById(opponentId));
+        BattlePokemon.fromPokemon(PogoRepository.getPokemonById(opponentId));
 
     self.initializeStats(cp);
     opponent.initializeStats(cp);

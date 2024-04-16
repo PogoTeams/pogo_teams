@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../pogo_objects/pokemon_team.dart';
 import '../pogo_objects/tag.dart';
 import '../modules/ui/sizing.dart';
-import '../modules/data/pogo_data.dart';
+import '../modules/data/pogo_repository.dart';
 import '../widgets/tag_dot.dart';
 import '../widgets/buttons/tag_filter_button.dart';
 import '../widgets/nodes/team_node.dart';
@@ -109,7 +109,7 @@ class _RankingsState extends State<BattleLogs> {
   @override
   Widget build(BuildContext context) {
     final List<OpponentPokemonTeam> opponents =
-        PogoData.getOpponentTeamsSync(tag: _selectedTag);
+        PogoRepository.getOpponentTeamsSync(tag: _selectedTag);
 
     double winRate = 0.0;
     if (opponents.isNotEmpty) {

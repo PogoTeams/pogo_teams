@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // Local Imports
 import 'team_builder.dart';
 import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_data.dart';
+import '../../modules/data/pogo_repository.dart';
 import '../../widgets/nodes/pokemon_node.dart';
 import '../../widgets/dropdowns/cup_dropdown.dart';
 import '../../widgets/dropdowns/team_size_dropdown.dart';
@@ -43,7 +43,7 @@ class _TeamEditState extends State<TeamEdit> {
 
     setState(() {
       _builderTeam.setCupById(newCup);
-      PogoData.updatePokemonTeamSync(_builderTeam);
+      PogoRepository.updatePokemonTeamSync(_builderTeam);
     });
   }
 
@@ -52,20 +52,20 @@ class _TeamEditState extends State<TeamEdit> {
 
     setState(() {
       _builderTeam.teamSize = newSize;
-      PogoData.updatePokemonTeamSync(_builderTeam);
+      PogoRepository.updatePokemonTeamSync(_builderTeam);
     });
   }
 
   void _onPokemonCleared(int index) {
     setState(() {
       _builderTeam.removePokemon(index);
-      PogoData.updatePokemonTeamSync(_builderTeam);
+      PogoRepository.updatePokemonTeamSync(_builderTeam);
     });
   }
 
   void _onPokemonMoveChanged() {
     setState(() {
-      PogoData.updatePokemonTeamSync(_builderTeam);
+      PogoRepository.updatePokemonTeamSync(_builderTeam);
     });
   }
 
@@ -167,7 +167,7 @@ class _TeamEditState extends State<TeamEdit> {
 
   @override
   Widget build(BuildContext context) {
-    _builderTeam = PogoData.getUserTeamSync(_builderTeam.id);
+    _builderTeam = PogoRepository.getUserTeamSync(_builderTeam.id);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
