@@ -240,6 +240,14 @@ class PokemonBase {
     return move.name;
   }
 
+  String getFormattedForm() {
+    List<String> split = form.split('_');
+    if (split.isEmpty || split.last.length < 2) return '';
+
+    String last = split.last;
+    return '${last[0].toUpperCase()}${last.substring(1)}';
+  }
+
   bool isEliteMove(Move move) {
     if (move is FastMove) {
       return eliteFastMoveIds?.contains(move.moveId) ?? false;

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'rankings.dart';
 import 'battle_logs.dart';
 import 'teams/teams.dart';
-import 'drive_backups.dart';
 import 'settings.dart';
 import 'tags.dart';
 import '../modules/ui/sizing.dart';
@@ -22,7 +21,6 @@ enum PogoPages {
   battleLogs,
   rankings,
   sync,
-  driveBackup,
   settings,
 }
 
@@ -39,8 +37,6 @@ extension PogoPagesExt on PogoPages {
         return 'Rankings';
       case PogoPages.sync:
         return 'Sync Pogo Data';
-      case PogoPages.driveBackup:
-        return 'Google Drive Backup';
       case PogoPages.settings:
         return 'Settings';
     }
@@ -73,11 +69,6 @@ extension PogoPagesExt on PogoPages {
           Icons.sync,
           size: Sizing.icon3,
         );
-      case PogoPages.driveBackup:
-        return Icon(
-          Icons.drive_file_move,
-          size: Sizing.icon3,
-        );
       case PogoPages.settings:
         return Icon(
           Icons.settings,
@@ -98,8 +89,6 @@ extension PogoPagesExt on PogoPages {
         return const Rankings();
       case PogoPages.sync:
         return const Rankings();
-      case PogoPages.driveBackup:
-        return const DriveBackups();
       case PogoPages.settings:
         return const Settings();
     }

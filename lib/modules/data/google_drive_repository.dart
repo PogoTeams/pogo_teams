@@ -32,6 +32,7 @@ class GoogleDriveRepository {
 
   static Future<void> init() async {
     _cache = await Hive.openBox('googleDriveRepositoryCache');
+    await trySignInSilently();
   }
 
   static Future<void> tryLoadLinkedBackupFile() async {
@@ -61,6 +62,8 @@ class GoogleDriveRepository {
         GoogleSignIn.standard(scopes: [drive_api.DriveApi.driveFileScope]);
     account = await googleSignIn.signInSilently();
 
+    await loadBackups();
+
     return isSignedIn;
   }
 
@@ -68,6 +71,8 @@ class GoogleDriveRepository {
     final googleSignIn =
         GoogleSignIn.standard(scopes: [drive_api.DriveApi.driveFileScope]);
     account = await googleSignIn.signIn();
+
+    await loadBackups();
 
     return isSignedIn;
   }
@@ -118,8 +123,8 @@ class GoogleDriveRepository {
       final drive = await getDrive();
       backupFiles = (await drive.files.list(
                   q: '\'$backupFolderId\' in parents',
-                  $fields: 'files(id,name,createdTime)',
-                  orderBy: 'createdTime'))
+                  $fields: 'files(id,name,createdTime,modifiedTime)',
+                  orderBy: 'modifiedTime'))
               .files ??
           [];
 
@@ -144,8 +149,10 @@ class GoogleDriveRepository {
     await GoogleDriveRepository.loadOrCreateBackupFolder();
     if (GoogleDriveRepository.backupFolderId == null) return;
 
+    final now = DateTime.now();
     drive_api.File writeFile = drive_api.File()
-      ..createdTime = DateTime.now()
+      ..createdTime = now
+      ..modifiedTime = now
       ..name = '$filename.json';
     writeFile.parents = [GoogleDriveRepository.backupFolderId!];
 
@@ -161,6 +168,30 @@ class GoogleDriveRepository {
         backupJsonEncoded.length,
       ),
     );
+  }
+
+  static Future updateLinkedBackup(
+    String backupJsonEncoded,
+  ) async {
+    if (!isSignedIn || linkedBackupFile?.id == null) return;
+
+    final stream = Future.value(backupJsonEncoded.codeUnits)
+        .asStream()
+        .asBroadcastStream();
+
+    drive_api.File writeFile = drive_api.File();
+
+    final drive = await getDrive();
+    await drive.files.update(
+      writeFile,
+      linkedBackupFile!.id!,
+      uploadMedia: drive_api.Media(
+        stream,
+        backupJsonEncoded.length,
+      ),
+    );
+
+    await loadBackups();
   }
 
   static Future<void> deleteBackup(String id) async {

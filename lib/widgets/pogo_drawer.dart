@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:pogo_teams/modules/data/google_drive_repository.dart';
 
 // Packages
 import 'package:url_launcher/url_launcher.dart';
@@ -8,6 +9,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../pages/pogo_pages.dart';
 import '../modules/data/globals.dart';
 import '../modules/ui/sizing.dart';
+import '../widgets/buttons/gradient_button.dart';
+import '../widgets/drive_backup.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -41,7 +44,7 @@ class PogoDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawerHeader() {
+  Widget _buildDrawerHeader(BuildContext context) {
     return SizedBox(
       height: Sizing.blockSizeVertical * 30.0,
       child: DrawerHeader(
@@ -67,7 +70,8 @@ class PogoDrawer extends StatelessWidget {
               child: Column(
                 children: [
                   // Pogo Teams Logo
-                  _buildDrawerHeader(),
+                  //_buildDrawerHeader(context),
+                  const DriveBackup(),
 
                   // Teams
                   ListTile(
@@ -178,31 +182,6 @@ class PogoDrawer extends StatelessWidget {
               ),
               onTap: () {
                 onNavSelected(PogoPages.sync);
-                Navigator.pop(context);
-              },
-            ),
-
-            // Google Drive
-            ListTile(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    width: Sizing.blockSizeHorizontal * 2.0,
-                  ),
-                  Text(
-                    PogoPages.driveBackup.displayName,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  SizedBox(
-                    width: Sizing.blockSizeHorizontal * 3.0,
-                  ),
-                  PogoPages.driveBackup.icon,
-                ],
-              ),
-              onTap: () async {
-                onNavSelected(PogoPages.driveBackup);
                 Navigator.pop(context);
               },
             ),

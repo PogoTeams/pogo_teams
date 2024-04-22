@@ -16,6 +16,7 @@ import '../modules/data/pogo_repository.dart';
 import '../modules/data/google_drive_repository.dart';
 import '../modules/ui/sizing.dart';
 import '../widgets/buttons/gradient_button.dart';
+import '../tools/extensions.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -33,80 +34,19 @@ class DriveBackups extends StatefulWidget {
 
 class _DriveBackupsState extends State<DriveBackups> {
   final TextEditingController _textController = TextEditingController();
-  bool _refreshBackupsList = false;
+  bool _refreshBackupsList = true;
   Function()? _beforeLoadBackups;
-
-  Future<void> _trySignInSilently() async {
-    if (await GoogleDriveRepository.trySignInSilently()) {
-      setState(() {
-        _refreshBackupsList = true;
-      });
-    }
-  }
-
-  Future<void> _signIn() async {
-    if (await GoogleDriveRepository.signIn()) {
-      setState(() {
-        _refreshBackupsList = true;
-      });
-    }
-  }
-
-  Future<void> _signOut() async {
-    await GoogleDriveRepository.signOut();
-    setState(() {
-      _refreshBackupsList = false;
-    });
-  }
 
   Future<void> _onRestoreBackup() async {
     if (GoogleDriveRepository.linkedBackupFile == null ||
         GoogleDriveRepository.linkedBackupFile?.id == null) return;
 
-    bool restore = false;
-    bool clearAndRestore = false;
-
-    final options = <Widget>[
-      TextButton(
-        style: TextButton.styleFrom(
-          textStyle: Theme.of(context).textTheme.titleLarge,
-        ),
-        child: Text(
-          'Clear All Data & Restore Backup',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        onPressed: () {
-          clearAndRestore = true;
-          Navigator.of(context).pop();
-        },
-      ),
-      TextButton(
-        style: TextButton.styleFrom(
-          textStyle: Theme.of(context).textTheme.titleLarge,
-        ),
-        child: Text(
-          'Restore Backup',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        onPressed: () {
-          restore = true;
-          Navigator.of(context).pop();
-        },
-      ),
-    ];
-
-    await showOptions(
-        context,
-        'Download Backup',
-        'All data will be imported from ${GoogleDriveRepository.linkedBackupFile?.name ?? 'this file'}.',
-        options);
-
-    if (restore || clearAndRestore) {
+    if (await getConfirmation(context, 'Restore from Backup',
+        'All data will be cleared and restored from ${GoogleDriveRepository.linkedBackupFile!.nameWithoutExtension ?? 'this file'}.')) {
       setState(() {
         _refreshBackupsList = true;
         _beforeLoadBackups = () => _restoreBackup(
               GoogleDriveRepository.linkedBackupFile!,
-              clearAndRestore,
             );
       });
     }
@@ -211,32 +151,24 @@ class _DriveBackupsState extends State<DriveBackups> {
 
   Widget _buildScaffoldBody() {
     if (!GoogleDriveRepository.isSignedIn) return Container();
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              GoogleDriveRepository.account!.email,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontStyle: FontStyle.italic,
-                  ),
-              overflow: TextOverflow.ellipsis,
-            ),
-            IconButton(
-              onPressed: _signOut,
-              icon: Icon(
-                Icons.logout,
-                size: Sizing.blockSizeHorizontal * 7.0,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: Sizing.blockSizeVertical * 3.0,
-        ),
-        _buildGoogleDriveBackupOptions(),
-      ],
+    return Expanded(
+      child: Column(
+        children: [
+          Text(
+            GoogleDriveRepository.account!.email,
+            style: Theme.of(context).textTheme.titleLarge,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(
+            height: Sizing.blockSizeVertical * 3.0,
+          ),
+          _buildFloatingActionButtons(),
+          SizedBox(
+            height: Sizing.blockSizeVertical * 3.0,
+          ),
+          _buildGoogleDriveBackupOptions(),
+        ],
+      ),
     );
   }
 
@@ -246,14 +178,6 @@ class _DriveBackupsState extends State<DriveBackups> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Backups',
-            style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-            height: Sizing.blockSizeVertical * 3.0,
-          ),
           _refreshBackupsList
               ? FutureBuilder(
                   future: _loadBackupFilesFromDrive(),
@@ -262,9 +186,12 @@ class _DriveBackupsState extends State<DriveBackups> {
                       return _buildBackupFilesListView();
                     }
 
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+                    return const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.cyan),
+                        ),
                       ),
                     );
                   },
@@ -306,8 +233,8 @@ class _DriveBackupsState extends State<DriveBackups> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  GoogleDriveRepository.backupFiles[index].name
-                          ?.replaceAll('.json', '') ??
+                  GoogleDriveRepository
+                          .backupFiles[index].nameWithoutExtension ??
                       '',
                   style: Theme.of(context).textTheme.titleLarge,
                   overflow: TextOverflow.ellipsis,
@@ -323,10 +250,11 @@ class _DriveBackupsState extends State<DriveBackups> {
               ],
             ),
             subtitle: Text(
-              GoogleDriveRepository.backupFiles[index].createdTime == null
+              GoogleDriveRepository.backupFiles[index].modifiedTime == null
                   ? ''
-                  : DateFormat.yMMMMd().format(
-                      GoogleDriveRepository.backupFiles[index].createdTime!),
+                  : DateFormat.yMMMMd().add_jm().format(GoogleDriveRepository
+                      .backupFiles[index].modifiedTime!
+                      .toLocal()),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontStyle: FontStyle.italic,
                   ),
@@ -368,14 +296,14 @@ class _DriveBackupsState extends State<DriveBackups> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Restore Backup',
+                  'Restore',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(
                   width: Sizing.blockSizeHorizontal * 5.0,
                 ),
                 Icon(
-                  Icons.download,
+                  Icons.settings_backup_restore_rounded,
                   size: Sizing.blockSizeHorizontal * 7.0,
                 ),
               ],
@@ -414,7 +342,7 @@ class _DriveBackupsState extends State<DriveBackups> {
       );
     }
     return GradientButton(
-      onPressed: _signIn,
+      onPressed: () {},
       width: Sizing.screenWidth * .85,
       height: Sizing.blockSizeVertical * 8.5,
       borderRadius: BorderRadius.circular(10),
@@ -437,7 +365,7 @@ class _DriveBackupsState extends State<DriveBackups> {
     );
   }
 
-  Future<void> _restoreBackup(drive_api.File file, bool clearAllData) async {
+  Future<void> _restoreBackup(drive_api.File file) async {
     if (file.id == null) return;
     final media = await GoogleDriveRepository.getBackup(file.id!);
     if (media != null) {
@@ -458,9 +386,7 @@ class _DriveBackupsState extends State<DriveBackups> {
                       'improper formatting');
                 }
 
-                if (clearAllData) {
-                  await PogoRepository.clearUserData();
-                }
+                await PogoRepository.clearUserData();
 
                 await PogoRepository.importUserDataFromJson(userDataJson);
                 String message;
@@ -468,7 +394,7 @@ class _DriveBackupsState extends State<DriveBackups> {
                   message = 'The backup was successfully restored.';
                 } else {
                   message = 'The backup file '
-                      '${file.name?.replaceFirst('.json', '') ?? ''} '
+                      '${file.nameWithoutExtension ?? ''} '
                       'was successfully completed.';
                 }
                 if (mounted) {
@@ -491,7 +417,6 @@ class _DriveBackupsState extends State<DriveBackups> {
   @override
   void initState() {
     super.initState();
-    _trySignInSilently();
   }
 
   @override
@@ -502,11 +427,29 @@ class _DriveBackupsState extends State<DriveBackups> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildScaffoldBody(),
-        _buildFloatingActionButtons(),
-      ],
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: Sizing.blockSizeVertical * 2.0,
+          ),
+          _buildScaffoldBody(),
+          MaterialButton(
+            padding: EdgeInsets.zero,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            onPressed: () => Navigator.pop(context),
+            height: Sizing.blockSizeVertical * 7.0,
+            child: Center(
+              child: Icon(
+                Icons.clear,
+                size: Sizing.icon2,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

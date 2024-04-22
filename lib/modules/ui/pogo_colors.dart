@@ -1,3 +1,6 @@
+// dart
+import 'dart:math';
+
 // Flutter
 import 'package:flutter/material.dart';
 
@@ -14,6 +17,26 @@ All color association is handled by the mappings that are implemented here.
 */
 
 class PogoColors {
+  static const Color green = Color.fromARGB(255, 6, 201, 32);
+  static const Color green2 = Color.fromARGB(255, 10, 187, 122);
+  static const Color red = Color.fromARGB(255, 231, 63, 61);
+  static const Color red2 = Color.fromARGB(255, 255, 135, 153);
+  static const Color inactiveGrey = Color.fromARGB(255, 132, 132, 132);
+  static const Color error = Color.fromARGB(255, 255, 174, 11);
+
+  static const List<Color> greenGradient = [
+    green,
+    green2,
+  ];
+
+  static const List<Color> redGradient = [
+    red,
+    red2,
+  ];
+
+  static Color getRandomColor() =>
+      Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
+
   static const Map<String, Color> _typeColors = {
     'normal': Color(0xFFA8A77A),
     'fire': Color(0xFFEE8130),
