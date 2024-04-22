@@ -121,18 +121,20 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
       limit: 50,
     );
 
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return PokemonCountersList(
-            team: _team,
-            pokemon: pokemon,
-            counters: counters,
-          );
-        },
-      ),
-    );
+    if (mounted) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return PokemonCountersList(
+              team: _team,
+              pokemon: pokemon,
+              counters: counters,
+            );
+          },
+        ),
+      );
+    }
 
     widget.onTeamChanged();
   }
@@ -179,20 +181,22 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
       physics: const NeverScrollableScrollPhysics(),
       children: List.generate(
         pokemonTeam.length,
-        (index) => Padding(
-          padding: EdgeInsets.only(
-            top: Sizing.blockSizeVertical * .5,
-            bottom: Sizing.blockSizeVertical * .5,
-          ),
-          child: PokemonNode.small(
-            pokemon: pokemonTeam[index],
-            onMoveChanged: () {
-              PogoRepository.updateUserPokemonSync(pokemonTeam[index]);
-              widget.onTeamChanged();
-            },
-            lead: ((pokemonTeam[index].teamIndex ?? -1) == 0),
-          ),
-        ),
+        (index) {
+          return Padding(
+            padding: EdgeInsets.only(
+              top: Sizing.blockSizeVertical * .5,
+              bottom: Sizing.blockSizeVertical * .5,
+            ),
+            child: PokemonNode.small(
+              pokemon: pokemonTeam[index],
+              onMoveChanged: () {
+                PogoRepository.updateUserPokemonSync(pokemonTeam[index]);
+                widget.onTeamChanged();
+              },
+              lead: ((pokemonTeam[index].teamIndex ?? -1) == 0),
+            ),
+          );
+        },
       ),
     );
   }
@@ -311,7 +315,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
           elevation: 0.0,
           expansionCallback: (int index, bool isExpanded) {
             setState(() {
-              _teamExpanded = !isExpanded;
+              _teamExpanded = isExpanded;
             });
           },
           children: [
