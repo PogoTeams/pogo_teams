@@ -26,7 +26,7 @@ class _SettingsState extends State<Settings> {
       children: [
         GradientButton(
           onPressed: _clearUserData,
-          width: Sizing.screenWidth * .85,
+          width: Sizing.scrnwidth * .85,
           height: Sizing.blockSizeVertical * 8.5,
           borderRadius: BorderRadius.circular(10),
           child: Row(

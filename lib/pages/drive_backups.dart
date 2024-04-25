@@ -284,7 +284,7 @@ class _DriveBackupsState extends State<DriveBackups> {
           // Import
           GradientButton(
             onPressed: _onRestoreBackup,
-            width: Sizing.screenWidth * .4,
+            width: Sizing.scrnwidth * .4,
             height: Sizing.blockSizeVertical * 8.5,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(50),
@@ -313,7 +313,7 @@ class _DriveBackupsState extends State<DriveBackups> {
           // Export
           GradientButton(
             onPressed: _onCreateBackup,
-            width: Sizing.screenWidth * .4,
+            width: Sizing.scrnwidth * .4,
             height: Sizing.blockSizeVertical * 8.5,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10),
@@ -343,7 +343,7 @@ class _DriveBackupsState extends State<DriveBackups> {
     }
     return GradientButton(
       onPressed: () {},
-      width: Sizing.screenWidth * .85,
+      width: Sizing.scrnwidth * .85,
       height: Sizing.blockSizeVertical * 8.5,
       borderRadius: BorderRadius.circular(10),
       child: Row(

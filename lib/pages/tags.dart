@@ -120,7 +120,7 @@ class _TagsState extends State<Tags> {
         body: _buildTagsListView(),
         floatingActionButton: GradientButton(
           onPressed: _onEditTag,
-          width: Sizing.screenWidth * .85,
+          width: Sizing.scrnwidth * .85,
           height: Sizing.blockSizeVertical * 8.5,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

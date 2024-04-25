@@ -76,7 +76,7 @@ class CoverageGraph extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(20),
             ),
-            width: Sizing.screenWidth * .84,
+            width: Sizing.scrnwidth * .84,
             height: Sizing.blockSizeVertical * .6,
           ),
         ),
@@ -130,9 +130,8 @@ class GraphRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               color: PogoColors.getPokemonTypeColor(typeData.a.typeId),
             ),
-            width: normalize(barLength / teamFactor, 0, 1) *
-                Sizing.screenWidth *
-                .8,
+            width:
+                normalize(barLength / teamFactor, 0, 1) * Sizing.scrnwidth * .8,
             height: Sizing.blockSizeVertical * 1.7,
           ),
         ),

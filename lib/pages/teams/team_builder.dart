@@ -118,7 +118,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
             (_team as OpponentPokemonTeam).battleOutcome = battleOutcome;
           });
         },
-        width: Sizing.screenWidth,
+        width: Sizing.scrnwidth,
       );
     }
 
@@ -129,7 +129,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
         CupDropdown(
           cup: _cup,
           onCupChanged: _onCupChanged,
-          width: Sizing.screenWidth * .65,
+          width: Sizing.scrnwidth * .65,
         ),
 
         // Dropdown to select team size
@@ -163,7 +163,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
         _saveTeam();
         Navigator.pop(context, _team);
       },
-      width: Sizing.screenWidth * .85,
+      width: Sizing.scrnwidth * .85,
       height: Sizing.blockSizeVertical * 8.5,
       child: Icon(
         Icons.clear,
@@ -282,7 +282,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                   // User input text field
                   PogoTextField(
                     controller: _searchController,
-                    width: Sizing.screenWidth * .8,
+                    width: Sizing.scrnwidth * .8,
                     onClear: () => setState(() {
                       _searchController.clear();
                     }),

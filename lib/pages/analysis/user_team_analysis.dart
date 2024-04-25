@@ -511,7 +511,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         PokemonActionButton(
-          width: Sizing.screenWidth * .4,
+          width: Sizing.scrnwidth * .4,
           pokemon: pokemon,
           label: 'Team Swap',
           icon: Icon(
@@ -522,7 +522,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
           onPressed: _onSwap,
         ),
         PokemonActionButton(
-          width: Sizing.screenWidth * .4,
+          width: Sizing.scrnwidth * .4,
           pokemon: pokemon,
           label: 'Counters',
           icon: Icon(

@@ -120,7 +120,7 @@ class _TeamEditState extends State<TeamEdit> {
         CupDropdown(
           cup: cup,
           onCupChanged: _onCupChanged,
-          width: Sizing.screenWidth * .7,
+          width: Sizing.scrnwidth * .7,
         ),
 
         // Dropdown to select team size

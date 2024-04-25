@@ -236,7 +236,7 @@ class _BattleLogState extends State<BattleLog> {
     if (_team.getOpponents().isEmpty) {
       return GradientButton(
         onPressed: _onAddTeam,
-        width: Sizing.screenWidth * .85,
+        width: Sizing.scrnwidth * .85,
         height: Sizing.blockSizeVertical * 8.5,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -263,7 +263,7 @@ class _BattleLogState extends State<BattleLog> {
         // Analyze button
         GradientButton(
           onPressed: _onAnalyzeLogs,
-          width: Sizing.screenWidth * .44,
+          width: Sizing.scrnwidth * .44,
           height: Sizing.blockSizeVertical * 8.5,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(50),
@@ -292,7 +292,7 @@ class _BattleLogState extends State<BattleLog> {
         // Log button
         GradientButton(
           onPressed: _onAddTeam,
-          width: Sizing.screenWidth * .44,
+          width: Sizing.scrnwidth * .44,
           height: Sizing.blockSizeVertical * 8.5,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),

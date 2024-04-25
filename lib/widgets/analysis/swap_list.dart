@@ -42,7 +42,7 @@ class SwapList extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           PokemonActionButton(
-            width: Sizing.screenWidth * .35,
+            width: Sizing.scrnwidth * .35,
             pokemon: pokemon,
             label: 'Add To Team',
             icon: Icon(
@@ -53,7 +53,7 @@ class SwapList extends StatelessWidget {
             onPressed: onAdd,
           ),
           PokemonActionButton(
-            width: Sizing.screenWidth * .35,
+            width: Sizing.scrnwidth * .35,
             pokemon: pokemon,
             label: 'Team Swap',
             icon: Icon(

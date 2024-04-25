@@ -6,11 +6,11 @@ import 'package:pogo_teams/modules/data/google_drive_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Local Imports
-import '../pages/pogo_pages.dart';
-import '../modules/data/globals.dart';
-import '../modules/ui/sizing.dart';
-import '../widgets/buttons/gradient_button.dart';
-import '../widgets/drive_backup.dart';
+import '../../pages/pogo_pages.dart';
+import '../../modules/data/globals.dart';
+import '../../modules/ui/sizing.dart';
+import '../buttons/gradient_button.dart';
+import '../drive_backup.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -23,9 +23,11 @@ class PogoDrawer extends StatelessWidget {
   const PogoDrawer({
     Key? key,
     required this.onNavSelected,
+    this.popOnNavSelected = true,
   }) : super(key: key);
 
   final Function(PogoPages) onNavSelected;
+  final bool popOnNavSelected;
 
   void _launchGitHubUrl() async => await launchUrl(Uri.https(
         'github.com',
@@ -90,7 +92,7 @@ class PogoDrawer extends StatelessWidget {
                     ),
                     onTap: () {
                       onNavSelected(PogoPages.teams);
-                      Navigator.pop(context);
+                      if (popOnNavSelected) Navigator.pop(context);
                     },
                   ),
 
@@ -112,7 +114,7 @@ class PogoDrawer extends StatelessWidget {
                     ),
                     onTap: () async {
                       onNavSelected(PogoPages.tags);
-                      Navigator.pop(context);
+                      if (popOnNavSelected) Navigator.pop(context);
                     },
                   ),
 
@@ -133,7 +135,7 @@ class PogoDrawer extends StatelessWidget {
                     ),
                     onTap: () {
                       onNavSelected(PogoPages.battleLogs);
-                      Navigator.pop(context);
+                      if (popOnNavSelected) Navigator.pop(context);
                     },
                   ),
 
@@ -154,7 +156,7 @@ class PogoDrawer extends StatelessWidget {
                     ),
                     onTap: () {
                       onNavSelected(PogoPages.rankings);
-                      Navigator.pop(context);
+                      if (popOnNavSelected) Navigator.pop(context);
                     },
                   ),
                 ],
@@ -182,7 +184,7 @@ class PogoDrawer extends StatelessWidget {
               ),
               onTap: () {
                 onNavSelected(PogoPages.sync);
-                Navigator.pop(context);
+                if (popOnNavSelected) Navigator.pop(context);
               },
             ),
 
@@ -207,7 +209,7 @@ class PogoDrawer extends StatelessWidget {
               ),
               onTap: () async {
                 onNavSelected(PogoPages.settings);
-                Navigator.pop(context);
+                if (popOnNavSelected) Navigator.pop(context);
               },
             ),
 

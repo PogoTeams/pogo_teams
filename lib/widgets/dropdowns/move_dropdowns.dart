@@ -210,7 +210,7 @@ class MoveDropdown extends StatelessWidget {
           margin: EdgeInsets.only(
             top: Sizing.blockSizeVertical * .7,
           ),
-          width: Sizing.screenWidth * .28,
+          width: Sizing.scrnwidth * .28,
           height: Sizing.blockSizeVertical * 3.5,
           decoration: BoxDecoration(
             border: Border.all(

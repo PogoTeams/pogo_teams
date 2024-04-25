@@ -58,7 +58,7 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
       onPressed: () {
         Navigator.pop(context);
       },
-      width: Sizing.screenWidth * .85,
+      width: Sizing.scrnwidth * .85,
       height: Sizing.blockSizeVertical * 8.5,
       child: Icon(
         Icons.clear,
@@ -71,7 +71,7 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
     return PokemonNode.large(
       pokemon: pokemon,
       footer: PokemonActionButton(
-        width: Sizing.screenWidth * .8,
+        width: Sizing.scrnwidth * .8,
         pokemon: pokemon,
         label: 'Team Swap',
         icon: Icon(

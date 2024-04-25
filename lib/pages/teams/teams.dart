@@ -245,7 +245,7 @@ class _TeamsState extends State<Teams> {
         children: [
           GradientButton(
             onPressed: _onAddTeam,
-            width: Sizing.screenWidth * .6,
+            width: Sizing.scrnwidth * .6,
             height: Sizing.blockSizeVertical * 8.5,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

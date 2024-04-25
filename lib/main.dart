@@ -16,7 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Restrict view orientation to portrait only
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  //await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   await Hive.initFlutter();
   await PogoRepository.init();

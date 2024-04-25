@@ -7,7 +7,9 @@ import 'modules/data/pogo_repository.dart';
 import 'tools/pair.dart';
 import 'modules/ui/sizing.dart';
 import 'modules/data/globals.dart';
-import 'widgets/pogo_drawer.dart';
+import 'widgets/navigation/pogo_drawer.dart';
+import 'tools/animations.dart';
+import 'widgets/navigation/pogo_navigation_rail.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -51,50 +53,6 @@ class _PogoScaffoldState extends State<PogoScaffold>
     duration: const Duration(seconds: 2),
   );
 
-  // The main scaffold for the app
-  // This will build once the loading phase is complete
-  Widget _buildPogoScaffold() {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      drawer: PogoDrawer(
-        onNavSelected: _onNavSelected,
-      ),
-      body: Padding(
-        padding: EdgeInsets.only(
-          left: Sizing.blockSizeHorizontal * 2.0,
-          right: Sizing.blockSizeHorizontal * 2.0,
-        ),
-        child: _currentPage.page,
-      ),
-    );
-  }
-
-  // Build the app bar with the current page title, and icon
-  AppBar _buildAppBar() {
-    return AppBar(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          // Page title
-          Text(
-            _currentPage.displayName,
-            style: Theme.of(context).textTheme.headlineSmall?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
-          ),
-
-          // Spacer
-          SizedBox(
-            width: Sizing.blockSizeHorizontal * 2.0,
-          ),
-
-          // Page icon
-          _currentPage.icon,
-        ],
-      ),
-    );
-  }
-
   // Callback for navigating to a new page in the app
   void _onNavSelected(PogoPages page) {
     setState(() {
@@ -119,7 +77,12 @@ class _PogoScaffoldState extends State<PogoScaffold>
     // Initialize media queries
     Sizing().init(context);
 
-    if (_loaded) return _buildPogoScaffold();
+    if (_loaded) {
+      return _CanonicalPogoScaffold(
+        currentPage: _currentPage,
+        onNavSelected: _onNavSelected,
+      );
+    }
 
     // App loading procedure
     return StreamBuilder<Pair<String, double>>(
@@ -133,7 +96,10 @@ class _PogoScaffoldState extends State<PogoScaffold>
           _loaded = true;
           _progressBarAnimController.stop();
 
-          return _buildPogoScaffold();
+          return _CanonicalPogoScaffold(
+            currentPage: _currentPage,
+            onNavSelected: _onNavSelected,
+          );
         }
         // Progress update
         if (snapshot.hasData) {
@@ -188,6 +154,160 @@ class _PogoScaffoldState extends State<PogoScaffold>
           ),
         );
       },
+    );
+  }
+}
+
+class _CanonicalPogoScaffold extends StatefulWidget {
+  const _CanonicalPogoScaffold({
+    required this.currentPage,
+    required this.onNavSelected,
+  });
+
+  final PogoPages currentPage;
+  final void Function(PogoPages) onNavSelected;
+
+  @override
+  State<_CanonicalPogoScaffold> createState() => _CanonicalPogoScaffoldState();
+}
+
+class _CanonicalPogoScaffoldState extends State<_CanonicalPogoScaffold>
+    with TickerProviderStateMixin {
+  late final _navigationAnimationController = AnimationController(
+    duration: const Duration(milliseconds: 1000),
+    reverseDuration: const Duration(milliseconds: 1250),
+    value: 0,
+    vsync: this,
+  );
+
+  late final _railAnimation = RailAnimation(
+    parent: _navigationAnimationController,
+  );
+
+  late final _railFabAnimation = RailFabAnimation(
+    parent: _navigationAnimationController,
+  );
+
+  late final _barAnimation = BarAnimation(
+    parent: _navigationAnimationController,
+  );
+
+  late final TabController _tabController =
+      TabController(length: 6, vsync: this);
+
+  late final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  bool _controllerInitialized = false;
+
+  // Build the app bar with the current page title, and icon
+  AppBar _buildAppBar(bool isWideScreen) {
+    return AppBar(
+      automaticallyImplyLeading: !isWideScreen,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Page title
+          Text(
+            widget.currentPage.displayName,
+            style: Theme.of(context).textTheme.headlineSmall?.apply(
+                  fontStyle: FontStyle.italic,
+                ),
+          ),
+
+          // Spacer
+          SizedBox(
+            width: Sizing.blockSizeHorizontal * 2.0,
+          ),
+
+          // Page icon
+          widget.currentPage.icon,
+        ],
+      ),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final double width = Sizing.screenWidth(context);
+
+    final AnimationStatus status = _navigationAnimationController.status;
+    if (width > 600) {
+      if (status != AnimationStatus.forward &&
+          status != AnimationStatus.completed) {
+        _navigationAnimationController.forward();
+      }
+    } else {
+      if (status != AnimationStatus.reverse &&
+          status != AnimationStatus.dismissed) {
+        _navigationAnimationController.reverse();
+      }
+    }
+
+    if (!_controllerInitialized) {
+      _controllerInitialized = true;
+      _navigationAnimationController.value = width > 600 ? 1 : 0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _railAnimation.dispose();
+    _railFabAnimation.dispose();
+    _navigationAnimationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isWideScreen = Sizing.isWideScreen(context);
+
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: _buildAppBar(isWideScreen),
+      drawer: isWideScreen
+          ? null
+          : PogoDrawer(
+              onNavSelected: widget.onNavSelected,
+            ),
+      extendBody: true,
+      body: Row(
+        children: [
+          if (isWideScreen)
+            PogoDrawer(
+                onNavSelected: widget.onNavSelected, popOnNavSelected: false),
+          /*
+            HomeNavigationRail(
+              railAnimation: _railAnimation,
+              railFabAnimation: _railFabAnimation,
+              destinations: const [
+                PogoPages.teams,
+                PogoPages.tags,
+                PogoPages.battleLogs,
+                PogoPages.rankings,
+                PogoPages.sync,
+                PogoPages.settings,
+              ],
+              selectedIndex: _tabController.index,
+              backgroundColor: Theme.of(context).colorScheme.background,
+              onDestinationSelected: (index) {
+                _tabController.index = index;
+                widget.onNavSelected(pogoPageFromIndex(index));
+              },
+            ),
+            */
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: Sizing.blockSizeHorizontal * 2.0,
+                right: Sizing.blockSizeHorizontal * 2.0,
+              ),
+              child: widget.currentPage.page,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -37,7 +37,7 @@ class _TagEditState extends State<TagEdit> {
 
   Widget _buildFloatingActionButtons() {
     return SizedBox(
-      width: Sizing.screenWidth * .87,
+      width: Sizing.scrnwidth * .87,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -167,7 +167,7 @@ class _TagEditState extends State<TagEdit> {
             ColorPicker(
               paletteType: PaletteType.hsl,
               enableAlpha: false,
-              colorPickerWidth: Sizing.screenWidth,
+              colorPickerWidth: Sizing.scrnwidth,
               pickerAreaBorderRadius: BorderRadius.circular(10),
               labelTypes: const [],
               pickerColor: _selectedColor,

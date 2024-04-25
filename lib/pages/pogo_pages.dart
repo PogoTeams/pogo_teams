@@ -94,3 +94,22 @@ extension PogoPagesExt on PogoPages {
     }
   }
 }
+
+pogoPageFromIndex(int index) {
+  switch (index) {
+    case 0:
+      return PogoPages.teams;
+    case 1:
+      return PogoPages.tags;
+    case 2:
+      return PogoPages.battleLogs;
+    case 3:
+      return PogoPages.rankings;
+    case 4:
+      return PogoPages.sync;
+    case 5:
+      return PogoPages.settings;
+  }
+
+  return PogoPages.teams;
+}

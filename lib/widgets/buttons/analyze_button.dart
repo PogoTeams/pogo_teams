@@ -31,7 +31,7 @@ class AnalyzeButton extends StatelessWidget {
           )
         : GradientButton(
             onPressed: onPressed,
-            width: Sizing.screenWidth * .85,
+            width: Sizing.scrnwidth * .85,
             height: Sizing.blockSizeVertical * 8.5,
             child: Text(
               'Analyze',

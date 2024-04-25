@@ -61,7 +61,7 @@ class _TeamSwapState extends State<TeamSwap> {
         _saveTeam();
         Navigator.pop(context);
       },
-      width: Sizing.screenWidth * .85,
+      width: Sizing.scrnwidth * .85,
       height: Sizing.blockSizeVertical * 8.5,
       child: Icon(
         Icons.clear,
