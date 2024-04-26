@@ -3,9 +3,9 @@ import 'dart:io';
 
 // Local
 import 'snapshot_diff.dart';
-import '../pogo_objects/pokemon_stats.dart';
-import '../modules/data/stats.dart';
-import '../tools/json_tools.dart';
+import '../model/pokemon_stats.dart';
+import '../modules/stats.dart';
+import '../utils/json_tools.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

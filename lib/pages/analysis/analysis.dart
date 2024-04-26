@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'user_team_analysis.dart';
 import 'opponent_team_analysis.dart';
 import 'logs_analysis.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../modules/data/pokemon_types.dart';
-import '../../tools/pair.dart';
-import '../../modules/data/pogo_repository.dart';
+import '../../model/pokemon.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/pokemon_typing.dart';
+import '../../modules/pokemon_types.dart';
+import '../../utils/pair.dart';
+import '../../modules/pogo_repository.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -26,11 +26,11 @@ team(s). This widget is used to branch unique analysis pages for a :
 
 class Analysis extends StatefulWidget {
   const Analysis({
-    Key? key,
+    super.key,
     required this.team,
     this.opponentTeam,
     this.opponentTeams,
-  }) : super(key: key);
+  });
 
   final UserPokemonTeam team;
   final OpponentPokemonTeam? opponentTeam;

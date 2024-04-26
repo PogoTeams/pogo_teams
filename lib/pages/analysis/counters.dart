@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../pogo_objects/pokemon.dart';
+import '../../app/ui/sizing.dart';
+import '../../modules/pogo_repository.dart';
+import '../../model/pokemon.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../widgets/buttons/pokemon_action_button.dart';
 import '../../widgets/nodes/pokemon_node.dart';
-import '../../pogo_objects/pokemon_team.dart';
+import '../../model/pokemon_team.dart';
 import '../teams/team_swap.dart';
 
 /*
@@ -20,11 +20,11 @@ swap a counter into their team.
 
 class PokemonCountersList extends StatefulWidget {
   const PokemonCountersList({
-    Key? key,
+    super.key,
     required this.team,
     required this.pokemon,
     required this.counters,
-  }) : super(key: key);
+  });
 
   final UserPokemonTeam team;
   final Pokemon pokemon;
@@ -60,7 +60,7 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
       },
       width: Sizing.scrnwidth * .85,
       height: Sizing.blockSizeVertical * 8.5,
-      child: Icon(
+      child: const Icon(
         Icons.clear,
         size: Sizing.icon2,
       ),

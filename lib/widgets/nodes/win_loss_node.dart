@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../../enums/battle_outcome.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_colors.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -16,9 +16,9 @@ backlog.
 
 class WinLossNode extends StatelessWidget {
   const WinLossNode({
-    Key? key,
+    super.key,
     required this.outcome,
-  }) : super(key: key);
+  });
 
   final BattleOutcome outcome;
 

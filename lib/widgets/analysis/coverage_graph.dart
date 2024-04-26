@@ -5,12 +5,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../tools/pair.dart';
-import '../../tools/logic.dart';
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_icons.dart';
-import '../../modules/ui/pogo_colors.dart';
+import '../../utils/pair.dart';
+import '../../utils/logic.dart';
+import '../../model/pokemon_typing.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_icons.dart';
+import '../../app/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -22,10 +22,10 @@ half way across the screen.
 
 class CoverageGraph extends StatelessWidget {
   const CoverageGraph({
-    Key? key,
+    super.key,
     required this.netEffectiveness,
     required this.teamSize,
-  }) : super(key: key);
+  });
 
   final List<Pair<PokemonType, double>> netEffectiveness;
   final int teamSize;
@@ -97,10 +97,10 @@ class CoverageGraph extends StatelessWidget {
 
 class GraphRow extends StatelessWidget {
   const GraphRow({
-    Key? key,
+    super.key,
     required this.typeData,
     required this.teamSize,
-  }) : super(key: key);
+  });
 
   final Pair<PokemonType, double> typeData;
   final int teamSize;

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pogo_objects/pokemon_stats.dart';
+import '../model/pokemon_stats.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -12,10 +12,10 @@ A display of a Pokemon's max CP and perfect IVs, given the cup in question.
 
 class PvpStats extends StatelessWidget {
   const PvpStats({
-    Key? key,
+    super.key,
     required this.cp,
     required this.ivs,
-  }) : super(key: key);
+  });
 
   final int cp;
   final IVs ivs;

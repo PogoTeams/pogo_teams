@@ -7,7 +7,7 @@ import 'battle_logs.dart';
 import 'teams/teams.dart';
 import 'settings.dart';
 import 'tags.dart';
-import '../modules/ui/sizing.dart';
+import '../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -45,32 +45,32 @@ extension PogoPagesExt on PogoPages {
   Widget get icon {
     switch (this) {
       case PogoPages.teams:
-        return Icon(
+        return const Icon(
           Icons.catching_pokemon,
           size: Sizing.icon3,
         );
       case PogoPages.tags:
-        return Icon(
+        return const Icon(
           Icons.tag,
           size: Sizing.icon3,
         );
       case PogoPages.battleLogs:
-        return Icon(
+        return const Icon(
           Icons.query_stats,
           size: Sizing.icon3,
         );
       case PogoPages.rankings:
-        return Icon(
+        return const Icon(
           Icons.bar_chart,
           size: Sizing.icon3,
         );
       case PogoPages.sync:
-        return Icon(
+        return const Icon(
           Icons.sync,
           size: Sizing.icon3,
         );
       case PogoPages.settings:
-        return Icon(
+        return const Icon(
           Icons.settings,
           size: Sizing.icon3,
         );

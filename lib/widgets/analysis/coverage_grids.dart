@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../tools/pair.dart';
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_icons.dart';
+import '../../utils/pair.dart';
+import '../../model/pokemon_typing.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_icons.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -16,11 +16,11 @@ teams offense coverage based on movesets.
 
 class CoverageGrids extends StatelessWidget {
   const CoverageGrids({
-    Key? key,
+    super.key,
     required this.defenseThreats,
     required this.offenseCoverage,
     required this.includedTypesKeys,
-  }) : super(key: key);
+  });
 
   final List<Pair<PokemonType, double>> defenseThreats;
   final List<Pair<PokemonType, double>> offenseCoverage;

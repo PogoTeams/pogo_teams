@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../modules/ui/sizing.dart';
+import '../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -13,12 +13,12 @@ controller is already initialized and has listeners.
 
 class PogoTextField extends StatelessWidget {
   const PogoTextField({
-    Key? key,
+    super.key,
     required this.controller,
     this.width = double.infinity,
     required this.onClear,
     this.label,
-  }) : super(key: key);
+  });
 
   final TextEditingController controller;
   final double width;

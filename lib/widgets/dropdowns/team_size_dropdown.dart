@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
+import '../../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -14,10 +14,10 @@ All logged Pokemon teams under this team will then be adjusted to be of size 6.
 
 class TeamSizeDropdown extends StatefulWidget {
   const TeamSizeDropdown({
-    Key? key,
+    super.key,
     required this.size,
     required this.onTeamSizeChanged,
-  }) : super(key: key);
+  });
 
   final void Function(int?) onTeamSizeChanged;
   final int size;

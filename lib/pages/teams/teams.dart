@@ -13,10 +13,10 @@ import '../analysis/analysis.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../widgets/buttons/tag_filter_button.dart';
-import '../../modules/ui/sizing.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/tag.dart';
-import '../../modules/data/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/tag.dart';
+import '../../modules/pogo_repository.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -26,7 +26,7 @@ delete teams from here.
 */
 
 class Teams extends StatefulWidget {
-  const Teams({Key? key}) : super(key: key);
+  const Teams({super.key});
 
   @override
   _TeamsState createState() => _TeamsState();

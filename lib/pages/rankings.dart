@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import '../modules/ui/sizing.dart';
-import '../pogo_objects/pokemon.dart';
-import '../pogo_objects/cup.dart';
+import '../app/ui/sizing.dart';
+import '../model/pokemon.dart';
+import '../model/cup.dart';
 import '../widgets/pokemon_list.dart';
 import '../widgets/pogo_text_field.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
 import '../widgets/buttons/rankings_category_button.dart';
-import '../modules/data/pogo_repository.dart';
+import '../modules/pogo_repository.dart';
 import '../enums/rankings_categories.dart';
 
 /*
@@ -23,7 +23,7 @@ The PvPoke model.
 */
 
 class Rankings extends StatefulWidget {
-  const Rankings({Key? key}) : super(key: key);
+  const Rankings({super.key});
 
   @override
   _RankingsState createState() => _RankingsState();

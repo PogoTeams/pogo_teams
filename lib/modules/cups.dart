@@ -1,4 +1,4 @@
-import '../../pogo_objects/pokemon_base.dart';
+import '../model/pokemon_base.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

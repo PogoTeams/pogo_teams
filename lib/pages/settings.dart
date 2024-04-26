@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import '../widgets/dialogs.dart';
-import '../modules/data/pogo_repository.dart';
-import '../modules/ui/sizing.dart';
+import '../modules/pogo_repository.dart';
+import '../app/ui/sizing.dart';
 import '../widgets/buttons/gradient_button.dart';
 
 /*
@@ -14,7 +14,7 @@ App settings.
 */
 
 class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+  const Settings({super.key});
 
   @override
   _SettingsState createState() => _SettingsState();

@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/tag.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../modules/ui/sizing.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/tag.dart';
+import '../../modules/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
 import '../tag_edit.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/tag_dot.dart';
@@ -19,10 +19,10 @@ new tags from this page.
 
 class TagTeam extends StatefulWidget {
   const TagTeam({
-    Key? key,
+    super.key,
     required this.team,
     this.winRate,
-  }) : super(key: key);
+  });
 
   final PokemonTeam team;
   final String? winRate;
@@ -79,7 +79,7 @@ class _TagTeamState extends State<TagTeam> {
                 SizedBox(
                   width: Sizing.blockSizeHorizontal * 2.0,
                 ),
-                Icon(
+                const Icon(
                   Icons.add,
                   size: Sizing.icon2,
                 ),
@@ -144,7 +144,7 @@ class _TagTeamState extends State<TagTeam> {
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             onPressed: () => Navigator.pop(context, _selectedTag),
             height: Sizing.blockSizeVertical * 7.0,
-            child: Center(
+            child: const Center(
               child: Icon(
                 Icons.clear,
                 size: Sizing.icon2,

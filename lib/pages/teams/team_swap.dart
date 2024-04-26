@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../pogo_objects/pokemon.dart';
+import '../../app/ui/sizing.dart';
+import '../../modules/pogo_repository.dart';
+import '../../model/pokemon.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../widgets/buttons/pokemon_action_button.dart';
 import '../../widgets/nodes/pokemon_node.dart';
-import '../../pogo_objects/pokemon_team.dart';
+import '../../model/pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -19,10 +19,10 @@ the swap Pokemon. Movesets may also be edited here.
 
 class TeamSwap extends StatefulWidget {
   const TeamSwap({
-    Key? key,
+    super.key,
     required this.team,
     required this.swap,
-  }) : super(key: key);
+  });
 
   final PokemonTeam team;
   final UserPokemon swap;
@@ -63,7 +63,7 @@ class _TeamSwapState extends State<TeamSwap> {
       },
       width: Sizing.scrnwidth * .85,
       height: Sizing.blockSizeVertical * 8.5,
-      child: Icon(
+      child: const Icon(
         Icons.clear,
         size: Sizing.icon2,
       ),

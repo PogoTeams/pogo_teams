@@ -4,11 +4,10 @@ import 'dart:math';
 // Local
 import 'pokemon.dart';
 import 'pokemon_base.dart';
-import 'pokemon_typing.dart';
 import 'move.dart';
 import 'pokemon_stats.dart';
-import '../modules/data/stats.dart';
-import '../modules/data/globals.dart';
+import '../modules/stats.dart';
+import '../modules/globals.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -20,22 +19,22 @@ exclusively for battle simulations.
 // Pokemon instance for simulating battles
 class BattlePokemon extends PokemonBase {
   BattlePokemon({
-    required int dex,
-    required String pokemonId,
-    required String name,
-    required PokemonTyping typing,
-    required BaseStats stats,
-    List<String>? eliteFastMoveIds,
-    List<String>? eliteChargeMoveIds,
-    ThirdMoveCost? thirdMoveCost,
-    Shadow? shadow,
-    required String form,
-    required String familyId,
-    required bool released,
-    List<String>? tags,
-    IVs? littleCupIVs,
-    IVs? greatLeagueIVs,
-    IVs? ultraLeagueIVs,
+    required super.dex,
+    required super.pokemonId,
+    required super.name,
+    required super.typing,
+    required super.stats,
+    super.eliteFastMoveIds,
+    super.eliteChargeMoveIds,
+    super.thirdMoveCost,
+    super.shadow,
+    required super.form,
+    required super.familyId,
+    required super.released,
+    super.tags,
+    super.littleCupIVs,
+    super.greatLeagueIVs,
+    super.ultraLeagueIVs,
     this.cp = 0,
     this.currentRating = 0,
     this.currentHp = 0,
@@ -45,24 +44,7 @@ class BattlePokemon extends PokemonBase {
     this.chargeTDO = 0,
     this.chargeEnergyDelta = 0,
     this.prioritizeMoveAlignment = false,
-  }) : super(
-          dex: dex,
-          pokemonId: pokemonId,
-          name: name,
-          typing: typing,
-          stats: stats,
-          eliteFastMoveIds: eliteFastMoveIds,
-          eliteChargeMoveIds: eliteChargeMoveIds,
-          thirdMoveCost: thirdMoveCost,
-          shadow: shadow,
-          form: form,
-          familyId: familyId,
-          released: released,
-          tags: tags,
-          littleCupIVs: littleCupIVs,
-          greatLeagueIVs: greatLeagueIVs,
-          ultraLeagueIVs: ultraLeagueIVs,
-        );
+  });
 
   factory BattlePokemon.fromPokemon(PokemonBase other) {
     return BattlePokemon(

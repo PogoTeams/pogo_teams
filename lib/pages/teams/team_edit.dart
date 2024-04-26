@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import 'team_builder.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
+import '../../modules/pogo_repository.dart';
 import '../../widgets/nodes/pokemon_node.dart';
 import '../../widgets/dropdowns/cup_dropdown.dart';
 import '../../widgets/dropdowns/team_size_dropdown.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/cup.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/pokemon.dart';
+import '../../model/cup.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -23,9 +23,9 @@ moveset can be adjusted.
 
 class TeamEdit extends StatefulWidget {
   const TeamEdit({
-    Key? key,
+    super.key,
     required this.team,
-  }) : super(key: key);
+  });
 
   final PokemonTeam team;
 
@@ -188,7 +188,7 @@ class _TeamEditState extends State<TeamEdit> {
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           onPressed: () => Navigator.pop(context),
           height: Sizing.blockSizeVertical * 7.0,
-          child: Center(
+          child: const Center(
             child: Icon(
               Icons.clear,
               size: Sizing.icon2,

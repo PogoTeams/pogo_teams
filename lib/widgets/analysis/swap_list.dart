@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_typing.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/pokemon.dart';
+import '../../model/pokemon_typing.dart';
 import '../nodes/pokemon_node.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
+import '../../modules/pogo_repository.dart';
 import '../buttons/pokemon_action_button.dart';
 import '../../enums/rankings_categories.dart';
 
@@ -21,12 +21,12 @@ the user to swap this Pokemon with another in their team.
 
 class SwapList extends StatelessWidget {
   const SwapList({
-    Key? key,
+    super.key,
     required this.onSwap,
     required this.onAdd,
     required this.team,
     required this.types,
-  }) : super(key: key);
+  });
 
   final Function(Pokemon) onSwap;
   final Function(Pokemon) onAdd;

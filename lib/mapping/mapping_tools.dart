@@ -2,8 +2,8 @@
 import 'dart:io';
 
 // Local
-import '../modules/data/pogo_repository.dart';
-import '../tools/json_tools.dart';
+import '../modules/pogo_repository.dart';
+import '../utils/json_tools.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

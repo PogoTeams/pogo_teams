@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pogo_objects/pokemon_base.dart';
-import '../modules/ui/sizing.dart';
+import '../model/pokemon_base.dart';
+import '../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -16,10 +16,10 @@ Flame - Shadow Pokemon
 
 class TraitsIcons extends StatelessWidget {
   const TraitsIcons({
-    Key? key,
+    super.key,
     required this.pokemon,
     this.scale = 1.0,
-  }) : super(key: key);
+  });
 
   final PokemonBase pokemon;
   final double scale;
@@ -40,9 +40,9 @@ class TraitsIcons extends StatelessWidget {
 
 class XlIcon extends StatelessWidget {
   const XlIcon({
-    Key? key,
+    super.key,
     required this.scale,
-  }) : super(key: key);
+  });
 
   final double scale;
 
@@ -74,9 +74,9 @@ class XlIcon extends StatelessWidget {
 
 class ShadowIcon extends StatelessWidget {
   const ShadowIcon({
-    Key? key,
+    super.key,
     required this.scale,
-  }) : super(key: key);
+  });
 
   final double scale;
 

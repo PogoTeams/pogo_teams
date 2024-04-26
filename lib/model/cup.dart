@@ -5,7 +5,7 @@ import 'package:pogo_teams/enums/rankings_categories.dart';
 // Local
 import 'pokemon_base.dart';
 import 'pokemon.dart';
-import '../modules/data/pokemon_types.dart';
+import '../modules/pokemon_types.dart';
 import '../enums/cup_filter_type.dart';
 
 part 'cup.g.dart';

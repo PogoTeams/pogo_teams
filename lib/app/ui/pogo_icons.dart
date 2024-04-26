@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local
-import '../../pogo_objects/pokemon_typing.dart';
+import '../../model/pokemon_typing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/cup.dart';
+import '../../model/pokemon_typing.dart';
+import '../../model/pokemon.dart';
+import '../../model/cup.dart';
 import '../nodes/pokemon_node.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
+import '../../modules/pogo_repository.dart';
 import '../../enums/rankings_categories.dart';
 
 /*
@@ -18,10 +18,10 @@ A list of Pokemon that are filtered by a specified subset of types.
 
 class TypeFilteredPokemonList extends StatelessWidget {
   const TypeFilteredPokemonList({
-    Key? key,
+    super.key,
     required this.cup,
     required this.types,
-  }) : super(key: key);
+  });
 
   final Cup cup;
   final List<PokemonType> types;

@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pogo_objects/tag.dart';
-import '../modules/data/pogo_repository.dart';
-import '../modules/ui/sizing.dart';
+import '../model/tag.dart';
+import '../modules/pogo_repository.dart';
+import '../app/ui/sizing.dart';
 import '../widgets/tag_dot.dart';
 import '../widgets/dialogs.dart';
 import '../widgets/buttons/gradient_button.dart';
@@ -18,7 +18,7 @@ delete tags from here.
 */
 
 class Tags extends StatefulWidget {
-  const Tags({Key? key}) : super(key: key);
+  const Tags({super.key});
 
   @override
   _TagsState createState() => _TagsState();
@@ -48,14 +48,14 @@ class _TagsState extends State<Tags> {
                 children: [
                   IconButton(
                     onPressed: () => _onEditTag(tag: tag),
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.edit,
                       size: Sizing.icon3,
                     ),
                   ),
                   IconButton(
                     onPressed: () => _onRemoveTag(tag),
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.clear,
                       size: Sizing.icon3,
                     ),

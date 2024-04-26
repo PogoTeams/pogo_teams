@@ -1,11 +1,11 @@
 // Local
-import '../pogo_objects/battle_pokemon.dart';
-import '../pogo_objects/move.dart';
-import '../pogo_objects/ratings.dart';
+import '../model/battle_pokemon.dart';
+import '../model/move.dart';
+import '../model/ratings.dart';
 import '../enums/battle_outcome.dart';
 import '../battle/battle_result.dart';
-import '../modules/data/globals.dart';
-import '../modules/data/pokemon_types.dart';
+import '../modules/globals.dart';
+import '../modules/pokemon_types.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

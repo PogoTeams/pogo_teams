@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pogo_objects/pokemon.dart';
-import '../pogo_objects/pokemon_base.dart';
+import '../model/pokemon.dart';
+import '../model/pokemon_base.dart';
 import 'nodes/pokemon_node.dart';
-import '../modules/ui/sizing.dart';
+import '../app/ui/sizing.dart';
 import '../enums/rankings_categories.dart';
 
 /*
@@ -18,12 +18,12 @@ passing the Pokemon in question back to the calling routine.
 
 class PokemonList extends StatelessWidget {
   const PokemonList({
-    Key? key,
+    super.key,
     required this.pokemon,
     required this.onPokemonSelected,
     this.dropdowns = true,
     this.rankingsCategory,
-  }) : super(key: key);
+  });
 
   final List<CupPokemon> pokemon;
   final Function(CupPokemon) onPokemonSelected;
@@ -72,11 +72,11 @@ class PokemonList extends StatelessWidget {
 
 class PokemonColumn extends StatelessWidget {
   const PokemonColumn({
-    Key? key,
+    super.key,
     required this.pokemon,
     required this.onPokemonSelected,
     this.dropdowns = true,
-  }) : super(key: key);
+  });
 
   final List<CupPokemon> pokemon;
   final Function(PokemonBase) onPokemonSelected;

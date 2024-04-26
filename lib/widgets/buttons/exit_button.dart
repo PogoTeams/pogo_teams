@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
+import '../../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -14,11 +14,11 @@ navigator stack. No information is returned from the current screen.
 
 class ExitButton extends StatelessWidget {
   const ExitButton({
-    Key? key,
+    super.key,
     required this.onPressed,
     this.icon = const Icon(Icons.close),
     this.backgroundColor = Colors.teal,
-  }) : super(key: key);
+  });
 
   final VoidCallback onPressed;
   final Icon icon;

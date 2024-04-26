@@ -1,15 +1,13 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:pogo_teams/modules/data/google_drive_repository.dart';
 
 // Packages
 import 'package:url_launcher/url_launcher.dart';
 
 // Local Imports
 import '../../pages/pogo_pages.dart';
-import '../../modules/data/globals.dart';
-import '../../modules/ui/sizing.dart';
-import '../buttons/gradient_button.dart';
+import '../../modules/globals.dart';
+import '../../app/ui/sizing.dart';
 import '../drive_backup.dart';
 
 /*
@@ -21,10 +19,10 @@ accessible to the user by any screen that contains a scaffold app bar.
 
 class PogoDrawer extends StatelessWidget {
   const PogoDrawer({
-    Key? key,
+    super.key,
     required this.onNavSelected,
     this.popOnNavSelected = true,
-  }) : super(key: key);
+  });
 
   final Function(PogoPages) onNavSelected;
   final bool popOnNavSelected;

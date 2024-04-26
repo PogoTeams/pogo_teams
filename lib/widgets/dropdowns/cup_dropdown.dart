@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/cup.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_colors.dart';
-import '../../modules/data/pogo_repository.dart';
+import '../../model/cup.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_colors.dart';
+import '../../modules/pogo_repository.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -17,11 +17,11 @@ as well as the Pokemon's ideal IVs.
 
 class CupDropdown extends StatefulWidget {
   const CupDropdown({
-    Key? key,
+    super.key,
     required this.cup,
     required this.onCupChanged,
     required this.width,
-  }) : super(key: key);
+  });
 
   final Cup cup;
   final void Function(String?) onCupChanged;

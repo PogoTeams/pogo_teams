@@ -2,14 +2,13 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import 'pages/pogo_pages.dart';
-import 'modules/data/pogo_repository.dart';
-import 'tools/pair.dart';
-import 'modules/ui/sizing.dart';
-import 'modules/data/globals.dart';
-import 'widgets/navigation/pogo_drawer.dart';
-import 'tools/animations.dart';
-import 'widgets/navigation/pogo_navigation_rail.dart';
+import 'pogo_pages.dart';
+import '../modules/pogo_repository.dart';
+import '../utils/pair.dart';
+import '../app/ui/sizing.dart';
+import '../modules/globals.dart';
+import '../widgets/navigation/pogo_drawer.dart';
+import '../utils/animations.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -21,7 +20,7 @@ rankings data are loaded.
 */
 
 class PogoScaffold extends StatefulWidget {
-  const PogoScaffold({Key? key}) : super(key: key);
+  const PogoScaffold({super.key});
 
   @override
   _PogoScaffoldState createState() => _PogoScaffoldState();

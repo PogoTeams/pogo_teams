@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local
-import '../modules/ui/sizing.dart';
+import '../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -11,8 +11,8 @@ import '../modules/ui/sizing.dart';
 
 class GradientDivider extends StatelessWidget {
   const GradientDivider({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

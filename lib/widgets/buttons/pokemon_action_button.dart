@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
-import '../../pogo_objects/pokemon.dart';
+import '../../app/ui/sizing.dart';
+import '../../model/pokemon.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -14,13 +14,13 @@ can perform an action with that Pokemon.
 
 class PokemonActionButton extends StatelessWidget {
   const PokemonActionButton({
-    Key? key,
+    super.key,
     this.width = double.infinity,
     required this.pokemon,
     required this.label,
     required this.icon,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   final double width;
   final Pokemon pokemon;

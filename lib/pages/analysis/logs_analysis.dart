@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 // Local Imports
 import '../../widgets/analysis/type_coverage.dart';
 import '../../widgets/pokemon_list.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../modules/ui/sizing.dart';
-import '../../tools/pair.dart';
+import '../../model/pokemon.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/pokemon_typing.dart';
+import '../../modules/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
+import '../../utils/pair.dart';
 import '../../enums/rankings_categories.dart';
 
 /*
@@ -21,13 +21,13 @@ as OpponentTeamAnalysis.
 
 class LogsAnalysis extends StatelessWidget {
   const LogsAnalysis({
-    Key? key,
+    super.key,
     required this.team,
     required this.opponents,
     required this.defenseThreats,
     required this.offenseCoverage,
     required this.netEffectiveness,
-  }) : super(key: key);
+  });
 
   final UserPokemonTeam team;
   final List<OpponentPokemonTeam> opponents;
@@ -54,7 +54,7 @@ class LogsAnalysis extends StatelessWidget {
           ),
 
           // Page icon
-          Icon(
+          const Icon(
             Icons.analytics,
             size: Sizing.icon3,
           ),

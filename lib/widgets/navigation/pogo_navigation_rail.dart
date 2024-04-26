@@ -2,12 +2,10 @@
 import 'package:flutter/material.dart';
 
 // recipio
-import '../../modules/ui/sizing.dart';
+import '../../app/ui/sizing.dart';
 import '../../pages/pogo_pages.dart';
-import '../../tools/animations.dart';
+import '../../utils/animations.dart';
 import '../transitions/nav_rail_transition.dart';
-import '../../modules/data/globals.dart';
-import '../drive_backup.dart';
 
 class PogoNavigationRail extends StatelessWidget {
   const PogoNavigationRail({

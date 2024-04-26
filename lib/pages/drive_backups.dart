@@ -11,12 +11,12 @@ import 'package:intl/intl.dart';
 
 // Local Imports
 import '../widgets/dialogs.dart';
-import '../modules/data/globals.dart';
-import '../modules/data/pogo_repository.dart';
-import '../modules/data/google_drive_repository.dart';
-import '../modules/ui/sizing.dart';
+import '../modules/globals.dart';
+import '../modules/pogo_repository.dart';
+import '../modules/google_drive_repository.dart';
+import '../app/ui/sizing.dart';
 import '../widgets/buttons/gradient_button.dart';
-import '../tools/extensions.dart';
+import '../utils/extensions.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -26,7 +26,7 @@ using a Google account.
 */
 
 class DriveBackups extends StatefulWidget {
-  const DriveBackups({Key? key}) : super(key: key);
+  const DriveBackups({super.key});
 
   @override
   _DriveBackupsState createState() => _DriveBackupsState();
@@ -242,7 +242,7 @@ class _DriveBackupsState extends State<DriveBackups> {
                 IconButton(
                   onPressed: () =>
                       _onDeleteBackup(GoogleDriveRepository.backupFiles[index]),
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.clear,
                     size: Sizing.icon3,
                   ),
@@ -441,7 +441,7 @@ class _DriveBackupsState extends State<DriveBackups> {
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             onPressed: () => Navigator.pop(context),
             height: Sizing.blockSizeVertical * 7.0,
-            child: Center(
+            child: const Center(
               child: Icon(
                 Icons.clear,
                 size: Sizing.icon2,

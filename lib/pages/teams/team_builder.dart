@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/cup.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../modules/ui/sizing.dart';
+import '../../model/pokemon.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/cup.dart';
+import '../../modules/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
 import '../../widgets/pokemon_list.dart';
 import '../../widgets/pogo_text_field.dart';
 import '../../widgets/buttons/gradient_button.dart';
@@ -27,11 +27,11 @@ node in the grid to put focus on that node for adding a Pokemon.
 
 class TeamBuilder extends StatefulWidget {
   const TeamBuilder({
-    Key? key,
+    super.key,
     required this.team,
     required this.cup,
     required this.focusIndex,
-  }) : super(key: key);
+  });
 
   final PokemonTeam team;
   final Cup cup;
@@ -165,7 +165,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
       },
       width: Sizing.scrnwidth * .85,
       height: Sizing.blockSizeVertical * 8.5,
-      child: Icon(
+      child: const Icon(
         Icons.clear,
         size: Sizing.icon2,
       ),

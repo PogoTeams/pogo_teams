@@ -7,12 +7,12 @@ import 'package:isar/isar.dart';
 
 // Local Imports
 import 'team_builder.dart';
-import '../../pogo_objects/pokemon_team.dart';
+import '../../model/pokemon_team.dart';
 import '../../../widgets/nodes/team_node.dart';
 import '../../../widgets/buttons/gradient_button.dart';
 import '../../../widgets/nodes/win_loss_node.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../modules/ui/sizing.dart';
+import '../../modules/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -25,9 +25,9 @@ logged opponenents associated with their team.
 
 class BattleLog extends StatefulWidget {
   const BattleLog({
-    Key? key,
+    super.key,
     required this.team,
-  }) : super(key: key);
+  });
 
   final UserPokemonTeam team;
 
@@ -63,7 +63,7 @@ class _BattleLogState extends State<BattleLog> {
           ),
 
           // Page icon
-          Icon(
+          const Icon(
             Icons.query_stats,
             size: Sizing.icon3,
           ),

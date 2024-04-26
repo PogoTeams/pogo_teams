@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_colors.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_colors.dart';
 import '../../enums/battle_outcome.dart';
 
 /*
@@ -15,11 +15,11 @@ user's team and a logged opponent team.
 
 class WinLossDropdown extends StatefulWidget {
   const WinLossDropdown({
-    Key? key,
+    super.key,
     required this.selectedOption,
     required this.onChanged,
     required this.width,
-  }) : super(key: key);
+  });
 
   final BattleOutcome selectedOption;
   final void Function(BattleOutcome?) onChanged;

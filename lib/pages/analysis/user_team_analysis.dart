@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 // Local
 import '../../enums/rankings_categories.dart';
-import '../../pogo_objects/battle_pokemon.dart';
+import '../../model/battle_pokemon.dart';
 import '../../battle/battle_result.dart';
 import 'counters.dart';
 import '../../widgets/analysis/type_coverage.dart';
@@ -14,13 +14,13 @@ import '../../widgets/nodes/pokemon_node.dart';
 import '../../widgets/formatted_pokemon_name.dart';
 import '../../widgets/buttons/pokemon_action_button.dart';
 import '../teams/team_swap.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../modules/data/pokemon_types.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../modules/ui/sizing.dart';
-import '../../tools/pair.dart';
+import '../../model/pokemon.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/pokemon_typing.dart';
+import '../../modules/pokemon_types.dart';
+import '../../modules/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
+import '../../utils/pair.dart';
 import '../../ranker/pokemon_ranker.dart';
 import '../../ranker/ranking_data.dart';
 
@@ -41,13 +41,13 @@ the top threats.
 
 class UserTeamAnalysis extends StatefulWidget {
   const UserTeamAnalysis({
-    Key? key,
+    super.key,
     required this.team,
     required this.defenseThreats,
     required this.offenseCoverage,
     required this.netEffectiveness,
     required this.onTeamChanged,
-  }) : super(key: key);
+  });
 
   final UserPokemonTeam team;
   final List<Pair<PokemonType, double>> defenseThreats;
@@ -164,7 +164,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
           ),
 
           // Page icon
-          Icon(
+          const Icon(
             Icons.analytics,
             size: Sizing.icon3,
           ),

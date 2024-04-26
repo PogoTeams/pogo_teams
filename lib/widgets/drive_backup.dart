@@ -12,15 +12,14 @@ import 'package:intl/intl.dart';
 
 // pogo teams
 import 'dialogs.dart';
-import '../tools/extensions.dart';
-import '../tools/async_state.dart';
-import '../modules/data/pogo_repository.dart';
-import '../modules/ui/sizing.dart';
-import '../modules/data/google_drive_repository.dart';
+import '../utils/extensions.dart';
+import '../modules/pogo_repository.dart';
+import '../app/ui/sizing.dart';
+import '../modules/google_drive_repository.dart';
 import '../pages/drive_backups.dart';
 
 class DriveBackup extends StatefulWidget {
-  const DriveBackup({Key? key}) : super(key: key);
+  const DriveBackup({super.key});
 
   @override
   State<DriveBackup> createState() => _DriveBackupState();
@@ -137,12 +136,7 @@ class _DriveBackupState extends State<DriveBackup> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'linked backup: ${GoogleDriveRepository.linkedBackupFile!.nameWithoutExtension}\n' +
-                        'last modified: ' +
-                        DateFormat.yMMMMd().add_jm().format(
-                            GoogleDriveRepository
-                                .linkedBackupFile!.modifiedTime!
-                                .toLocal()),
+                    'linked backup: ${GoogleDriveRepository.linkedBackupFile!.nameWithoutExtension}\nlast modified: ${DateFormat.yMMMMd().add_jm().format(GoogleDriveRepository.linkedBackupFile!.modifiedTime!.toLocal())}',
                     style: Theme.of(context).textTheme.bodySmall?.apply(
                           fontStyle: FontStyle.italic,
                         ),
@@ -208,9 +202,8 @@ class _DriveBackupState extends State<DriveBackup> {
 
 class _SyncButton extends StatelessWidget {
   const _SyncButton({
-    Key? key,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   final void Function() onPressed;
 

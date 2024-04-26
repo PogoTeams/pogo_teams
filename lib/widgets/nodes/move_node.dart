@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/move.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_colors.dart';
+import '../../model/pokemon.dart';
+import '../../model/move.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -16,9 +16,9 @@ MoveNodes.
 
 class MoveNodes extends StatelessWidget {
   const MoveNodes({
-    Key? key,
+    super.key,
     required this.pokemon,
-  }) : super(key: key);
+  });
 
   final Pokemon pokemon;
 
@@ -37,9 +37,9 @@ class MoveNodes extends StatelessWidget {
 
 class MoveNode extends StatelessWidget {
   const MoveNode({
-    Key? key,
+    super.key,
     required this.move,
-  }) : super(key: key);
+  });
 
   final Move move;
 
@@ -72,9 +72,9 @@ class MoveNode extends StatelessWidget {
 
 class MoveDots extends StatelessWidget {
   const MoveDots({
-    Key? key,
+    super.key,
     required this.moveColors,
-  }) : super(key: key);
+  });
 
   final List<Color> moveColors;
 

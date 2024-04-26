@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import '../../widgets/analysis/type_coverage.dart';
 import '../../widgets/pokemon_list.dart';
 import '../../widgets/nodes/pokemon_node.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../modules/ui/sizing.dart';
-import '../../tools/pair.dart';
+import '../../model/pokemon.dart';
+import '../../model/pokemon_typing.dart';
+import '../../model/pokemon_team.dart';
+import '../../modules/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
+import '../../utils/pair.dart';
 import '../../enums/rankings_categories.dart';
 
 /*
@@ -22,13 +22,13 @@ team as well, via the swap feature.
 
 class OpponentTeamAnalysis extends StatelessWidget {
   const OpponentTeamAnalysis({
-    Key? key,
+    super.key,
     required this.team,
     required this.pokemonTeam,
     required this.defenseThreats,
     required this.offenseCoverage,
     required this.netEffectiveness,
-  }) : super(key: key);
+  });
 
   final UserPokemonTeam team;
   final List<UserPokemon> pokemonTeam;
@@ -55,7 +55,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
           ),
 
           // Page icon
-          Icon(
+          const Icon(
             Icons.analytics,
             size: Sizing.icon3,
           ),

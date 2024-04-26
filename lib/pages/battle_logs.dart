@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pogo_objects/pokemon_team.dart';
-import '../pogo_objects/tag.dart';
-import '../modules/ui/sizing.dart';
-import '../modules/data/pogo_repository.dart';
+import '../model/pokemon_team.dart';
+import '../model/tag.dart';
+import '../app/ui/sizing.dart';
+import '../modules/pogo_repository.dart';
 import '../widgets/tag_dot.dart';
 import '../widgets/buttons/tag_filter_button.dart';
 import '../widgets/nodes/team_node.dart';
@@ -19,7 +19,7 @@ by tag.
 */
 
 class BattleLogs extends StatefulWidget {
-  const BattleLogs({Key? key}) : super(key: key);
+  const BattleLogs({super.key});
 
   @override
   _RankingsState createState() => _RankingsState();

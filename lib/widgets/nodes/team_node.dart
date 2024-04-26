@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 // Local Imports
 import 'pokemon_node.dart';
 import '../tag_dot.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_colors.dart';
+import '../../model/pokemon.dart';
+import '../../model/pokemon_team.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -16,7 +16,7 @@ import '../../modules/ui/pogo_colors.dart';
 
 class TeamNode extends StatelessWidget {
   const TeamNode({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.onEmptyPressed,
     required this.team,
@@ -26,7 +26,7 @@ class TeamNode extends StatelessWidget {
     this.focusIndex,
     this.emptyTransparent = false,
     this.collapsible = false,
-  }) : super(key: key);
+  });
 
   final Function(int) onPressed;
   final Function(int) onEmptyPressed;
@@ -166,10 +166,10 @@ class TeamNode extends StatelessWidget {
 
 class UserTeamNodeHeader extends StatelessWidget {
   const UserTeamNodeHeader({
-    Key? key,
+    super.key,
     required this.team,
     required this.onTagTeam,
-  }) : super(key: key);
+  });
 
   final UserPokemonTeam team;
   final Function(UserPokemonTeam) onTagTeam;
@@ -232,7 +232,7 @@ class UserTeamNodeHeader extends StatelessWidget {
 
 class UserTeamNodeFooter extends StatelessWidget {
   const UserTeamNodeFooter({
-    Key? key,
+    super.key,
     required this.team,
     required this.onClear,
     required this.onBuild,
@@ -240,7 +240,7 @@ class UserTeamNodeFooter extends StatelessWidget {
     required this.onLog,
     required this.onLock,
     required this.onAnalyze,
-  }) : super(key: key);
+  });
 
   final UserPokemonTeam team;
   final Function(UserPokemonTeam) onClear;
@@ -261,7 +261,7 @@ class UserTeamNodeFooter extends StatelessWidget {
         if (!team.locked)
           IconButton(
             onPressed: () => onClear(team),
-            icon: Icon(
+            icon: const Icon(
               Icons.clear,
               size: Sizing.icon3,
             ),
@@ -272,7 +272,7 @@ class UserTeamNodeFooter extends StatelessWidget {
         // Edit team
         IconButton(
           onPressed: () => onBuild(team),
-          icon: Icon(
+          icon: const Icon(
             Icons.build_circle,
             size: Sizing.icon3,
           ),
@@ -283,7 +283,7 @@ class UserTeamNodeFooter extends StatelessWidget {
         // Tag team
         IconButton(
           onPressed: () => onTag(team),
-          icon: Icon(
+          icon: const Icon(
             Icons.tag,
             size: Sizing.icon3,
           ),
@@ -294,7 +294,7 @@ class UserTeamNodeFooter extends StatelessWidget {
         // Log team
         IconButton(
           onPressed: () => onLog(team),
-          icon: Icon(
+          icon: const Icon(
             Icons.query_stats,
             size: Sizing.icon3,
           ),
@@ -347,7 +347,7 @@ class UserTeamNodeFooter extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Icon(
+              const Icon(
                 Icons.analytics,
                 size: Sizing.icon3,
               ),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Local
-import '../pogo_objects/pokemon_base.dart';
+import '../model/pokemon_base.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -16,13 +16,13 @@ formatting can occur for "Stunfisk" and "(Galarian)".
 
 class FormattedPokemonName extends StatelessWidget {
   const FormattedPokemonName({
-    Key? key,
+    super.key,
     required this.pokemon,
     required this.style,
     this.textAlign = TextAlign.start,
     this.suffixDivider = '\n',
     this.suffixStyle,
-  }) : super(key: key);
+  });
 
   final PokemonBase pokemon;
   final TextStyle? style;

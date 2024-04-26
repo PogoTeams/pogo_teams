@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../modules/ui/sizing.dart';
+import '../app/ui/sizing.dart';
 
 Future<bool> getConfirmation(
   BuildContext context,

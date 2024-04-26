@@ -2,14 +2,13 @@
 import 'package:flutter/material.dart';
 
 // recipio
-import '../../modules/ui/pogo_colors.dart';
-import '../../modules/ui/sizing.dart';
+import '../../app/ui/pogo_colors.dart';
 import 'invactive_outlined_button.dart';
-import '../../tools/async_state.dart';
+import '../../utils/async_state.dart';
 
 class AsyncStatusButton extends StatelessWidget {
   const AsyncStatusButton({
-    Key? key,
+    super.key,
     this.onPressed,
     required this.child,
     required this.status,
@@ -22,7 +21,7 @@ class AsyncStatusButton extends StatelessWidget {
     this.height = double.infinity, //Sizing.formFieldHeight,
     this.gradientColors,
     this.borderRadius,
-  }) : super(key: key);
+  });
 
   final void Function()? onPressed;
   final Widget child;

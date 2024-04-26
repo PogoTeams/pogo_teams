@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
+import '../../app/ui/sizing.dart';
 import '../../enums/rankings_categories.dart';
 
 /*
@@ -15,12 +15,12 @@ PVP related categories.
 
 class RankingsCategoryButton extends StatelessWidget {
   const RankingsCategoryButton({
-    Key? key,
+    super.key,
     required this.onSelected,
     required this.selectedCategory,
     this.size,
     this.dex = false,
-  }) : super(key: key);
+  });
 
   final void Function(RankingsCategories) onSelected;
   final RankingsCategories selectedCategory;
@@ -104,10 +104,10 @@ class RankingsCategoryButton extends StatelessWidget {
 
 class PopupItem extends StatelessWidget {
   const PopupItem({
-    Key? key,
+    super.key,
     required this.category,
     required this.selectedCategory,
-  }) : super(key: key);
+  });
 
   final RankingsCategories category;
   final RankingsCategories selectedCategory;

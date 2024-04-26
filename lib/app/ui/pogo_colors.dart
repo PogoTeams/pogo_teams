@@ -5,9 +5,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Local
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../pogo_objects/move.dart';
-import '../../pogo_objects/cup.dart';
+import '../../model/pokemon_typing.dart';
+import '../../model/move.dart';
+import '../../model/cup.dart';
 import '../../enums/battle_outcome.dart';
 
 /*

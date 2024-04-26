@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
-import '../pogo_objects/tag.dart';
+import '../app/ui/sizing.dart';
+import '../model/tag.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -12,10 +12,10 @@ import '../pogo_objects/tag.dart';
 
 class TagDot extends StatelessWidget {
   const TagDot({
-    Key? key,
+    super.key,
     required this.tag,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   final Tag? tag;
   final void Function()? onPressed;

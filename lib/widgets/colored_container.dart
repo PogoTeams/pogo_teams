@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pogo_objects/pokemon_base.dart';
-import '../modules/ui/pogo_colors.dart';
+import '../model/pokemon_base.dart';
+import '../app/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -15,12 +15,12 @@ color will be applied, otherwise a linear gradient will be applied.
 
 class ColoredContainer extends StatelessWidget {
   const ColoredContainer({
-    Key? key,
+    super.key,
     this.height,
     this.padding,
     required this.pokemon,
     required this.child,
-  }) : super(key: key);
+  });
 
   final double? height;
   final EdgeInsets? padding;

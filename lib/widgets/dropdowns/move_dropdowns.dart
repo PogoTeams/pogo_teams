@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/move.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_colors.dart';
+import '../../model/move.dart';
+import '../../model/pokemon.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -21,10 +21,10 @@ Pokemon's possible movesets.
 
 class MoveDropdowns extends StatefulWidget {
   MoveDropdowns({
-    Key? key,
+    super.key,
     required this.pokemon,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   final Pokemon pokemon;
   final VoidCallback? onChanged;
@@ -177,12 +177,12 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
 // The _MovesDropdownsState will dynamically generate 3 of the nodes
 class MoveDropdown extends StatelessWidget {
   const MoveDropdown({
-    Key? key,
+    super.key,
     required this.label,
     required this.move,
     required this.options,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   final String label;
   final Move move;

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // recipio
-import '../../tools/animations.dart';
+import '../../utils/animations.dart';
 
 class BottomBarTransition extends StatefulWidget {
   const BottomBarTransition({

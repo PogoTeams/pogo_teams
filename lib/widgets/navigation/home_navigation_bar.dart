@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // recipio
 import '../../pages/pogo_pages.dart';
-import '../../tools/animations.dart';
+import '../../utils/animations.dart';
 import '../transitions/bottom_bar_transition.dart';
 
 class HomeNavigationBar extends StatelessWidget {

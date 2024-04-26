@@ -1,8 +1,8 @@
 // Local
-import '../pogo_objects/battle_pokemon.dart';
+import '../model/battle_pokemon.dart';
 import 'battle_result.dart';
-import '../modules/data/globals.dart';
-import '../modules/data/pogo_debugging.dart';
+import '../modules/globals.dart';
+import '../modules/pogo_debugging.dart';
 import '../enums/battle_outcome.dart';
 
 /*

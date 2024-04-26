@@ -2,16 +2,16 @@
 import 'package:flutter/material.dart';
 
 // recipio
-import '../../modules/ui/pogo_colors.dart';
+import '../../app/ui/pogo_colors.dart';
 
 class InactiveOutlinedButton extends StatelessWidget {
   const InactiveOutlinedButton({
-    Key? key,
+    super.key,
     this.width = 400.0,
     this.height = 60.0,
     this.borderRadius,
     this.child,
-  }) : super(key: key);
+  });
 
   final double width;
   final double height;

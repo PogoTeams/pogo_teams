@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import 'pogo_scaffold.dart';
+import '../pages/pogo_scaffold.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -10,7 +10,7 @@ import 'pogo_scaffold.dart';
 */
 
 class PogoTeamsApp extends StatelessWidget {
-  const PogoTeamsApp({Key? key}) : super(key: key);
+  const PogoTeamsApp({super.key});
 
   static const String _fontFamily = 'Futura';
 

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
+import '../../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -15,10 +15,10 @@ when their Pokemon ref is null.
 
 class EmptyNode extends StatelessWidget {
   const EmptyNode({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.emptyTransparent,
-  }) : super(key: key);
+  });
 
   final VoidCallback? onPressed;
   final bool emptyTransparent;

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 // Local Imports
-import '../modules/ui/sizing.dart';
-import '../pogo_objects/tag.dart';
+import '../app/ui/sizing.dart';
+import '../model/tag.dart';
 import '../widgets/buttons/exit_button.dart';
 import '../widgets/dialogs.dart';
-import '../modules/data/pogo_repository.dart';
+import '../modules/pogo_repository.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -19,10 +19,10 @@ A page for creating and editing tags.
 
 class TagEdit extends StatefulWidget {
   const TagEdit({
-    Key? key,
+    super.key,
     this.tag,
     this.create = false,
-  }) : super(key: key);
+  });
 
   final Tag? tag;
   final bool create;

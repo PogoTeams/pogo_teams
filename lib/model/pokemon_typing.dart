@@ -2,8 +2,8 @@
 import 'package:isar/isar.dart';
 
 // Local
-import '../modules/data/globals.dart';
-import '../modules/data/pokemon_types.dart';
+import '../modules/globals.dart';
+import '../modules/pokemon_types.dart';
 
 part 'pokemon_typing.g.dart';
 

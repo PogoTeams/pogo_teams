@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 // Local Imports
 import 'empty_node.dart';
 import 'move_node.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/cup.dart';
+import '../../model/pokemon.dart';
+import '../../model/cup.dart';
 import '../pvp_stats.dart';
 import '../dropdowns/move_dropdowns.dart';
 import '../traits_icons.dart';
 import '../colored_container.dart';
 import '../formatted_pokemon_name.dart';
-import '../../modules/data/stats.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_colors.dart';
-import '../../modules/ui/pogo_icons.dart';
+import '../../modules/stats.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_colors.dart';
+import '../../app/ui/pogo_icons.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -25,14 +25,14 @@ PokemonNode. The node can take many different forms depending on the context.
 
 class PokemonNode extends StatelessWidget {
   PokemonNode.square({
-    Key? key,
+    super.key,
     required this.pokemon,
     this.onPressed,
     this.onEmptyPressed,
     this.emptyTransparent = false,
     this.padding,
     this.lead = false,
-  }) : super(key: key) {
+  }) {
     width = Sizing.blockSizeHorizontal * 25.0;
     height = Sizing.blockSizeHorizontal * 25.0;
     cup = null;
@@ -44,7 +44,7 @@ class PokemonNode extends StatelessWidget {
   }
 
   PokemonNode.small({
-    Key? key,
+    super.key,
     required this.pokemon,
     this.onPressed,
     this.onEmptyPressed,
@@ -54,7 +54,7 @@ class PokemonNode extends StatelessWidget {
     this.dropdowns = true,
     this.rating,
     this.lead = false,
-  }) : super(key: key) {
+  }) {
     width = double.infinity;
     height = Sizing.blockSizeVertical * 15.0;
 
@@ -67,7 +67,7 @@ class PokemonNode extends StatelessWidget {
   }
 
   PokemonNode.large({
-    Key? key,
+    super.key,
     required this.pokemon,
     this.onPressed,
     this.onEmptyPressed,
@@ -77,7 +77,7 @@ class PokemonNode extends StatelessWidget {
     this.emptyTransparent = false,
     this.padding,
     this.lead = false,
-  }) : super(key: key) {
+  }) {
     width = double.infinity;
     height = Sizing.blockSizeVertical * 22.0;
     dropdowns = false;
@@ -180,9 +180,8 @@ class PokemonNode extends StatelessWidget {
 
 class _SquareNodeBody extends StatelessWidget {
   const _SquareNodeBody({
-    Key? key,
     required this.pokemon,
-  }) : super(key: key);
+  });
 
   final Pokemon pokemon;
 
@@ -223,12 +222,11 @@ class _SquareNodeBody extends StatelessWidget {
 
 class _SmallNodeBody extends StatelessWidget {
   const _SmallNodeBody({
-    Key? key,
     required this.pokemon,
     required this.dropdowns,
     required this.onMoveChanged,
     this.rating,
-  }) : super(key: key);
+  });
 
   final Pokemon pokemon;
   final bool dropdowns;
@@ -341,12 +339,11 @@ class _SmallNodeBody extends StatelessWidget {
 
 class _LargeNodeBody extends StatelessWidget {
   const _LargeNodeBody({
-    Key? key,
     required this.pokemon,
     required this.cup,
     required this.footer,
     this.onMoveChanged,
-  }) : super(key: key);
+  });
 
   final Pokemon pokemon;
   final Cup? cup;

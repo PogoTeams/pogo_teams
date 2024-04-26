@@ -2,7 +2,7 @@
 import 'dart:math';
 
 // Local
-import '../../pogo_objects/pokemon_stats.dart';
+import '../model/pokemon_stats.dart';
 import 'globals.dart';
 
 /*

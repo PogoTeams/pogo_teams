@@ -1,14 +1,14 @@
 // Local
 import 'ranking_data.dart';
-import '../pogo_objects/pokemon.dart';
-import '../pogo_objects/pokemon_base.dart';
-import '../pogo_objects/battle_pokemon.dart';
-import '../pogo_objects/cup.dart';
+import '../model/pokemon.dart';
+import '../model/pokemon_base.dart';
+import '../model/battle_pokemon.dart';
+import '../model/cup.dart';
 import '../battle/pokemon_battler.dart';
 import '../battle/battle_result.dart';
-import '../modules/data/pogo_repository.dart';
-import '../modules/data/cups.dart';
-import '../modules/data/pogo_debugging.dart';
+import '../modules/pogo_repository.dart';
+import '../modules/cups.dart';
+import '../modules/pogo_debugging.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
