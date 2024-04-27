@@ -74,10 +74,9 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
       footer: PokemonActionButton(
         width: Sizing.screenWidth(context) * .8,
         pokemon: pokemon,
-        label: 'Team Swap',
-        icon: Icon(
+        label: 'Team Swap  ',
+        icon: const Icon(
           Icons.move_up,
-          size: Sizing.screenWidth(context) * .05,
           color: Colors.white,
         ),
         onPressed: _onSwap,

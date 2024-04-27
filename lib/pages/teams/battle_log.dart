@@ -238,15 +238,11 @@ class _BattleLogState extends State<BattleLog> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Log Opponent Team',
+              'Log Opponent Team  ',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            SizedBox(
-              width: Sizing.screenWidth(context) * .05,
-            ),
-            Icon(
+            const Icon(
               Icons.add,
-              size: Sizing.screenWidth(context) * .07,
             ),
           ],
         ),
@@ -271,15 +267,11 @@ class _BattleLogState extends State<BattleLog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Analyze',
+                'Analyze  ',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(
-                width: Sizing.screenWidth(context) * .04,
-              ),
-              Icon(
+              const Icon(
                 Icons.analytics,
-                size: Sizing.screenWidth(context) * .07,
               ),
             ],
           ),
@@ -300,15 +292,11 @@ class _BattleLogState extends State<BattleLog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Log',
+                'Log  ',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(
-                width: Sizing.screenWidth(context) * .04,
-              ),
-              Icon(
+              const Icon(
                 Icons.add,
-                size: Sizing.screenWidth(context) * .07,
               ),
             ],
           ),

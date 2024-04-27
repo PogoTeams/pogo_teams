@@ -244,31 +244,30 @@ class _TeamsState extends State<Teams> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          GradientButton(
-            onPressed: _onAddTeam,
-            width: Sizing.screenWidth(context) * .6,
-            height: Sizing.screenHeight(context) * .085,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Add Team',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                SizedBox(
-                  width: Sizing.screenWidth(context) * .05,
-                ),
-                Icon(
-                  Icons.add,
-                  size: Sizing.screenWidth(context) * .07,
-                ),
-              ],
+          Expanded(
+            child: GradientButton(
+              onPressed: _onAddTeam,
+              width: double.infinity,
+              height: Sizing.fabLargeHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Add Team  ',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const Icon(
+                    Icons.add,
+                  ),
+                ],
+              ),
             ),
           ),
+          Sizing.paneSpacer,
           TagFilterButton(
             tag: _selectedTag,
             onTagChanged: _onTagChanged,
-            width: Sizing.screenWidth(context) * .0085,
+            width: Sizing.fabLargeHeight,
           ),
         ],
       ),

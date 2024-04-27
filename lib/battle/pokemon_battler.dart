@@ -26,6 +26,37 @@ class PokemonBattler {
     opponent.resetCooldown();
   }
 
+  static BattleResult battleIterative(
+    BattlePokemon self,
+    BattlePokemon opponent,
+  ) {
+    int turn = 1;
+    while (!_battleComplete(self, opponent, turn)) {
+      self.cooldown -= 1;
+      opponent.cooldown -= 1;
+
+      if (_chargeMoveSequenceBoth(self, opponent)) {
+        _chargeMoveSequenceTieBreak(self, opponent);
+      } else {
+        if (_chargeMoveSequenceReady(self, opponent.cooldown)) {
+          _chargeMoveSequence(self, opponent);
+        } else if (_chargeMoveSequenceReady(opponent, self.cooldown)) {
+          _chargeMoveSequence(opponent, self);
+        } else {
+          _fastMoveSequence(self, opponent);
+
+          ++turn;
+        }
+      }
+    }
+
+    return BattleResult(
+      self: self,
+      opponent: opponent,
+      timeline: null,
+    );
+  }
+
   static BattleResult battle(
     BattlePokemon self,
     BattlePokemon opponent, {

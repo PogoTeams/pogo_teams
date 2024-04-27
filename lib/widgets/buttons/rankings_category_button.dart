@@ -18,22 +18,18 @@ class RankingsCategoryButton extends StatelessWidget {
     super.key,
     required this.onSelected,
     required this.selectedCategory,
-    this.size,
     this.dex = false,
   });
 
   final void Function(RankingsCategories) onSelected;
   final RankingsCategories selectedCategory;
-  final double? size;
   final bool dex;
 
   @override
   Widget build(BuildContext context) {
-    final size = this.size ?? Sizing.screenWidth(context) * .14;
-
     return Container(
-      height: size,
-      width: size,
+      width: Sizing.formFieldHeight,
+      height: Sizing.formFieldHeight,
       decoration: BoxDecoration(
         color: Colors.teal,
         border: Border.all(
@@ -46,7 +42,6 @@ class RankingsCategoryButton extends StatelessWidget {
         position: PopupMenuPosition.over,
         onSelected: onSelected,
         icon: const Icon(Icons.sort_sharp),
-        iconSize: size / 2,
 
         // Category options
         itemBuilder: (BuildContext context) {

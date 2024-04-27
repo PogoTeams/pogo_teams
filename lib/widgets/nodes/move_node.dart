@@ -27,9 +27,33 @@ class MoveNodes extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        MoveNode(move: pokemon.getSelectedFastMove()),
-        MoveNode(move: pokemon.getSelectedChargeMoveL()),
-        MoveNode(move: pokemon.getSelectedChargeMoveR()),
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 2.0,
+            ),
+            child: MoveNode(move: pokemon.getSelectedFastMove()),
+          ),
+        ),
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 2.0,
+            ),
+            child: MoveNode(move: pokemon.getSelectedChargeMoveL()),
+          ),
+        ),
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 2.0,
+            ),
+            child: MoveNode(move: pokemon.getSelectedChargeMoveR()),
+          ),
+        ),
       ],
     );
   }
@@ -50,8 +74,6 @@ class MoveNode extends StatelessWidget {
       margin: EdgeInsets.only(
         top: Sizing.screenHeight(context) * .007,
       ),
-      width: Sizing.screenWidth(context) * .28,
-      height: Sizing.screenHeight(context) * .035,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
@@ -80,24 +102,34 @@ class MoveDots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: moveColors
-          .map(
-            (color) => Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
-                  width: Sizing.borderWidthThin,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: moveColors
+              .map(
+                (color) => Padding(
+                  padding: const EdgeInsets.only(
+                    left: 2.0,
+                    right: 2.0,
+                  ),
+                  child: Container(
+                    width: constraints.maxHeight,
+                    height: constraints.maxHeight,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.white,
+                        width: Sizing.borderWidthThin,
+                      ),
+                      color: color,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
                 ),
-                color: color,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              height: Sizing.screenWidth(context) * .05,
-              width: Sizing.screenWidth(context) * .05,
-            ),
-          )
-          .toList(),
+              )
+              .toList(),
+        );
+      },
     );
   }
 }

@@ -33,15 +33,11 @@ class _SettingsState extends State<Settings> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Clear All Local Data',
+                'Clear All Local Data  ',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              SizedBox(
-                width: Sizing.screenWidth(context) * .05,
-              ),
-              Icon(
+              const Icon(
                 Icons.restore,
-                size: Sizing.screenWidth(context) * .07,
               ),
             ],
           ),

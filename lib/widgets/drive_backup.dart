@@ -89,7 +89,7 @@ class _DriveBackupState extends State<DriveBackup> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Sizing.screenHeight(context, oriented: true) * .27,
+      height: Sizing.screenHeight(context) * .27,
       width: double.infinity,
       child: GoogleDriveRepository.isSignedIn
           ? DrawerHeader(
@@ -99,8 +99,8 @@ class _DriveBackupState extends State<DriveBackup> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: SizedBox(
-                      width: Sizing.screenHeight(context, oriented: true) * .1,
-                      height: Sizing.screenHeight(context, oriented: true) * .1,
+                      width: Sizing.screenHeight(context) * .1,
+                      height: Sizing.screenHeight(context) * .1,
                       child: GoogleUserCircleAvatar(
                         identity: GoogleDriveRepository.account!,
                       ),

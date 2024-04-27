@@ -45,9 +45,8 @@ class SwapList extends StatelessWidget {
             width: Sizing.screenWidth(context) * .35,
             pokemon: pokemon,
             label: 'Add To Team',
-            icon: Icon(
+            icon: const Icon(
               Icons.add,
-              size: Sizing.screenWidth(context) * .05,
               color: Colors.white,
             ),
             onPressed: onAdd,
@@ -56,9 +55,8 @@ class SwapList extends StatelessWidget {
             width: Sizing.screenWidth(context) * .35,
             pokemon: pokemon,
             label: 'Team Swap',
-            icon: Icon(
+            icon: const Icon(
               Icons.swap_horiz_rounded,
-              size: Sizing.screenWidth(context) * .05,
               color: Colors.white,
             ),
             onPressed: onSwap,
@@ -70,9 +68,8 @@ class SwapList extends StatelessWidget {
     return PokemonActionButton(
       pokemon: pokemon,
       label: 'Team Swap',
-      icon: Icon(
+      icon: const Icon(
         Icons.swap_horiz_rounded,
-        size: Sizing.screenWidth(context) * .05,
         color: Colors.white,
       ),
       onPressed: onSwap,

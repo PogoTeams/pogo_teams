@@ -58,90 +58,6 @@ class PogoDrawer extends StatelessWidget {
     );
   }
 
-  List<Widget> _pageListTiles(BuildContext context) {
-    return [
-      // Teams
-      ListTile(
-        titleTextStyle: Theme.of(context).textTheme.headlineSmall,
-        selectedColor: Theme.of(context).colorScheme.background,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              '${PogoPages.teams.displayName}  ',
-            ),
-            PogoPages.teams.icon,
-          ],
-        ),
-        selected: currentPage == PogoPages.teams,
-        onTap: () {
-          onNavSelected(PogoPages.teams);
-          if (isModal) Navigator.pop(context);
-        },
-      ),
-
-      // Tags
-      ListTile(
-        titleTextStyle: Theme.of(context).textTheme.headlineSmall,
-        selectedColor: Theme.of(context).colorScheme.background,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              '${PogoPages.tags.displayName}  ',
-            ),
-            PogoPages.tags.icon,
-          ],
-        ),
-        selected: currentPage == PogoPages.tags,
-        onTap: () async {
-          onNavSelected(PogoPages.tags);
-          if (isModal) Navigator.pop(context);
-        },
-      ),
-
-      // Battle logs
-      ListTile(
-        titleTextStyle: Theme.of(context).textTheme.headlineSmall,
-        selectedColor: Theme.of(context).colorScheme.background,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              '${PogoPages.battleLogs.displayName}  ',
-            ),
-            PogoPages.battleLogs.icon,
-          ],
-        ),
-        selected: currentPage == PogoPages.battleLogs,
-        onTap: () {
-          onNavSelected(PogoPages.battleLogs);
-          if (isModal) Navigator.pop(context);
-        },
-      ),
-
-      // Rankings
-      ListTile(
-        titleTextStyle: Theme.of(context).textTheme.headlineSmall,
-        selectedColor: Theme.of(context).colorScheme.background,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              '${PogoPages.rankings.displayName}  ',
-            ),
-            PogoPages.rankings.icon,
-          ],
-        ),
-        selected: currentPage == PogoPages.rankings,
-        onTap: () {
-          onNavSelected(PogoPages.rankings);
-          if (isModal) Navigator.pop(context);
-        },
-      ),
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -166,10 +82,97 @@ class PogoDrawer extends StatelessWidget {
                         Expanded(
                           child: Column(
                             children: [
-                              ..._pageListTiles(context),
+                              // Teams
+                              ListTile(
+                                titleTextStyle:
+                                    Theme.of(context).textTheme.headlineSmall,
+                                selectedColor:
+                                    Theme.of(context).colorScheme.background,
+                                title: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${PogoPages.teams.displayName}  ',
+                                    ),
+                                    PogoPages.teams.icon,
+                                  ],
+                                ),
+                                selected: currentPage == PogoPages.teams,
+                                onTap: () {
+                                  onNavSelected(PogoPages.teams);
+                                  if (isModal) Navigator.pop(context);
+                                },
+                              ),
+
+                              // Tags
+                              ListTile(
+                                titleTextStyle:
+                                    Theme.of(context).textTheme.headlineSmall,
+                                selectedColor:
+                                    Theme.of(context).colorScheme.background,
+                                title: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${PogoPages.tags.displayName}  ',
+                                    ),
+                                    PogoPages.tags.icon,
+                                  ],
+                                ),
+                                selected: currentPage == PogoPages.tags,
+                                onTap: () async {
+                                  onNavSelected(PogoPages.tags);
+                                  if (isModal) Navigator.pop(context);
+                                },
+                              ),
+
+                              // Battle logs
+                              ListTile(
+                                titleTextStyle:
+                                    Theme.of(context).textTheme.headlineSmall,
+                                selectedColor:
+                                    Theme.of(context).colorScheme.background,
+                                title: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${PogoPages.battleLogs.displayName}  ',
+                                    ),
+                                    PogoPages.battleLogs.icon,
+                                  ],
+                                ),
+                                selected: currentPage == PogoPages.battleLogs,
+                                onTap: () {
+                                  onNavSelected(PogoPages.battleLogs);
+                                  if (isModal) Navigator.pop(context);
+                                },
+                              ),
+
+                              // Rankings
+                              ListTile(
+                                titleTextStyle:
+                                    Theme.of(context).textTheme.headlineSmall,
+                                selectedColor:
+                                    Theme.of(context).colorScheme.background,
+                                title: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${PogoPages.rankings.displayName}  ',
+                                    ),
+                                    PogoPages.rankings.icon,
+                                  ],
+                                ),
+                                selected: currentPage == PogoPages.rankings,
+                                onTap: () {
+                                  onNavSelected(PogoPages.rankings);
+                                  if (isModal) Navigator.pop(context);
+                                },
+                              ),
                             ],
                           ),
                         ),
+
                         // Synchronize Pogo data
                         ListTile(
                           titleTextStyle:

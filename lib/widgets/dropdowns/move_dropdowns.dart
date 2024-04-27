@@ -125,48 +125,72 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        MoveDropdown(
-          label: 'F A S T',
-          move: widget.pokemon.getSelectedFastMove(),
-          options: fastMoveOptions,
-          onChanged: (Move? newFastMove) {
-            setState(() {
-              if (newFastMove != null) {
-                widget.pokemon.selectedFastMoveId = newFastMove.moveId;
-              }
-              if (widget.onChanged != null) widget.onChanged!();
-            });
-          },
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 2.0,
+            ),
+            child: MoveDropdown(
+              label: 'F A S T',
+              move: widget.pokemon.getSelectedFastMove(),
+              options: fastMoveOptions,
+              onChanged: (Move? newFastMove) {
+                setState(() {
+                  if (newFastMove != null) {
+                    widget.pokemon.selectedFastMoveId = newFastMove.moveId;
+                  }
+                  if (widget.onChanged != null) widget.onChanged!();
+                });
+              },
+            ),
+          ),
         ),
-        MoveDropdown(
-          label: 'C H A R G E  1',
-          move: widget.pokemon.getSelectedChargeMoveL(),
-          options: chargedMoveOptionsL,
-          onChanged: (Move? newChargedMove) {
-            setState(() {
-              if (newChargedMove != null) {
-                widget.pokemon.selectedChargeMoveIds.first =
-                    newChargedMove.moveId;
-              }
-              _updateChargedMoveOptions();
-              if (widget.onChanged != null) widget.onChanged!();
-            });
-          },
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 2.0,
+            ),
+            child: MoveDropdown(
+              label: 'C H A R G E  1',
+              move: widget.pokemon.getSelectedChargeMoveL(),
+              options: chargedMoveOptionsL,
+              onChanged: (Move? newChargedMove) {
+                setState(() {
+                  if (newChargedMove != null) {
+                    widget.pokemon.selectedChargeMoveIds.first =
+                        newChargedMove.moveId;
+                  }
+                  _updateChargedMoveOptions();
+                  if (widget.onChanged != null) widget.onChanged!();
+                });
+              },
+            ),
+          ),
         ),
-        MoveDropdown(
-          label: 'C H A R G E  2',
-          move: widget.pokemon.getSelectedChargeMoveR(),
-          options: chargedMoveOptionsR,
-          onChanged: (Move? newChargedMove) {
-            setState(() {
-              if (newChargedMove != null) {
-                widget.pokemon.selectedChargeMoveIds.last =
-                    newChargedMove.moveId;
-              }
-              _updateChargedMoveOptions();
-              if (widget.onChanged != null) widget.onChanged!();
-            });
-          },
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 2.0,
+            ),
+            child: MoveDropdown(
+              label: 'C H A R G E  2',
+              move: widget.pokemon.getSelectedChargeMoveR(),
+              options: chargedMoveOptionsR,
+              onChanged: (Move? newChargedMove) {
+                setState(() {
+                  if (newChargedMove != null) {
+                    widget.pokemon.selectedChargeMoveIds.last =
+                        newChargedMove.moveId;
+                  }
+                  _updateChargedMoveOptions();
+                  if (widget.onChanged != null) widget.onChanged!();
+                });
+              },
+            ),
+          ),
         ),
       ],
     );
@@ -204,14 +228,9 @@ class MoveDropdown extends StatelessWidget {
 
         // Dropdown button
         Container(
-          padding: EdgeInsets.only(
-            right: Sizing.screenHeight(context) * .007,
+          padding: const EdgeInsets.only(
+            right: 8.0,
           ),
-          margin: EdgeInsets.only(
-            top: Sizing.screenHeight(context) * .007,
-          ),
-          width: Sizing.screenWidth(context) * .28,
-          height: Sizing.screenHeight(context) * .035,
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.white,
@@ -224,8 +243,6 @@ class MoveDropdown extends StatelessWidget {
             child: DropdownButton(
               isExpanded: true,
               value: move,
-              icon: const Icon(Icons.arrow_drop_down_circle),
-              iconSize: Sizing.screenWidth(context) * .04,
               style: Theme.of(context).textTheme.bodySmall,
               items: options,
               onChanged: onChanged,

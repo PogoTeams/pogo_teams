@@ -82,9 +82,8 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
         child: DropdownButton(
           isExpanded: true,
           value: widget.size,
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_drop_down_circle,
-            size: Sizing.screenHeight(context) * .03,
           ),
           style: DefaultTextStyle.of(context).style,
           onChanged: widget.onTeamSizeChanged,

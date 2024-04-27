@@ -124,15 +124,11 @@ class _TagsState extends State<Tags> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Add Tag',
+                'Add Tag  ',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              SizedBox(
-                width: Sizing.screenWidth(context) * .05,
-              ),
-              Icon(
+              const Icon(
                 Icons.add,
-                size: Sizing.screenWidth(context) * .07,
               ),
             ],
           ),

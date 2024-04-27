@@ -166,7 +166,7 @@ class _RankingsState extends State<BattleLogs> {
               _selectedTag = tag;
             });
           },
-          width: Sizing.screenWidth(context) * .0085,
+          width: Sizing.fabLargeHeight,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),

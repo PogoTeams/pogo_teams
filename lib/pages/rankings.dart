@@ -100,17 +100,21 @@ class _RankingsState extends State<Rankings> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Dropdown for pvp cup selection
-          CupDropdown(
-            cup: cup,
-            onCupChanged: _onCupChanged,
-            width: Sizing.screenWidth(context) * .7,
+          Flexible(
+            flex: 4,
+            child: CupDropdown(
+              cup: cup,
+              onCupChanged: _onCupChanged,
+            ),
           ),
 
           // Category filter dropdown
-          RankingsCategoryButton(
-            onSelected: _filterCategory,
-            selectedCategory: _selectedCategory,
-            size: Sizing.screenWidth(context) * .12,
+          Flexible(
+            flex: 1,
+            child: RankingsCategoryButton(
+              onSelected: _filterCategory,
+              selectedCategory: _selectedCategory,
+            ),
           ),
         ],
       ),

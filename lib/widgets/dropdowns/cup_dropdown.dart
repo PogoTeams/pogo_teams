@@ -20,12 +20,10 @@ class CupDropdown extends StatefulWidget {
     super.key,
     required this.cup,
     required this.onCupChanged,
-    required this.width,
   });
 
   final Cup cup;
   final void Function(String?) onCupChanged;
-  final double width;
 
   @override
   _CupDropdownState createState() => _CupDropdownState();
@@ -60,7 +58,6 @@ class _CupDropdownState extends State<CupDropdown>
 
     return Container(
       alignment: Alignment.center,
-      width: widget.width,
       padding: EdgeInsets.only(
         right: Sizing.screenWidth(context) * .02,
       ),
@@ -87,9 +84,8 @@ class _CupDropdownState extends State<CupDropdown>
           borderRadius: BorderRadius.circular(5),
           isExpanded: true,
           value: selectedCup.cupId,
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_drop_down_circle,
-            size: Sizing.screenHeight(context) * .03,
           ),
           style: DefaultTextStyle.of(context).style,
           onChanged: widget.onCupChanged,

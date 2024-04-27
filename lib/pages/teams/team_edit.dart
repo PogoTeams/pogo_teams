@@ -117,16 +117,21 @@ class _TeamEditState extends State<TeamEdit> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Dropdown for pvp cup selection
-        CupDropdown(
-          cup: cup,
-          onCupChanged: _onCupChanged,
-          width: Sizing.screenWidth(context) * .7,
+        Flexible(
+          flex: 5,
+          child: CupDropdown(
+            cup: cup,
+            onCupChanged: _onCupChanged,
+          ),
         ),
 
         // Dropdown to select team size
-        TeamSizeDropdown(
-          size: _builderTeam.teamSize,
-          onTeamSizeChanged: _onTeamSizeChanged,
+        Flexible(
+          flex: 1,
+          child: TeamSizeDropdown(
+            size: _builderTeam.teamSize,
+            onTeamSizeChanged: _onTeamSizeChanged,
+          ),
         ),
       ],
     );

@@ -87,7 +87,10 @@ class TeamNode extends StatelessWidget {
   // If the focus index is provided, draw a special border
   // This indicates the current 'focus' node
   Widget _buildFocusNode(
-      UserPokemon? pokemon, int index, BuildContext context) {
+    UserPokemon? pokemon,
+    int index,
+    BuildContext context,
+  ) {
     Color color;
 
     if (index == focusIndex) {
@@ -265,7 +268,7 @@ class UserTeamNodeFooter extends StatelessWidget {
             onPressed: () => onClear(team),
             icon: const Icon(
               Icons.clear,
-              size: Sizing.icon3,
+              size: Sizing.icon2,
             ),
             tooltip: 'Remove Team',
             splashRadius: Sizing.screenWidth(context) * .05,
@@ -276,7 +279,7 @@ class UserTeamNodeFooter extends StatelessWidget {
           onPressed: () => onBuild(team),
           icon: const Icon(
             Icons.build_circle,
-            size: Sizing.icon3,
+            size: Sizing.icon2,
           ),
           tooltip: 'Edit Team',
           splashRadius: Sizing.screenWidth(context) * .05,
@@ -287,7 +290,7 @@ class UserTeamNodeFooter extends StatelessWidget {
           onPressed: () => onTag(team),
           icon: const Icon(
             Icons.tag,
-            size: Sizing.icon3,
+            size: Sizing.icon2,
           ),
           tooltip: 'Tag Team',
           splashRadius: Sizing.screenWidth(context) * .05,
@@ -298,7 +301,7 @@ class UserTeamNodeFooter extends StatelessWidget {
           onPressed: () => onLog(team),
           icon: const Icon(
             Icons.query_stats,
-            size: Sizing.icon3,
+            size: Sizing.icon2,
           ),
           tooltip: 'Log Team',
           splashRadius: Sizing.screenWidth(context) * .05,
@@ -308,7 +311,7 @@ class UserTeamNodeFooter extends StatelessWidget {
           onPressed: () => onLock(team),
           icon: Icon(
             lockIcon,
-            size: Sizing.icon3,
+            size: Sizing.icon2,
           ),
           tooltip: 'Toggle Team Lock',
           splashRadius: Sizing.screenWidth(context) * .05,
@@ -342,16 +345,13 @@ class UserTeamNodeFooter extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.only(
-            left: Sizing.screenWidth(context) * .02,
-            right: Sizing.screenWidth(context) * .02,
-          ),
+          padding: Sizing.horizontalWindowInsets(context),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Icon(
                 Icons.analytics,
-                size: Sizing.icon3,
+                size: Sizing.icon2,
               ),
               SizedBox(
                 width: Sizing.screenWidth(context) * .02,

@@ -296,15 +296,11 @@ class _DriveBackupsState extends State<DriveBackups> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Restore',
+                  'Restore  ',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                SizedBox(
-                  width: Sizing.screenWidth(context) * .05,
-                ),
-                Icon(
+                const Icon(
                   Icons.settings_backup_restore_rounded,
-                  size: Sizing.screenWidth(context) * .07,
                 ),
               ],
             ),
@@ -325,15 +321,11 @@ class _DriveBackupsState extends State<DriveBackups> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'New',
+                  'New  ',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                SizedBox(
-                  width: Sizing.screenWidth(context) * .05,
-                ),
-                Icon(
+                const Icon(
                   Icons.add_to_drive_outlined,
-                  size: Sizing.screenWidth(context) * .07,
                 ),
               ],
             ),
@@ -350,15 +342,11 @@ class _DriveBackupsState extends State<DriveBackups> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Sign In',
+            'Sign In  ',
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          SizedBox(
-            width: Sizing.screenWidth(context) * .05,
-          ),
-          Icon(
+          const Icon(
             Icons.login,
-            size: Sizing.screenWidth(context) * .07,
           ),
         ],
       ),

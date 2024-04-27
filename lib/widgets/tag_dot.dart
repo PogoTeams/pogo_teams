@@ -22,8 +22,11 @@ class TagDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double size = Sizing.screenWidth(context) * .07;
     if (tag == null) {
       return Container(
+        width: size,
+        height: size,
         decoration: BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(100),
@@ -32,8 +35,6 @@ class TagDot extends StatelessWidget {
             width: Sizing.borderWidthThin,
           ),
         ),
-        height: Sizing.screenWidth(context) * .065,
-        width: Sizing.screenWidth(context) * .065,
         child: onPressed == null
             ? Container()
             : MaterialButton(
@@ -43,6 +44,8 @@ class TagDot extends StatelessWidget {
     }
 
     return Container(
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         color: Color(
           int.parse(tag!.uiColor),
@@ -50,8 +53,6 @@ class TagDot extends StatelessWidget {
         //borderRadius: BorderRadius.circular(100),
         borderRadius: BorderRadius.circular(100),
       ),
-      height: Sizing.screenWidth(context) * .065,
-      width: Sizing.screenWidth(context) * .065,
       child: onPressed == null
           ? Container()
           : MaterialButton(

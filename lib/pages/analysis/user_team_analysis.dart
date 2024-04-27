@@ -509,27 +509,30 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        PokemonActionButton(
-          width: Sizing.screenWidth(context) * .4,
-          pokemon: pokemon,
-          label: 'Team Swap',
-          icon: Icon(
-            Icons.move_up,
-            size: Sizing.screenWidth(context) * .05,
-            color: Colors.white,
+        Flexible(
+          child: PokemonActionButton(
+            //width: Sizing.screenWidth(context) * .4,
+            pokemon: pokemon,
+            label: 'Team Swap',
+            icon: const Icon(
+              Icons.move_up,
+              color: Colors.white,
+            ),
+            onPressed: _onSwap,
           ),
-          onPressed: _onSwap,
         ),
-        PokemonActionButton(
-          width: Sizing.screenWidth(context) * .4,
-          pokemon: pokemon,
-          label: 'Counters',
-          icon: Icon(
-            Icons.block,
-            size: Sizing.screenWidth(context) * .05,
-            color: Colors.white,
+        Sizing.paneSpacer,
+        Flexible(
+          child: PokemonActionButton(
+            //width: Sizing.screenWidth(context) * .4,
+            pokemon: pokemon,
+            label: 'Counters',
+            icon: const Icon(
+              Icons.block,
+              color: Colors.white,
+            ),
+            onPressed: _onCounters,
           ),
-          onPressed: _onCounters,
         ),
       ],
     );

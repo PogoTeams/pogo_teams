@@ -8,7 +8,6 @@ import '../utils/pair.dart';
 import '../app/ui/sizing.dart';
 import '../modules/globals.dart';
 import '../widgets/navigation/pogo_drawer.dart';
-import '../utils/animations.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -170,9 +169,8 @@ class _CanonicalPogoScaffoldState extends State<_CanonicalPogoScaffold>
   late final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   // Build the app bar with the current page title, and icon
-  AppBar _buildAppBar(bool isWideScreen) {
+  AppBar _buildAppBar() {
     return AppBar(
-      automaticallyImplyLeading: !isWideScreen,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -198,12 +196,11 @@ class _CanonicalPogoScaffoldState extends State<_CanonicalPogoScaffold>
 
   @override
   Widget build(BuildContext context) {
-    final bool isExpanded =
-        Sizing.windowSizeClass(context) == WindowSizeClass.expanded;
+    final bool isExpanded = Sizing.isExpanded(context);
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: _buildAppBar(isExpanded),
+      appBar: isExpanded ? null : _buildAppBar(),
       drawer: isExpanded
           ? null
           : PogoDrawer(

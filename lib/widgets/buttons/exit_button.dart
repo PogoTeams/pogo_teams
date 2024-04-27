@@ -46,7 +46,6 @@ class ExitButton extends StatelessWidget {
         onPressed: onPressed,
         child: Icon(
           icon.icon,
-          size: Sizing.screenWidth(context) * .05,
         ),
       ),
     );

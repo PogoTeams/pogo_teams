@@ -46,9 +46,8 @@ class _TeamSwapState extends State<TeamSwap> {
     return PokemonActionButton(
       pokemon: _pokemonTeam[index],
       label: 'Swap Out',
-      icon: Icon(
+      icon: const Icon(
         Icons.swap_horiz_rounded,
-        size: Sizing.screenWidth(context) * .05,
         color: Colors.white,
       ),
       onPressed: onSwap,

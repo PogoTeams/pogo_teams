@@ -15,21 +15,18 @@ class PogoTextField extends StatelessWidget {
   const PogoTextField({
     super.key,
     required this.controller,
-    this.width = double.infinity,
     required this.onClear,
     this.label,
   });
 
   final TextEditingController controller;
-  final double width;
   final VoidCallback onClear;
   final Widget? label;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width,
-      height: Sizing.screenHeight(context) * .055,
+      height: Sizing.formFieldHeight,
       child: TextField(
         controller: controller,
 

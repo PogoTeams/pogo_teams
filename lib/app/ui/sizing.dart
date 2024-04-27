@@ -272,8 +272,9 @@ class Sizing {
   }
 
   /// https://m3.material.io/foundations/layout/applying-layout/window-size-classes
-  static bool isWideScreen(BuildContext context) =>
-      MediaQuery.of(context).size.width > 600;
+  static bool isWideScreen(BuildContext context) => screenWidth(context) > 600;
+
+  static bool isExpanded(BuildContext context) => screenWidth(context) > 840;
 
   static bool isLandscape(BuildContext context) =>
       MediaQuery.of(context).orientation == Orientation.landscape;

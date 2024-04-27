@@ -126,16 +126,23 @@ class _TeamBuilderState extends State<TeamBuilder> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Dropdown for pvp cup selection
-        CupDropdown(
-          cup: _cup,
-          onCupChanged: _onCupChanged,
-          width: Sizing.screenWidth(context) * .65,
+        Flexible(
+          flex: 5,
+          child: CupDropdown(
+            cup: _cup,
+            onCupChanged: _onCupChanged,
+          ),
         ),
 
+        Sizing.paneSpacer,
+
         // Dropdown to select team size
-        TeamSizeDropdown(
-          size: _team.teamSize,
-          onTeamSizeChanged: _onTeamSizeChanged,
+        Flexible(
+          flex: 2,
+          child: TeamSizeDropdown(
+            size: _team.teamSize,
+            onTeamSizeChanged: _onTeamSizeChanged,
+          ),
         ),
       ],
     );
@@ -268,29 +275,32 @@ class _TeamBuilderState extends State<TeamBuilder> {
             children: [
               _buildTeamNode(),
 
-              // Spacer
-              SizedBox(
-                height: Sizing.screenHeight(context) * .01,
-              ),
+              Sizing.listItemSpacer,
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // User input text field
-                  PogoTextField(
-                    controller: _searchController,
-                    width: Sizing.screenWidth(context) * .8,
-                    onClear: () => setState(() {
-                      _searchController.clear();
-                    }),
+                  Flexible(
+                    flex: 6,
+                    child: PogoTextField(
+                      controller: _searchController,
+                      onClear: () => setState(() {
+                        _searchController.clear();
+                      }),
+                    ),
                   ),
 
+                  Sizing.paneSpacer,
+
                   // Filter by ranking category
-                  RankingsCategoryButton(
-                    onSelected: _filterCategory,
-                    selectedCategory: _selectedCategory,
-                    size: Sizing.screenWidth(context) * .12,
-                    dex: true,
+                  Flexible(
+                    flex: 1,
+                    child: RankingsCategoryButton(
+                      onSelected: _filterCategory,
+                      selectedCategory: _selectedCategory,
+                      dex: true,
+                    ),
                   ),
                 ],
               ),
