@@ -58,8 +58,8 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
       onPressed: () {
         Navigator.pop(context);
       },
-      width: Sizing.scrnwidth * .85,
-      height: Sizing.blockSizeVertical * 8.5,
+      width: Sizing.screenWidth(context) * .85,
+      height: Sizing.screenHeight(context) * .8,
       child: const Icon(
         Icons.clear,
         size: Sizing.icon2,
@@ -69,14 +69,15 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
 
   Widget _buildPokemonNode(CupPokemon pokemon) {
     return PokemonNode.large(
+      context: context,
       pokemon: pokemon,
       footer: PokemonActionButton(
-        width: Sizing.scrnwidth * .8,
+        width: Sizing.screenWidth(context) * .8,
         pokemon: pokemon,
         label: 'Team Swap',
         icon: Icon(
           Icons.move_up,
-          size: Sizing.blockSizeHorizontal * 5.0,
+          size: Sizing.screenWidth(context) * .5,
           color: Colors.white,
         ),
         onPressed: _onSwap,
@@ -100,8 +101,8 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
         right: false,
         child: Padding(
           padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 2.0,
-            right: Sizing.blockSizeHorizontal * 2.0,
+            left: Sizing.screenWidth(context) * .2,
+            right: Sizing.screenWidth(context) * .2,
           ),
           child: Column(
             children: [
@@ -111,6 +112,7 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
                   bottom: 12.0,
                 ),
                 child: PokemonNode.small(
+                  context: context,
                   pokemon: widget.pokemon,
                   dropdowns: false,
                 ),
@@ -136,7 +138,8 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
                         child: index == widget.counters.length - 1
                             ? Padding(
                                 padding: EdgeInsets.only(
-                                    bottom: Sizing.blockSizeVertical * 15.0),
+                                  bottom: Sizing.screenHeight(context) * .15,
+                                ),
                                 child:
                                     _buildPokemonNode(widget.counters[index]),
                               )

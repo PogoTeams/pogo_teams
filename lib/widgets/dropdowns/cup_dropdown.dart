@@ -60,14 +60,15 @@ class _CupDropdownState extends State<CupDropdown>
 
     return Container(
       alignment: Alignment.center,
+      height: Sizing.formFieldHeight,
       width: widget.width,
-      padding: EdgeInsets.only(
-        right: Sizing.blockSizeHorizontal * 2.0,
+      padding: const EdgeInsets.only(
+        right: 20.0,
       ),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: Sizing.blockSizeHorizontal * .4,
+          width: 2.0,
         ),
         borderRadius: BorderRadius.circular(100.0),
         gradient: LinearGradient(
@@ -87,9 +88,8 @@ class _CupDropdownState extends State<CupDropdown>
           borderRadius: BorderRadius.circular(5),
           isExpanded: true,
           value: selectedCup.cupId,
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_drop_down_circle,
-            size: Sizing.blockSizeVertical * 3.0,
           ),
           style: DefaultTextStyle.of(context).style,
           onChanged: widget.onCupChanged,

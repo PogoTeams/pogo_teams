@@ -91,29 +91,23 @@ class _RankingsState extends State<Rankings> {
   }
 
   Widget _buildDropdowns() {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: Sizing.blockSizeHorizontal * 1.0,
-        right: Sizing.blockSizeHorizontal * 1.0,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Dropdown for pvp cup selection
-          CupDropdown(
-            cup: cup,
-            onCupChanged: _onCupChanged,
-            width: Sizing.scrnwidth * .7,
-          ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Dropdown for pvp cup selection
+        CupDropdown(
+          cup: cup,
+          onCupChanged: _onCupChanged,
+          width: Sizing.screenWidth(context) * .7,
+        ),
 
-          // Category filter dropdown
-          RankingsCategoryButton(
-            onSelected: _filterCategory,
-            selectedCategory: _selectedCategory,
-            size: Sizing.blockSizeHorizontal * 12.0,
-          ),
-        ],
-      ),
+        // Category filter dropdown
+        RankingsCategoryButton(
+          onSelected: _filterCategory,
+          selectedCategory: _selectedCategory,
+          size: Sizing.formFieldHeight,
+        ),
+      ],
     );
   }
 
@@ -144,8 +138,8 @@ class _RankingsState extends State<Rankings> {
     }
 
     return Padding(
-      padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 2.0,
+      padding: const EdgeInsets.only(
+        top: Sizing.listItemVerticalSpacing,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -153,10 +147,7 @@ class _RankingsState extends State<Rankings> {
           // Dropdowns for selecting a cup and a category
           _buildDropdowns(),
 
-          // Spacer
-          SizedBox(
-            height: Sizing.blockSizeVertical * 2.0,
-          ),
+          Sizing.listItemSpacer,
 
           // User text input
           PogoTextField(
@@ -166,10 +157,7 @@ class _RankingsState extends State<Rankings> {
             }),
           ),
 
-          // Spacer
-          SizedBox(
-            height: Sizing.blockSizeVertical * 2.0,
-          ),
+          Sizing.listItemSpacer,
 
           // Build list
           PokemonList(

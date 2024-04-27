@@ -111,30 +111,22 @@ class _TagsState extends State<Tags> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 2.0,
-        left: Sizing.blockSizeHorizontal * 2.0,
-        right: Sizing.blockSizeHorizontal * 2.0,
-      ),
+      padding: Sizing.horizontalWindowInsets(context),
       child: Scaffold(
         body: _buildTagsListView(),
         floatingActionButton: GradientButton(
           onPressed: _onEditTag,
-          width: Sizing.scrnwidth * .85,
-          height: Sizing.blockSizeVertical * 8.5,
+          width: Sizing.screenWidth(context) * .85,
+          height: Sizing.fabLargeHeight,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Add Tag',
+                'Add Tag  ',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              SizedBox(
-                width: Sizing.blockSizeHorizontal * 5.0,
-              ),
-              Icon(
+              const Icon(
                 Icons.add,
-                size: Sizing.blockSizeHorizontal * 7.0,
               ),
             ],
           ),

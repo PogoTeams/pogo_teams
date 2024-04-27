@@ -46,7 +46,7 @@ class _RankingsState extends State<BattleLogs> {
 
                 // Spacer to give last node in the list more scroll room
                 SizedBox(
-                  height: Sizing.blockSizeVertical * 10.0,
+                  height: Sizing.screenHeight(context) * .10,
                 ),
               ],
             );
@@ -79,7 +79,7 @@ class _RankingsState extends State<BattleLogs> {
               ),
               if (opponent.getTag() != null)
                 SizedBox(
-                  width: Sizing.blockSizeHorizontal * 2.0,
+                  width: Sizing.screenWidth(context) * .2,
                 ),
               if (opponent.getTag() != null)
                 Text(
@@ -91,8 +91,8 @@ class _RankingsState extends State<BattleLogs> {
           ),
           Padding(
             padding: EdgeInsets.only(
-              top: Sizing.blockSizeVertical,
-              bottom: Sizing.blockSizeVertical,
+              top: Sizing.screenHeight(context),
+              bottom: Sizing.screenHeight(context),
             ),
             child: WinLossNode(outcome: opponent.battleOutcome),
           ),
@@ -118,8 +118,8 @@ class _RankingsState extends State<BattleLogs> {
     }
 
     return Padding(
-      padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 2.0,
+      padding: const EdgeInsets.only(
+        top: Sizing.listItemVerticalSpacing,
       ),
       child: Scaffold(
         body: SafeArea(
@@ -127,11 +127,7 @@ class _RankingsState extends State<BattleLogs> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(
-                  left: Sizing.blockSizeHorizontal * 2.0,
-                  right: Sizing.blockSizeHorizontal * 2.0,
-                  bottom: Sizing.blockSizeVertical * 2.0,
-                ),
+                padding: Sizing.horizontalWindowInsets(context),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -169,7 +165,7 @@ class _RankingsState extends State<BattleLogs> {
               _selectedTag = tag;
             });
           },
-          width: Sizing.blockSizeHorizontal * .85,
+          width: Sizing.screenWidth(context) * .1,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),

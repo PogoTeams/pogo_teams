@@ -43,9 +43,7 @@ class TypeCoverage extends StatelessWidget {
         ),
 
         // Spacer
-        SizedBox(
-          height: Sizing.blockSizeVertical * 2.5,
-        ),
+        SizedBox(height: Sizing.screenHeight(context) * .2),
 
         CoverageGraph(
           netEffectiveness: netEffectiveness,

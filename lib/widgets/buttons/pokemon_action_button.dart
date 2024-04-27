@@ -32,18 +32,18 @@ class PokemonActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 1.0,
-        bottom: Sizing.blockSizeVertical * .5,
+        top: Sizing.screenHeight(context) * .1,
+        bottom: Sizing.screenHeight(context) * .05,
       ),
       child: MaterialButton(
         padding: EdgeInsets.zero,
         onPressed: () => onPressed(pokemon),
         child: Container(
-          height: Sizing.blockSizeVertical * 4.0,
+          height: Sizing.screenHeight(context) * .4,
           width: width,
           decoration: BoxDecoration(
             borderRadius:
-                BorderRadius.circular(Sizing.blockSizeHorizontal * 2.5),
+                BorderRadius.circular(Sizing.screenWidth(context) * .025),
             color: Colors.black54,
           ),
           child: Row(

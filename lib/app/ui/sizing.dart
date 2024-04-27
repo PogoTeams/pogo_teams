@@ -56,35 +56,6 @@ class AppBarSizing {
 ///
 /// https://m3.material.io
 class Sizing {
-  static late MediaQueryData _mediaQueryData;
-  static late double scrnwidth;
-  static late double scrnheight;
-  static late double blockSizeHorizontal;
-  static late double blockSizeVertical;
-
-  void init(BuildContext context) {
-    _mediaQueryData = MediaQuery.of(context);
-    scrnwidth = _mediaQueryData.size.width;
-    scrnheight = _mediaQueryData.size.height;
-
-    // Tablet query
-    if (isTablet()) {
-      blockSizeHorizontal = scrnwidth * .8 / 100;
-      blockSizeVertical = scrnheight * 1.2 / 100;
-    }
-
-    // Mobile query
-    else {
-      blockSizeHorizontal = scrnwidth / 100;
-      blockSizeVertical = scrnheight / 100;
-    }
-  }
-
-  // Calculate the screen diagonal and determine if the device is a tablet
-  bool isTablet() {
-    return _mediaQueryData.size.shortestSide > 550;
-  }
-
   // icons --------------------------------------------------------------------
   static const double iconLarge = 30.0;
   static const double icon1 = 25.0;
@@ -102,8 +73,7 @@ class Sizing {
   static const double formFieldHeight = 64.0;
   static const double fabMediumWidth = 150.0;
   static const double fabMediumHeight = 60.0;
-  static const double recipeCardWidth = 400.0;
-  static const double recipeCardHeight = 200.0;
+  static const double fabLargeHeight = 85.0;
   static const double avatarLeading = 74.0;
   static const double avatarMedium = 112.0;
   static const double avatarLarge = 250.0;
@@ -253,11 +223,11 @@ class Sizing {
         25.0,
         8.0,
       );
-  static EdgeInsets cardPadding() => const EdgeInsets.fromLTRB(
-        4.0,
-        2.0,
-        1.0,
-        2.0,
+  static EdgeInsets pokemonNodePadding() => const EdgeInsets.fromLTRB(
+        10.0,
+        5.0,
+        10.0,
+        10.0,
       );
 
   // alignment ----------------------------------------------------------------
@@ -266,9 +236,23 @@ class Sizing {
 
   // utils --------------------------------------------------------------------
   static Size screenSize(BuildContext context) => MediaQuery.of(context).size;
-  static double screenWidth(BuildContext context) => screenSize(context).width;
-  static double screenHeight(BuildContext context) =>
-      screenSize(context).height;
+  static double screenWidth(BuildContext context, {bool oriented = false}) {
+    if (oriented) {
+      return screenSize(context).width;
+    }
+    return isLandscape(context)
+        ? screenSize(context).height
+        : screenSize(context).width;
+  }
+
+  static double screenHeight(BuildContext context, {bool oriented = false}) {
+    if (oriented) {
+      return screenSize(context).height;
+    }
+    return isLandscape(context)
+        ? screenSize(context).width
+        : screenSize(context).height;
+  }
 
   /// https://m3.material.io/foundations/layout/applying-layout/window-size-classes
   static WindowSizeClass windowSizeClass(BuildContext context) {
@@ -285,6 +269,9 @@ class Sizing {
   /// https://m3.material.io/foundations/layout/applying-layout/window-size-classes
   static bool isWideScreen(BuildContext context) =>
       MediaQuery.of(context).size.width > 600;
+
+  static bool isLandscape(BuildContext context) =>
+      MediaQuery.of(context).orientation == Orientation.landscape;
 
   /// True if bottom [viewInsets] is 0.
   ///

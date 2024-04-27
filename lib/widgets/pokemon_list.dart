@@ -52,11 +52,11 @@ class PokemonList extends StatelessWidget {
                 },
                 onLongPress: () {},
                 child: Padding(
-                  padding: EdgeInsets.only(
-                    top: Sizing.blockSizeVertical * .5,
-                    bottom: Sizing.blockSizeVertical * .5,
+                  padding: const EdgeInsets.only(
+                    bottom: Sizing.listItemVerticalSpacing,
                   ),
                   child: PokemonNode.small(
+                    context: context,
                     pokemon: pokemon[index],
                     dropdowns: dropdowns,
                     rating: rankingsCategory == null ? null : '#${index + 1}',
@@ -88,10 +88,10 @@ class PokemonColumn extends StatelessWidget {
       children: pokemon
           .map(
             (pokemon) => Padding(
-              padding: EdgeInsets.only(
-                bottom: Sizing.blockSizeHorizontal * 2.0,
-              ),
+              padding:
+                  EdgeInsets.only(bottom: Sizing.screenWidth(context) * .2),
               child: PokemonNode.small(
+                context: context,
                 pokemon: pokemon,
                 dropdowns: dropdowns,
               ),
