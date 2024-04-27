@@ -111,10 +111,8 @@ class _TagsState extends State<Tags> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
+      padding: Sizing.horizontalWindowInsets(context).copyWith(
         top: Sizing.screenHeight(context) * .02,
-        left: Sizing.screenWidth(context) * .02,
-        right: Sizing.screenWidth(context) * .02,
       ),
       child: Scaffold(
         body: _buildTagsListView(),

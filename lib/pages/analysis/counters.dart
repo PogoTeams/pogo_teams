@@ -100,10 +100,7 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
         left: false,
         right: false,
         child: Padding(
-          padding: EdgeInsets.only(
-            left: Sizing.screenWidth(context) * .02,
-            right: Sizing.screenWidth(context) * .02,
-          ),
+          padding: Sizing.horizontalWindowInsets(context),
           child: Column(
             children: [
               Padding(

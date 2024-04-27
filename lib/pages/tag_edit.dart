@@ -127,11 +127,9 @@ class _TagEditState extends State<TagEdit> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.fromLTRB(
-          Sizing.screenWidth(context) * .02,
-          Sizing.screenHeight(context) * .10,
-          Sizing.screenWidth(context) * .02,
-          Sizing.screenHeight(context) * .10,
+        padding: Sizing.horizontalWindowInsets(context).copyWith(
+          top: Sizing.screenHeight(context) * .10,
+          bottom: Sizing.screenHeight(context) * .10,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

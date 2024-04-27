@@ -109,9 +109,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
         // Rebuild progress bar
         return Scaffold(
           body: Padding(
-            padding: EdgeInsets.only(
-              left: Sizing.screenWidth(context) * .02,
-              right: Sizing.screenWidth(context) * .02,
+            padding: Sizing.horizontalWindowInsets(context).copyWith(
               bottom: Sizing.screenHeight(context) * .10,
             ),
             child: Padding(
@@ -273,26 +271,6 @@ class _CanonicalPogoScaffoldState extends State<_CanonicalPogoScaffold>
           if (isWideScreen)
             PogoDrawer(
                 onNavSelected: widget.onNavSelected, popOnNavSelected: false),
-          /*
-            HomeNavigationRail(
-              railAnimation: _railAnimation,
-              railFabAnimation: _railFabAnimation,
-              destinations: const [
-                PogoPages.teams,
-                PogoPages.tags,
-                PogoPages.battleLogs,
-                PogoPages.rankings,
-                PogoPages.sync,
-                PogoPages.settings,
-              ],
-              selectedIndex: _tabController.index,
-              backgroundColor: Theme.of(context).colorScheme.background,
-              onDestinationSelected: (index) {
-                _tabController.index = index;
-                widget.onNavSelected(pogoPageFromIndex(index));
-              },
-            ),
-            */
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(

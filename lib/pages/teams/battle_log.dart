@@ -74,11 +74,7 @@ class _BattleLogState extends State<BattleLog> {
 
   Widget _buildScaffoldBody() {
     return Padding(
-      padding: EdgeInsets.only(
-        top: Sizing.screenHeight(context) * .01,
-        left: Sizing.screenWidth(context) * .02,
-        right: Sizing.screenWidth(context) * .02,
-      ),
+      padding: Sizing.horizontalWindowInsets(context),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

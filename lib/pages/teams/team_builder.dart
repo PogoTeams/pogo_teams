@@ -263,10 +263,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
       body: SafeArea(
         bottom: false,
         child: Padding(
-          padding: EdgeInsets.only(
-            left: Sizing.screenWidth(context) * .02,
-            right: Sizing.screenWidth(context) * .02,
-          ),
+          padding: Sizing.horizontalWindowInsets(context),
           child: Column(
             children: [
               _buildTeamNode(),

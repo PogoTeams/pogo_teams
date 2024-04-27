@@ -127,11 +127,7 @@ class _RankingsState extends State<BattleLogs> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(
-                  left: Sizing.screenWidth(context) * .02,
-                  right: Sizing.screenWidth(context) * .02,
-                  bottom: Sizing.screenHeight(context) * .02,
-                ),
+                padding: Sizing.horizontalWindowInsets(context),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -158,6 +154,7 @@ class _RankingsState extends State<BattleLogs> {
                   ],
                 ),
               ),
+              Sizing.listItemSpacer,
               _buildLoggedBattles(opponents),
             ],
           ),

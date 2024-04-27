@@ -114,10 +114,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
     return Scaffold(
       appBar: _buildAppBar(context),
       body: Padding(
-        padding: EdgeInsets.only(
-          left: Sizing.screenWidth(context) * .02,
-          right: Sizing.screenWidth(context) * .02,
-        ),
+        padding: Sizing.horizontalWindowInsets(context),
         child: ListView(
           children: [
             // Spacer

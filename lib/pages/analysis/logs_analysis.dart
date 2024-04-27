@@ -88,11 +88,7 @@ class LogsAnalysis extends StatelessWidget {
     return Scaffold(
       appBar: _buildAppBar(context),
       body: Padding(
-        padding: EdgeInsets.only(
-          top: Sizing.screenHeight(context) * .02,
-          left: Sizing.screenWidth(context) * .02,
-          right: Sizing.screenWidth(context) * .02,
-        ),
+        padding: Sizing.horizontalWindowInsets(context).copyWith(),
         child: ListView(
           children: [
             // PokemonType coverage widgets

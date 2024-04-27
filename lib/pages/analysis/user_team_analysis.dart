@@ -345,11 +345,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
           ],
         ),
         Padding(
-          padding: EdgeInsets.only(
-            left: Sizing.screenWidth(context) * .02,
-            right: Sizing.screenWidth(context) * .02,
-            bottom: 12.0,
-          ),
+          padding: Sizing.horizontalWindowInsets(context),
           child: TabBar(
             controller: _tabController,
             tabs: [
