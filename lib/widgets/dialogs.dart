@@ -23,8 +23,8 @@ Future<bool> getConfirmation(
           children: [
             Padding(
               padding: EdgeInsets.only(
-                top: Sizing.screenHeight(context) * .2,
-                left: Sizing.screenWidth(context) * .5,
+                top: Sizing.blockSizeVertical * 2.0,
+                left: Sizing.blockSizeHorizontal * 5.0,
               ),
               child: Text(
                 title,
@@ -88,8 +88,9 @@ Future<void> showOptions(
           children: [
             Padding(
               padding: EdgeInsets.only(
-                  top: Sizing.screenHeight(context) * .2,
-                  left: Sizing.screenWidth(context) * .5),
+                top: Sizing.blockSizeVertical * 2.0,
+                left: Sizing.blockSizeHorizontal * 5.0,
+              ),
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(

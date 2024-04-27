@@ -27,15 +27,14 @@ class PokemonNode extends StatelessWidget {
   PokemonNode.square({
     super.key,
     required this.pokemon,
-    required BuildContext context,
     this.onPressed,
     this.onEmptyPressed,
     this.emptyTransparent = false,
     this.padding,
     this.lead = false,
   }) {
-    width = 50.0;
-    height = 50.0;
+    width = Sizing.blockSizeHorizontal * 25.0;
+    height = Sizing.blockSizeHorizontal * 25.0;
     cup = null;
     dropdowns = false;
 
@@ -47,7 +46,6 @@ class PokemonNode extends StatelessWidget {
   PokemonNode.small({
     super.key,
     required this.pokemon,
-    required BuildContext context,
     this.onPressed,
     this.onEmptyPressed,
     this.onMoveChanged,
@@ -58,7 +56,7 @@ class PokemonNode extends StatelessWidget {
     this.lead = false,
   }) {
     width = double.infinity;
-    height = 100.0;
+    height = Sizing.blockSizeVertical * 15.0;
 
     body = _SmallNodeBody(
       pokemon: pokemon!,
@@ -71,7 +69,6 @@ class PokemonNode extends StatelessWidget {
   PokemonNode.large({
     super.key,
     required this.pokemon,
-    required BuildContext context,
     this.onPressed,
     this.onEmptyPressed,
     this.onMoveChanged,
@@ -82,7 +79,7 @@ class PokemonNode extends StatelessWidget {
     this.lead = false,
   }) {
     width = double.infinity;
-    height = 110.0;
+    height = Sizing.blockSizeVertical * 22.0;
     dropdowns = false;
 
     if (pokemon == null) return;
@@ -112,14 +109,20 @@ class PokemonNode extends StatelessWidget {
   late final String? rating;
   late final bool lead;
 
-  Widget _buildPokemonNode(BuildContext context) {
+  Widget _buildPokemonNode() {
     return pokemon == null
         ? EmptyNode(
             onPressed: onEmptyPressed,
             emptyTransparent: emptyTransparent,
           )
         : ColoredContainer(
-            padding: padding ?? EdgeInsets.zero,
+            padding: padding ??
+                EdgeInsets.only(
+                  top: Sizing.blockSizeVertical * .5,
+                  left: Sizing.blockSizeHorizontal * 2.0,
+                  right: Sizing.blockSizeHorizontal * 2.0,
+                  bottom: Sizing.blockSizeVertical * .5,
+                ),
             pokemon: pokemon!.getBase(),
             child: onPressed == null
                 ? body
@@ -139,13 +142,13 @@ class PokemonNode extends StatelessWidget {
           ? Stack(
               fit: StackFit.passthrough,
               children: [
-                _buildPokemonNode(context),
+                _buildPokemonNode(),
                 Positioned(
                     bottom: 0,
                     left: 0,
                     child: Container(
-                      width: Sizing.screenWidth(context) * .05,
-                      height: Sizing.screenWidth(context) * .15,
+                      width: Sizing.blockSizeHorizontal * 5,
+                      height: Sizing.blockSizeHorizontal * 15.0,
                       decoration: const BoxDecoration(
                         color: Colors.amber,
                         borderRadius: BorderRadius.only(
@@ -170,7 +173,7 @@ class PokemonNode extends StatelessWidget {
                     )),
               ],
             )
-          : _buildPokemonNode(context),
+          : _buildPokemonNode(),
     );
   }
 }
@@ -186,9 +189,9 @@ class _SquareNodeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          //top: Sizing.screenHeight(context) * .1,
-          //bottom: Sizing.screenHeight(context) * .1,
-          ),
+        top: Sizing.blockSizeVertical * 1.0,
+        bottom: Sizing.blockSizeVertical * 1.0,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -254,7 +257,7 @@ class _SmallNodeBody extends StatelessWidget {
           // Typing icon(s)
           Container(
             alignment: Alignment.topRight,
-            height: Sizing.screenWidth(context) * .08,
+            height: Sizing.blockSizeHorizontal * 8.0,
             child: Row(
               children:
                   PogoIcons.getPokemonTypingIcons(pokemon.getBase().typing),
@@ -291,7 +294,7 @@ class _SmallNodeBody extends StatelessWidget {
         // Typing icon(s)
         Container(
           alignment: Alignment.topRight,
-          height: Sizing.screenWidth(context) * .08,
+          height: Sizing.blockSizeHorizontal * 8.0,
           child: Row(
             children: PogoIcons.getPokemonTypingIcons(pokemon.getBase().typing),
           ),
@@ -303,11 +306,22 @@ class _SmallNodeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: Sizing.pokemonNodePadding(),
+      padding: EdgeInsets.only(
+        top: Sizing.blockSizeVertical * .5,
+        left: Sizing.blockSizeHorizontal * 2.0,
+        right: Sizing.blockSizeHorizontal * 2.0,
+        bottom: Sizing.blockSizeVertical * 1.5,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildNodeHeader(context, pokemon),
+
+          // A line divider
+          Divider(
+            color: Colors.white,
+            thickness: Sizing.blockSizeHorizontal * 0.4,
+          ),
 
           // The dropdowns for the Pokemon's moves
           // Defaults to the most meta relavent moves
@@ -366,7 +380,7 @@ class _LargeNodeBody extends StatelessWidget {
         // Typing icon(s)
         Container(
           alignment: Alignment.topRight,
-          height: Sizing.screenWidth(context) * .8,
+          height: Sizing.blockSizeHorizontal * 8.0,
           child: Row(
             children: PogoIcons.getPokemonTypingIcons(pokemon.getBase().typing),
           ),
@@ -378,16 +392,22 @@ class _LargeNodeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: Sizing.pokemonNodePadding(),
+      padding: EdgeInsets.only(
+        top: Sizing.blockSizeVertical * .5,
+        left: Sizing.blockSizeHorizontal * 2.0,
+        right: Sizing.blockSizeHorizontal * 2.0,
+        bottom: Sizing.blockSizeVertical * .2,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           // Pokemon name, perfect IVs, and typing icons
           _buildNodeHeader(context, pokemon, cup),
 
-          const Divider(
+          // A line divider
+          Divider(
             color: Colors.white,
-            thickness: 1.0,
+            thickness: Sizing.blockSizeHorizontal * 0.4,
           ),
 
           // The dropdowns for the Pokemon's moves

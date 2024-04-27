@@ -28,8 +28,9 @@ class EmptyNode extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-            color: emptyTransparent ? Colors.transparent : Colors.white54,
-            width: Sizing.screenWidth(context) * .0),
+          color: emptyTransparent ? Colors.transparent : Colors.white54,
+          width: Sizing.blockSizeHorizontal * 0.5,
+        ),
         borderRadius: BorderRadius.circular(20),
       ),
       child: MaterialButton(
@@ -38,8 +39,11 @@ class EmptyNode extends StatelessWidget {
         // Evaluate button transparency
         child: emptyTransparent
             ? Container()
-            : Icon(Icons.add,
-                color: Colors.white54, size: Sizing.screenWidth(context) * .15),
+            : Icon(
+                Icons.add,
+                color: Colors.white54,
+                size: Sizing.blockSizeHorizontal * 15.0,
+              ),
       ),
     );
   }

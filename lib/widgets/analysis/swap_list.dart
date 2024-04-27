@@ -42,23 +42,23 @@ class SwapList extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           PokemonActionButton(
-            width: Sizing.screenWidth(context) * .35,
+            width: Sizing.scrnwidth * .35,
             pokemon: pokemon,
             label: 'Add To Team',
             icon: Icon(
               Icons.add,
-              size: Sizing.screenWidth(context) * .5,
+              size: Sizing.blockSizeHorizontal * 5.0,
               color: Colors.white,
             ),
             onPressed: onAdd,
           ),
           PokemonActionButton(
-            width: Sizing.screenWidth(context) * .35,
+            width: Sizing.scrnwidth * .35,
             pokemon: pokemon,
             label: 'Team Swap',
             icon: Icon(
               Icons.swap_horiz_rounded,
-              size: Sizing.screenWidth(context) * .5,
+              size: Sizing.blockSizeHorizontal * 5.0,
               color: Colors.white,
             ),
             onPressed: onSwap,
@@ -72,7 +72,7 @@ class SwapList extends StatelessWidget {
       label: 'Team Swap',
       icon: Icon(
         Icons.swap_horiz_rounded,
-        size: Sizing.screenWidth(context) * .5,
+        size: Sizing.blockSizeHorizontal * 5.0,
         color: Colors.white,
       ),
       onPressed: onSwap,
@@ -96,11 +96,10 @@ class SwapList extends StatelessWidget {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) => Padding(
                 padding: EdgeInsets.only(
-                  top: Sizing.screenHeight(context) * .05,
-                  bottom: Sizing.screenHeight(context) * .05,
+                  top: Sizing.blockSizeVertical * .5,
+                  bottom: Sizing.blockSizeVertical * .5,
                 ),
                 child: PokemonNode.large(
-                  context: context,
                   pokemon: snapshot.data![index],
                   footer: _buildFooter(
                     context,

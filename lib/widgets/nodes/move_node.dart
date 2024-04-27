@@ -47,8 +47,11 @@ class MoveNode extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      width: Sizing.screenWidth(context) * .28,
-      height: 35.0,
+      margin: EdgeInsets.only(
+        top: Sizing.blockSizeVertical * .7,
+      ),
+      width: Sizing.blockSizeHorizontal * 28.0,
+      height: Sizing.blockSizeVertical * 3.5,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
@@ -85,13 +88,13 @@ class MoveDots extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.white,
-                  width: 1.0,
+                  width: Sizing.blockSizeHorizontal * 0.4,
                 ),
                 color: color,
                 borderRadius: BorderRadius.circular(100),
               ),
-              width: 20.0,
-              height: 20.0,
+              height: Sizing.blockSizeHorizontal * 5.0,
+              width: Sizing.blockSizeHorizontal * 5.0,
             ),
           )
           .toList(),

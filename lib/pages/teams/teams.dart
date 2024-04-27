@@ -44,9 +44,7 @@ class _TeamsState extends State<Teams> {
       itemBuilder: (context, index) {
         if (index == _teams.length - 1) {
           return Padding(
-            padding: EdgeInsets.only(
-              bottom: Sizing.screenHeight(context) * .11,
-            ),
+            padding: EdgeInsets.only(bottom: Sizing.blockSizeVertical * 11.0),
             child: _buildTeamNode(_teams[index]),
           );
         }
@@ -121,8 +119,8 @@ class _TeamsState extends State<Teams> {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Dialog(
             insetPadding: EdgeInsets.only(
-              left: Sizing.screenWidth(context) * .2,
-              right: Sizing.screenWidth(context) * .2,
+              left: Sizing.blockSizeHorizontal * 2.0,
+              right: Sizing.blockSizeHorizontal * 2.0,
             ),
             backgroundColor: Colors.transparent,
             child: TagTeam(
@@ -247,17 +245,21 @@ class _TeamsState extends State<Teams> {
         children: [
           GradientButton(
             onPressed: _onAddTeam,
-            width: Sizing.screenWidth(context, oriented: true) * .6,
-            height: Sizing.fabLargeHeight,
+            width: Sizing.scrnwidth * .6,
+            height: Sizing.blockSizeVertical * 8.5,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Add Team  ',
+                  'Add Team',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                const Icon(
+                SizedBox(
+                  width: Sizing.blockSizeHorizontal * 5.0,
+                ),
+                Icon(
                   Icons.add,
+                  size: Sizing.blockSizeHorizontal * 7.0,
                 ),
               ],
             ),
@@ -265,7 +267,7 @@ class _TeamsState extends State<Teams> {
           TagFilterButton(
             tag: _selectedTag,
             onTagChanged: _onTagChanged,
-            width: Sizing.screenWidth(context) * .085,
+            width: Sizing.blockSizeHorizontal * .85,
           ),
         ],
       ),

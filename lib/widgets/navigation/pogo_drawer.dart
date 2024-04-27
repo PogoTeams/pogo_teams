@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../pages/pogo_pages.dart';
 import '../../modules/globals.dart';
 import '../../app/ui/sizing.dart';
-import '../drive_backup_sync.dart';
+import '../drive_backup.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -21,12 +21,10 @@ class PogoDrawer extends StatelessWidget {
   const PogoDrawer({
     super.key,
     required this.onNavSelected,
-    required this.currentPage,
     this.popOnNavSelected = true,
   });
 
   final Function(PogoPages) onNavSelected;
-  final PogoPages currentPage;
   final bool popOnNavSelected;
 
   void _launchGitHubUrl() async => await launchUrl(Uri.https(
@@ -48,221 +46,208 @@ class PogoDrawer extends StatelessWidget {
 
   Widget _buildDrawerHeader(BuildContext context) {
     return SizedBox(
-      height: Sizing.screenHeight(context) * .30,
+      height: Sizing.blockSizeVertical * 30.0,
       child: DrawerHeader(
         child: Image.asset(
           'assets/pogo_teams_icon.png',
-          scale: Sizing.screenWidth(context) * .05,
+          scale: Sizing.blockSizeHorizontal * .5,
         ),
       ),
     );
   }
 
-  List<Widget> _pageListTiles(BuildContext context) {
-    return [
-      // Teams
-      ListTile(
-        titleTextStyle: Theme.of(context).textTheme.headlineSmall,
-        selectedColor: Theme.of(context).colorScheme.background,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              '${PogoPages.teams.displayName}  ',
-            ),
-            PogoPages.teams.icon,
-          ],
-        ),
-        selected: currentPage == PogoPages.teams,
-        onTap: () {
-          onNavSelected(PogoPages.teams);
-          if (popOnNavSelected) Navigator.pop(context);
-        },
-      ),
-
-      // Tags
-      ListTile(
-        titleTextStyle: Theme.of(context).textTheme.headlineSmall,
-        selectedColor: Theme.of(context).colorScheme.background,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              '${PogoPages.tags.displayName}  ',
-            ),
-            PogoPages.tags.icon,
-          ],
-        ),
-        selected: currentPage == PogoPages.tags,
-        onTap: () async {
-          onNavSelected(PogoPages.tags);
-          if (popOnNavSelected) Navigator.pop(context);
-        },
-      ),
-
-      // Battle logs
-      ListTile(
-        titleTextStyle: Theme.of(context).textTheme.headlineSmall,
-        selectedColor: Theme.of(context).colorScheme.background,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              '${PogoPages.battleLogs.displayName}  ',
-            ),
-            PogoPages.battleLogs.icon,
-          ],
-        ),
-        selected: currentPage == PogoPages.battleLogs,
-        onTap: () {
-          onNavSelected(PogoPages.battleLogs);
-          if (popOnNavSelected) Navigator.pop(context);
-        },
-      ),
-
-      // Rankings
-      ListTile(
-        titleTextStyle: Theme.of(context).textTheme.headlineSmall,
-        selectedColor: Theme.of(context).colorScheme.background,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              '${PogoPages.rankings.displayName}  ',
-            ),
-            PogoPages.rankings.icon,
-          ],
-        ),
-        selected: currentPage == PogoPages.rankings,
-        onTap: () {
-          onNavSelected(PogoPages.rankings);
-          if (popOnNavSelected) Navigator.pop(context);
-        },
-      ),
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Container(
-            padding: EdgeInsets.only(
-              bottom: Sizing.screenHeight(context) * .2,
-            ),
-            decoration: _buildGradientDecoration(),
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: constraints.copyWith(
-                  minHeight: constraints.maxHeight,
-                  maxHeight: double.infinity,
-                ),
-                child: IntrinsicHeight(
-                  child: SafeArea(
-                    left: false,
-                    right: false,
-                    child: Column(
+      child: Container(
+        padding: EdgeInsets.only(
+          bottom: Sizing.blockSizeVertical * 2.0,
+        ),
+        decoration: _buildGradientDecoration(),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  // Pogo Teams Logo
+                  //_buildDrawerHeader(context),
+                  const DriveBackup(),
+
+                  // Teams
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        // Pogo Teams Logo
-                        //_buildDrawerHeader(context),
-                        const DriveBackupSync(),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              ..._pageListTiles(context),
-                            ],
-                          ),
+                        Text(
+                          PogoPages.teams.displayName,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
-                        // Synchronize Pogo data
-                        ListTile(
-                          titleTextStyle:
-                              Theme.of(context).textTheme.headlineSmall,
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${PogoPages.sync.displayName}  ',
-                              ),
-                              PogoPages.sync.icon,
-                            ],
-                          ),
-                          onTap: () {
-                            onNavSelected(PogoPages.sync);
-                            if (popOnNavSelected) Navigator.pop(context);
-                          },
-                        ),
-
-                        // Settings
-                        ListTile(
-                          titleTextStyle:
-                              Theme.of(context).textTheme.headlineSmall,
-                          selectedColor:
-                              Theme.of(context).colorScheme.background,
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${PogoPages.settings.displayName}  ',
-                              ),
-                              PogoPages.settings.icon,
-                            ],
-                          ),
-                          selected: currentPage == PogoPages.settings,
-                          onTap: () async {
-                            onNavSelected(PogoPages.settings);
-                            if (popOnNavSelected) Navigator.pop(context);
-                          },
-                        ),
-
                         SizedBox(
-                          height: Sizing.screenWidth(context) * .3,
+                          width: Sizing.blockSizeHorizontal * 3.0,
                         ),
-
-                        // Footer
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                              width: Sizing.screenWidth(context) * .5,
-                            ),
-                            // GitHub link
-                            SizedBox(
-                              width: Sizing.screenWidth(context) * .10,
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                onPressed: _launchGitHubUrl,
-                                icon: Image.asset(
-                                    'assets/GitHub-Mark-Light-64px.png'),
-                              ),
-                            ),
-
-                            SizedBox(
-                              width: Sizing.screenWidth(context) * .3,
-                            ),
-
-                            // Version
-                            Text(
-                              Globals.version,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                            ),
-                          ],
-                        ),
+                        PogoPages.teams.icon,
                       ],
                     ),
+                    onTap: () {
+                      onNavSelected(PogoPages.teams);
+                      if (popOnNavSelected) Navigator.pop(context);
+                    },
                   ),
-                ),
+
+                  // Tags
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          PogoPages.tags.displayName,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        SizedBox(
+                          width: Sizing.blockSizeHorizontal * 3.0,
+                        ),
+                        PogoPages.tags.icon,
+                      ],
+                    ),
+                    onTap: () async {
+                      onNavSelected(PogoPages.tags);
+                      if (popOnNavSelected) Navigator.pop(context);
+                    },
+                  ),
+
+                  // Battle logs
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          PogoPages.battleLogs.displayName,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        SizedBox(
+                          width: Sizing.blockSizeHorizontal * 3.0,
+                        ),
+                        PogoPages.battleLogs.icon,
+                      ],
+                    ),
+                    onTap: () {
+                      onNavSelected(PogoPages.battleLogs);
+                      if (popOnNavSelected) Navigator.pop(context);
+                    },
+                  ),
+
+                  // Rankings
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          PogoPages.rankings.displayName,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        SizedBox(
+                          width: Sizing.blockSizeHorizontal * 3.0,
+                        ),
+                        PogoPages.rankings.icon,
+                      ],
+                    ),
+                    onTap: () {
+                      onNavSelected(PogoPages.rankings);
+                      if (popOnNavSelected) Navigator.pop(context);
+                    },
+                  ),
+                ],
               ),
             ),
-          );
-        },
+
+            // Synchronize Pogo data
+            ListTile(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: Sizing.blockSizeHorizontal * 2.0,
+                  ),
+                  Text(
+                    PogoPages.sync.displayName,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  SizedBox(
+                    width: Sizing.blockSizeHorizontal * 3.0,
+                  ),
+                  PogoPages.sync.icon,
+                ],
+              ),
+              onTap: () {
+                onNavSelected(PogoPages.sync);
+                if (popOnNavSelected) Navigator.pop(context);
+              },
+            ),
+
+            // Settings
+            ListTile(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: Sizing.blockSizeHorizontal * 2.0,
+                  ),
+                  Text(
+                    PogoPages.settings.displayName,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  SizedBox(
+                    width: Sizing.blockSizeHorizontal * 3.0,
+                  ),
+                  PogoPages.settings.icon,
+                ],
+              ),
+              onTap: () async {
+                onNavSelected(PogoPages.settings);
+                if (popOnNavSelected) Navigator.pop(context);
+              },
+            ),
+
+            SizedBox(
+              height: Sizing.blockSizeHorizontal * 3.0,
+            ),
+
+            // Footer
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: Sizing.blockSizeHorizontal * 5.0,
+                ),
+                // GitHub link
+                SizedBox(
+                  width: Sizing.blockSizeHorizontal * 10.0,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: _launchGitHubUrl,
+                    icon: Image.asset('assets/GitHub-Mark-Light-64px.png'),
+                  ),
+                ),
+
+                SizedBox(
+                  width: Sizing.blockSizeHorizontal * 3.0,
+                ),
+
+                // Version
+                Text(
+                  Globals.version,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -73,6 +73,9 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
   @override
   Widget build(BuildContext context) {
+    // Initialize media queries
+    Sizing().init(context);
+
     if (_loaded) {
       return _CanonicalPogoScaffold(
         currentPage: _currentPage,
@@ -109,32 +112,42 @@ class _PogoScaffoldState extends State<PogoScaffold>
         // Rebuild progress bar
         return Scaffold(
           body: Padding(
-            padding: Sizing.horizontalWindowInsets(context),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Loading message
-                  Text(
-                    snapshot.data!.a,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
+            padding: EdgeInsets.only(
+              left: Sizing.blockSizeHorizontal * 2.0,
+              right: Sizing.blockSizeHorizontal * 2.0,
+              bottom: Sizing.blockSizeVertical * 10.0,
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: Sizing.blockSizeHorizontal * 3.0,
+                right: Sizing.blockSizeHorizontal * 5.0,
+              ),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Loading message
+                    Text(
+                      snapshot.data!.a,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
 
-                  // Loading indicator
-                  SizedBox(
-                    child: AnimatedBuilder(
-                      animation: _progressBarAnimController,
-                      builder: (context, child) => CircularProgressIndicator(
-                        valueColor:
-                            const AlwaysStoppedAnimation<Color>(Colors.cyan),
-                        semanticsLabel: 'Pogo Teams Loading Indicator',
-                        semanticsValue: snapshot.data.toString(),
-                        backgroundColor: Colors.transparent,
+                    // Loading indicator
+                    SizedBox(
+                      child: AnimatedBuilder(
+                        animation: _progressBarAnimController,
+                        builder: (context, child) => CircularProgressIndicator(
+                          valueColor:
+                              const AlwaysStoppedAnimation<Color>(Colors.cyan),
+                          semanticsLabel: 'Pogo Teams Loading Indicator',
+                          semanticsValue: snapshot.data.toString(),
+                          backgroundColor: Colors.transparent,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -159,18 +172,50 @@ class _CanonicalPogoScaffold extends StatefulWidget {
 
 class _CanonicalPogoScaffoldState extends State<_CanonicalPogoScaffold>
     with TickerProviderStateMixin {
+  late final _navigationAnimationController = AnimationController(
+    duration: const Duration(milliseconds: 1000),
+    reverseDuration: const Duration(milliseconds: 1250),
+    value: 0,
+    vsync: this,
+  );
+
+  late final _railAnimation = RailAnimation(
+    parent: _navigationAnimationController,
+  );
+
+  late final _railFabAnimation = RailFabAnimation(
+    parent: _navigationAnimationController,
+  );
+
+  late final _barAnimation = BarAnimation(
+    parent: _navigationAnimationController,
+  );
+
+  late final TabController _tabController =
+      TabController(length: 6, vsync: this);
+
   late final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
+  bool _controllerInitialized = false;
+
   // Build the app bar with the current page title, and icon
-  AppBar _buildAppBar(bool isExpanded) {
+  AppBar _buildAppBar(bool isWideScreen) {
     return AppBar(
+      automaticallyImplyLeading: !isWideScreen,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           // Page title
           Text(
-            '${widget.currentPage.displayName}  ',
-            style: Theme.of(context).textTheme.headlineSmall,
+            widget.currentPage.displayName,
+            style: Theme.of(context).textTheme.headlineSmall?.apply(
+                  fontStyle: FontStyle.italic,
+                ),
+          ),
+
+          // Spacer
+          SizedBox(
+            width: Sizing.blockSizeHorizontal * 2.0,
           ),
 
           // Page icon
@@ -181,31 +226,82 @@ class _CanonicalPogoScaffoldState extends State<_CanonicalPogoScaffold>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final double width = Sizing.screenWidth(context);
+
+    final AnimationStatus status = _navigationAnimationController.status;
+    if (width > 600) {
+      if (status != AnimationStatus.forward &&
+          status != AnimationStatus.completed) {
+        _navigationAnimationController.forward();
+      }
+    } else {
+      if (status != AnimationStatus.reverse &&
+          status != AnimationStatus.dismissed) {
+        _navigationAnimationController.reverse();
+      }
+    }
+
+    if (!_controllerInitialized) {
+      _controllerInitialized = true;
+      _navigationAnimationController.value = width > 600 ? 1 : 0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _railAnimation.dispose();
+    _railFabAnimation.dispose();
+    _navigationAnimationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final WindowSizeClass sizeClass = Sizing.windowSizeClass(context);
-    final bool isExpanded = sizeClass == WindowSizeClass.expanded;
+    final bool isWideScreen = Sizing.isWideScreen(context);
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: isExpanded ? null : _buildAppBar(isExpanded),
-      drawer: isExpanded
+      appBar: _buildAppBar(isWideScreen),
+      drawer: isWideScreen
           ? null
           : PogoDrawer(
               onNavSelected: widget.onNavSelected,
-              currentPage: widget.currentPage,
             ),
       extendBody: true,
       body: Row(
         children: [
-          if (isExpanded)
+          if (isWideScreen)
             PogoDrawer(
-              onNavSelected: widget.onNavSelected,
-              popOnNavSelected: false,
-              currentPage: widget.currentPage,
+                onNavSelected: widget.onNavSelected, popOnNavSelected: false),
+          /*
+            HomeNavigationRail(
+              railAnimation: _railAnimation,
+              railFabAnimation: _railFabAnimation,
+              destinations: const [
+                PogoPages.teams,
+                PogoPages.tags,
+                PogoPages.battleLogs,
+                PogoPages.rankings,
+                PogoPages.sync,
+                PogoPages.settings,
+              ],
+              selectedIndex: _tabController.index,
+              backgroundColor: Theme.of(context).colorScheme.background,
+              onDestinationSelected: (index) {
+                _tabController.index = index;
+                widget.onNavSelected(pogoPageFromIndex(index));
+              },
             ),
+            */
           Expanded(
             child: Padding(
-              padding: Sizing.horizontalWindowInsets(context),
+              padding: EdgeInsets.only(
+                left: Sizing.blockSizeHorizontal * 2.0,
+                right: Sizing.blockSizeHorizontal * 2.0,
+              ),
               child: widget.currentPage.page,
             ),
           ),

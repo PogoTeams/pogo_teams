@@ -90,7 +90,7 @@ class _TeamEditState extends State<TeamEdit> {
     if (pokemon == null) return null;
 
     // Size of the footer icons
-    final double iconSize = Sizing.screenWidth(context) * .06;
+    final double iconSize = Sizing.blockSizeHorizontal * 6.0;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,7 +120,7 @@ class _TeamEditState extends State<TeamEdit> {
         CupDropdown(
           cup: cup,
           onCupChanged: _onCupChanged,
-          width: Sizing.screenWidth(context) * .7,
+          width: Sizing.scrnwidth * .7,
         ),
 
         // Dropdown to select team size
@@ -141,22 +141,21 @@ class _TeamEditState extends State<TeamEdit> {
           _builderTeam.teamSize,
           (index) => Padding(
             padding: EdgeInsets.only(
-              top: Sizing.screenHeight(context) * .1,
-              bottom: Sizing.screenHeight(context) * .1,
-              left: Sizing.screenWidth(context) * .2,
-              right: Sizing.screenWidth(context) * .2,
+              top: Sizing.blockSizeVertical * 1.0,
+              bottom: Sizing.blockSizeVertical * 1.0,
+              left: Sizing.blockSizeHorizontal * 2.0,
+              right: Sizing.blockSizeHorizontal * 2.0,
             ),
             child: PokemonNode.large(
-              context: context,
               pokemon: _builderTeam.getPokemon(index),
               onEmptyPressed: () => _onSearchPressed(index),
               onMoveChanged: _onPokemonMoveChanged,
               cup: _builderTeam.getCup(),
               footer: _buildNodeFooter(_builderTeam.getPokemon(index), index),
               padding: EdgeInsets.only(
-                top: Sizing.screenHeight(context) * .05,
-                left: Sizing.screenWidth(context) * .2,
-                right: Sizing.screenWidth(context) * .2,
+                top: Sizing.blockSizeVertical * .7,
+                left: Sizing.blockSizeHorizontal * 2.0,
+                right: Sizing.blockSizeHorizontal * 2.0,
               ),
               lead: index == 0,
             ),
@@ -176,10 +175,10 @@ class _TeamEditState extends State<TeamEdit> {
         // Cup and team size dropdown menus at the top of the page
         Padding(
           padding: EdgeInsets.only(
-            top: Sizing.screenHeight(context) * .2,
-            bottom: Sizing.screenHeight(context) * .2,
-            left: Sizing.screenWidth(context) * .2,
-            right: Sizing.screenWidth(context) * .2,
+            top: Sizing.blockSizeVertical * 2.0,
+            bottom: Sizing.blockSizeVertical * 2.0,
+            left: Sizing.blockSizeHorizontal * 2.0,
+            right: Sizing.blockSizeHorizontal * 2.0,
           ),
           child: _buildHeaderDropdowns(_builderTeam.getCup()),
         ),
@@ -188,7 +187,7 @@ class _TeamEditState extends State<TeamEdit> {
           padding: EdgeInsets.zero,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           onPressed: () => Navigator.pop(context),
-          height: Sizing.screenHeight(context) * .7,
+          height: Sizing.blockSizeVertical * 7.0,
           child: const Center(
             child: Icon(
               Icons.clear,

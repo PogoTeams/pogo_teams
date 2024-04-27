@@ -75,8 +75,8 @@ class CoverageGrids extends StatelessWidget {
                   // Threat type Icons
                   child: GridView.count(
                     shrinkWrap: true,
-                    crossAxisSpacing: Sizing.screenWidth(context) * .05,
-                    mainAxisSpacing: Sizing.screenHeight(context) * .05,
+                    crossAxisSpacing: Sizing.blockSizeHorizontal * .1,
+                    mainAxisSpacing: Sizing.blockSizeVertical * .5,
                     physics: const NeverScrollableScrollPhysics(),
                     crossAxisCount: crossAxisCount,
                     children: defenseThreats
@@ -92,7 +92,7 @@ class CoverageGrids extends StatelessWidget {
 
         // Spacer
         SizedBox(
-          height: Sizing.screenHeight(context) * .2,
+          height: Sizing.blockSizeVertical * 2.5,
         ),
 
         // List of coverage
@@ -134,8 +134,8 @@ class CoverageGrids extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 7.0),
                   child: GridView.count(
                     shrinkWrap: true,
-                    crossAxisSpacing: Sizing.screenWidth(context) * .05,
-                    mainAxisSpacing: Sizing.screenHeight(context) * .05,
+                    crossAxisSpacing: Sizing.blockSizeHorizontal * .1,
+                    mainAxisSpacing: Sizing.blockSizeVertical * .5,
                     physics: const NeverScrollableScrollPhysics(),
                     crossAxisCount: crossAxisCount,
                     children: offenseCoverage

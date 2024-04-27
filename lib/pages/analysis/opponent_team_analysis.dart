@@ -51,7 +51,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
 
           // Spacer
           SizedBox(
-            width: Sizing.screenWidth(context) * .3,
+            width: Sizing.blockSizeHorizontal * 3.0,
           ),
 
           // Page icon
@@ -65,8 +65,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
   }
 
   // Build the list of either 3 or 6 PokemonNodes that make up this team
-  Widget _buildPokemonNodes(
-      List<UserPokemon> pokemonTeam, BuildContext context) {
+  Widget _buildPokemonNodes(List<UserPokemon> pokemonTeam) {
     return ListView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -74,11 +73,10 @@ class OpponentTeamAnalysis extends StatelessWidget {
         pokemonTeam.length,
         (index) => Padding(
           padding: EdgeInsets.only(
-            top: Sizing.screenHeight(context) * .05,
-            bottom: Sizing.screenHeight(context) * .05,
+            top: Sizing.blockSizeVertical * .5,
+            bottom: Sizing.blockSizeVertical * .5,
           ),
           child: PokemonNode.small(
-            context: context,
             pokemon: pokemonTeam[index],
             dropdowns: false,
             lead: ((pokemonTeam[index].teamIndex ?? -1) == 0),
@@ -113,22 +111,22 @@ class OpponentTeamAnalysis extends StatelessWidget {
       appBar: _buildAppBar(context),
       body: Padding(
         padding: EdgeInsets.only(
-          left: Sizing.screenWidth(context) * .2,
-          right: Sizing.screenWidth(context) * .2,
+          left: Sizing.blockSizeHorizontal * 2.0,
+          right: Sizing.blockSizeHorizontal * 2.0,
         ),
         child: ListView(
           children: [
             // Spacer
             SizedBox(
-              height: Sizing.screenHeight(context) * .1,
+              height: Sizing.blockSizeVertical * 1.0,
             ),
 
             // Opponent team
-            _buildPokemonNodes(pokemonTeam, context),
+            _buildPokemonNodes(pokemonTeam),
 
             // Spacer
             SizedBox(
-              height: Sizing.screenHeight(context) * .2,
+              height: Sizing.blockSizeVertical * 2.0,
             ),
 
             TypeCoverage(
@@ -141,7 +139,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
 
             // Spacer
             SizedBox(
-              height: Sizing.screenHeight(context) * .2,
+              height: Sizing.blockSizeVertical * 2.0,
             ),
 
             Text(
@@ -151,10 +149,10 @@ class OpponentTeamAnalysis extends StatelessWidget {
             ),
 
             Divider(
-              height: Sizing.screenHeight(context) * .5,
-              thickness: Sizing.screenHeight(context) * .05,
-              indent: Sizing.screenWidth(context) * .2,
-              endIndent: Sizing.screenWidth(context) * .2,
+              height: Sizing.blockSizeVertical * 5.0,
+              thickness: Sizing.blockSizeVertical * .5,
+              indent: Sizing.blockSizeHorizontal * 2.0,
+              endIndent: Sizing.blockSizeHorizontal * 2.0,
               color: Colors.white,
             ),
 

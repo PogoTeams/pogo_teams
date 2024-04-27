@@ -26,15 +26,15 @@ class WinLossNode extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        top: Sizing.screenHeight(context) * .05,
-        bottom: Sizing.screenHeight(context) * .05,
+        top: Sizing.blockSizeVertical * .5,
+        bottom: Sizing.blockSizeVertical * .5,
       ),
       alignment: Alignment.center,
-      width: Sizing.screenWidth(context) * .15,
+      width: Sizing.blockSizeHorizontal * 15.0,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: Sizing.screenWidth(context) * .05,
+          width: Sizing.blockSizeHorizontal * .4,
         ),
         borderRadius: BorderRadius.circular(15.0),
         color: PogoColors.getBattleOutcomeColor(outcome),

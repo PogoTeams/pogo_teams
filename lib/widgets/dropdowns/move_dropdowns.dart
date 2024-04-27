@@ -89,8 +89,8 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
           value: move,
           child: Padding(
             padding: EdgeInsets.only(
-              left: 5.0,
-              right: 5.0,
+              left: Sizing.blockSizeHorizontal * 2.0,
+              right: Sizing.blockSizeHorizontal * 2.0,
             ),
             child: Center(
               child: FittedBox(
@@ -204,11 +204,14 @@ class MoveDropdown extends StatelessWidget {
 
         // Dropdown button
         Container(
-          padding: const EdgeInsets.only(
-            right: 5.0,
+          padding: EdgeInsets.only(
+            right: Sizing.blockSizeVertical * .7,
           ),
-          width: Sizing.screenWidth(context) * .28,
-          height: 35.0,
+          margin: EdgeInsets.only(
+            top: Sizing.blockSizeVertical * .7,
+          ),
+          width: Sizing.scrnwidth * .28,
+          height: Sizing.blockSizeVertical * 3.5,
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.white,
@@ -222,8 +225,8 @@ class MoveDropdown extends StatelessWidget {
               isExpanded: true,
               value: move,
               icon: const Icon(Icons.arrow_drop_down_circle),
+              iconSize: Sizing.blockSizeHorizontal * 4.0,
               style: Theme.of(context).textTheme.bodySmall,
-              iconSize: Sizing.icon5,
               items: options,
               onChanged: onChanged,
             ),

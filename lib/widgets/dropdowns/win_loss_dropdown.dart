@@ -57,14 +57,14 @@ class _WinLossDropdownState extends State<WinLossDropdown>
     return Container(
       alignment: Alignment.center,
       width: widget.width,
-      height: Sizing.screenHeight(context) * .5,
+      height: Sizing.blockSizeVertical * 5.0,
       padding: EdgeInsets.only(
-        right: Sizing.screenWidth(context) * .2,
+        right: Sizing.blockSizeHorizontal * 2.0,
       ),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: Sizing.screenWidth(context) * .05,
+          width: Sizing.blockSizeHorizontal * .4,
         ),
         borderRadius: BorderRadius.circular(100.0),
         color: PogoColors.getBattleOutcomeColor(widget.selectedOption),

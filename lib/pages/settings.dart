@@ -26,8 +26,8 @@ class _SettingsState extends State<Settings> {
       children: [
         GradientButton(
           onPressed: _clearUserData,
-          width: Sizing.screenWidth(context) * .85,
-          height: Sizing.screenHeight(context) * .8,
+          width: Sizing.scrnwidth * .85,
+          height: Sizing.blockSizeVertical * 8.5,
           borderRadius: BorderRadius.circular(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -37,11 +37,11 @@ class _SettingsState extends State<Settings> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               SizedBox(
-                width: Sizing.screenWidth(context) * .5,
+                width: Sizing.blockSizeHorizontal * 5.0,
               ),
               Icon(
                 Icons.restore,
-                size: Sizing.screenWidth(context) * .7,
+                size: Sizing.blockSizeHorizontal * 7.0,
               ),
             ],
           ),
@@ -82,9 +82,9 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: Sizing.screenHeight(context) * .2,
-        left: Sizing.screenWidth(context) * .2,
-        right: Sizing.screenWidth(context) * .2,
+        top: Sizing.blockSizeVertical * 2.0,
+        left: Sizing.blockSizeHorizontal * 2.0,
+        right: Sizing.blockSizeHorizontal * 2.0,
       ),
       child: _buildSettingsListView(),
     );

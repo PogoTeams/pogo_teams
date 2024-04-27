@@ -48,7 +48,7 @@ class _TeamSwapState extends State<TeamSwap> {
       label: 'Swap Out',
       icon: Icon(
         Icons.swap_horiz_rounded,
-        size: Sizing.screenWidth(context) * .5,
+        size: Sizing.blockSizeHorizontal * 5.0,
         color: Colors.white,
       ),
       onPressed: onSwap,
@@ -61,8 +61,8 @@ class _TeamSwapState extends State<TeamSwap> {
         _saveTeam();
         Navigator.pop(context);
       },
-      width: Sizing.screenWidth(context) * .85,
-      height: Sizing.screenHeight(context) * .8,
+      width: Sizing.scrnwidth * .85,
+      height: Sizing.blockSizeVertical * 8.5,
       child: const Icon(
         Icons.clear,
         size: Sizing.icon2,
@@ -79,7 +79,6 @@ class _TeamSwapState extends State<TeamSwap> {
 
   Widget _buildPokemonNode(int index) {
     return PokemonNode.large(
-      context: context,
       pokemon: _pokemonTeam[index],
       footer: _buildFooter(context, index),
     );
@@ -101,8 +100,8 @@ class _TeamSwapState extends State<TeamSwap> {
         right: false,
         child: Padding(
           padding: EdgeInsets.only(
-            left: Sizing.screenWidth(context) * .2,
-            right: Sizing.screenWidth(context) * .2,
+            left: Sizing.blockSizeHorizontal * 2.0,
+            right: Sizing.blockSizeHorizontal * 2.0,
           ),
           child: Column(
             children: [
@@ -112,10 +111,7 @@ class _TeamSwapState extends State<TeamSwap> {
                   top: 12.0,
                   bottom: 12.0,
                 ),
-                child: PokemonNode.small(
-                  context: context,
-                  pokemon: _swap,
-                ),
+                child: PokemonNode.small(pokemon: _swap),
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -136,8 +132,8 @@ class _TeamSwapState extends State<TeamSwap> {
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: EdgeInsets.only(
-                            top: Sizing.screenHeight(context) * .05,
-                            bottom: Sizing.screenHeight(context) * .05,
+                            top: Sizing.blockSizeVertical * .5,
+                            bottom: Sizing.blockSizeVertical * .5,
                           ),
                           child: Padding(
                               padding: const EdgeInsets.only(
@@ -146,8 +142,8 @@ class _TeamSwapState extends State<TeamSwap> {
                               child: index == _pokemonTeam.length - 1
                                   ? Padding(
                                       padding: EdgeInsets.only(
-                                          bottom: Sizing.screenHeight(context) *
-                                              .11),
+                                          bottom:
+                                              Sizing.blockSizeVertical * 11.0),
                                       child: _buildPokemonNode(index))
                                   : _buildPokemonNode(index)),
                         );

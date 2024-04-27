@@ -29,7 +29,7 @@ class PogoTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      height: Sizing.formFieldHeight,
+      height: Sizing.blockSizeVertical * 5.5,
       child: TextField(
         controller: controller,
 
@@ -60,6 +60,7 @@ class PogoTextField extends StatelessWidget {
               : IconButton(
                   onPressed: onClear,
                   icon: const Icon(Icons.clear),
+                  iconSize: Sizing.blockSizeHorizontal * 5.0,
                   color: Colors.white,
                 ),
         ),

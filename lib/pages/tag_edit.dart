@@ -37,7 +37,7 @@ class _TagEditState extends State<TagEdit> {
 
   Widget _buildFloatingActionButtons() {
     return SizedBox(
-      width: Sizing.screenWidth(context) * .87,
+      width: Sizing.scrnwidth * .87,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -128,10 +128,10 @@ class _TagEditState extends State<TagEdit> {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.fromLTRB(
-          Sizing.screenWidth(context) * .2,
-          Sizing.screenHeight(context) * .10,
-          Sizing.screenWidth(context) * .2,
-          Sizing.screenHeight(context) * .10,
+          Sizing.blockSizeHorizontal * 2.0,
+          Sizing.blockSizeVertical * 10.0,
+          Sizing.blockSizeHorizontal * 2.0,
+          Sizing.blockSizeVertical * 10.0,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -140,7 +140,7 @@ class _TagEditState extends State<TagEdit> {
             Text('Name', style: Theme.of(context).textTheme.titleLarge),
 
             SizedBox(
-              height: Sizing.screenHeight(context) * .2,
+              height: Sizing.blockSizeVertical * 2.0,
             ),
 
             // Tag Name
@@ -154,20 +154,20 @@ class _TagEditState extends State<TagEdit> {
             ),
 
             SizedBox(
-              height: Sizing.screenHeight(context) * .2,
+              height: Sizing.blockSizeVertical * 2.0,
             ),
 
             Text('Color', style: Theme.of(context).textTheme.titleLarge),
 
             SizedBox(
-              height: Sizing.screenHeight(context) * .2,
+              height: Sizing.blockSizeVertical * 2.0,
             ),
 
             // Color
             ColorPicker(
               paletteType: PaletteType.hsl,
               enableAlpha: false,
-              colorPickerWidth: Sizing.screenWidth(context),
+              colorPickerWidth: Sizing.scrnwidth,
               pickerAreaBorderRadius: BorderRadius.circular(10),
               labelTypes: const [],
               pickerColor: _selectedColor,

@@ -36,8 +36,8 @@ class CoverageGraph extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(
-            left: Sizing.screenWidth(context) * .7,
-            right: Sizing.screenWidth(context) * .5,
+            left: Sizing.blockSizeHorizontal * 7.0,
+            right: Sizing.blockSizeHorizontal * 5.0,
             bottom: 4.0,
           ),
           child: Row(
@@ -62,8 +62,8 @@ class CoverageGraph extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(
-            left: Sizing.screenWidth(context) * .7,
-            right: Sizing.screenWidth(context) * .5,
+            left: Sizing.blockSizeHorizontal * 7.0,
+            right: Sizing.blockSizeHorizontal * 5.0,
             bottom: 10.0,
           ),
           child: Container(
@@ -76,8 +76,8 @@ class CoverageGraph extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(20),
             ),
-            width: Sizing.screenWidth(context) * .84,
-            height: Sizing.screenHeight(context) * .05,
+            width: Sizing.scrnwidth * .84,
+            height: Sizing.blockSizeVertical * .6,
           ),
         ),
         ListView(
@@ -117,23 +117,22 @@ class GraphRow extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 4.0),
           child: SizedBox(
-            width: Sizing.screenWidth(context) * .6,
+            width: Sizing.blockSizeHorizontal * 6.0,
             child: PogoIcons.getPokemonTypeIcon(typeData.a.typeId),
           ),
         ),
         Padding(
           padding: EdgeInsets.only(
-            right: Sizing.screenWidth(context) * .5,
+            right: Sizing.blockSizeHorizontal * 5.0,
           ),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: PogoColors.getPokemonTypeColor(typeData.a.typeId),
             ),
-            width: normalize(barLength / teamFactor, 0, 1) *
-                Sizing.screenWidth(context) *
-                .8,
-            height: Sizing.screenHeight(context) * .1,
+            width:
+                normalize(barLength / teamFactor, 0, 1) * Sizing.scrnwidth * .8,
+            height: Sizing.blockSizeVertical * 1.7,
           ),
         ),
       ],

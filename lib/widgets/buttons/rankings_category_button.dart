@@ -29,7 +29,7 @@ class RankingsCategoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = this.size ?? Sizing.formFieldHeight;
+    final size = this.size ?? Sizing.blockSizeHorizontal * 14.0;
 
     return Container(
       height: size,
@@ -38,16 +38,14 @@ class RankingsCategoryButton extends StatelessWidget {
         color: Colors.teal,
         border: Border.all(
           color: Colors.white,
-          width: 2.0,
+          width: Sizing.blockSizeHorizontal * .7,
         ),
         shape: BoxShape.circle,
       ),
       child: PopupMenuButton<RankingsCategories>(
         position: PopupMenuPosition.over,
         onSelected: onSelected,
-        icon: const Icon(
-          Icons.sort_sharp,
-        ),
+        icon: const Icon(Icons.sort_sharp),
         iconSize: size / 2,
 
         // Category options

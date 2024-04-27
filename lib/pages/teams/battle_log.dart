@@ -59,7 +59,7 @@ class _BattleLogState extends State<BattleLog> {
 
           // Spacer
           SizedBox(
-            width: Sizing.screenWidth(context) * .3,
+            width: Sizing.blockSizeHorizontal * 3.0,
           ),
 
           // Page icon
@@ -75,9 +75,9 @@ class _BattleLogState extends State<BattleLog> {
   Widget _buildScaffoldBody() {
     return Padding(
       padding: EdgeInsets.only(
-        top: Sizing.screenHeight(context) * .1,
-        left: Sizing.screenWidth(context) * .2,
-        right: Sizing.screenWidth(context) * .2,
+        top: Sizing.blockSizeVertical * 1.0,
+        left: Sizing.blockSizeHorizontal * 2.0,
+        right: Sizing.blockSizeHorizontal * 2.0,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,7 +87,7 @@ class _BattleLogState extends State<BattleLog> {
 
           // Spacer
           SizedBox(
-            height: Sizing.screenHeight(context) * .2,
+            height: Sizing.blockSizeVertical * 2.0,
           ),
 
           Text(
@@ -97,7 +97,7 @@ class _BattleLogState extends State<BattleLog> {
 
           // Spacer
           SizedBox(
-            height: Sizing.screenHeight(context) * .2,
+            height: Sizing.blockSizeVertical * 2.0,
           ),
 
           // Logged opponent teams
@@ -140,7 +140,7 @@ class _BattleLogState extends State<BattleLog> {
                   footer: _buildTeamNodeFooter(index),
                 ),
                 SizedBox(
-                  height: Sizing.screenHeight(context) * .10,
+                  height: Sizing.blockSizeVertical * 10.0,
                 ),
               ],
             );
@@ -161,7 +161,7 @@ class _BattleLogState extends State<BattleLog> {
   // The icon buttons at the footer of each TeamNode
   Widget _buildTeamNodeFooter(int teamIndex) {
     // Size of the footer icons
-    final double iconSize = Sizing.screenWidth(context) * .06;
+    final double iconSize = Sizing.blockSizeHorizontal * 6.0;
 
     // Provider retrieve
     final opponent = _team.getOpponents().elementAt(teamIndex);
@@ -189,7 +189,7 @@ class _BattleLogState extends State<BattleLog> {
                         icon: const Icon(Icons.clear),
                         tooltip: 'Remove Team',
                         iconSize: iconSize,
-                        splashRadius: Sizing.screenWidth(context) * .5,
+                        splashRadius: Sizing.blockSizeHorizontal * 5.0,
                       ),
 
                 // Analyze team
@@ -198,7 +198,7 @@ class _BattleLogState extends State<BattleLog> {
                   icon: const Icon(Icons.analytics),
                   tooltip: 'Analyze Team',
                   iconSize: iconSize,
-                  splashRadius: Sizing.screenWidth(context) * .5,
+                  splashRadius: Sizing.blockSizeHorizontal * 5.0,
                 ),
 
                 // Edit team
@@ -207,7 +207,7 @@ class _BattleLogState extends State<BattleLog> {
                   icon: const Icon(Icons.build_circle),
                   tooltip: 'Edit Team',
                   iconSize: iconSize,
-                  splashRadius: Sizing.screenWidth(context) * .5,
+                  splashRadius: Sizing.blockSizeHorizontal * 5.0,
                 ),
 
                 // Lock team
@@ -216,7 +216,7 @@ class _BattleLogState extends State<BattleLog> {
                   icon: Icon(lockIcon),
                   tooltip: 'Unlock Team',
                   iconSize: iconSize,
-                  splashRadius: Sizing.screenWidth(context) * .5,
+                  splashRadius: Sizing.blockSizeHorizontal * 5.0,
                 ),
               ],
             ),
@@ -236,8 +236,8 @@ class _BattleLogState extends State<BattleLog> {
     if (_team.getOpponents().isEmpty) {
       return GradientButton(
         onPressed: _onAddTeam,
-        width: Sizing.screenWidth(context) * .85,
-        height: Sizing.screenHeight(context) * .8,
+        width: Sizing.scrnwidth * .85,
+        height: Sizing.blockSizeVertical * 8.5,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -246,11 +246,11 @@ class _BattleLogState extends State<BattleLog> {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             SizedBox(
-              width: Sizing.screenWidth(context) * .5,
+              width: Sizing.blockSizeHorizontal * 5.0,
             ),
             Icon(
               Icons.add,
-              size: Sizing.screenWidth(context) * .7,
+              size: Sizing.blockSizeHorizontal * 7.0,
             ),
           ],
         ),
@@ -263,8 +263,8 @@ class _BattleLogState extends State<BattleLog> {
         // Analyze button
         GradientButton(
           onPressed: _onAnalyzeLogs,
-          width: Sizing.screenWidth(context) * .44,
-          height: Sizing.screenHeight(context) * .8,
+          width: Sizing.scrnwidth * .44,
+          height: Sizing.blockSizeVertical * 8.5,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(50),
             topRight: Radius.circular(20),
@@ -279,11 +279,11 @@ class _BattleLogState extends State<BattleLog> {
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               SizedBox(
-                width: Sizing.screenWidth(context) * .4,
+                width: Sizing.blockSizeHorizontal * 4.0,
               ),
               Icon(
                 Icons.analytics,
-                size: Sizing.screenWidth(context) * .7,
+                size: Sizing.blockSizeHorizontal * 7.0,
               ),
             ],
           ),
@@ -292,8 +292,8 @@ class _BattleLogState extends State<BattleLog> {
         // Log button
         GradientButton(
           onPressed: _onAddTeam,
-          width: Sizing.screenWidth(context) * .44,
-          height: Sizing.screenHeight(context) * .8,
+          width: Sizing.scrnwidth * .44,
+          height: Sizing.blockSizeVertical * 8.5,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(50),
@@ -308,11 +308,11 @@ class _BattleLogState extends State<BattleLog> {
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               SizedBox(
-                width: Sizing.screenWidth(context) * .4,
+                width: Sizing.blockSizeHorizontal * 4.0,
               ),
               Icon(
                 Icons.add,
-                size: Sizing.screenWidth(context) * .7,
+                size: Sizing.blockSizeHorizontal * 7.0,
               ),
             ],
           ),

@@ -50,7 +50,7 @@ class LogsAnalysis extends StatelessWidget {
 
           // Spacer
           SizedBox(
-            width: Sizing.screenWidth(context) * .3,
+            width: Sizing.blockSizeHorizontal * 3.0,
           ),
 
           // Page icon
@@ -89,9 +89,9 @@ class LogsAnalysis extends StatelessWidget {
       appBar: _buildAppBar(context),
       body: Padding(
         padding: EdgeInsets.only(
-          top: Sizing.screenHeight(context) * .2,
-          left: Sizing.screenWidth(context) * .2,
-          right: Sizing.screenWidth(context) * .2,
+          top: Sizing.blockSizeVertical * 2.0,
+          left: Sizing.blockSizeHorizontal * 2.0,
+          right: Sizing.blockSizeHorizontal * 2.0,
         ),
         child: ListView(
           children: [
@@ -106,7 +106,7 @@ class LogsAnalysis extends StatelessWidget {
 
             // Spacer
             SizedBox(
-              height: Sizing.screenHeight(context) * .2,
+              height: Sizing.blockSizeVertical * 2.0,
             ),
 
             Text(
@@ -116,10 +116,10 @@ class LogsAnalysis extends StatelessWidget {
             ),
 
             Divider(
-              height: Sizing.screenHeight(context) * .5,
-              thickness: Sizing.screenHeight(context) * .05,
-              indent: Sizing.screenWidth(context) * .2,
-              endIndent: Sizing.screenWidth(context) * .2,
+              height: Sizing.blockSizeVertical * 5.0,
+              thickness: Sizing.blockSizeVertical * .5,
+              indent: Sizing.blockSizeHorizontal * 2.0,
+              endIndent: Sizing.blockSizeHorizontal * 2.0,
               color: Colors.white,
             ),
 
