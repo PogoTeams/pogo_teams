@@ -86,7 +86,6 @@ class PogoDrawer extends StatelessWidget {
         selectedColor: Theme.of(context).colorScheme.background,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
               '${PogoPages.tags.displayName}  ',

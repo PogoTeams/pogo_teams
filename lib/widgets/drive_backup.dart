@@ -46,10 +46,7 @@ class _DriveBackupState extends State<DriveBackup> {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Dialog(
-            insetPadding: EdgeInsets.only(
-              left: Sizing.screenWidth(context) * .02,
-              right: Sizing.screenWidth(context) * .02,
-            ),
+            insetPadding: Sizing.horizontalWindowInsets(context),
             backgroundColor: Colors.transparent,
             child: const DriveBackups(),
           ),
@@ -63,9 +60,7 @@ class _DriveBackupState extends State<DriveBackup> {
     if (!GoogleDriveRepository.isSignedIn) return;
 
     setState(() {
-      _syncBackup = const CircularProgressIndicator(
-        color: Colors.white,
-      );
+      _syncBackup = const _SyncButton(onPressed: null);
     });
 
     final Map<String, dynamic> backupJson =
@@ -93,128 +88,140 @@ class _DriveBackupState extends State<DriveBackup> {
 
   @override
   Widget build(BuildContext context) {
-    if (GoogleDriveRepository.isSignedIn) {
-      return SizedBox(
-        height: Sizing.screenHeight(context) * .3,
-        child: DrawerHeader(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
+    return SizedBox(
+      height: Sizing.screenHeight(context, oriented: true) * .27,
+      width: double.infinity,
+      child: GoogleDriveRepository.isSignedIn
+          ? DrawerHeader(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Align(
-                    alignment: Alignment.topLeft,
+                    alignment: Alignment.centerLeft,
                     child: SizedBox(
-                      width: Sizing.screenWidth(context) * .2,
-                      height: Sizing.screenWidth(context) * .2,
+                      width: Sizing.screenHeight(context, oriented: true) * .1,
+                      height: Sizing.screenHeight(context, oriented: true) * .1,
                       child: GoogleUserCircleAvatar(
                         identity: GoogleDriveRepository.account!,
                       ),
                     ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      GoogleDriveRepository.linkedBackupFile == null
+                          ? 'Linked Backup: none'
+                          : 'Linked Backup: ${GoogleDriveRepository.linkedBackupFile!.nameWithoutExtension}\nLast Modified: ${DateFormat.yMMMMd().add_jm().format(GoogleDriveRepository.linkedBackupFile!.modifiedTime!.toLocal())}',
+                      style: Theme.of(context).textTheme.bodySmall?.apply(
+                            fontStyle: FontStyle.italic,
+                          ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (GoogleDriveRepository.account!.displayName != null)
-                        Text(
-                          GoogleDriveRepository.account!.displayName!,
-                          style: Theme.of(context).textTheme.bodyMedium,
+                      if (GoogleDriveRepository.linkedBackupFile != null)
+                        _syncBackup,
+                      ElevatedButton(
+                        onPressed: _onLinkBackupFilePressed,
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all(const CircleBorder()),
                         ),
-                      Text(
-                        GoogleDriveRepository.account!.email,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontStyle: FontStyle.italic,
-                            ),
+                        child: Icon(
+                          Icons.backup_rounded,
+                          color: Theme.of(context).iconTheme.color,
+                          size: Sizing.icon3,
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: _signOut,
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all(const CircleBorder()),
+                        ),
+                        child: Icon(
+                          Icons.logout,
+                          color: Theme.of(context).iconTheme.color,
+                          size: Sizing.icon3,
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
-              if (GoogleDriveRepository.linkedBackupFile != null)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'linked backup: ${GoogleDriveRepository.linkedBackupFile!.nameWithoutExtension}\nlast modified: ${DateFormat.yMMMMd().add_jm().format(GoogleDriveRepository.linkedBackupFile!.modifiedTime!.toLocal())}',
+            )
+          : DrawerHeader(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SignInButton(
+                    Buttons.google,
+                    text: 'Sign in with Google',
+                    onPressed: _signIn,
+                  ),
+                  Text(
+                    '*Backup your data via Google Drive',
                     style: Theme.of(context).textTheme.bodySmall?.apply(
                           fontStyle: FontStyle.italic,
                         ),
                   ),
-                ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (GoogleDriveRepository.linkedBackupFile != null)
-                    _syncBackup,
-                  ElevatedButton(
-                    onPressed: _onLinkBackupFilePressed,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Backups  ',
-                          style: Theme.of(context).textTheme.bodySmall?.apply(
-                                fontStyle: FontStyle.italic,
-                              ),
-                        ),
-                        Icon(
-                          Icons.backup_rounded,
-                          color: Theme.of(context).iconTheme.color,
-                        )
-                      ],
-                    ),
-                  ),
                 ],
               ),
-            ],
-          ),
-        ),
-      );
-    } else {
-      return DrawerHeader(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SignInButton(
-              Buttons.google,
-              text: 'Sign in with Google',
-              onPressed: _signIn,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '*Backup your data via Google Drive ',
-                  style: Theme.of(context).textTheme.bodySmall?.apply(
-                        fontStyle: FontStyle.italic,
-                      ),
-                ),
-                const Icon(Icons.backup_rounded)
-              ],
-            ),
-          ],
-        ),
-      );
-    }
+    );
   }
 }
 
-class _SyncButton extends StatelessWidget {
+class _SyncButton extends StatefulWidget {
   const _SyncButton({
     required this.onPressed,
   });
 
-  final void Function() onPressed;
+  final void Function()? onPressed;
+
+  @override
+  State<_SyncButton> createState() => __SyncButtonState();
+}
+
+class __SyncButtonState extends State<_SyncButton>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.onPressed == null) {
+      _animationController.repeat();
+    } else {
+      _animationController.reset();
+    }
     return ElevatedButton(
-      onPressed: onPressed,
-      child: Icon(
-        Icons.sync_rounded,
-        color: Theme.of(context).iconTheme.color,
-        size: Sizing.icon3,
+      onPressed: widget.onPressed ?? () {},
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all(const CircleBorder()),
+      ),
+      child: RotationTransition(
+        turns: Tween(begin: 0.0, end: -1.0).animate(_animationController),
+        child: Icon(
+          Icons.sync_rounded,
+          color: Theme.of(context).iconTheme.color,
+          size: Sizing.icon3,
+        ),
       ),
     );
   }
