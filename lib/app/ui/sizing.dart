@@ -73,6 +73,7 @@ class Sizing {
   static const double formFieldHeight = 64.0;
   static const double fabMediumWidth = 150.0;
   static const double fabMediumHeight = 60.0;
+  static const double fabLargeHeight = 85.0;
   static const double recipeCardWidth = 400.0;
   static const double recipeCardHeight = 200.0;
   static const double avatarLeading = 74.0;
@@ -82,7 +83,8 @@ class Sizing {
   static const double borderWidth = 3.0;
   static const double borderWidthThin = 1.1;
 
-  static double drawerWidth(BuildContext context) => screenWidth(context) * .8;
+  static double modalDrawerWidth(BuildContext context) =>
+      screenWidth(context) * .8;
 
   /// https://m3.material.io/components/top-app-bar/specs
   static const AppBarSizing smallTopAppBar = AppBarSizing(
@@ -237,11 +239,25 @@ class Sizing {
   static const Alignment formAlignment = Alignment(0, -1 / 3);
   static const double railGroupAlignment = -0.85;
 
-  // utils --------------------------------------------------------------------
+// utils --------------------------------------------------------------------
   static Size screenSize(BuildContext context) => MediaQuery.of(context).size;
-  static double screenWidth(BuildContext context) => screenSize(context).width;
-  static double screenHeight(BuildContext context) =>
-      screenSize(context).height;
+  static double screenWidth(BuildContext context, {bool oriented = false}) {
+    if (oriented) {
+      return screenSize(context).width;
+    }
+    return isLandscape(context)
+        ? screenSize(context).height
+        : screenSize(context).width;
+  }
+
+  static double screenHeight(BuildContext context, {bool oriented = false}) {
+    if (oriented) {
+      return screenSize(context).height;
+    }
+    return isLandscape(context)
+        ? screenSize(context).width
+        : screenSize(context).height;
+  }
 
   /// https://m3.material.io/foundations/layout/applying-layout/window-size-classes
   static WindowSizeClass windowSizeClass(BuildContext context) {
@@ -258,6 +274,9 @@ class Sizing {
   /// https://m3.material.io/foundations/layout/applying-layout/window-size-classes
   static bool isWideScreen(BuildContext context) =>
       MediaQuery.of(context).size.width > 600;
+
+  static bool isLandscape(BuildContext context) =>
+      MediaQuery.of(context).orientation == Orientation.landscape;
 
   /// True if bottom [viewInsets] is 0.
   ///

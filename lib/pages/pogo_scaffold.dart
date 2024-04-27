@@ -167,31 +167,7 @@ class _CanonicalPogoScaffold extends StatefulWidget {
 
 class _CanonicalPogoScaffoldState extends State<_CanonicalPogoScaffold>
     with TickerProviderStateMixin {
-  late final _navigationAnimationController = AnimationController(
-    duration: const Duration(milliseconds: 1000),
-    reverseDuration: const Duration(milliseconds: 1250),
-    value: 0,
-    vsync: this,
-  );
-
-  late final _railAnimation = RailAnimation(
-    parent: _navigationAnimationController,
-  );
-
-  late final _railFabAnimation = RailFabAnimation(
-    parent: _navigationAnimationController,
-  );
-
-  late final _barAnimation = BarAnimation(
-    parent: _navigationAnimationController,
-  );
-
-  late final TabController _tabController =
-      TabController(length: 6, vsync: this);
-
   late final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
-  bool _controllerInitialized = false;
 
   // Build the app bar with the current page title, and icon
   AppBar _buildAppBar(bool isWideScreen) {
@@ -221,56 +197,27 @@ class _CanonicalPogoScaffoldState extends State<_CanonicalPogoScaffold>
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final double width = Sizing.screenWidth(context);
-
-    final AnimationStatus status = _navigationAnimationController.status;
-    if (width > 600) {
-      if (status != AnimationStatus.forward &&
-          status != AnimationStatus.completed) {
-        _navigationAnimationController.forward();
-      }
-    } else {
-      if (status != AnimationStatus.reverse &&
-          status != AnimationStatus.dismissed) {
-        _navigationAnimationController.reverse();
-      }
-    }
-
-    if (!_controllerInitialized) {
-      _controllerInitialized = true;
-      _navigationAnimationController.value = width > 600 ? 1 : 0;
-    }
-  }
-
-  @override
-  void dispose() {
-    _railAnimation.dispose();
-    _railFabAnimation.dispose();
-    _navigationAnimationController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final bool isWideScreen = Sizing.isWideScreen(context);
+    final bool isExpanded =
+        Sizing.windowSizeClass(context) == WindowSizeClass.expanded;
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: _buildAppBar(isWideScreen),
-      drawer: isWideScreen
+      appBar: _buildAppBar(isExpanded),
+      drawer: isExpanded
           ? null
           : PogoDrawer(
               onNavSelected: widget.onNavSelected,
+              currentPage: widget.currentPage,
             ),
       extendBody: true,
       body: Row(
         children: [
-          if (isWideScreen)
+          if (isExpanded)
             PogoDrawer(
-                onNavSelected: widget.onNavSelected, popOnNavSelected: false),
+                onNavSelected: widget.onNavSelected,
+                currentPage: widget.currentPage,
+                isModal: false),
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(
