@@ -73,9 +73,6 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
   @override
   Widget build(BuildContext context) {
-    // Initialize media queries
-    Sizing().init(context);
-
     if (_loaded) {
       return _CanonicalPogoScaffold(
         currentPage: _currentPage,
@@ -113,14 +110,14 @@ class _PogoScaffoldState extends State<PogoScaffold>
         return Scaffold(
           body: Padding(
             padding: EdgeInsets.only(
-              left: Sizing.blockSizeHorizontal * 2.0,
-              right: Sizing.blockSizeHorizontal * 2.0,
-              bottom: Sizing.blockSizeVertical * 10.0,
+              left: Sizing.screenWidth(context) * .02,
+              right: Sizing.screenWidth(context) * .02,
+              bottom: Sizing.screenHeight(context) * .10,
             ),
             child: Padding(
               padding: EdgeInsets.only(
-                left: Sizing.blockSizeHorizontal * 3.0,
-                right: Sizing.blockSizeHorizontal * 5.0,
+                left: Sizing.screenWidth(context) * .03,
+                right: Sizing.screenWidth(context) * .05,
               ),
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -215,7 +212,7 @@ class _CanonicalPogoScaffoldState extends State<_CanonicalPogoScaffold>
 
           // Spacer
           SizedBox(
-            width: Sizing.blockSizeHorizontal * 2.0,
+            width: Sizing.screenWidth(context) * .02,
           ),
 
           // Page icon
@@ -299,8 +296,8 @@ class _CanonicalPogoScaffoldState extends State<_CanonicalPogoScaffold>
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(
-                left: Sizing.blockSizeHorizontal * 2.0,
-                right: Sizing.blockSizeHorizontal * 2.0,
+                left: Sizing.screenWidth(context) * .02,
+                right: Sizing.screenWidth(context) * .02,
               ),
               child: widget.currentPage.page,
             ),

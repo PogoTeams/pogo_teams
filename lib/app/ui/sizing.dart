@@ -56,35 +56,6 @@ class AppBarSizing {
 ///
 /// https://m3.material.io
 class Sizing {
-  static late MediaQueryData _mediaQueryData;
-  static late double scrnwidth;
-  static late double scrnheight;
-  static late double blockSizeHorizontal;
-  static late double blockSizeVertical;
-
-  void init(BuildContext context) {
-    _mediaQueryData = MediaQuery.of(context);
-    scrnwidth = _mediaQueryData.size.width;
-    scrnheight = _mediaQueryData.size.height;
-
-    // Tablet query
-    if (isTablet()) {
-      blockSizeHorizontal = scrnwidth * .8 / 100;
-      blockSizeVertical = scrnheight * 1.2 / 100;
-    }
-
-    // Mobile query
-    else {
-      blockSizeHorizontal = scrnwidth / 100;
-      blockSizeVertical = scrnheight / 100;
-    }
-  }
-
-  // Calculate the screen diagonal and determine if the device is a tablet
-  bool isTablet() {
-    return _mediaQueryData.size.shortestSide > 550;
-  }
-
   // icons --------------------------------------------------------------------
   static const double iconLarge = 30.0;
   static const double icon1 = 25.0;
@@ -108,6 +79,8 @@ class Sizing {
   static const double avatarMedium = 112.0;
   static const double avatarLarge = 250.0;
   static const double fabCircular = fabMediumHeight;
+  static const double borderWidth = 3.0;
+  static const double borderWidthThin = 1.1;
 
   static double drawerWidth(BuildContext context) => screenWidth(context) * .8;
 

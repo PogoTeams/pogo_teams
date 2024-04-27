@@ -29,7 +29,7 @@ class RankingsCategoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = this.size ?? Sizing.blockSizeHorizontal * 14.0;
+    final size = this.size ?? Sizing.screenWidth(context) * .14;
 
     return Container(
       height: size,
@@ -38,7 +38,7 @@ class RankingsCategoryButton extends StatelessWidget {
         color: Colors.teal,
         border: Border.all(
           color: Colors.white,
-          width: Sizing.blockSizeHorizontal * .7,
+          width: Sizing.borderWidth,
         ),
         shape: BoxShape.circle,
       ),

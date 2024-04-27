@@ -29,11 +29,11 @@ class TagDot extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
           border: Border.all(
             color: Colors.white,
-            width: 1.0,
+            width: Sizing.borderWidthThin,
           ),
         ),
-        height: Sizing.blockSizeHorizontal * 6.5,
-        width: Sizing.blockSizeHorizontal * 6.5,
+        height: Sizing.screenWidth(context) * .065,
+        width: Sizing.screenWidth(context) * .065,
         child: onPressed == null
             ? Container()
             : MaterialButton(
@@ -50,8 +50,8 @@ class TagDot extends StatelessWidget {
         //borderRadius: BorderRadius.circular(100),
         borderRadius: BorderRadius.circular(100),
       ),
-      height: Sizing.blockSizeHorizontal * 6.5,
-      width: Sizing.blockSizeHorizontal * 6.5,
+      height: Sizing.screenWidth(context) * .065,
+      width: Sizing.screenWidth(context) * .065,
       child: onPressed == null
           ? Container()
           : MaterialButton(

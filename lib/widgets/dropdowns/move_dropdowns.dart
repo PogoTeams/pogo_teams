@@ -89,8 +89,8 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
           value: move,
           child: Padding(
             padding: EdgeInsets.only(
-              left: Sizing.blockSizeHorizontal * 2.0,
-              right: Sizing.blockSizeHorizontal * 2.0,
+              left: Sizing.screenWidth(context) * .02,
+              right: Sizing.screenWidth(context) * .02,
             ),
             child: Center(
               child: FittedBox(
@@ -205,17 +205,17 @@ class MoveDropdown extends StatelessWidget {
         // Dropdown button
         Container(
           padding: EdgeInsets.only(
-            right: Sizing.blockSizeVertical * .7,
+            right: Sizing.screenHeight(context) * .007,
           ),
           margin: EdgeInsets.only(
-            top: Sizing.blockSizeVertical * .7,
+            top: Sizing.screenHeight(context) * .007,
           ),
-          width: Sizing.scrnwidth * .28,
-          height: Sizing.blockSizeVertical * 3.5,
+          width: Sizing.screenWidth(context) * .28,
+          height: Sizing.screenHeight(context) * .035,
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.white,
-              width: 1.1,
+              width: Sizing.borderWidthThin,
             ),
             borderRadius: BorderRadius.circular(100),
             color: PogoColors.getPokemonTypeColor(move.type.typeId),
@@ -225,7 +225,7 @@ class MoveDropdown extends StatelessWidget {
               isExpanded: true,
               value: move,
               icon: const Icon(Icons.arrow_drop_down_circle),
-              iconSize: Sizing.blockSizeHorizontal * 4.0,
+              iconSize: Sizing.screenWidth(context) * .04,
               style: Theme.of(context).textTheme.bodySmall,
               items: options,
               onChanged: onChanged,

@@ -46,11 +46,11 @@ class PogoDrawer extends StatelessWidget {
 
   Widget _buildDrawerHeader(BuildContext context) {
     return SizedBox(
-      height: Sizing.blockSizeVertical * 30.0,
+      height: Sizing.screenHeight(context) * .30,
       child: DrawerHeader(
         child: Image.asset(
           'assets/pogo_teams_icon.png',
-          scale: Sizing.blockSizeHorizontal * .5,
+          scale: Sizing.screenWidth(context) * .005,
         ),
       ),
     );
@@ -61,7 +61,7 @@ class PogoDrawer extends StatelessWidget {
     return Drawer(
       child: Container(
         padding: EdgeInsets.only(
-          bottom: Sizing.blockSizeVertical * 2.0,
+          bottom: Sizing.screenHeight(context) * .02,
         ),
         decoration: _buildGradientDecoration(),
         child: Column(
@@ -83,7 +83,7 @@ class PogoDrawer extends StatelessWidget {
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         SizedBox(
-                          width: Sizing.blockSizeHorizontal * 3.0,
+                          width: Sizing.screenWidth(context) * .03,
                         ),
                         PogoPages.teams.icon,
                       ],
@@ -105,7 +105,7 @@ class PogoDrawer extends StatelessWidget {
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         SizedBox(
-                          width: Sizing.blockSizeHorizontal * 3.0,
+                          width: Sizing.screenWidth(context) * .03,
                         ),
                         PogoPages.tags.icon,
                       ],
@@ -126,7 +126,7 @@ class PogoDrawer extends StatelessWidget {
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         SizedBox(
-                          width: Sizing.blockSizeHorizontal * 3.0,
+                          width: Sizing.screenWidth(context) * .03,
                         ),
                         PogoPages.battleLogs.icon,
                       ],
@@ -147,7 +147,7 @@ class PogoDrawer extends StatelessWidget {
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         SizedBox(
-                          width: Sizing.blockSizeHorizontal * 3.0,
+                          width: Sizing.screenWidth(context) * .03,
                         ),
                         PogoPages.rankings.icon,
                       ],
@@ -168,14 +168,14 @@ class PogoDrawer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   SizedBox(
-                    width: Sizing.blockSizeHorizontal * 2.0,
+                    width: Sizing.screenWidth(context) * .02,
                   ),
                   Text(
                     PogoPages.sync.displayName,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   SizedBox(
-                    width: Sizing.blockSizeHorizontal * 3.0,
+                    width: Sizing.screenWidth(context) * .03,
                   ),
                   PogoPages.sync.icon,
                 ],
@@ -193,14 +193,14 @@ class PogoDrawer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   SizedBox(
-                    width: Sizing.blockSizeHorizontal * 2.0,
+                    width: Sizing.screenWidth(context) * .02,
                   ),
                   Text(
                     PogoPages.settings.displayName,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   SizedBox(
-                    width: Sizing.blockSizeHorizontal * 3.0,
+                    width: Sizing.screenWidth(context) * .03,
                   ),
                   PogoPages.settings.icon,
                 ],
@@ -212,7 +212,7 @@ class PogoDrawer extends StatelessWidget {
             ),
 
             SizedBox(
-              height: Sizing.blockSizeHorizontal * 3.0,
+              height: Sizing.screenWidth(context) * .03,
             ),
 
             // Footer
@@ -221,11 +221,11 @@ class PogoDrawer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 SizedBox(
-                  width: Sizing.blockSizeHorizontal * 5.0,
+                  width: Sizing.screenWidth(context) * .05,
                 ),
                 // GitHub link
                 SizedBox(
-                  width: Sizing.blockSizeHorizontal * 10.0,
+                  width: Sizing.screenWidth(context) * .10,
                   child: IconButton(
                     padding: EdgeInsets.zero,
                     onPressed: _launchGitHubUrl,
@@ -234,7 +234,7 @@ class PogoDrawer extends StatelessWidget {
                 ),
 
                 SizedBox(
-                  width: Sizing.blockSizeHorizontal * 3.0,
+                  width: Sizing.screenWidth(context) * .03,
                 ),
 
                 // Version

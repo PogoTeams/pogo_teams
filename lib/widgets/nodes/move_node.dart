@@ -48,14 +48,14 @@ class MoveNode extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * .7,
+        top: Sizing.screenHeight(context) * .007,
       ),
-      width: Sizing.blockSizeHorizontal * 28.0,
-      height: Sizing.blockSizeVertical * 3.5,
+      width: Sizing.screenWidth(context) * .28,
+      height: Sizing.screenHeight(context) * .035,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: 1.1,
+          width: Sizing.borderWidthThin,
         ),
         borderRadius: BorderRadius.circular(100.0),
         color: PogoColors.getPokemonTypeColor(move.type.typeId),
@@ -88,13 +88,13 @@ class MoveDots extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.white,
-                  width: Sizing.blockSizeHorizontal * 0.4,
+                  width: Sizing.borderWidthThin,
                 ),
                 color: color,
                 borderRadius: BorderRadius.circular(100),
               ),
-              height: Sizing.blockSizeHorizontal * 5.0,
-              width: Sizing.blockSizeHorizontal * 5.0,
+              height: Sizing.screenWidth(context) * .05,
+              width: Sizing.screenWidth(context) * .05,
             ),
           )
           .toList(),

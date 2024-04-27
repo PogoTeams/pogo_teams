@@ -112,16 +112,16 @@ class _TagsState extends State<Tags> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 2.0,
-        left: Sizing.blockSizeHorizontal * 2.0,
-        right: Sizing.blockSizeHorizontal * 2.0,
+        top: Sizing.screenHeight(context) * .02,
+        left: Sizing.screenWidth(context) * .02,
+        right: Sizing.screenWidth(context) * .02,
       ),
       child: Scaffold(
         body: _buildTagsListView(),
         floatingActionButton: GradientButton(
           onPressed: _onEditTag,
-          width: Sizing.scrnwidth * .85,
-          height: Sizing.blockSizeVertical * 8.5,
+          width: Sizing.screenWidth(context) * .85,
+          height: Sizing.screenHeight(context) * .085,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -130,11 +130,11 @@ class _TagsState extends State<Tags> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               SizedBox(
-                width: Sizing.blockSizeHorizontal * 5.0,
+                width: Sizing.screenWidth(context) * .05,
               ),
               Icon(
                 Icons.add,
-                size: Sizing.blockSizeHorizontal * 7.0,
+                size: Sizing.screenWidth(context) * .07,
               ),
             ],
           ),

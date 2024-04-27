@@ -41,8 +41,8 @@ class TagFilterButton extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(20),
       ),
-      width: Sizing.blockSizeVertical * 8.5,
-      height: Sizing.blockSizeVertical * 8.5,
+      width: Sizing.screenHeight(context) * .085,
+      height: Sizing.screenHeight(context) * .085,
       child: PopupMenuButton<Tag?>(
         onSelected: onTagChanged,
         itemBuilder: (context) {

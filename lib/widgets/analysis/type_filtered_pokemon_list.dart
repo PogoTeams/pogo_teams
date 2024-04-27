@@ -43,10 +43,11 @@ class TypeFilteredPokemonList extends StatelessWidget {
                   .map(
                     (pokemon) => Padding(
                       padding: EdgeInsets.only(
-                        bottom: Sizing.blockSizeHorizontal * 2.0,
+                        bottom: Sizing.screenWidth(context) * .02,
                       ),
                       child: PokemonNode.small(
                         pokemon: pokemon,
+                        context: context,
                       ),
                     ),
                   )

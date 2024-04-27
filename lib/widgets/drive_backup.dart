@@ -47,8 +47,8 @@ class _DriveBackupState extends State<DriveBackup> {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Dialog(
             insetPadding: EdgeInsets.only(
-              left: Sizing.blockSizeHorizontal * 2.0,
-              right: Sizing.blockSizeHorizontal * 2.0,
+              left: Sizing.screenWidth(context) * .02,
+              right: Sizing.screenWidth(context) * .02,
             ),
             backgroundColor: Colors.transparent,
             child: const DriveBackups(),
@@ -95,7 +95,7 @@ class _DriveBackupState extends State<DriveBackup> {
   Widget build(BuildContext context) {
     if (GoogleDriveRepository.isSignedIn) {
       return SizedBox(
-        height: Sizing.scrnheight * .3,
+        height: Sizing.screenHeight(context) * .3,
         child: DrawerHeader(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,8 +107,8 @@ class _DriveBackupState extends State<DriveBackup> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: SizedBox(
-                      width: Sizing.scrnwidth * .2,
-                      height: Sizing.scrnwidth * .2,
+                      width: Sizing.screenWidth(context) * .2,
+                      height: Sizing.screenWidth(context) * .2,
                       child: GoogleUserCircleAvatar(
                         identity: GoogleDriveRepository.account!,
                       ),

@@ -77,7 +77,7 @@ class _TagTeamState extends State<TagTeam> {
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 SizedBox(
-                  width: Sizing.blockSizeHorizontal * 2.0,
+                  width: Sizing.screenWidth(context) * .02,
                 ),
                 const Icon(
                   Icons.add,
@@ -88,7 +88,7 @@ class _TagTeamState extends State<TagTeam> {
           ),
 
           SizedBox(
-            height: Sizing.blockSizeVertical * 2.0,
+            height: Sizing.screenHeight(context) * .02,
           ),
 
           Expanded(
@@ -99,16 +99,16 @@ class _TagTeamState extends State<TagTeam> {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: EdgeInsets.only(
-                    left: Sizing.blockSizeHorizontal * 2.0,
-                    right: Sizing.blockSizeHorizontal * 2.0,
+                    left: Sizing.screenWidth(context) * .02,
+                    right: Sizing.screenWidth(context) * .02,
                   ),
                   child: RadioListTile<String?>(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     contentPadding: EdgeInsets.only(
-                      left: Sizing.blockSizeHorizontal * 2.0,
-                      right: Sizing.blockSizeHorizontal * 2.0,
+                      left: Sizing.screenWidth(context) * .02,
+                      right: Sizing.screenWidth(context) * .02,
                     ),
                     selected: _selectedTag?.name == tags[index].name,
                     title: Row(
@@ -143,7 +143,7 @@ class _TagTeamState extends State<TagTeam> {
             padding: EdgeInsets.zero,
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             onPressed: () => Navigator.pop(context, _selectedTag),
-            height: Sizing.blockSizeVertical * 7.0,
+            height: Sizing.screenHeight(context) * .07,
             child: const Center(
               child: Icon(
                 Icons.clear,

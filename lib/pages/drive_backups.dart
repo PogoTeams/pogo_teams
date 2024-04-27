@@ -64,8 +64,8 @@ class _DriveBackupsState extends State<DriveBackups> {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                  top: Sizing.blockSizeVertical * 2.0,
-                  left: Sizing.blockSizeHorizontal * 5.0,
+                  top: Sizing.screenHeight(context) * .02,
+                  left: Sizing.screenWidth(context) * .05,
                 ),
                 child: Text(
                   'Export',
@@ -160,11 +160,11 @@ class _DriveBackupsState extends State<DriveBackups> {
             overflow: TextOverflow.ellipsis,
           ),
           SizedBox(
-            height: Sizing.blockSizeVertical * 3.0,
+            height: Sizing.screenHeight(context) * .03,
           ),
           _buildFloatingActionButtons(),
           SizedBox(
-            height: Sizing.blockSizeVertical * 3.0,
+            height: Sizing.screenHeight(context) * .03,
           ),
           _buildGoogleDriveBackupOptions(),
         ],
@@ -225,7 +225,7 @@ class _DriveBackupsState extends State<DriveBackups> {
               borderRadius: BorderRadius.circular(10),
             ),
             contentPadding: EdgeInsets.only(
-              bottom: Sizing.blockSizeVertical * 1.0,
+              bottom: Sizing.screenHeight(context) * .01,
             ),
             selected: GoogleDriveRepository.linkedBackupFile?.id ==
                 GoogleDriveRepository.backupFiles[index].id,
@@ -284,8 +284,8 @@ class _DriveBackupsState extends State<DriveBackups> {
           // Import
           GradientButton(
             onPressed: _onRestoreBackup,
-            width: Sizing.scrnwidth * .4,
-            height: Sizing.blockSizeVertical * 8.5,
+            width: Sizing.screenWidth(context) * .4,
+            height: Sizing.screenHeight(context) * .085,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(50),
               topRight: Radius.circular(10),
@@ -300,11 +300,11 @@ class _DriveBackupsState extends State<DriveBackups> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(
-                  width: Sizing.blockSizeHorizontal * 5.0,
+                  width: Sizing.screenWidth(context) * .05,
                 ),
                 Icon(
                   Icons.settings_backup_restore_rounded,
-                  size: Sizing.blockSizeHorizontal * 7.0,
+                  size: Sizing.screenWidth(context) * .07,
                 ),
               ],
             ),
@@ -313,8 +313,8 @@ class _DriveBackupsState extends State<DriveBackups> {
           // Export
           GradientButton(
             onPressed: _onCreateBackup,
-            width: Sizing.scrnwidth * .4,
-            height: Sizing.blockSizeVertical * 8.5,
+            width: Sizing.screenWidth(context) * .4,
+            height: Sizing.screenHeight(context) * .085,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10),
               topRight: Radius.circular(50),
@@ -329,11 +329,11 @@ class _DriveBackupsState extends State<DriveBackups> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(
-                  width: Sizing.blockSizeHorizontal * 5.0,
+                  width: Sizing.screenWidth(context) * .05,
                 ),
                 Icon(
                   Icons.add_to_drive_outlined,
-                  size: Sizing.blockSizeHorizontal * 7.0,
+                  size: Sizing.screenWidth(context) * .07,
                 ),
               ],
             ),
@@ -343,8 +343,8 @@ class _DriveBackupsState extends State<DriveBackups> {
     }
     return GradientButton(
       onPressed: () {},
-      width: Sizing.scrnwidth * .85,
-      height: Sizing.blockSizeVertical * 8.5,
+      width: Sizing.screenWidth(context) * .85,
+      height: Sizing.screenHeight(context) * .085,
       borderRadius: BorderRadius.circular(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -354,11 +354,11 @@ class _DriveBackupsState extends State<DriveBackups> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           SizedBox(
-            width: Sizing.blockSizeHorizontal * 5.0,
+            width: Sizing.screenWidth(context) * .05,
           ),
           Icon(
             Icons.login,
-            size: Sizing.blockSizeHorizontal * 7.0,
+            size: Sizing.screenWidth(context) * .07,
           ),
         ],
       ),
@@ -433,14 +433,14 @@ class _DriveBackupsState extends State<DriveBackups> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
-            height: Sizing.blockSizeVertical * 2.0,
+            height: Sizing.screenHeight(context) * .02,
           ),
           _buildScaffoldBody(),
           MaterialButton(
             padding: EdgeInsets.zero,
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             onPressed: () => Navigator.pop(context),
-            height: Sizing.blockSizeVertical * 7.0,
+            height: Sizing.screenHeight(context) * .07,
             child: const Center(
               child: Icon(
                 Icons.clear,

@@ -93,8 +93,8 @@ class _RankingsState extends State<Rankings> {
   Widget _buildDropdowns() {
     return Padding(
       padding: EdgeInsets.only(
-        left: Sizing.blockSizeHorizontal * 1.0,
-        right: Sizing.blockSizeHorizontal * 1.0,
+        left: Sizing.screenWidth(context) * .01,
+        right: Sizing.screenWidth(context) * .01,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,14 +103,14 @@ class _RankingsState extends State<Rankings> {
           CupDropdown(
             cup: cup,
             onCupChanged: _onCupChanged,
-            width: Sizing.scrnwidth * .7,
+            width: Sizing.screenWidth(context) * .7,
           ),
 
           // Category filter dropdown
           RankingsCategoryButton(
             onSelected: _filterCategory,
             selectedCategory: _selectedCategory,
-            size: Sizing.blockSizeHorizontal * 12.0,
+            size: Sizing.screenWidth(context) * .12,
           ),
         ],
       ),
@@ -145,7 +145,7 @@ class _RankingsState extends State<Rankings> {
 
     return Padding(
       padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 2.0,
+        top: Sizing.screenHeight(context) * .02,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,7 +155,7 @@ class _RankingsState extends State<Rankings> {
 
           // Spacer
           SizedBox(
-            height: Sizing.blockSizeVertical * 2.0,
+            height: Sizing.screenHeight(context) * .02,
           ),
 
           // User text input
@@ -168,7 +168,7 @@ class _RankingsState extends State<Rankings> {
 
           // Spacer
           SizedBox(
-            height: Sizing.blockSizeVertical * 2.0,
+            height: Sizing.screenHeight(context) * .02,
           ),
 
           // Build list

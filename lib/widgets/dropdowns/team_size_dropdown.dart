@@ -56,9 +56,9 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
 
     return Container(
       alignment: Alignment.center,
-      width: Sizing.scrnwidth * .2,
+      width: Sizing.screenWidth(context) * .2,
       padding: EdgeInsets.only(
-        right: Sizing.blockSizeHorizontal * 2.0,
+        right: Sizing.screenWidth(context) * .02,
       ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -72,7 +72,7 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
         ),
         border: Border.all(
           color: Colors.white,
-          width: Sizing.blockSizeHorizontal * .4,
+          width: Sizing.borderWidth,
         ),
         borderRadius: BorderRadius.circular(100.0),
       ),
@@ -84,7 +84,7 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
           value: widget.size,
           icon: Icon(
             Icons.arrow_drop_down_circle,
-            size: Sizing.blockSizeVertical * 3.0,
+            size: Sizing.screenHeight(context) * .03,
           ),
           style: DefaultTextStyle.of(context).style,
           onChanged: widget.onTeamSizeChanged,

@@ -54,11 +54,11 @@ class XlIcon extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: SizedBox(
-        height: Sizing.blockSizeVertical * 3.0 * scale,
+        height: Sizing.screenHeight(context) * .03 * scale,
         child: Padding(
           padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 2.5 * scale,
-            right: Sizing.blockSizeHorizontal * 2.5 * scale,
+            left: Sizing.screenWidth(context) * .025 * scale,
+            right: Sizing.screenWidth(context) * .025 * scale,
           ),
           child: Center(
             child: Text(
@@ -85,7 +85,7 @@ class ShadowIcon extends StatelessWidget {
     return Icon(
       Icons.local_fire_department_rounded,
       color: Colors.purple[900]!,
-      size: Sizing.blockSizeHorizontal * 6.0 * scale,
+      size: Sizing.screenWidth(context) * .06 * scale,
     );
   }
 }

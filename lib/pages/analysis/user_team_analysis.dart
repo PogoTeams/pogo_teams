@@ -160,7 +160,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
 
           // Spacer
           SizedBox(
-            width: Sizing.blockSizeHorizontal * 3.0,
+            width: Sizing.screenWidth(context) * .03,
           ),
 
           // Page icon
@@ -184,11 +184,12 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
         (index) {
           return Padding(
             padding: EdgeInsets.only(
-              top: Sizing.blockSizeVertical * .5,
-              bottom: Sizing.blockSizeVertical * .5,
+              top: Sizing.screenHeight(context) * .005,
+              bottom: Sizing.screenHeight(context) * .005,
             ),
             child: PokemonNode.small(
               pokemon: pokemonTeam[index],
+              context: context,
               onMoveChanged: () {
                 PogoRepository.updateUserPokemonSync(pokemonTeam[index]);
                 widget.onTeamChanged();
@@ -334,8 +335,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
               },
               body: Padding(
                 padding: EdgeInsets.only(
-                  left: Sizing.blockSizeHorizontal * 2.0,
-                  right: Sizing.blockSizeHorizontal * 2.0,
+                  left: Sizing.screenWidth(context) * .02,
+                  right: Sizing.screenWidth(context) * .02,
                 ),
                 child: _buildPokemonNodes(_team.getOrderedPokemonList()),
               ),
@@ -345,8 +346,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
         ),
         Padding(
           padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 2.0,
-            right: Sizing.blockSizeHorizontal * 2.0,
+            left: Sizing.screenWidth(context) * .02,
+            right: Sizing.screenWidth(context) * .02,
             bottom: 12.0,
           ),
           child: TabBar(
@@ -370,8 +371,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
         Expanded(
           child: Padding(
             padding: EdgeInsets.only(
-              left: Sizing.blockSizeHorizontal * 2.0,
-              right: Sizing.blockSizeHorizontal * 2.0,
+              left: Sizing.screenWidth(context) * .02,
+              right: Sizing.screenWidth(context) * .02,
             ),
             child: TabBarView(
               controller: _tabController,
@@ -455,11 +456,12 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
                     onLongPress: () {},
                     child: Padding(
                       padding: EdgeInsets.only(
-                        top: Sizing.blockSizeVertical * .5,
-                        bottom: Sizing.blockSizeVertical * .5,
+                        top: Sizing.screenHeight(context) * .005,
+                        bottom: Sizing.screenHeight(context) * .005,
                       ),
                       child: PokemonNode.large(
                         pokemon: _overallThreats[index],
+                        context: context,
                         footer: _buildPokemonNodeFooter(
                             context, _overallThreats[index]),
                       ),
@@ -486,11 +488,12 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
                           onLongPress: () {},
                           child: Padding(
                             padding: EdgeInsets.only(
-                              top: Sizing.blockSizeVertical * .5,
-                              bottom: Sizing.blockSizeVertical * .5,
+                              top: Sizing.screenHeight(context) * .005,
+                              bottom: Sizing.screenHeight(context) * .005,
                             ),
                             child: PokemonNode.large(
                               pokemon: _leadThreats[index],
+                              context: context,
                               footer: _buildPokemonNodeFooter(
                                   context, _leadThreats[index]),
                             ),
@@ -511,23 +514,23 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         PokemonActionButton(
-          width: Sizing.scrnwidth * .4,
+          width: Sizing.screenWidth(context) * .4,
           pokemon: pokemon,
           label: 'Team Swap',
           icon: Icon(
             Icons.move_up,
-            size: Sizing.blockSizeHorizontal * 5.0,
+            size: Sizing.screenWidth(context) * .05,
             color: Colors.white,
           ),
           onPressed: _onSwap,
         ),
         PokemonActionButton(
-          width: Sizing.scrnwidth * .4,
+          width: Sizing.screenWidth(context) * .4,
           pokemon: pokemon,
           label: 'Counters',
           icon: Icon(
             Icons.block,
-            size: Sizing.blockSizeHorizontal * 5.0,
+            size: Sizing.screenWidth(context) * .05,
             color: Colors.white,
           ),
           onPressed: _onCounters,
@@ -571,8 +574,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10.0),
                       child: SizedBox(
-                        width: Sizing.blockSizeHorizontal * 7.0,
-                        height: Sizing.blockSizeHorizontal * 7.0,
+                        width: Sizing.screenWidth(context) * .07,
+                        height: Sizing.screenWidth(context) * .07,
                         child: const CircularProgressIndicator(
                           valueColor:
                               AlwaysStoppedAnimation<Color>(Colors.cyan),

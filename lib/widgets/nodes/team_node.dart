@@ -51,42 +51,43 @@ class TeamNode extends StatelessWidget {
     if (collapsible && _pokemonTeamIsEmpty()) return Container();
 
     if (focusIndex != null) {
-      return _buildFocusNodes();
+      return _buildFocusNodes(context);
     }
 
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisSpacing: Sizing.blockSizeHorizontal * 3.0,
-        mainAxisSpacing: Sizing.blockSizeHorizontal * 3.0,
+        crossAxisSpacing: Sizing.screenWidth(context) * .03,
+        mainAxisSpacing: Sizing.screenWidth(context) * .03,
         crossAxisCount: 3,
       ),
       shrinkWrap: true,
       itemCount: team.teamSize,
       itemBuilder: (context, index) {
-        return _buildPokemonNode(index);
+        return _buildPokemonNode(index, context);
       },
       physics: const NeverScrollableScrollPhysics(),
     );
   }
 
-  Widget _buildFocusNodes() {
+  Widget _buildFocusNodes(BuildContext context) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisSpacing: Sizing.blockSizeHorizontal * 1.0,
-        mainAxisSpacing: Sizing.blockSizeHorizontal * 1.0,
+        crossAxisSpacing: Sizing.screenWidth(context) * .01,
+        mainAxisSpacing: Sizing.screenWidth(context) * .01,
         crossAxisCount: 3,
       ),
       shrinkWrap: true,
       itemCount: team.teamSize,
       itemBuilder: (context, index) =>
-          _buildFocusNode(team.getPokemon(index), index),
+          _buildFocusNode(team.getPokemon(index), index, context),
       physics: const NeverScrollableScrollPhysics(),
     );
   }
 
   // If the focus index is provided, draw a special border
   // This indicates the current 'focus' node
-  Widget _buildFocusNode(UserPokemon? pokemon, int index) {
+  Widget _buildFocusNode(
+      UserPokemon? pokemon, int index, BuildContext context) {
     Color color;
 
     if (index == focusIndex) {
@@ -98,20 +99,21 @@ class TeamNode extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          width: Sizing.blockSizeHorizontal * 1.0,
           color: color,
+          width: Sizing.borderWidth,
         ),
         borderRadius: BorderRadius.circular(25),
       ),
-      child: _buildPokemonNode(index),
+      child: _buildPokemonNode(index, context),
     );
   }
 
-  Widget _buildPokemonNode(int index) {
+  Widget _buildPokemonNode(int index, BuildContext context) {
     return PokemonNode.square(
       onEmptyPressed: () => onEmptyPressed(index),
       onPressed: () => onPressed(index),
       pokemon: team.getPokemon(index),
+      context: context,
       emptyTransparent: emptyTransparent,
       lead: index == 0,
     );
@@ -121,8 +123,8 @@ class TeamNode extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 1.0,
-        bottom: Sizing.blockSizeVertical * 1.0,
+        top: Sizing.screenHeight(context) * .01,
+        bottom: Sizing.screenHeight(context) * .01,
       ),
       child: Container(
         decoration: BoxDecoration(
@@ -251,7 +253,7 @@ class UserTeamNodeFooter extends StatelessWidget {
   final Function(UserPokemonTeam) onAnalyze;
 
   // The icon buttons at the footer of each TeamNode
-  Widget _buildIconButtons() {
+  Widget _buildIconButtons(BuildContext context) {
     final IconData lockIcon = team.locked ? Icons.lock : Icons.lock_open;
 
     return Row(
@@ -266,7 +268,7 @@ class UserTeamNodeFooter extends StatelessWidget {
               size: Sizing.icon3,
             ),
             tooltip: 'Remove Team',
-            splashRadius: Sizing.blockSizeHorizontal * 5.0,
+            splashRadius: Sizing.screenWidth(context) * .05,
           ),
 
         // Edit team
@@ -277,7 +279,7 @@ class UserTeamNodeFooter extends StatelessWidget {
             size: Sizing.icon3,
           ),
           tooltip: 'Edit Team',
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
+          splashRadius: Sizing.screenWidth(context) * .05,
         ),
 
         // Tag team
@@ -288,7 +290,7 @@ class UserTeamNodeFooter extends StatelessWidget {
             size: Sizing.icon3,
           ),
           tooltip: 'Tag Team',
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
+          splashRadius: Sizing.screenWidth(context) * .05,
         ),
 
         // Log team
@@ -299,7 +301,7 @@ class UserTeamNodeFooter extends StatelessWidget {
             size: Sizing.icon3,
           ),
           tooltip: 'Log Team',
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
+          splashRadius: Sizing.screenWidth(context) * .05,
         ),
 
         IconButton(
@@ -309,7 +311,7 @@ class UserTeamNodeFooter extends StatelessWidget {
             size: Sizing.icon3,
           ),
           tooltip: 'Toggle Team Lock',
-          splashRadius: Sizing.blockSizeHorizontal * 5.0,
+          splashRadius: Sizing.screenWidth(context) * .05,
         )
       ],
     );
@@ -321,7 +323,7 @@ class UserTeamNodeFooter extends StatelessWidget {
       padding: EdgeInsets.zero,
       onPressed: () => onAnalyze(team),
       child: Container(
-        height: Sizing.blockSizeVertical * 5.0,
+        height: Sizing.screenHeight(context) * .05,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -341,8 +343,8 @@ class UserTeamNodeFooter extends StatelessWidget {
         ),
         child: Padding(
           padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 2.0,
-            right: Sizing.blockSizeHorizontal * 2.0,
+            left: Sizing.screenWidth(context) * .02,
+            right: Sizing.screenWidth(context) * .02,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -352,7 +354,7 @@ class UserTeamNodeFooter extends StatelessWidget {
                 size: Sizing.icon3,
               ),
               SizedBox(
-                width: Sizing.blockSizeHorizontal * 2.0,
+                width: Sizing.screenWidth(context) * .02,
               ),
               Text(
                 'Analysis',
@@ -369,7 +371,7 @@ class UserTeamNodeFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildIconButtons(),
+        _buildIconButtons(context),
         _buildAnalysisFooter(context),
       ],
     );

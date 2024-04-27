@@ -118,7 +118,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
             (_team as OpponentPokemonTeam).battleOutcome = battleOutcome;
           });
         },
-        width: Sizing.scrnwidth,
+        width: Sizing.screenWidth(context),
       );
     }
 
@@ -129,7 +129,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
         CupDropdown(
           cup: _cup,
           onCupChanged: _onCupChanged,
-          width: Sizing.scrnwidth * .65,
+          width: Sizing.screenWidth(context) * .65,
         ),
 
         // Dropdown to select team size
@@ -163,8 +163,8 @@ class _TeamBuilderState extends State<TeamBuilder> {
         _saveTeam();
         Navigator.pop(context, _team);
       },
-      width: Sizing.scrnwidth * .85,
-      height: Sizing.blockSizeVertical * 8.5,
+      width: Sizing.screenWidth(context) * .85,
+      height: Sizing.screenHeight(context) * .085,
       child: const Icon(
         Icons.clear,
         size: Sizing.icon2,
@@ -264,8 +264,8 @@ class _TeamBuilderState extends State<TeamBuilder> {
         bottom: false,
         child: Padding(
           padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 2.0,
-            right: Sizing.blockSizeHorizontal * 2.0,
+            left: Sizing.screenWidth(context) * .02,
+            right: Sizing.screenWidth(context) * .02,
           ),
           child: Column(
             children: [
@@ -273,7 +273,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
 
               // Spacer
               SizedBox(
-                height: Sizing.blockSizeVertical * 1.0,
+                height: Sizing.screenHeight(context) * .01,
               ),
 
               Row(
@@ -282,7 +282,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                   // User input text field
                   PogoTextField(
                     controller: _searchController,
-                    width: Sizing.scrnwidth * .8,
+                    width: Sizing.screenWidth(context) * .8,
                     onClear: () => setState(() {
                       _searchController.clear();
                     }),
@@ -292,7 +292,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                   RankingsCategoryButton(
                     onSelected: _filterCategory,
                     selectedCategory: _selectedCategory,
-                    size: Sizing.blockSizeHorizontal * 12.0,
+                    size: Sizing.screenWidth(context) * .12,
                     dex: true,
                   ),
                 ],
@@ -300,7 +300,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
 
               // Spacer
               SizedBox(
-                height: Sizing.blockSizeVertical * 1.0,
+                height: Sizing.screenHeight(context) * .01,
               ),
 
               _buildPokemonList(),

@@ -29,7 +29,7 @@ class EmptyNode extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           color: emptyTransparent ? Colors.transparent : Colors.white54,
-          width: Sizing.blockSizeHorizontal * 0.5,
+          width: Sizing.borderWidth,
         ),
         borderRadius: BorderRadius.circular(20),
       ),
@@ -42,7 +42,7 @@ class EmptyNode extends StatelessWidget {
             : Icon(
                 Icons.add,
                 color: Colors.white54,
-                size: Sizing.blockSizeHorizontal * 15.0,
+                size: Sizing.screenWidth(context) * .15,
               ),
       ),
     );

@@ -18,14 +18,14 @@ class GradientDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: Sizing.blockSizeHorizontal * 2.0,
-        bottom: Sizing.blockSizeHorizontal * 2.0,
+        top: Sizing.screenWidth(context) * .02,
+        bottom: Sizing.screenWidth(context) * .02,
       ),
       child: Container(
-        height: Sizing.blockSizeVertical * .75,
+        height: Sizing.screenHeight(context) * .0075,
         padding: EdgeInsets.only(
-          top: Sizing.blockSizeVertical * 2.0,
-          bottom: Sizing.blockSizeVertical * 2.0,
+          top: Sizing.screenHeight(context) * .02,
+          bottom: Sizing.screenHeight(context) * .02,
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
