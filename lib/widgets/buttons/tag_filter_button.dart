@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/tag.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_repository.dart';
+import '../../model/tag.dart';
+import '../../app/ui/sizing.dart';
+import '../../modules/pogo_repository.dart';
 import '../tag_dot.dart';
 
 /*
@@ -14,11 +14,11 @@ import '../tag_dot.dart';
 
 class TagFilterButton extends StatelessWidget {
   const TagFilterButton({
-    Key? key,
+    super.key,
     required this.tag,
     required this.onTagChanged,
     required this.width,
-  }) : super(key: key);
+  });
 
   final Tag? tag;
   final void Function(Tag?) onTagChanged;
@@ -41,8 +41,8 @@ class TagFilterButton extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(20),
       ),
-      width: Sizing.blockSizeVertical * 8.5,
-      height: Sizing.blockSizeVertical * 8.5,
+      width: width,
+      height: width,
       child: PopupMenuButton<Tag?>(
         onSelected: onTagChanged,
         itemBuilder: (context) {

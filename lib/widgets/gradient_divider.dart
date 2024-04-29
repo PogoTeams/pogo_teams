@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local
-import '../modules/ui/sizing.dart';
+import '../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -11,21 +11,21 @@ import '../modules/ui/sizing.dart';
 
 class GradientDivider extends StatelessWidget {
   const GradientDivider({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: Sizing.blockSizeHorizontal * 2.0,
-        bottom: Sizing.blockSizeHorizontal * 2.0,
+        top: Sizing.screenWidth(context) * .02,
+        bottom: Sizing.screenWidth(context) * .02,
       ),
       child: Container(
-        height: Sizing.blockSizeVertical * .75,
+        height: Sizing.screenHeight(context) * .0075,
         padding: EdgeInsets.only(
-          top: Sizing.blockSizeVertical * 2.0,
-          bottom: Sizing.blockSizeVertical * 2.0,
+          top: Sizing.screenHeight(context) * .02,
+          bottom: Sizing.screenHeight(context) * .02,
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),

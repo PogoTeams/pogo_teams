@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 // Local Imports
-import '../modules/ui/sizing.dart';
-import '../pogo_objects/pokemon.dart';
-import '../pogo_objects/cup.dart';
+import '../app/ui/sizing.dart';
+import '../model/pokemon.dart';
+import '../model/cup.dart';
 import '../widgets/pokemon_list.dart';
 import '../widgets/pogo_text_field.dart';
 import '../widgets/dropdowns/cup_dropdown.dart';
 import '../widgets/buttons/rankings_category_button.dart';
-import '../modules/data/pogo_repository.dart';
+import '../modules/pogo_repository.dart';
 import '../enums/rankings_categories.dart';
 
 /*
@@ -23,7 +23,7 @@ The PvPoke model.
 */
 
 class Rankings extends StatefulWidget {
-  const Rankings({Key? key}) : super(key: key);
+  const Rankings({super.key});
 
   @override
   _RankingsState createState() => _RankingsState();
@@ -93,24 +93,28 @@ class _RankingsState extends State<Rankings> {
   Widget _buildDropdowns() {
     return Padding(
       padding: EdgeInsets.only(
-        left: Sizing.blockSizeHorizontal * 1.0,
-        right: Sizing.blockSizeHorizontal * 1.0,
+        left: Sizing.screenWidth(context) * .01,
+        right: Sizing.screenWidth(context) * .01,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Dropdown for pvp cup selection
-          CupDropdown(
-            cup: cup,
-            onCupChanged: _onCupChanged,
-            width: Sizing.screenWidth * .7,
+          Flexible(
+            flex: 4,
+            child: CupDropdown(
+              cup: cup,
+              onCupChanged: _onCupChanged,
+            ),
           ),
 
           // Category filter dropdown
-          RankingsCategoryButton(
-            onSelected: _filterCategory,
-            selectedCategory: _selectedCategory,
-            size: Sizing.blockSizeHorizontal * 12.0,
+          Flexible(
+            flex: 1,
+            child: RankingsCategoryButton(
+              onSelected: _filterCategory,
+              selectedCategory: _selectedCategory,
+            ),
           ),
         ],
       ),
@@ -145,7 +149,7 @@ class _RankingsState extends State<Rankings> {
 
     return Padding(
       padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 2.0,
+        top: Sizing.screenHeight(context) * .02,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,7 +159,7 @@ class _RankingsState extends State<Rankings> {
 
           // Spacer
           SizedBox(
-            height: Sizing.blockSizeVertical * 2.0,
+            height: Sizing.screenHeight(context) * .02,
           ),
 
           // User text input
@@ -168,7 +172,7 @@ class _RankingsState extends State<Rankings> {
 
           // Spacer
           SizedBox(
-            height: Sizing.blockSizeVertical * 2.0,
+            height: Sizing.screenHeight(context) * .02,
           ),
 
           // Build list

@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../pogo_objects/pokemon.dart';
+import '../../app/ui/sizing.dart';
+import '../../modules/pogo_repository.dart';
+import '../../model/pokemon.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../widgets/buttons/pokemon_action_button.dart';
 import '../../widgets/nodes/pokemon_node.dart';
-import '../../pogo_objects/pokemon_team.dart';
+import '../../model/pokemon_team.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -19,10 +19,10 @@ the swap Pokemon. Movesets may also be edited here.
 
 class TeamSwap extends StatefulWidget {
   const TeamSwap({
-    Key? key,
+    super.key,
     required this.team,
     required this.swap,
-  }) : super(key: key);
+  });
 
   final PokemonTeam team;
   final UserPokemon swap;
@@ -46,9 +46,8 @@ class _TeamSwapState extends State<TeamSwap> {
     return PokemonActionButton(
       pokemon: _pokemonTeam[index],
       label: 'Swap Out',
-      icon: Icon(
+      icon: const Icon(
         Icons.swap_horiz_rounded,
-        size: Sizing.blockSizeHorizontal * 5.0,
         color: Colors.white,
       ),
       onPressed: onSwap,
@@ -61,9 +60,9 @@ class _TeamSwapState extends State<TeamSwap> {
         _saveTeam();
         Navigator.pop(context);
       },
-      width: Sizing.screenWidth * .85,
-      height: Sizing.blockSizeVertical * 8.5,
-      child: Icon(
+      width: Sizing.screenWidth(context) * .85,
+      height: Sizing.screenHeight(context) * .085,
+      child: const Icon(
         Icons.clear,
         size: Sizing.icon2,
       ),
@@ -80,6 +79,7 @@ class _TeamSwapState extends State<TeamSwap> {
   Widget _buildPokemonNode(int index) {
     return PokemonNode.large(
       pokemon: _pokemonTeam[index],
+      context: context,
       footer: _buildFooter(context, index),
     );
   }
@@ -99,10 +99,7 @@ class _TeamSwapState extends State<TeamSwap> {
         left: false,
         right: false,
         child: Padding(
-          padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 2.0,
-            right: Sizing.blockSizeHorizontal * 2.0,
-          ),
+          padding: Sizing.horizontalWindowInsets(context),
           child: Column(
             children: [
               // The Pokemon to swap out
@@ -111,7 +108,10 @@ class _TeamSwapState extends State<TeamSwap> {
                   top: 12.0,
                   bottom: 12.0,
                 ),
-                child: PokemonNode.small(pokemon: _swap),
+                child: PokemonNode.small(
+                  pokemon: _swap,
+                  context: context,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -132,8 +132,8 @@ class _TeamSwapState extends State<TeamSwap> {
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: EdgeInsets.only(
-                            top: Sizing.blockSizeVertical * .5,
-                            bottom: Sizing.blockSizeVertical * .5,
+                            top: Sizing.screenHeight(context) * .005,
+                            bottom: Sizing.screenHeight(context) * .005,
                           ),
                           child: Padding(
                               padding: const EdgeInsets.only(
@@ -142,8 +142,8 @@ class _TeamSwapState extends State<TeamSwap> {
                               child: index == _pokemonTeam.length - 1
                                   ? Padding(
                                       padding: EdgeInsets.only(
-                                          bottom:
-                                              Sizing.blockSizeVertical * 11.0),
+                                          bottom: Sizing.screenHeight(context) *
+                                              .11),
                                       child: _buildPokemonNode(index))
                                   : _buildPokemonNode(index)),
                         );

@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pogo_objects/pokemon_team.dart';
-import '../pogo_objects/tag.dart';
-import '../modules/ui/sizing.dart';
-import '../modules/data/pogo_repository.dart';
+import '../model/pokemon_team.dart';
+import '../model/tag.dart';
+import '../app/ui/sizing.dart';
+import '../modules/pogo_repository.dart';
 import '../widgets/tag_dot.dart';
 import '../widgets/buttons/tag_filter_button.dart';
 import '../widgets/nodes/team_node.dart';
@@ -19,7 +19,7 @@ by tag.
 */
 
 class BattleLogs extends StatefulWidget {
-  const BattleLogs({Key? key}) : super(key: key);
+  const BattleLogs({super.key});
 
   @override
   _RankingsState createState() => _RankingsState();
@@ -46,7 +46,7 @@ class _RankingsState extends State<BattleLogs> {
 
                 // Spacer to give last node in the list more scroll room
                 SizedBox(
-                  height: Sizing.blockSizeVertical * 10.0,
+                  height: Sizing.screenHeight(context) * .10,
                 ),
               ],
             );
@@ -73,13 +73,17 @@ class _RankingsState extends State<BattleLogs> {
         children: [
           Row(
             children: [
-              TagDot(
-                tag: opponent.getTag(),
-                onPressed: () {},
+              SizedBox(
+                width: 45.0,
+                height: 45.0,
+                child: TagDot(
+                  tag: opponent.getTag(),
+                  onPressed: () {},
+                ),
               ),
               if (opponent.getTag() != null)
                 SizedBox(
-                  width: Sizing.blockSizeHorizontal * 2.0,
+                  width: Sizing.screenWidth(context) * .02,
                 ),
               if (opponent.getTag() != null)
                 Text(
@@ -91,8 +95,8 @@ class _RankingsState extends State<BattleLogs> {
           ),
           Padding(
             padding: EdgeInsets.only(
-              top: Sizing.blockSizeVertical,
-              bottom: Sizing.blockSizeVertical,
+              top: Sizing.screenHeight(context) * .01,
+              bottom: Sizing.screenHeight(context) * .01,
             ),
             child: WinLossNode(outcome: opponent.battleOutcome),
           ),
@@ -119,7 +123,7 @@ class _RankingsState extends State<BattleLogs> {
 
     return Padding(
       padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 2.0,
+        top: Sizing.screenHeight(context) * .02,
       ),
       child: Scaffold(
         body: SafeArea(
@@ -127,11 +131,7 @@ class _RankingsState extends State<BattleLogs> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(
-                  left: Sizing.blockSizeHorizontal * 2.0,
-                  right: Sizing.blockSizeHorizontal * 2.0,
-                  bottom: Sizing.blockSizeVertical * 2.0,
-                ),
+                padding: Sizing.horizontalWindowInsets(context),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -158,6 +158,7 @@ class _RankingsState extends State<BattleLogs> {
                   ],
                 ),
               ),
+              Sizing.listItemSpacer,
               _buildLoggedBattles(opponents),
             ],
           ),
@@ -169,7 +170,7 @@ class _RankingsState extends State<BattleLogs> {
               _selectedTag = tag;
             });
           },
-          width: Sizing.blockSizeHorizontal * .85,
+          width: Sizing.fabLargeHeight,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),

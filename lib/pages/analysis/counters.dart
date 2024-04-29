@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../pogo_objects/pokemon.dart';
+import '../../app/ui/sizing.dart';
+import '../../modules/pogo_repository.dart';
+import '../../model/pokemon.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../widgets/buttons/pokemon_action_button.dart';
 import '../../widgets/nodes/pokemon_node.dart';
-import '../../pogo_objects/pokemon_team.dart';
+import '../../model/pokemon_team.dart';
 import '../teams/team_swap.dart';
 
 /*
@@ -20,11 +20,11 @@ swap a counter into their team.
 
 class PokemonCountersList extends StatefulWidget {
   const PokemonCountersList({
-    Key? key,
+    super.key,
     required this.team,
     required this.pokemon,
     required this.counters,
-  }) : super(key: key);
+  });
 
   final UserPokemonTeam team;
   final Pokemon pokemon;
@@ -58,9 +58,9 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
       onPressed: () {
         Navigator.pop(context);
       },
-      width: Sizing.screenWidth * .85,
-      height: Sizing.blockSizeVertical * 8.5,
-      child: Icon(
+      width: Sizing.screenWidth(context) * .85,
+      height: Sizing.screenHeight(context) * .085,
+      child: const Icon(
         Icons.clear,
         size: Sizing.icon2,
       ),
@@ -70,13 +70,13 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
   Widget _buildPokemonNode(CupPokemon pokemon) {
     return PokemonNode.large(
       pokemon: pokemon,
+      context: context,
       footer: PokemonActionButton(
-        width: Sizing.screenWidth * .8,
+        width: Sizing.screenWidth(context) * .8,
         pokemon: pokemon,
-        label: 'Team Swap',
-        icon: Icon(
+        label: 'Team Swap  ',
+        icon: const Icon(
           Icons.move_up,
-          size: Sizing.blockSizeHorizontal * 5.0,
           color: Colors.white,
         ),
         onPressed: _onSwap,
@@ -99,10 +99,7 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
         left: false,
         right: false,
         child: Padding(
-          padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 2.0,
-            right: Sizing.blockSizeHorizontal * 2.0,
-          ),
+          padding: Sizing.horizontalWindowInsets(context),
           child: Column(
             children: [
               Padding(
@@ -112,6 +109,7 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
                 ),
                 child: PokemonNode.small(
                   pokemon: widget.pokemon,
+                  context: context,
                   dropdowns: false,
                 ),
               ),
@@ -136,7 +134,7 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
                         child: index == widget.counters.length - 1
                             ? Padding(
                                 padding: EdgeInsets.only(
-                                    bottom: Sizing.blockSizeVertical * 15.0),
+                                    bottom: Sizing.screenHeight(context) * .15),
                                 child:
                                     _buildPokemonNode(widget.counters[index]),
                               )

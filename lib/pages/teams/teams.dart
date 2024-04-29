@@ -13,10 +13,10 @@ import '../analysis/analysis.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../widgets/buttons/tag_filter_button.dart';
-import '../../modules/ui/sizing.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/tag.dart';
-import '../../modules/data/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/tag.dart';
+import '../../modules/pogo_repository.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -26,7 +26,7 @@ delete teams from here.
 */
 
 class Teams extends StatefulWidget {
-  const Teams({Key? key}) : super(key: key);
+  const Teams({super.key});
 
   @override
   _TeamsState createState() => _TeamsState();
@@ -44,7 +44,8 @@ class _TeamsState extends State<Teams> {
       itemBuilder: (context, index) {
         if (index == _teams.length - 1) {
           return Padding(
-            padding: EdgeInsets.only(bottom: Sizing.blockSizeVertical * 11.0),
+            padding:
+                EdgeInsets.only(bottom: Sizing.screenHeight(context) * .11),
             child: _buildTeamNode(_teams[index]),
           );
         }
@@ -119,8 +120,8 @@ class _TeamsState extends State<Teams> {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Dialog(
             insetPadding: EdgeInsets.only(
-              left: Sizing.blockSizeHorizontal * 2.0,
-              right: Sizing.blockSizeHorizontal * 2.0,
+              left: Sizing.screenWidth(context) * .02,
+              right: Sizing.screenWidth(context) * .02,
             ),
             backgroundColor: Colors.transparent,
             child: TagTeam(
@@ -243,31 +244,30 @@ class _TeamsState extends State<Teams> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          GradientButton(
-            onPressed: _onAddTeam,
-            width: Sizing.screenWidth * .6,
-            height: Sizing.blockSizeVertical * 8.5,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Add Team',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                SizedBox(
-                  width: Sizing.blockSizeHorizontal * 5.0,
-                ),
-                Icon(
-                  Icons.add,
-                  size: Sizing.blockSizeHorizontal * 7.0,
-                ),
-              ],
+          Expanded(
+            child: GradientButton(
+              onPressed: _onAddTeam,
+              width: double.infinity,
+              height: Sizing.fabLargeHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Add Team  ',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const Icon(
+                    Icons.add,
+                  ),
+                ],
+              ),
             ),
           ),
+          Sizing.paneSpacer,
           TagFilterButton(
             tag: _selectedTag,
             onTagChanged: _onTagChanged,
-            width: Sizing.blockSizeHorizontal * .85,
+            width: Sizing.fabLargeHeight,
           ),
         ],
       ),

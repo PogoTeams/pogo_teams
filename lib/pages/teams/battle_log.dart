@@ -7,12 +7,12 @@ import 'package:isar/isar.dart';
 
 // Local Imports
 import 'team_builder.dart';
-import '../../pogo_objects/pokemon_team.dart';
+import '../../model/pokemon_team.dart';
 import '../../../widgets/nodes/team_node.dart';
 import '../../../widgets/buttons/gradient_button.dart';
 import '../../../widgets/nodes/win_loss_node.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../modules/ui/sizing.dart';
+import '../../modules/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -25,9 +25,9 @@ logged opponenents associated with their team.
 
 class BattleLog extends StatefulWidget {
   const BattleLog({
-    Key? key,
+    super.key,
     required this.team,
-  }) : super(key: key);
+  });
 
   final UserPokemonTeam team;
 
@@ -52,18 +52,16 @@ class _BattleLogState extends State<BattleLog> {
           // Page title
           Text(
             'Battle Log',
-            style: Theme.of(context).textTheme.headlineSmall?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
 
           // Spacer
           SizedBox(
-            width: Sizing.blockSizeHorizontal * 3.0,
+            width: Sizing.screenWidth(context) * .03,
           ),
 
           // Page icon
-          Icon(
+          const Icon(
             Icons.query_stats,
             size: Sizing.icon3,
           ),
@@ -74,11 +72,7 @@ class _BattleLogState extends State<BattleLog> {
 
   Widget _buildScaffoldBody() {
     return Padding(
-      padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 1.0,
-        left: Sizing.blockSizeHorizontal * 2.0,
-        right: Sizing.blockSizeHorizontal * 2.0,
-      ),
+      padding: Sizing.horizontalWindowInsets(context),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -87,7 +81,7 @@ class _BattleLogState extends State<BattleLog> {
 
           // Spacer
           SizedBox(
-            height: Sizing.blockSizeVertical * 2.0,
+            height: Sizing.screenHeight(context) * .02,
           ),
 
           Text(
@@ -97,7 +91,7 @@ class _BattleLogState extends State<BattleLog> {
 
           // Spacer
           SizedBox(
-            height: Sizing.blockSizeVertical * 2.0,
+            height: Sizing.screenHeight(context) * .02,
           ),
 
           // Logged opponent teams
@@ -140,7 +134,7 @@ class _BattleLogState extends State<BattleLog> {
                   footer: _buildTeamNodeFooter(index),
                 ),
                 SizedBox(
-                  height: Sizing.blockSizeVertical * 10.0,
+                  height: Sizing.screenHeight(context) * .10,
                 ),
               ],
             );
@@ -161,7 +155,7 @@ class _BattleLogState extends State<BattleLog> {
   // The icon buttons at the footer of each TeamNode
   Widget _buildTeamNodeFooter(int teamIndex) {
     // Size of the footer icons
-    final double iconSize = Sizing.blockSizeHorizontal * 6.0;
+    final double iconSize = Sizing.screenWidth(context) * .06;
 
     // Provider retrieve
     final opponent = _team.getOpponents().elementAt(teamIndex);
@@ -189,7 +183,7 @@ class _BattleLogState extends State<BattleLog> {
                         icon: const Icon(Icons.clear),
                         tooltip: 'Remove Team',
                         iconSize: iconSize,
-                        splashRadius: Sizing.blockSizeHorizontal * 5.0,
+                        splashRadius: Sizing.screenWidth(context) * .05,
                       ),
 
                 // Analyze team
@@ -198,7 +192,7 @@ class _BattleLogState extends State<BattleLog> {
                   icon: const Icon(Icons.analytics),
                   tooltip: 'Analyze Team',
                   iconSize: iconSize,
-                  splashRadius: Sizing.blockSizeHorizontal * 5.0,
+                  splashRadius: Sizing.screenWidth(context) * .05,
                 ),
 
                 // Edit team
@@ -207,7 +201,7 @@ class _BattleLogState extends State<BattleLog> {
                   icon: const Icon(Icons.build_circle),
                   tooltip: 'Edit Team',
                   iconSize: iconSize,
-                  splashRadius: Sizing.blockSizeHorizontal * 5.0,
+                  splashRadius: Sizing.screenWidth(context) * .05,
                 ),
 
                 // Lock team
@@ -216,7 +210,7 @@ class _BattleLogState extends State<BattleLog> {
                   icon: Icon(lockIcon),
                   tooltip: 'Unlock Team',
                   iconSize: iconSize,
-                  splashRadius: Sizing.blockSizeHorizontal * 5.0,
+                  splashRadius: Sizing.screenWidth(context) * .05,
                 ),
               ],
             ),
@@ -236,21 +230,17 @@ class _BattleLogState extends State<BattleLog> {
     if (_team.getOpponents().isEmpty) {
       return GradientButton(
         onPressed: _onAddTeam,
-        width: Sizing.screenWidth * .85,
-        height: Sizing.blockSizeVertical * 8.5,
+        width: Sizing.screenWidth(context) * .85,
+        height: Sizing.screenHeight(context) * .085,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Log Opponent Team',
+              'Log Opponent Team  ',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            SizedBox(
-              width: Sizing.blockSizeHorizontal * 5.0,
-            ),
-            Icon(
+            const Icon(
               Icons.add,
-              size: Sizing.blockSizeHorizontal * 7.0,
             ),
           ],
         ),
@@ -263,8 +253,8 @@ class _BattleLogState extends State<BattleLog> {
         // Analyze button
         GradientButton(
           onPressed: _onAnalyzeLogs,
-          width: Sizing.screenWidth * .44,
-          height: Sizing.blockSizeVertical * 8.5,
+          width: Sizing.screenWidth(context) * .44,
+          height: Sizing.screenHeight(context) * .085,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(50),
             topRight: Radius.circular(20),
@@ -275,15 +265,11 @@ class _BattleLogState extends State<BattleLog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Analyze',
+                'Analyze  ',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(
-                width: Sizing.blockSizeHorizontal * 4.0,
-              ),
-              Icon(
+              const Icon(
                 Icons.analytics,
-                size: Sizing.blockSizeHorizontal * 7.0,
               ),
             ],
           ),
@@ -292,8 +278,8 @@ class _BattleLogState extends State<BattleLog> {
         // Log button
         GradientButton(
           onPressed: _onAddTeam,
-          width: Sizing.screenWidth * .44,
-          height: Sizing.blockSizeVertical * 8.5,
+          width: Sizing.screenWidth(context) * .44,
+          height: Sizing.screenHeight(context) * .085,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(50),
@@ -304,15 +290,11 @@ class _BattleLogState extends State<BattleLog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Log',
+                'Log  ',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(
-                width: Sizing.blockSizeHorizontal * 4.0,
-              ),
-              Icon(
+              const Icon(
                 Icons.add,
-                size: Sizing.blockSizeHorizontal * 7.0,
               ),
             ],
           ),

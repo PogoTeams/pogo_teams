@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/move.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_colors.dart';
+import '../../model/pokemon.dart';
+import '../../model/move.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -16,9 +16,9 @@ MoveNodes.
 
 class MoveNodes extends StatelessWidget {
   const MoveNodes({
-    Key? key,
+    super.key,
     required this.pokemon,
-  }) : super(key: key);
+  });
 
   final Pokemon pokemon;
 
@@ -27,9 +27,33 @@ class MoveNodes extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        MoveNode(move: pokemon.getSelectedFastMove()),
-        MoveNode(move: pokemon.getSelectedChargeMoveL()),
-        MoveNode(move: pokemon.getSelectedChargeMoveR()),
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 2.0,
+            ),
+            child: MoveNode(move: pokemon.getSelectedFastMove()),
+          ),
+        ),
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 2.0,
+            ),
+            child: MoveNode(move: pokemon.getSelectedChargeMoveL()),
+          ),
+        ),
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 2.0,
+            ),
+            child: MoveNode(move: pokemon.getSelectedChargeMoveR()),
+          ),
+        ),
       ],
     );
   }
@@ -37,25 +61,24 @@ class MoveNodes extends StatelessWidget {
 
 class MoveNode extends StatelessWidget {
   const MoveNode({
-    Key? key,
+    super.key,
     required this.move,
-  }) : super(key: key);
+  });
 
   final Move move;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 45.0,
       alignment: Alignment.center,
       margin: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * .7,
+        top: Sizing.screenHeight(context) * .007,
       ),
-      width: Sizing.blockSizeHorizontal * 28.0,
-      height: Sizing.blockSizeVertical * 3.5,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: 1.1,
+          width: Sizing.borderWidthThin,
         ),
         borderRadius: BorderRadius.circular(100.0),
         color: PogoColors.getPokemonTypeColor(move.type.typeId),
@@ -72,32 +95,42 @@ class MoveNode extends StatelessWidget {
 
 class MoveDots extends StatelessWidget {
   const MoveDots({
-    Key? key,
+    super.key,
     required this.moveColors,
-  }) : super(key: key);
+  });
 
   final List<Color> moveColors;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: moveColors
-          .map(
-            (color) => Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
-                  width: Sizing.blockSizeHorizontal * 0.4,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: moveColors
+              .map(
+                (color) => Padding(
+                  padding: const EdgeInsets.only(
+                    left: 2.0,
+                    right: 2.0,
+                  ),
+                  child: Container(
+                    width: constraints.maxHeight,
+                    height: constraints.maxHeight,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.white,
+                        width: Sizing.borderWidthThin,
+                      ),
+                      color: color,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
                 ),
-                color: color,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              height: Sizing.blockSizeHorizontal * 5.0,
-              width: Sizing.blockSizeHorizontal * 5.0,
-            ),
-          )
-          .toList(),
+              )
+              .toList(),
+        );
+      },
     );
   }
 }

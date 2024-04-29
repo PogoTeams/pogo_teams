@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 // Local Imports
-import '../modules/ui/sizing.dart';
-import '../pogo_objects/tag.dart';
+import '../app/ui/sizing.dart';
+import '../model/tag.dart';
 import '../widgets/buttons/exit_button.dart';
 import '../widgets/dialogs.dart';
-import '../modules/data/pogo_repository.dart';
+import '../modules/pogo_repository.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -19,10 +19,10 @@ A page for creating and editing tags.
 
 class TagEdit extends StatefulWidget {
   const TagEdit({
-    Key? key,
+    super.key,
     this.tag,
     this.create = false,
-  }) : super(key: key);
+  });
 
   final Tag? tag;
   final bool create;
@@ -37,7 +37,7 @@ class _TagEditState extends State<TagEdit> {
 
   Widget _buildFloatingActionButtons() {
     return SizedBox(
-      width: Sizing.screenWidth * .87,
+      width: Sizing.screenWidth(context) * .87,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -127,53 +127,53 @@ class _TagEditState extends State<TagEdit> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.fromLTRB(
-          Sizing.blockSizeHorizontal * 2.0,
-          Sizing.blockSizeVertical * 10.0,
-          Sizing.blockSizeHorizontal * 2.0,
-          Sizing.blockSizeVertical * 10.0,
+        padding: Sizing.horizontalWindowInsets(context).copyWith(
+          top: Sizing.screenHeight(context) * .10,
+          bottom: Sizing.screenHeight(context) * .10,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Name', style: Theme.of(context).textTheme.titleLarge),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Name', style: Theme.of(context).textTheme.titleLarge),
 
-            SizedBox(
-              height: Sizing.blockSizeVertical * 2.0,
-            ),
+              SizedBox(
+                height: Sizing.screenHeight(context) * .02,
+              ),
 
-            // Tag Name
-            TextField(
-              controller: _textController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+              // Tag Name
+              TextField(
+                controller: _textController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
                 ),
               ),
-            ),
 
-            SizedBox(
-              height: Sizing.blockSizeVertical * 2.0,
-            ),
+              SizedBox(
+                height: Sizing.screenHeight(context) * .02,
+              ),
 
-            Text('Color', style: Theme.of(context).textTheme.titleLarge),
+              Text('Color', style: Theme.of(context).textTheme.titleLarge),
 
-            SizedBox(
-              height: Sizing.blockSizeVertical * 2.0,
-            ),
+              SizedBox(
+                height: Sizing.screenHeight(context) * .02,
+              ),
 
-            // Color
-            ColorPicker(
-              paletteType: PaletteType.hsl,
-              enableAlpha: false,
-              colorPickerWidth: Sizing.screenWidth,
-              pickerAreaBorderRadius: BorderRadius.circular(10),
-              labelTypes: const [],
-              pickerColor: _selectedColor,
-              onColorChanged: (color) => _selectedColor = color,
-            ),
-          ],
+              // Color
+              ColorPicker(
+                paletteType: PaletteType.hsl,
+                enableAlpha: false,
+                colorPickerWidth: Sizing.screenWidth(context) * .75,
+                pickerAreaBorderRadius: BorderRadius.circular(10),
+                labelTypes: const [],
+                pickerColor: _selectedColor,
+                onColorChanged: (color) => _selectedColor = color,
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: _buildFloatingActionButtons(),

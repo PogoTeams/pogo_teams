@@ -11,12 +11,12 @@ import 'package:intl/intl.dart';
 
 // Local Imports
 import '../widgets/dialogs.dart';
-import '../modules/data/globals.dart';
-import '../modules/data/pogo_repository.dart';
-import '../modules/data/google_drive_repository.dart';
-import '../modules/ui/sizing.dart';
+import '../modules/globals.dart';
+import '../modules/pogo_repository.dart';
+import '../modules/google_drive_repository.dart';
+import '../app/ui/sizing.dart';
 import '../widgets/buttons/gradient_button.dart';
-import '../tools/extensions.dart';
+import '../utils/extensions.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -26,7 +26,7 @@ using a Google account.
 */
 
 class DriveBackups extends StatefulWidget {
-  const DriveBackups({Key? key}) : super(key: key);
+  const DriveBackups({super.key});
 
   @override
   _DriveBackupsState createState() => _DriveBackupsState();
@@ -64,8 +64,8 @@ class _DriveBackupsState extends State<DriveBackups> {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                  top: Sizing.blockSizeVertical * 2.0,
-                  left: Sizing.blockSizeHorizontal * 5.0,
+                  top: Sizing.screenHeight(context) * .02,
+                  left: Sizing.screenWidth(context) * .05,
                 ),
                 child: Text(
                   'Export',
@@ -160,11 +160,11 @@ class _DriveBackupsState extends State<DriveBackups> {
             overflow: TextOverflow.ellipsis,
           ),
           SizedBox(
-            height: Sizing.blockSizeVertical * 3.0,
+            height: Sizing.screenHeight(context) * .03,
           ),
           _buildFloatingActionButtons(),
           SizedBox(
-            height: Sizing.blockSizeVertical * 3.0,
+            height: Sizing.screenHeight(context) * .03,
           ),
           _buildGoogleDriveBackupOptions(),
         ],
@@ -225,7 +225,7 @@ class _DriveBackupsState extends State<DriveBackups> {
               borderRadius: BorderRadius.circular(10),
             ),
             contentPadding: EdgeInsets.only(
-              bottom: Sizing.blockSizeVertical * 1.0,
+              bottom: Sizing.screenHeight(context) * .01,
             ),
             selected: GoogleDriveRepository.linkedBackupFile?.id ==
                 GoogleDriveRepository.backupFiles[index].id,
@@ -242,7 +242,7 @@ class _DriveBackupsState extends State<DriveBackups> {
                 IconButton(
                   onPressed: () =>
                       _onDeleteBackup(GoogleDriveRepository.backupFiles[index]),
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.clear,
                     size: Sizing.icon3,
                   ),
@@ -284,8 +284,8 @@ class _DriveBackupsState extends State<DriveBackups> {
           // Import
           GradientButton(
             onPressed: _onRestoreBackup,
-            width: Sizing.screenWidth * .4,
-            height: Sizing.blockSizeVertical * 8.5,
+            width: Sizing.screenWidth(context) * .4,
+            height: Sizing.screenHeight(context) * .085,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(50),
               topRight: Radius.circular(10),
@@ -296,15 +296,11 @@ class _DriveBackupsState extends State<DriveBackups> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Restore',
+                  'Restore  ',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                SizedBox(
-                  width: Sizing.blockSizeHorizontal * 5.0,
-                ),
-                Icon(
+                const Icon(
                   Icons.settings_backup_restore_rounded,
-                  size: Sizing.blockSizeHorizontal * 7.0,
                 ),
               ],
             ),
@@ -313,8 +309,8 @@ class _DriveBackupsState extends State<DriveBackups> {
           // Export
           GradientButton(
             onPressed: _onCreateBackup,
-            width: Sizing.screenWidth * .4,
-            height: Sizing.blockSizeVertical * 8.5,
+            width: Sizing.screenWidth(context) * .4,
+            height: Sizing.screenHeight(context) * .085,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10),
               topRight: Radius.circular(50),
@@ -325,15 +321,11 @@ class _DriveBackupsState extends State<DriveBackups> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'New',
+                  'New  ',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                SizedBox(
-                  width: Sizing.blockSizeHorizontal * 5.0,
-                ),
-                Icon(
+                const Icon(
                   Icons.add_to_drive_outlined,
-                  size: Sizing.blockSizeHorizontal * 7.0,
                 ),
               ],
             ),
@@ -343,22 +335,18 @@ class _DriveBackupsState extends State<DriveBackups> {
     }
     return GradientButton(
       onPressed: () {},
-      width: Sizing.screenWidth * .85,
-      height: Sizing.blockSizeVertical * 8.5,
+      width: Sizing.screenWidth(context) * .85,
+      height: Sizing.screenHeight(context) * .085,
       borderRadius: BorderRadius.circular(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Sign In',
+            'Sign In  ',
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          SizedBox(
-            width: Sizing.blockSizeHorizontal * 5.0,
-          ),
-          Icon(
+          const Icon(
             Icons.login,
-            size: Sizing.blockSizeHorizontal * 7.0,
           ),
         ],
       ),
@@ -433,15 +421,15 @@ class _DriveBackupsState extends State<DriveBackups> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
-            height: Sizing.blockSizeVertical * 2.0,
+            height: Sizing.screenHeight(context) * .02,
           ),
           _buildScaffoldBody(),
           MaterialButton(
             padding: EdgeInsets.zero,
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             onPressed: () => Navigator.pop(context),
-            height: Sizing.blockSizeVertical * 7.0,
-            child: Center(
+            height: Sizing.screenHeight(context) * .07,
+            child: const Center(
               child: Icon(
                 Icons.clear,
                 size: Sizing.icon2,

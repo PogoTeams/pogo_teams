@@ -62,7 +62,9 @@ class GoogleDriveRepository {
         GoogleSignIn.standard(scopes: [drive_api.DriveApi.driveFileScope]);
     account = await googleSignIn.signInSilently();
 
-    await loadBackups();
+    if (isSignedIn) {
+      await loadBackups();
+    }
 
     return isSignedIn;
   }
@@ -72,7 +74,9 @@ class GoogleDriveRepository {
         GoogleSignIn.standard(scopes: [drive_api.DriveApi.driveFileScope]);
     account = await googleSignIn.signIn();
 
-    await loadBackups();
+    if (isSignedIn) {
+      await loadBackups();
+    }
 
     return isSignedIn;
   }

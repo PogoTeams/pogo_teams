@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Local Imports
 import 'gradient_button.dart';
-import '../../modules/ui/sizing.dart';
+import '../../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -14,10 +14,10 @@ team is empty, the button will take up that same space as blank space.
 
 class AnalyzeButton extends StatelessWidget {
   const AnalyzeButton({
-    Key? key,
+    super.key,
     required this.isEmpty,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   final bool isEmpty;
   final VoidCallback onPressed;
@@ -27,12 +27,12 @@ class AnalyzeButton extends StatelessWidget {
     // Analyze button
     return isEmpty
         ? SizedBox(
-            height: Sizing.blockSizeVertical * 8.5,
+            height: Sizing.screenHeight(context) * .085,
           )
         : GradientButton(
             onPressed: onPressed,
-            width: Sizing.screenWidth * .85,
-            height: Sizing.blockSizeVertical * 8.5,
+            width: Sizing.screenWidth(context) * .85,
+            height: Sizing.screenHeight(context) * .085,
             child: Text(
               'Analyze',
               style: Theme.of(context).textTheme.headlineSmall,

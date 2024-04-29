@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
+import '../../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -14,10 +14,10 @@ All logged Pokemon teams under this team will then be adjusted to be of size 6.
 
 class TeamSizeDropdown extends StatefulWidget {
   const TeamSizeDropdown({
-    Key? key,
+    super.key,
     required this.size,
     required this.onTeamSizeChanged,
-  }) : super(key: key);
+  });
 
   final void Function(int?) onTeamSizeChanged;
   final int size;
@@ -56,9 +56,9 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
 
     return Container(
       alignment: Alignment.center,
-      width: Sizing.screenWidth * .2,
+      width: Sizing.screenWidth(context) * .2,
       padding: EdgeInsets.only(
-        right: Sizing.blockSizeHorizontal * 2.0,
+        right: Sizing.screenWidth(context) * .02,
       ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -72,7 +72,7 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
         ),
         border: Border.all(
           color: Colors.white,
-          width: Sizing.blockSizeHorizontal * .4,
+          width: Sizing.borderWidth,
         ),
         borderRadius: BorderRadius.circular(100.0),
       ),
@@ -82,9 +82,8 @@ class _TeamSizeDropdownState extends State<TeamSizeDropdown>
         child: DropdownButton(
           isExpanded: true,
           value: widget.size,
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_drop_down_circle,
-            size: Sizing.blockSizeVertical * 3.0,
           ),
           style: DefaultTextStyle.of(context).style,
           onChanged: widget.onTeamSizeChanged,

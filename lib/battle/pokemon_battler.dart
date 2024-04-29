@@ -1,8 +1,8 @@
 // Local
-import '../pogo_objects/battle_pokemon.dart';
+import '../model/battle_pokemon.dart';
 import 'battle_result.dart';
-import '../modules/data/globals.dart';
-import '../modules/data/pogo_debugging.dart';
+import '../modules/globals.dart';
+import '../modules/pogo_debugging.dart';
 import '../enums/battle_outcome.dart';
 
 /*
@@ -24,6 +24,45 @@ class PokemonBattler {
     opponent.resetHp();
     self.resetCooldown();
     opponent.resetCooldown();
+  }
+
+  static BattleResult battleIterative(
+    BattlePokemon self,
+    BattlePokemon opponent,
+  ) {
+    self.prioritizeMoveAlignment = true;
+    opponent.prioritizeMoveAlignment = true;
+    self.selectNextDecidedChargeMove(opponent);
+    opponent.selectNextDecidedChargeMove(self);
+
+    int turn = 1;
+    while (!_battleComplete(self, opponent, turn)) {
+      self.cooldown -= 1;
+      opponent.cooldown -= 1;
+
+      if (_chargeMoveSequenceBoth(self, opponent)) {
+        _chargeMoveSequenceTieBreak(self, opponent);
+        self.selectNextDecidedChargeMove(opponent);
+        opponent.selectNextDecidedChargeMove(self);
+      } else {
+        if (_chargeMoveSequenceReady(self, opponent.cooldown)) {
+          _chargeMoveSequence(self, opponent);
+          self.selectNextDecidedChargeMove(opponent);
+        } else if (_chargeMoveSequenceReady(opponent, self.cooldown)) {
+          _chargeMoveSequence(opponent, self);
+          opponent.selectNextDecidedChargeMove(self);
+        } else {
+          _fastMoveSequence(self, opponent);
+          ++turn;
+        }
+      }
+    }
+
+    return BattleResult(
+      self: self,
+      opponent: opponent,
+      timeline: null,
+    );
   }
 
   static BattleResult battle(

@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../tools/pair.dart';
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_icons.dart';
+import '../../utils/pair.dart';
+import '../../model/pokemon_typing.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_icons.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -16,11 +16,11 @@ teams offense coverage based on movesets.
 
 class CoverageGrids extends StatelessWidget {
   const CoverageGrids({
-    Key? key,
+    super.key,
     required this.defenseThreats,
     required this.offenseCoverage,
     required this.includedTypesKeys,
-  }) : super(key: key);
+  });
 
   final List<Pair<PokemonType, double>> defenseThreats;
   final List<Pair<PokemonType, double>> offenseCoverage;
@@ -75,8 +75,8 @@ class CoverageGrids extends StatelessWidget {
                   // Threat type Icons
                   child: GridView.count(
                     shrinkWrap: true,
-                    crossAxisSpacing: Sizing.blockSizeHorizontal * .1,
-                    mainAxisSpacing: Sizing.blockSizeVertical * .5,
+                    crossAxisSpacing: Sizing.screenWidth(context) * .001,
+                    mainAxisSpacing: Sizing.screenHeight(context) * .005,
                     physics: const NeverScrollableScrollPhysics(),
                     crossAxisCount: crossAxisCount,
                     children: defenseThreats
@@ -92,7 +92,7 @@ class CoverageGrids extends StatelessWidget {
 
         // Spacer
         SizedBox(
-          height: Sizing.blockSizeVertical * 2.5,
+          height: Sizing.screenHeight(context) * .025,
         ),
 
         // List of coverage
@@ -134,8 +134,8 @@ class CoverageGrids extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 7.0),
                   child: GridView.count(
                     shrinkWrap: true,
-                    crossAxisSpacing: Sizing.blockSizeHorizontal * .1,
-                    mainAxisSpacing: Sizing.blockSizeVertical * .5,
+                    crossAxisSpacing: Sizing.screenWidth(context) * .001,
+                    mainAxisSpacing: Sizing.screenHeight(context) * .005,
                     physics: const NeverScrollableScrollPhysics(),
                     crossAxisCount: crossAxisCount,
                     children: offenseCoverage

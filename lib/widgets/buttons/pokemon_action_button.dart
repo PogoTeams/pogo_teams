@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
-import '../../pogo_objects/pokemon.dart';
+import '../../app/ui/sizing.dart';
+import '../../model/pokemon.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -14,13 +14,13 @@ can perform an action with that Pokemon.
 
 class PokemonActionButton extends StatelessWidget {
   const PokemonActionButton({
-    Key? key,
+    super.key,
     this.width = double.infinity,
     required this.pokemon,
     required this.label,
     required this.icon,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   final double width;
   final Pokemon pokemon;
@@ -32,18 +32,18 @@ class PokemonActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 1.0,
-        bottom: Sizing.blockSizeVertical * .5,
+        top: Sizing.screenHeight(context) * .01,
+        bottom: Sizing.screenHeight(context) * .005,
       ),
       child: MaterialButton(
         padding: EdgeInsets.zero,
         onPressed: () => onPressed(pokemon),
         child: Container(
-          height: Sizing.blockSizeVertical * 4.0,
+          height: Sizing.screenHeight(context) * .04,
           width: width,
           decoration: BoxDecoration(
             borderRadius:
-                BorderRadius.circular(Sizing.blockSizeHorizontal * 2.5),
+                BorderRadius.circular(Sizing.screenWidth(context) * .025),
             color: Colors.black54,
           ),
           child: Row(

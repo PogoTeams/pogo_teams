@@ -1,8 +1,8 @@
 // Local
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/move.dart';
-import '../../tools/pair.dart';
+import '../model/pokemon_typing.dart';
+import '../model/pokemon.dart';
+import '../model/move.dart';
+import '../utils/pair.dart';
 import 'globals.dart';
 
 /*

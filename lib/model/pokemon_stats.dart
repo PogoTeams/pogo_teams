@@ -2,7 +2,7 @@
 import 'package:isar/isar.dart';
 
 // Local
-import '../modules/data/globals.dart';
+import '../modules/globals.dart';
 
 part 'pokemon_stats.g.dart';
 

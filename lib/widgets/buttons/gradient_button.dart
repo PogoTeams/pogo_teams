@@ -9,13 +9,13 @@ A gradient button that uses gradient coloring in theme with the app design.
 
 class GradientButton extends StatelessWidget {
   const GradientButton({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.child,
     required this.width,
     required this.height,
     this.borderRadius,
-  }) : super(key: key);
+  });
 
   final VoidCallback onPressed;
   final Widget child;

@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../modules/ui/sizing.dart';
+import '../app/ui/sizing.dart';
 
 Future<bool> getConfirmation(
   BuildContext context,
@@ -23,8 +23,8 @@ Future<bool> getConfirmation(
           children: [
             Padding(
               padding: EdgeInsets.only(
-                top: Sizing.blockSizeVertical * 2.0,
-                left: Sizing.blockSizeHorizontal * 5.0,
+                top: Sizing.screenHeight(context) * .02,
+                left: Sizing.screenWidth(context) * .05,
               ),
               child: Text(
                 title,
@@ -88,8 +88,8 @@ Future<void> showOptions(
           children: [
             Padding(
               padding: EdgeInsets.only(
-                top: Sizing.blockSizeVertical * 2.0,
-                left: Sizing.blockSizeHorizontal * 5.0,
+                top: Sizing.screenHeight(context) * .02,
+                left: Sizing.screenWidth(context) * .05,
               ),
               child: Text(
                 title,

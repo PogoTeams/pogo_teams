@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/cup.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_colors.dart';
-import '../../modules/data/pogo_repository.dart';
+import '../../model/cup.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_colors.dart';
+import '../../modules/pogo_repository.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -17,15 +17,13 @@ as well as the Pokemon's ideal IVs.
 
 class CupDropdown extends StatefulWidget {
   const CupDropdown({
-    Key? key,
+    super.key,
     required this.cup,
     required this.onCupChanged,
-    required this.width,
-  }) : super(key: key);
+  });
 
   final Cup cup;
   final void Function(String?) onCupChanged;
-  final double width;
 
   @override
   _CupDropdownState createState() => _CupDropdownState();
@@ -60,14 +58,13 @@ class _CupDropdownState extends State<CupDropdown>
 
     return Container(
       alignment: Alignment.center,
-      width: widget.width,
       padding: EdgeInsets.only(
-        right: Sizing.blockSizeHorizontal * 2.0,
+        right: Sizing.screenWidth(context) * .02,
       ),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: Sizing.blockSizeHorizontal * .4,
+          width: Sizing.borderWidth,
         ),
         borderRadius: BorderRadius.circular(100.0),
         gradient: LinearGradient(
@@ -87,9 +84,8 @@ class _CupDropdownState extends State<CupDropdown>
           borderRadius: BorderRadius.circular(5),
           isExpanded: true,
           value: selectedCup.cupId,
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_drop_down_circle,
-            size: Sizing.blockSizeVertical * 3.0,
           ),
           style: DefaultTextStyle.of(context).style,
           onChanged: widget.onCupChanged,

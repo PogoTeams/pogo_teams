@@ -148,18 +148,12 @@ class Pokemon {
 @Collection(accessor: 'cupPokemon')
 class CupPokemon extends Pokemon {
   CupPokemon({
-    required Ratings ratings,
-    required IVs ivs,
-    required String selectedFastMoveId,
-    required List<String> selectedChargeMoveIds,
-    PokemonBase? base,
-  }) : super(
-          ratings: ratings,
-          ivs: ivs,
-          selectedFastMoveId: selectedFastMoveId,
-          selectedChargeMoveIds: selectedChargeMoveIds,
-          base: base,
-        );
+    required super.ratings,
+    required super.ivs,
+    required super.selectedFastMoveId,
+    required super.selectedChargeMoveIds,
+    super.base,
+  });
 
   factory CupPokemon.from(CupPokemon other) {
     return CupPokemon(
@@ -188,19 +182,13 @@ class CupPokemon extends Pokemon {
 @Collection(accessor: 'userPokemon')
 class UserPokemon extends Pokemon {
   UserPokemon({
-    required Ratings ratings,
-    required IVs ivs,
-    required String selectedFastMoveId,
-    required List<String> selectedChargeMoveIds,
-    PokemonBase? base,
+    required super.ratings,
+    required super.ivs,
+    required super.selectedFastMoveId,
+    required super.selectedChargeMoveIds,
+    super.base,
     this.teamIndex,
-  }) : super(
-          ratings: ratings,
-          ivs: ivs,
-          selectedFastMoveId: selectedFastMoveId,
-          selectedChargeMoveIds: selectedChargeMoveIds,
-          base: base,
-        );
+  });
 
   factory UserPokemon.fromJson(Map<String, dynamic> json) {
     return UserPokemon(

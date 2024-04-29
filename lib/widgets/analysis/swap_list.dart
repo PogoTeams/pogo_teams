@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_typing.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/pokemon.dart';
+import '../../model/pokemon_typing.dart';
 import '../nodes/pokemon_node.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/data/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
+import '../../modules/pogo_repository.dart';
 import '../buttons/pokemon_action_button.dart';
 import '../../enums/rankings_categories.dart';
 
@@ -21,12 +21,12 @@ the user to swap this Pokemon with another in their team.
 
 class SwapList extends StatelessWidget {
   const SwapList({
-    Key? key,
+    super.key,
     required this.onSwap,
     required this.onAdd,
     required this.team,
     required this.types,
-  }) : super(key: key);
+  });
 
   final Function(Pokemon) onSwap;
   final Function(Pokemon) onAdd;
@@ -42,23 +42,21 @@ class SwapList extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           PokemonActionButton(
-            width: Sizing.screenWidth * .35,
+            width: Sizing.screenWidth(context) * .35,
             pokemon: pokemon,
             label: 'Add To Team',
-            icon: Icon(
+            icon: const Icon(
               Icons.add,
-              size: Sizing.blockSizeHorizontal * 5.0,
               color: Colors.white,
             ),
             onPressed: onAdd,
           ),
           PokemonActionButton(
-            width: Sizing.screenWidth * .35,
+            width: Sizing.screenWidth(context) * .35,
             pokemon: pokemon,
             label: 'Team Swap',
-            icon: Icon(
+            icon: const Icon(
               Icons.swap_horiz_rounded,
-              size: Sizing.blockSizeHorizontal * 5.0,
               color: Colors.white,
             ),
             onPressed: onSwap,
@@ -70,9 +68,8 @@ class SwapList extends StatelessWidget {
     return PokemonActionButton(
       pokemon: pokemon,
       label: 'Team Swap',
-      icon: Icon(
+      icon: const Icon(
         Icons.swap_horiz_rounded,
-        size: Sizing.blockSizeHorizontal * 5.0,
         color: Colors.white,
       ),
       onPressed: onSwap,
@@ -96,11 +93,12 @@ class SwapList extends StatelessWidget {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) => Padding(
                 padding: EdgeInsets.only(
-                  top: Sizing.blockSizeVertical * .5,
-                  bottom: Sizing.blockSizeVertical * .5,
+                  top: Sizing.screenHeight(context) * .005,
+                  bottom: Sizing.screenHeight(context) * .005,
                 ),
                 child: PokemonNode.large(
                   pokemon: snapshot.data![index],
+                  context: context,
                   footer: _buildFooter(
                     context,
                     snapshot.data![index],

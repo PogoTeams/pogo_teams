@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/move.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_colors.dart';
+import '../../model/move.dart';
+import '../../model/pokemon.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -21,10 +21,10 @@ Pokemon's possible movesets.
 
 class MoveDropdowns extends StatefulWidget {
   MoveDropdowns({
-    Key? key,
+    super.key,
     required this.pokemon,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   final Pokemon pokemon;
   final VoidCallback? onChanged;
@@ -89,8 +89,8 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
           value: move,
           child: Padding(
             padding: EdgeInsets.only(
-              left: Sizing.blockSizeHorizontal * 2.0,
-              right: Sizing.blockSizeHorizontal * 2.0,
+              left: Sizing.screenWidth(context) * .02,
+              right: Sizing.screenWidth(context) * .02,
             ),
             child: Center(
               child: FittedBox(
@@ -125,48 +125,72 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        MoveDropdown(
-          label: 'F A S T',
-          move: widget.pokemon.getSelectedFastMove(),
-          options: fastMoveOptions,
-          onChanged: (Move? newFastMove) {
-            setState(() {
-              if (newFastMove != null) {
-                widget.pokemon.selectedFastMoveId = newFastMove.moveId;
-              }
-              if (widget.onChanged != null) widget.onChanged!();
-            });
-          },
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 2.0,
+            ),
+            child: MoveDropdown(
+              label: 'F A S T',
+              move: widget.pokemon.getSelectedFastMove(),
+              options: fastMoveOptions,
+              onChanged: (Move? newFastMove) {
+                setState(() {
+                  if (newFastMove != null) {
+                    widget.pokemon.selectedFastMoveId = newFastMove.moveId;
+                  }
+                  if (widget.onChanged != null) widget.onChanged!();
+                });
+              },
+            ),
+          ),
         ),
-        MoveDropdown(
-          label: 'C H A R G E  1',
-          move: widget.pokemon.getSelectedChargeMoveL(),
-          options: chargedMoveOptionsL,
-          onChanged: (Move? newChargedMove) {
-            setState(() {
-              if (newChargedMove != null) {
-                widget.pokemon.selectedChargeMoveIds.first =
-                    newChargedMove.moveId;
-              }
-              _updateChargedMoveOptions();
-              if (widget.onChanged != null) widget.onChanged!();
-            });
-          },
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 2.0,
+            ),
+            child: MoveDropdown(
+              label: 'C H A R G E  1',
+              move: widget.pokemon.getSelectedChargeMoveL(),
+              options: chargedMoveOptionsL,
+              onChanged: (Move? newChargedMove) {
+                setState(() {
+                  if (newChargedMove != null) {
+                    widget.pokemon.selectedChargeMoveIds.first =
+                        newChargedMove.moveId;
+                  }
+                  _updateChargedMoveOptions();
+                  if (widget.onChanged != null) widget.onChanged!();
+                });
+              },
+            ),
+          ),
         ),
-        MoveDropdown(
-          label: 'C H A R G E  2',
-          move: widget.pokemon.getSelectedChargeMoveR(),
-          options: chargedMoveOptionsR,
-          onChanged: (Move? newChargedMove) {
-            setState(() {
-              if (newChargedMove != null) {
-                widget.pokemon.selectedChargeMoveIds.last =
-                    newChargedMove.moveId;
-              }
-              _updateChargedMoveOptions();
-              if (widget.onChanged != null) widget.onChanged!();
-            });
-          },
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 2.0,
+              right: 2.0,
+            ),
+            child: MoveDropdown(
+              label: 'C H A R G E  2',
+              move: widget.pokemon.getSelectedChargeMoveR(),
+              options: chargedMoveOptionsR,
+              onChanged: (Move? newChargedMove) {
+                setState(() {
+                  if (newChargedMove != null) {
+                    widget.pokemon.selectedChargeMoveIds.last =
+                        newChargedMove.moveId;
+                  }
+                  _updateChargedMoveOptions();
+                  if (widget.onChanged != null) widget.onChanged!();
+                });
+              },
+            ),
+          ),
         ),
       ],
     );
@@ -177,12 +201,12 @@ class _MoveDropdownsState extends State<MoveDropdowns> {
 // The _MovesDropdownsState will dynamically generate 3 of the nodes
 class MoveDropdown extends StatelessWidget {
   const MoveDropdown({
-    Key? key,
+    super.key,
     required this.label,
     required this.move,
     required this.options,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   final String label;
   final Move move;
@@ -204,18 +228,13 @@ class MoveDropdown extends StatelessWidget {
 
         // Dropdown button
         Container(
-          padding: EdgeInsets.only(
-            right: Sizing.blockSizeVertical * .7,
+          padding: const EdgeInsets.only(
+            right: 8.0,
           ),
-          margin: EdgeInsets.only(
-            top: Sizing.blockSizeVertical * .7,
-          ),
-          width: Sizing.screenWidth * .28,
-          height: Sizing.blockSizeVertical * 3.5,
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.white,
-              width: 1.1,
+              width: Sizing.borderWidthThin,
             ),
             borderRadius: BorderRadius.circular(100),
             color: PogoColors.getPokemonTypeColor(move.type.typeId),
@@ -224,8 +243,6 @@ class MoveDropdown extends StatelessWidget {
             child: DropdownButton(
               isExpanded: true,
               value: move,
-              icon: const Icon(Icons.arrow_drop_down_circle),
-              iconSize: Sizing.blockSizeHorizontal * 4.0,
               style: Theme.of(context).textTheme.bodySmall,
               items: options,
               onChanged: onChanged,

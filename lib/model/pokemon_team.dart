@@ -5,8 +5,8 @@ import 'package:isar/isar.dart';
 import 'pokemon.dart';
 import 'cup.dart';
 import 'tag.dart';
-import '../modules/data/pokemon_types.dart';
-import '../modules/data/pogo_repository.dart';
+import '../modules/pokemon_types.dart';
+import '../modules/pogo_repository.dart';
 import '../enums/battle_outcome.dart';
 
 part 'pokemon_team.g.dart';

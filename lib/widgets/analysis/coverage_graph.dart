@@ -5,12 +5,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../tools/pair.dart';
-import '../../tools/logic.dart';
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../modules/ui/sizing.dart';
-import '../../modules/ui/pogo_icons.dart';
-import '../../modules/ui/pogo_colors.dart';
+import '../../utils/pair.dart';
+import '../../utils/logic.dart';
+import '../../model/pokemon_typing.dart';
+import '../../app/ui/sizing.dart';
+import '../../app/ui/pogo_icons.dart';
+import '../../app/ui/pogo_colors.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -22,10 +22,10 @@ half way across the screen.
 
 class CoverageGraph extends StatelessWidget {
   const CoverageGraph({
-    Key? key,
+    super.key,
     required this.netEffectiveness,
     required this.teamSize,
-  }) : super(key: key);
+  });
 
   final List<Pair<PokemonType, double>> netEffectiveness;
   final int teamSize;
@@ -36,8 +36,8 @@ class CoverageGraph extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 7.0,
-            right: Sizing.blockSizeHorizontal * 5.0,
+            left: Sizing.screenWidth(context) * .07,
+            right: Sizing.screenWidth(context) * .05,
             bottom: 4.0,
           ),
           child: Row(
@@ -62,8 +62,8 @@ class CoverageGraph extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 7.0,
-            right: Sizing.blockSizeHorizontal * 5.0,
+            left: Sizing.screenWidth(context) * .07,
+            right: Sizing.screenWidth(context) * .05,
             bottom: 10.0,
           ),
           child: Container(
@@ -76,8 +76,8 @@ class CoverageGraph extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(20),
             ),
-            width: Sizing.screenWidth * .84,
-            height: Sizing.blockSizeVertical * .6,
+            width: Sizing.screenWidth(context) * .84,
+            height: Sizing.screenHeight(context) * .006,
           ),
         ),
         ListView(
@@ -97,10 +97,10 @@ class CoverageGraph extends StatelessWidget {
 
 class GraphRow extends StatelessWidget {
   const GraphRow({
-    Key? key,
+    super.key,
     required this.typeData,
     required this.teamSize,
-  }) : super(key: key);
+  });
 
   final Pair<PokemonType, double> typeData;
   final int teamSize;
@@ -117,13 +117,13 @@ class GraphRow extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 4.0),
           child: SizedBox(
-            width: Sizing.blockSizeHorizontal * 6.0,
+            width: Sizing.screenWidth(context) * .06,
             child: PogoIcons.getPokemonTypeIcon(typeData.a.typeId),
           ),
         ),
         Padding(
           padding: EdgeInsets.only(
-            right: Sizing.blockSizeHorizontal * 5.0,
+            right: Sizing.screenWidth(context) * .05,
           ),
           child: Container(
             decoration: BoxDecoration(
@@ -131,9 +131,9 @@ class GraphRow extends StatelessWidget {
               color: PogoColors.getPokemonTypeColor(typeData.a.typeId),
             ),
             width: normalize(barLength / teamFactor, 0, 1) *
-                Sizing.screenWidth *
+                Sizing.screenWidth(context) *
                 .8,
-            height: Sizing.blockSizeVertical * 1.7,
+            height: Sizing.screenHeight(context) * .017,
           ),
         ),
       ],

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
+import '../../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -14,11 +14,11 @@ navigator stack. No information is returned from the current screen.
 
 class ExitButton extends StatelessWidget {
   const ExitButton({
-    Key? key,
+    super.key,
     required this.onPressed,
     this.icon = const Icon(Icons.close),
     this.backgroundColor = Colors.teal,
-  }) : super(key: key);
+  });
 
   final VoidCallback onPressed;
   final Icon icon;
@@ -28,16 +28,17 @@ class ExitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     // Block size from MediaQuery
     return Container(
-      height: Sizing.blockSizeHorizontal * 9.0,
-      width: Sizing.blockSizeHorizontal * 9.0,
+      height: Sizing.screenWidth(context) * .09,
+      width: Sizing.screenWidth(context) * .09,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.white,
-          width: Sizing.blockSizeHorizontal * 0.7,
+          width: Sizing.borderWidth,
         ),
         shape: BoxShape.circle,
       ),
       child: FloatingActionButton(
+        shape: const CircleBorder(),
         heroTag: key,
         foregroundColor: Colors.white,
         backgroundColor: backgroundColor,
@@ -46,7 +47,6 @@ class ExitButton extends StatelessWidget {
         onPressed: onPressed,
         child: Icon(
           icon.icon,
-          size: Sizing.blockSizeHorizontal * 5.0,
         ),
       ),
     );

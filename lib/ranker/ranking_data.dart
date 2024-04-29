@@ -1,11 +1,13 @@
 // Local
-import '../pogo_objects/battle_pokemon.dart';
-import '../pogo_objects/move.dart';
-import '../pogo_objects/ratings.dart';
+import 'dart:math';
+
+import '../model/battle_pokemon.dart';
+import '../model/move.dart';
+import '../model/ratings.dart';
 import '../enums/battle_outcome.dart';
 import '../battle/battle_result.dart';
-import '../modules/data/globals.dart';
-import '../modules/data/pokemon_types.dart';
+import '../modules/globals.dart';
+import '../modules/pokemon_types.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -134,10 +136,9 @@ class RankingData {
       ratings.closer = (ratings.closer / closerBattleCount).floor();
     }
 
-    ratings.overall = ((ratings.lead +
-                (ratings.switchRating / switchShieldScenarios.length) +
-                (ratings.closer / closerShieldScenarios.length)) /
-            3)
+    ratings.overall = sqrt(((ratings.lead *
+            (ratings.switchRating / switchShieldScenarios.length) *
+            (ratings.closer / closerShieldScenarios.length))))
         .floor();
 
     // Determine the best moveset based on usage

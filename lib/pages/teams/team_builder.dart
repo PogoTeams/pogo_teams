@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/cup.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../modules/ui/sizing.dart';
+import '../../model/pokemon.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/cup.dart';
+import '../../modules/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
 import '../../widgets/pokemon_list.dart';
 import '../../widgets/pogo_text_field.dart';
 import '../../widgets/buttons/gradient_button.dart';
@@ -27,11 +27,11 @@ node in the grid to put focus on that node for adding a Pokemon.
 
 class TeamBuilder extends StatefulWidget {
   const TeamBuilder({
-    Key? key,
+    super.key,
     required this.team,
     required this.cup,
     required this.focusIndex,
-  }) : super(key: key);
+  });
 
   final PokemonTeam team;
   final Cup cup;
@@ -118,7 +118,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
             (_team as OpponentPokemonTeam).battleOutcome = battleOutcome;
           });
         },
-        width: Sizing.screenWidth,
+        width: Sizing.screenWidth(context),
       );
     }
 
@@ -126,16 +126,23 @@ class _TeamBuilderState extends State<TeamBuilder> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Dropdown for pvp cup selection
-        CupDropdown(
-          cup: _cup,
-          onCupChanged: _onCupChanged,
-          width: Sizing.screenWidth * .65,
+        Flexible(
+          flex: 5,
+          child: CupDropdown(
+            cup: _cup,
+            onCupChanged: _onCupChanged,
+          ),
         ),
 
+        Sizing.paneSpacer,
+
         // Dropdown to select team size
-        TeamSizeDropdown(
-          size: _team.teamSize,
-          onTeamSizeChanged: _onTeamSizeChanged,
+        Flexible(
+          flex: 2,
+          child: TeamSizeDropdown(
+            size: _team.teamSize,
+            onTeamSizeChanged: _onTeamSizeChanged,
+          ),
         ),
       ],
     );
@@ -163,9 +170,9 @@ class _TeamBuilderState extends State<TeamBuilder> {
         _saveTeam();
         Navigator.pop(context, _team);
       },
-      width: Sizing.screenWidth * .85,
-      height: Sizing.blockSizeVertical * 8.5,
-      child: Icon(
+      width: Sizing.screenWidth(context) * .85,
+      height: Sizing.screenHeight(context) * .085,
+      child: const Icon(
         Icons.clear,
         size: Sizing.icon2,
       ),
@@ -263,44 +270,44 @@ class _TeamBuilderState extends State<TeamBuilder> {
       body: SafeArea(
         bottom: false,
         child: Padding(
-          padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 2.0,
-            right: Sizing.blockSizeHorizontal * 2.0,
-          ),
+          padding: Sizing.horizontalWindowInsets(context),
           child: Column(
             children: [
               _buildTeamNode(),
 
-              // Spacer
-              SizedBox(
-                height: Sizing.blockSizeVertical * 1.0,
-              ),
+              Sizing.listItemSpacer,
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // User input text field
-                  PogoTextField(
-                    controller: _searchController,
-                    width: Sizing.screenWidth * .8,
-                    onClear: () => setState(() {
-                      _searchController.clear();
-                    }),
+                  Flexible(
+                    flex: 6,
+                    child: PogoTextField(
+                      controller: _searchController,
+                      onClear: () => setState(() {
+                        _searchController.clear();
+                      }),
+                    ),
                   ),
 
+                  Sizing.paneSpacer,
+
                   // Filter by ranking category
-                  RankingsCategoryButton(
-                    onSelected: _filterCategory,
-                    selectedCategory: _selectedCategory,
-                    size: Sizing.blockSizeHorizontal * 12.0,
-                    dex: true,
+                  Flexible(
+                    flex: 1,
+                    child: RankingsCategoryButton(
+                      onSelected: _filterCategory,
+                      selectedCategory: _selectedCategory,
+                      dex: true,
+                    ),
                   ),
                 ],
               ),
 
               // Spacer
               SizedBox(
-                height: Sizing.blockSizeVertical * 1.0,
+                height: Sizing.screenHeight(context) * .01,
               ),
 
               _buildPokemonList(),

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
+import '../../app/ui/sizing.dart';
 import '../../enums/rankings_categories.dart';
 
 /*
@@ -15,30 +15,26 @@ PVP related categories.
 
 class RankingsCategoryButton extends StatelessWidget {
   const RankingsCategoryButton({
-    Key? key,
+    super.key,
     required this.onSelected,
     required this.selectedCategory,
-    this.size,
     this.dex = false,
-  }) : super(key: key);
+  });
 
   final void Function(RankingsCategories) onSelected;
   final RankingsCategories selectedCategory;
-  final double? size;
   final bool dex;
 
   @override
   Widget build(BuildContext context) {
-    final size = this.size ?? Sizing.blockSizeHorizontal * 14.0;
-
     return Container(
-      height: size,
-      width: size,
+      width: Sizing.formFieldHeight,
+      height: Sizing.formFieldHeight,
       decoration: BoxDecoration(
         color: Colors.teal,
         border: Border.all(
           color: Colors.white,
-          width: Sizing.blockSizeHorizontal * .7,
+          width: Sizing.borderWidth,
         ),
         shape: BoxShape.circle,
       ),
@@ -46,7 +42,6 @@ class RankingsCategoryButton extends StatelessWidget {
         position: PopupMenuPosition.over,
         onSelected: onSelected,
         icon: const Icon(Icons.sort_sharp),
-        iconSize: size / 2,
 
         // Category options
         itemBuilder: (BuildContext context) {
@@ -104,10 +99,10 @@ class RankingsCategoryButton extends StatelessWidget {
 
 class PopupItem extends StatelessWidget {
   const PopupItem({
-    Key? key,
+    super.key,
     required this.category,
     required this.selectedCategory,
-  }) : super(key: key);
+  });
 
   final RankingsCategories category;
   final RankingsCategories selectedCategory;

@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 // Local Imports
 import '../../widgets/analysis/type_coverage.dart';
 import '../../widgets/pokemon_list.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../modules/ui/sizing.dart';
-import '../../tools/pair.dart';
+import '../../model/pokemon.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/pokemon_typing.dart';
+import '../../modules/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
+import '../../utils/pair.dart';
 import '../../enums/rankings_categories.dart';
 
 /*
@@ -21,13 +21,13 @@ as OpponentTeamAnalysis.
 
 class LogsAnalysis extends StatelessWidget {
   const LogsAnalysis({
-    Key? key,
+    super.key,
     required this.team,
     required this.opponents,
     required this.defenseThreats,
     required this.offenseCoverage,
     required this.netEffectiveness,
-  }) : super(key: key);
+  });
 
   final UserPokemonTeam team;
   final List<OpponentPokemonTeam> opponents;
@@ -37,28 +37,12 @@ class LogsAnalysis extends StatelessWidget {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          // Page title
-          Text(
-            'Logged Opponents Net Analysis',
-            style: Theme.of(context).textTheme.titleLarge?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
-          ),
-
-          // Spacer
-          SizedBox(
-            width: Sizing.blockSizeHorizontal * 3.0,
-          ),
-
-          // Page icon
-          Icon(
-            Icons.analytics,
-            size: Sizing.icon3,
-          ),
-        ],
+      title: const Align(
+        alignment: Alignment.centerRight,
+        child: Icon(
+          Icons.analytics,
+          size: Sizing.icon3,
+        ),
       ),
     );
   }
@@ -88,27 +72,9 @@ class LogsAnalysis extends StatelessWidget {
     return Scaffold(
       appBar: _buildAppBar(context),
       body: Padding(
-        padding: EdgeInsets.only(
-          top: Sizing.blockSizeVertical * 2.0,
-          left: Sizing.blockSizeHorizontal * 2.0,
-          right: Sizing.blockSizeHorizontal * 2.0,
-        ),
+        padding: Sizing.horizontalWindowInsets(context).copyWith(),
         child: ListView(
           children: [
-            // PokemonType coverage widgets
-            TypeCoverage(
-              netEffectiveness: netEffectiveness,
-              defenseThreats: defenseThreats,
-              offenseCoverage: offenseCoverage,
-              includedTypesKeys: team.getCup().includedTypeKeys(),
-              teamSize: team.teamSize,
-            ),
-
-            // Spacer
-            SizedBox(
-              height: Sizing.blockSizeVertical * 2.0,
-            ),
-
             Text(
               'Top Counters',
               textAlign: TextAlign.center,
@@ -116,10 +82,10 @@ class LogsAnalysis extends StatelessWidget {
             ),
 
             Divider(
-              height: Sizing.blockSizeVertical * 5.0,
-              thickness: Sizing.blockSizeVertical * .5,
-              indent: Sizing.blockSizeHorizontal * 2.0,
-              endIndent: Sizing.blockSizeHorizontal * 2.0,
+              height: Sizing.screenHeight(context) * .05,
+              thickness: Sizing.borderWidth,
+              indent: Sizing.screenWidth(context) * .02,
+              endIndent: Sizing.screenWidth(context) * .02,
               color: Colors.white,
             ),
 

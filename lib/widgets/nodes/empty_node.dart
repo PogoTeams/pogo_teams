@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../modules/ui/sizing.dart';
+import '../../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -15,10 +15,10 @@ when their Pokemon ref is null.
 
 class EmptyNode extends StatelessWidget {
   const EmptyNode({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.emptyTransparent,
-  }) : super(key: key);
+  });
 
   final VoidCallback? onPressed;
   final bool emptyTransparent;
@@ -29,7 +29,7 @@ class EmptyNode extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           color: emptyTransparent ? Colors.transparent : Colors.white54,
-          width: Sizing.blockSizeHorizontal * 0.5,
+          width: Sizing.borderWidth,
         ),
         borderRadius: BorderRadius.circular(20),
       ),
@@ -42,7 +42,7 @@ class EmptyNode extends StatelessWidget {
             : Icon(
                 Icons.add,
                 color: Colors.white54,
-                size: Sizing.blockSizeHorizontal * 15.0,
+                size: Sizing.screenWidth(context) * .15,
               ),
       ),
     );

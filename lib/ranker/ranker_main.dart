@@ -4,13 +4,13 @@ import 'dart:math';
 // Local
 import 'pokemon_ranker.dart';
 import 'ranking_data.dart';
-import '../pogo_objects/pokemon_base.dart';
-import '../pogo_objects/battle_pokemon.dart';
-import '../pogo_objects/cup.dart';
-import '../tools/json_tools.dart';
-import '../modules/data/pogo_repository.dart';
-import '../modules/data/pogo_debugging.dart';
-import '../modules/data/cups.dart';
+import '../model/pokemon_base.dart';
+import '../model/battle_pokemon.dart';
+import '../model/cup.dart';
+import '../utils/json_tools.dart';
+import '../modules/pogo_repository.dart';
+import '../modules/pogo_debugging.dart';
+import '../modules/cups.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

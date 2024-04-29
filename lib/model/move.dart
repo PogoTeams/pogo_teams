@@ -7,8 +7,8 @@ import 'package:isar/isar.dart';
 // Local
 import 'pokemon_typing.dart';
 import 'battle_pokemon.dart';
-import '../modules/data/stats.dart';
-import '../modules/data/pogo_debugging.dart';
+import '../modules/stats.dart';
+import '../modules/pogo_debugging.dart';
 
 part 'move.g.dart';
 
@@ -101,19 +101,13 @@ class Move {
 @Collection(accessor: 'fastMoves')
 class FastMove extends Move {
   FastMove({
-    required String moveId,
-    required String name,
-    required PokemonType type,
-    required double power,
-    required double energyDelta,
+    required super.moveId,
+    required super.name,
+    required super.type,
+    required super.power,
+    required super.energyDelta,
     required this.duration,
-  }) : super(
-          moveId: moveId,
-          name: name,
-          type: type,
-          power: power,
-          energyDelta: energyDelta,
-        ) {
+  }) {
     _calculateBaseRating();
   }
 
@@ -172,19 +166,13 @@ class FastMove extends Move {
 @Collection(accessor: 'chargeMoves')
 class ChargeMove extends Move {
   ChargeMove({
-    required String moveId,
-    required String name,
-    required PokemonType type,
-    required double power,
-    required double energyDelta,
+    required super.moveId,
+    required super.name,
+    required super.type,
+    required super.power,
+    required super.energyDelta,
     required this.buffs,
-  }) : super(
-          moveId: moveId,
-          name: name,
-          type: type,
-          power: power,
-          energyDelta: energyDelta,
-        ) {
+  }) {
     _calculateBaseRating();
   }
 

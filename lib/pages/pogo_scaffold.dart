@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import 'pages/pogo_pages.dart';
-import 'modules/data/pogo_repository.dart';
-import 'tools/pair.dart';
-import 'modules/ui/sizing.dart';
-import 'modules/data/globals.dart';
-import 'widgets/pogo_drawer.dart';
+import 'pogo_pages.dart';
+import '../modules/pogo_repository.dart';
+import '../utils/pair.dart';
+import '../app/ui/sizing.dart';
+import '../modules/globals.dart';
+import '../widgets/navigation/pogo_drawer.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -19,7 +19,7 @@ rankings data are loaded.
 */
 
 class PogoScaffold extends StatefulWidget {
-  const PogoScaffold({Key? key}) : super(key: key);
+  const PogoScaffold({super.key});
 
   @override
   _PogoScaffoldState createState() => _PogoScaffoldState();
@@ -51,50 +51,6 @@ class _PogoScaffoldState extends State<PogoScaffold>
     duration: const Duration(seconds: 2),
   );
 
-  // The main scaffold for the app
-  // This will build once the loading phase is complete
-  Widget _buildPogoScaffold() {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      drawer: PogoDrawer(
-        onNavSelected: _onNavSelected,
-      ),
-      body: Padding(
-        padding: EdgeInsets.only(
-          left: Sizing.blockSizeHorizontal * 2.0,
-          right: Sizing.blockSizeHorizontal * 2.0,
-        ),
-        child: _currentPage.page,
-      ),
-    );
-  }
-
-  // Build the app bar with the current page title, and icon
-  AppBar _buildAppBar() {
-    return AppBar(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          // Page title
-          Text(
-            _currentPage.displayName,
-            style: Theme.of(context).textTheme.headlineSmall?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
-          ),
-
-          // Spacer
-          SizedBox(
-            width: Sizing.blockSizeHorizontal * 2.0,
-          ),
-
-          // Page icon
-          _currentPage.icon,
-        ],
-      ),
-    );
-  }
-
   // Callback for navigating to a new page in the app
   void _onNavSelected(PogoPages page) {
     setState(() {
@@ -116,10 +72,12 @@ class _PogoScaffoldState extends State<PogoScaffold>
 
   @override
   Widget build(BuildContext context) {
-    // Initialize media queries
-    Sizing().init(context);
-
-    if (_loaded) return _buildPogoScaffold();
+    if (_loaded) {
+      return _CanonicalPogoScaffold(
+        currentPage: _currentPage,
+        onNavSelected: _onNavSelected,
+      );
+    }
 
     // App loading procedure
     return StreamBuilder<Pair<String, double>>(
@@ -133,7 +91,10 @@ class _PogoScaffoldState extends State<PogoScaffold>
           _loaded = true;
           _progressBarAnimController.stop();
 
-          return _buildPogoScaffold();
+          return _CanonicalPogoScaffold(
+            currentPage: _currentPage,
+            onNavSelected: _onNavSelected,
+          );
         }
         // Progress update
         if (snapshot.hasData) {
@@ -147,15 +108,13 @@ class _PogoScaffoldState extends State<PogoScaffold>
         // Rebuild progress bar
         return Scaffold(
           body: Padding(
-            padding: EdgeInsets.only(
-              left: Sizing.blockSizeHorizontal * 2.0,
-              right: Sizing.blockSizeHorizontal * 2.0,
-              bottom: Sizing.blockSizeVertical * 10.0,
+            padding: Sizing.horizontalWindowInsets(context).copyWith(
+              bottom: Sizing.screenHeight(context) * .10,
             ),
             child: Padding(
               padding: EdgeInsets.only(
-                left: Sizing.blockSizeHorizontal * 3.0,
-                right: Sizing.blockSizeHorizontal * 5.0,
+                left: Sizing.screenWidth(context) * .03,
+                right: Sizing.screenWidth(context) * .05,
               ),
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -188,6 +147,83 @@ class _PogoScaffoldState extends State<PogoScaffold>
           ),
         );
       },
+    );
+  }
+}
+
+class _CanonicalPogoScaffold extends StatefulWidget {
+  const _CanonicalPogoScaffold({
+    required this.currentPage,
+    required this.onNavSelected,
+  });
+
+  final PogoPages currentPage;
+  final void Function(PogoPages) onNavSelected;
+
+  @override
+  State<_CanonicalPogoScaffold> createState() => _CanonicalPogoScaffoldState();
+}
+
+class _CanonicalPogoScaffoldState extends State<_CanonicalPogoScaffold>
+    with TickerProviderStateMixin {
+  late final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  // Build the app bar with the current page title, and icon
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Page title
+          Text(
+            widget.currentPage.displayName,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+
+          // Spacer
+          SizedBox(
+            width: Sizing.screenWidth(context) * .02,
+          ),
+
+          // Page icon
+          widget.currentPage.icon,
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isExpanded = Sizing.isExpanded(context);
+
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: isExpanded ? null : _buildAppBar(),
+      drawer: isExpanded
+          ? null
+          : PogoDrawer(
+              onNavSelected: widget.onNavSelected,
+              currentPage: widget.currentPage,
+            ),
+      extendBody: true,
+      body: Row(
+        children: [
+          if (isExpanded)
+            PogoDrawer(
+                onNavSelected: widget.onNavSelected,
+                currentPage: widget.currentPage,
+                isModal: false),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: Sizing.screenWidth(context) * .02,
+                right: Sizing.screenWidth(context) * .02,
+              ),
+              child: widget.currentPage.page,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

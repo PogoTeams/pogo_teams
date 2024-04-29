@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 // Local
 import '../../enums/rankings_categories.dart';
-import '../../pogo_objects/battle_pokemon.dart';
+import '../../model/battle_pokemon.dart';
 import '../../battle/battle_result.dart';
 import 'counters.dart';
 import '../../widgets/analysis/type_coverage.dart';
@@ -14,13 +14,13 @@ import '../../widgets/nodes/pokemon_node.dart';
 import '../../widgets/formatted_pokemon_name.dart';
 import '../../widgets/buttons/pokemon_action_button.dart';
 import '../teams/team_swap.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../modules/data/pokemon_types.dart';
-import '../../modules/data/pogo_repository.dart';
-import '../../modules/ui/sizing.dart';
-import '../../tools/pair.dart';
+import '../../model/pokemon.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/pokemon_typing.dart';
+import '../../modules/pokemon_types.dart';
+import '../../modules/pogo_repository.dart';
+import '../../app/ui/sizing.dart';
+import '../../utils/pair.dart';
 import '../../ranker/pokemon_ranker.dart';
 import '../../ranker/ranking_data.dart';
 
@@ -41,13 +41,13 @@ the top threats.
 
 class UserTeamAnalysis extends StatefulWidget {
   const UserTeamAnalysis({
-    Key? key,
+    super.key,
     required this.team,
     required this.defenseThreats,
     required this.offenseCoverage,
     required this.netEffectiveness,
     required this.onTeamChanged,
-  }) : super(key: key);
+  });
 
   final UserPokemonTeam team;
   final List<Pair<PokemonType, double>> defenseThreats;
@@ -153,18 +153,16 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
           // Page title
           Text(
             'Team Analysis',
-            style: Theme.of(context).textTheme.headlineSmall?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
 
           // Spacer
           SizedBox(
-            width: Sizing.blockSizeHorizontal * 3.0,
+            width: Sizing.screenWidth(context) * .03,
           ),
 
           // Page icon
-          Icon(
+          const Icon(
             Icons.analytics,
             size: Sizing.icon3,
           ),
@@ -183,12 +181,13 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
         pokemonTeam.length,
         (index) {
           return Padding(
-            padding: EdgeInsets.only(
-              top: Sizing.blockSizeVertical * .5,
-              bottom: Sizing.blockSizeVertical * .5,
+            padding: const EdgeInsets.only(
+              top: Sizing.listItemVerticalSpacing * .5,
+              bottom: Sizing.listItemVerticalSpacing * .5,
             ),
             child: PokemonNode.small(
               pokemon: pokemonTeam[index],
+              context: context,
               onMoveChanged: () {
                 PogoRepository.updateUserPokemonSync(pokemonTeam[index]);
                 widget.onTeamChanged();
@@ -334,8 +333,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
               },
               body: Padding(
                 padding: EdgeInsets.only(
-                  left: Sizing.blockSizeHorizontal * 2.0,
-                  right: Sizing.blockSizeHorizontal * 2.0,
+                  left: Sizing.screenWidth(context) * .02,
+                  right: Sizing.screenWidth(context) * .02,
                 ),
                 child: _buildPokemonNodes(_team.getOrderedPokemonList()),
               ),
@@ -344,11 +343,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
           ],
         ),
         Padding(
-          padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 2.0,
-            right: Sizing.blockSizeHorizontal * 2.0,
-            bottom: 12.0,
-          ),
+          padding: Sizing.horizontalWindowInsets(context),
           child: TabBar(
             controller: _tabController,
             tabs: [
@@ -370,8 +365,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
         Expanded(
           child: Padding(
             padding: EdgeInsets.only(
-              left: Sizing.blockSizeHorizontal * 2.0,
-              right: Sizing.blockSizeHorizontal * 2.0,
+              left: Sizing.screenWidth(context) * .02,
+              right: Sizing.screenWidth(context) * .02,
             ),
             child: TabBarView(
               controller: _tabController,
@@ -455,11 +450,12 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
                     onLongPress: () {},
                     child: Padding(
                       padding: EdgeInsets.only(
-                        top: Sizing.blockSizeVertical * .5,
-                        bottom: Sizing.blockSizeVertical * .5,
+                        top: Sizing.screenHeight(context) * .005,
+                        bottom: Sizing.screenHeight(context) * .005,
                       ),
                       child: PokemonNode.large(
                         pokemon: _overallThreats[index],
+                        context: context,
                         footer: _buildPokemonNodeFooter(
                             context, _overallThreats[index]),
                       ),
@@ -486,11 +482,12 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
                           onLongPress: () {},
                           child: Padding(
                             padding: EdgeInsets.only(
-                              top: Sizing.blockSizeVertical * .5,
-                              bottom: Sizing.blockSizeVertical * .5,
+                              top: Sizing.screenHeight(context) * .005,
+                              bottom: Sizing.screenHeight(context) * .005,
                             ),
                             child: PokemonNode.large(
                               pokemon: _leadThreats[index],
+                              context: context,
                               footer: _buildPokemonNodeFooter(
                                   context, _leadThreats[index]),
                             ),
@@ -510,27 +507,28 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        PokemonActionButton(
-          width: Sizing.screenWidth * .4,
-          pokemon: pokemon,
-          label: 'Team Swap',
-          icon: Icon(
-            Icons.move_up,
-            size: Sizing.blockSizeHorizontal * 5.0,
-            color: Colors.white,
+        Flexible(
+          child: PokemonActionButton(
+            pokemon: pokemon,
+            label: 'Team Swap',
+            icon: const Icon(
+              Icons.move_up,
+              color: Colors.white,
+            ),
+            onPressed: _onSwap,
           ),
-          onPressed: _onSwap,
         ),
-        PokemonActionButton(
-          width: Sizing.screenWidth * .4,
-          pokemon: pokemon,
-          label: 'Counters',
-          icon: Icon(
-            Icons.block,
-            size: Sizing.blockSizeHorizontal * 5.0,
-            color: Colors.white,
+        Sizing.paneSpacer,
+        Flexible(
+          child: PokemonActionButton(
+            pokemon: pokemon,
+            label: 'Counters',
+            icon: const Icon(
+              Icons.block,
+              color: Colors.white,
+            ),
+            onPressed: _onCounters,
           ),
-          onPressed: _onCounters,
         ),
       ],
     );
@@ -571,8 +569,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10.0),
                       child: SizedBox(
-                        width: Sizing.blockSizeHorizontal * 7.0,
-                        height: Sizing.blockSizeHorizontal * 7.0,
+                        width: Sizing.screenWidth(context) * .07,
+                        height: Sizing.screenWidth(context) * .07,
                         child: const CircularProgressIndicator(
                           valueColor:
                               AlwaysStoppedAnimation<Color>(Colors.cyan),

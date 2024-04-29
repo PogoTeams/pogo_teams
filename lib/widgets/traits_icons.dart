@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pogo_objects/pokemon_base.dart';
-import '../modules/ui/sizing.dart';
+import '../model/pokemon_base.dart';
+import '../app/ui/sizing.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -16,10 +16,10 @@ Flame - Shadow Pokemon
 
 class TraitsIcons extends StatelessWidget {
   const TraitsIcons({
-    Key? key,
+    super.key,
     required this.pokemon,
     this.scale = 1.0,
-  }) : super(key: key);
+  });
 
   final PokemonBase pokemon;
   final double scale;
@@ -40,9 +40,9 @@ class TraitsIcons extends StatelessWidget {
 
 class XlIcon extends StatelessWidget {
   const XlIcon({
-    Key? key,
+    super.key,
     required this.scale,
-  }) : super(key: key);
+  });
 
   final double scale;
 
@@ -54,11 +54,11 @@ class XlIcon extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: SizedBox(
-        height: Sizing.blockSizeVertical * 3.0 * scale,
+        height: Sizing.screenHeight(context) * .03 * scale,
         child: Padding(
           padding: EdgeInsets.only(
-            left: Sizing.blockSizeHorizontal * 2.5 * scale,
-            right: Sizing.blockSizeHorizontal * 2.5 * scale,
+            left: Sizing.screenWidth(context) * .025 * scale,
+            right: Sizing.screenWidth(context) * .025 * scale,
           ),
           child: Center(
             child: Text(
@@ -74,9 +74,9 @@ class XlIcon extends StatelessWidget {
 
 class ShadowIcon extends StatelessWidget {
   const ShadowIcon({
-    Key? key,
+    super.key,
     required this.scale,
-  }) : super(key: key);
+  });
 
   final double scale;
 
@@ -85,7 +85,7 @@ class ShadowIcon extends StatelessWidget {
     return Icon(
       Icons.local_fire_department_rounded,
       color: Colors.purple[900]!,
-      size: Sizing.blockSizeHorizontal * 6.0 * scale,
+      size: Sizing.screenWidth(context) * .06 * scale,
     );
   }
 }

@@ -1,14 +1,14 @@
 // Local
 import 'ranking_data.dart';
-import '../pogo_objects/pokemon.dart';
-import '../pogo_objects/pokemon_base.dart';
-import '../pogo_objects/battle_pokemon.dart';
-import '../pogo_objects/cup.dart';
+import '../model/pokemon.dart';
+import '../model/pokemon_base.dart';
+import '../model/battle_pokemon.dart';
+import '../model/cup.dart';
 import '../battle/pokemon_battler.dart';
 import '../battle/battle_result.dart';
-import '../modules/data/pogo_repository.dart';
-import '../modules/data/cups.dart';
-import '../modules/data/pogo_debugging.dart';
+import '../modules/pogo_repository.dart';
+import '../modules/cups.dart';
+import '../modules/pogo_debugging.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -96,16 +96,35 @@ class PokemonRanker {
 
       if (opponent.cp >= Cups.cpMinimums[cup.cp]!) {
         // Lead shield scenario
-        rankingData.addLeadResult(battle(self, opponent, [2, 2]));
+        rankingData.addLeadResult(battle(
+          self,
+          opponent,
+          [2, 2],
+          iterative: true,
+        ));
 
         // Switch shield scenarios
         for (List<int> shields in RankingData.switchShieldScenarios) {
-          rankingData.addSwitchResult(battle(self, opponent, shields), shields);
+          rankingData.addSwitchResult(
+              battle(
+                self,
+                opponent,
+                shields,
+                iterative: true,
+              ),
+              shields);
         }
 
         // Closer shield scenarios
         for (List<int> shields in RankingData.closerShieldScenarios) {
-          rankingData.addCloserResult(battle(self, opponent, shields), shields);
+          rankingData.addCloserResult(
+              battle(
+                self,
+                opponent,
+                shields,
+                iterative: true,
+              ),
+              shields);
         }
       }
     }
@@ -119,16 +138,22 @@ class PokemonRanker {
   static BattleResult battle(
     BattlePokemon self,
     BattlePokemon opponent,
-    List<int> shieldScenario,
-  ) {
+    List<int> shieldScenario, {
+    bool iterative = false,
+  }) {
     self.currentShields = shieldScenario.first;
     opponent.currentShields = shieldScenario.last;
 
-    BattleResult result = PokemonBattler.battle(
-      self,
-      opponent,
-      makeTimeline: false,
-    );
+    BattleResult result;
+    if (iterative) {
+      result = PokemonBattler.battleIterative(self, opponent);
+    } else {
+      result = PokemonBattler.battle(
+        self,
+        opponent,
+        makeTimeline: false,
+      );
+    }
     PokemonBattler.resetPokemon(self, opponent);
 
     return result;

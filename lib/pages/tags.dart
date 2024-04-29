@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../pogo_objects/tag.dart';
-import '../modules/data/pogo_repository.dart';
-import '../modules/ui/sizing.dart';
+import '../model/tag.dart';
+import '../modules/pogo_repository.dart';
+import '../app/ui/sizing.dart';
 import '../widgets/tag_dot.dart';
 import '../widgets/dialogs.dart';
 import '../widgets/buttons/gradient_button.dart';
@@ -18,7 +18,7 @@ delete tags from here.
 */
 
 class Tags extends StatefulWidget {
-  const Tags({Key? key}) : super(key: key);
+  const Tags({super.key});
 
   @override
   _TagsState createState() => _TagsState();
@@ -36,8 +36,12 @@ class _TagsState extends State<Tags> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TagDot(
-                tag: tag,
+              SizedBox(
+                width: 25.0,
+                height: 25.0,
+                child: TagDot(
+                  tag: tag,
+                ),
               ),
               Text(
                 tag.name,
@@ -48,14 +52,14 @@ class _TagsState extends State<Tags> {
                 children: [
                   IconButton(
                     onPressed: () => _onEditTag(tag: tag),
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.edit,
                       size: Sizing.icon3,
                     ),
                   ),
                   IconButton(
                     onPressed: () => _onRemoveTag(tag),
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.clear,
                       size: Sizing.icon3,
                     ),
@@ -111,30 +115,24 @@ class _TagsState extends State<Tags> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        top: Sizing.blockSizeVertical * 2.0,
-        left: Sizing.blockSizeHorizontal * 2.0,
-        right: Sizing.blockSizeHorizontal * 2.0,
+      padding: Sizing.horizontalWindowInsets(context).copyWith(
+        top: Sizing.screenHeight(context) * .02,
       ),
       child: Scaffold(
         body: _buildTagsListView(),
         floatingActionButton: GradientButton(
           onPressed: _onEditTag,
-          width: Sizing.screenWidth * .85,
-          height: Sizing.blockSizeVertical * 8.5,
+          width: Sizing.screenWidth(context) * .85,
+          height: Sizing.screenHeight(context) * .085,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Add Tag',
+                'Add Tag  ',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              SizedBox(
-                width: Sizing.blockSizeHorizontal * 5.0,
-              ),
-              Icon(
+              const Icon(
                 Icons.add,
-                size: Sizing.blockSizeHorizontal * 7.0,
               ),
             ],
           ),

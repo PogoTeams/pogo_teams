@@ -10,17 +10,17 @@ import 'package:path_provider/path_provider.dart';
 
 // Local
 import 'globals.dart';
-import '../../enums/rankings_categories.dart';
-import '../../tools/pair.dart';
-import '../../pogo_objects/pokemon_base.dart';
-import '../../pogo_objects/pokemon.dart';
-import '../../pogo_objects/pokemon_typing.dart';
-import '../../pogo_objects/move.dart';
-import '../../pogo_objects/ratings.dart';
-import '../../pogo_objects/cup.dart';
-import '../../pogo_objects/tag.dart';
-import '../../pogo_objects/pokemon_team.dart';
-import '../data/cups.dart';
+import '../enums/rankings_categories.dart';
+import '../utils/pair.dart';
+import '../model/pokemon_base.dart';
+import '../model/pokemon.dart';
+import '../model/pokemon_typing.dart';
+import '../model/move.dart';
+import '../model/ratings.dart';
+import '../model/cup.dart';
+import '../model/tag.dart';
+import '../model/pokemon_team.dart';
+import 'cups.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
