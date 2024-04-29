@@ -215,17 +215,20 @@ class UserTeamNodeHeader extends StatelessWidget {
           Row(
             children: [
               if (team.getTag() != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: 5.0),
+                FittedBox(
                   child: Text(
-                    team.getTag()!.name,
+                    '${team.getTag()!.name}  ',
                     style: Theme.of(context).textTheme.bodyLarge,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-              TagDot(
-                tag: team.getTag(),
-                onPressed: () => onTagTeam(team),
+              SizedBox(
+                width: 45.0,
+                height: 45.0,
+                child: TagDot(
+                  tag: team.getTag(),
+                  onPressed: () => onTagTeam(team),
+                ),
               ),
             ],
           ),

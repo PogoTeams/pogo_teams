@@ -177,9 +177,7 @@ class _CanonicalPogoScaffoldState extends State<_CanonicalPogoScaffold>
           // Page title
           Text(
             widget.currentPage.displayName,
-            style: Theme.of(context).textTheme.headlineSmall?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
 
           // Spacer

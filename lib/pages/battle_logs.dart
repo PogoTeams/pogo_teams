@@ -73,9 +73,13 @@ class _RankingsState extends State<BattleLogs> {
         children: [
           Row(
             children: [
-              TagDot(
-                tag: opponent.getTag(),
-                onPressed: () {},
+              SizedBox(
+                width: 45.0,
+                height: 45.0,
+                child: TagDot(
+                  tag: opponent.getTag(),
+                  onPressed: () {},
+                ),
               ),
               if (opponent.getTag() != null)
                 SizedBox(

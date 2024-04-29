@@ -30,6 +30,11 @@ class PokemonBattler {
     BattlePokemon self,
     BattlePokemon opponent,
   ) {
+    self.prioritizeMoveAlignment = true;
+    opponent.prioritizeMoveAlignment = true;
+    self.selectNextDecidedChargeMove(opponent);
+    opponent.selectNextDecidedChargeMove(self);
+
     int turn = 1;
     while (!_battleComplete(self, opponent, turn)) {
       self.cooldown -= 1;
@@ -37,14 +42,17 @@ class PokemonBattler {
 
       if (_chargeMoveSequenceBoth(self, opponent)) {
         _chargeMoveSequenceTieBreak(self, opponent);
+        self.selectNextDecidedChargeMove(opponent);
+        opponent.selectNextDecidedChargeMove(self);
       } else {
         if (_chargeMoveSequenceReady(self, opponent.cooldown)) {
           _chargeMoveSequence(self, opponent);
+          self.selectNextDecidedChargeMove(opponent);
         } else if (_chargeMoveSequenceReady(opponent, self.cooldown)) {
           _chargeMoveSequence(opponent, self);
+          opponent.selectNextDecidedChargeMove(self);
         } else {
           _fastMoveSequence(self, opponent);
-
           ++turn;
         }
       }

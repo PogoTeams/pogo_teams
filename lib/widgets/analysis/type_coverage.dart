@@ -41,12 +41,7 @@ class TypeCoverage extends StatelessWidget {
           offenseCoverage: offenseCoverage,
           includedTypesKeys: includedTypesKeys,
         ),
-
-        // Spacer
-        SizedBox(
-          height: Sizing.screenHeight(context) * .025,
-        ),
-
+        Sizing.listItemSpacer,
         CoverageGraph(
           netEffectiveness: netEffectiveness,
           teamSize: teamSize,

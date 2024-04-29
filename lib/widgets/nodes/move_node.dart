@@ -70,6 +70,7 @@ class MoveNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 45.0,
       alignment: Alignment.center,
       margin: EdgeInsets.only(
         top: Sizing.screenHeight(context) * .007,

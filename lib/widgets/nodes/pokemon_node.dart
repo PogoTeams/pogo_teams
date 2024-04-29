@@ -58,7 +58,7 @@ class PokemonNode extends StatelessWidget {
     this.lead = false,
   }) {
     width = double.infinity;
-    height = Sizing.screenHeight(context) * .15;
+    height = Sizing.screenHeight(context) * .12;
 
     body = _SmallNodeBody(
       pokemon: pokemon!,
@@ -134,7 +134,7 @@ class PokemonNode extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      height: height,
+      //height: height,
       child: lead
           ? Stack(
               fit: StackFit.passthrough,
@@ -145,7 +145,7 @@ class PokemonNode extends StatelessWidget {
                   left: 0,
                   child: Container(
                     width: 25.0,
-                    height: Sizing.screenWidth(context) * .15,
+                    height: 70.0,
                     decoration: const BoxDecoration(
                       color: Colors.amber,
                       borderRadius: BorderRadius.only(
@@ -261,8 +261,9 @@ class _SmallNodeBody extends StatelessWidget {
           TraitsIcons(pokemon: pokemon.getBase()),
 
           // Typing icon(s)
-          Container(
-            alignment: Alignment.topRight,
+          SizedBox(
+            width: 90.0,
+            height: 45.0,
             child: Row(
               children:
                   PogoIcons.getPokemonTypingIcons(pokemon.getBase().typing),
@@ -277,9 +278,11 @@ class _SmallNodeBody extends StatelessWidget {
       children: [
         // Pokemon cup - specific rating
         // Used for the ratings pages
-        Text(
-          rating!,
-          style: Theme.of(context).textTheme.headlineSmall,
+        FittedBox(
+          child: Text(
+            rating!,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
         ),
 
         // Pokemon name
@@ -297,8 +300,9 @@ class _SmallNodeBody extends StatelessWidget {
         TraitsIcons(pokemon: pokemon.getBase()),
 
         // Typing icon(s)
-        Container(
-          alignment: Alignment.topRight,
+        SizedBox(
+          width: 90.0,
+          height: 45.0,
           child: Row(
             children: PogoIcons.getPokemonTypingIcons(pokemon.getBase().typing),
           ),
@@ -319,22 +323,16 @@ class _SmallNodeBody extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(
-            flex: 1,
-            child: _buildNodeHeader(context, pokemon),
-          ),
+          _buildNodeHeader(context, pokemon),
 
           // The dropdowns for the Pokemon's moves
           // Defaults to the most meta relavent moves
-          Flexible(
-            flex: 2,
-            child: dropdowns
-                ? MoveDropdowns(
-                    pokemon: pokemon,
-                    onChanged: onMoveChanged,
-                  )
-                : MoveNodes(pokemon: pokemon),
-          ),
+          dropdowns
+              ? MoveDropdowns(
+                  pokemon: pokemon,
+                  onChanged: onMoveChanged,
+                )
+              : MoveNodes(pokemon: pokemon),
         ],
       ),
     );
@@ -382,8 +380,9 @@ class _LargeNodeBody extends StatelessWidget {
               ),
 
         // Typing icon(s)
-        Container(
-          alignment: Alignment.topRight,
+        SizedBox(
+          width: 90.0,
+          height: 45.0,
           child: Row(
             children: PogoIcons.getPokemonTypingIcons(pokemon.getBase().typing),
           ),
@@ -405,19 +404,13 @@ class _LargeNodeBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           // Pokemon name, perfect IVs, and typing icons
-          Flexible(
-            flex: 1,
-            child: _buildNodeHeader(context, pokemon, cup),
-          ),
+          _buildNodeHeader(context, pokemon, cup),
 
           // The dropdowns for the Pokemon's moves
           // Defaults to the most meta relavent moves
-          Flexible(
-            flex: 2,
-            child: MoveDropdowns(
-              pokemon: pokemon,
-              onChanged: onMoveChanged,
-            ),
+          MoveDropdowns(
+            pokemon: pokemon,
+            onChanged: onMoveChanged,
           ),
 
           if (footer != null) footer!,

@@ -38,6 +38,7 @@ class ExitButton extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: FloatingActionButton(
+        shape: const CircleBorder(),
         heroTag: key,
         foregroundColor: Colors.white,
         backgroundColor: backgroundColor,

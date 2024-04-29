@@ -1,4 +1,6 @@
 // Local
+import 'dart:math';
+
 import '../model/battle_pokemon.dart';
 import '../model/move.dart';
 import '../model/ratings.dart';
@@ -134,10 +136,9 @@ class RankingData {
       ratings.closer = (ratings.closer / closerBattleCount).floor();
     }
 
-    ratings.overall = ((ratings.lead +
-                (ratings.switchRating / switchShieldScenarios.length) +
-                (ratings.closer / closerShieldScenarios.length)) /
-            3)
+    ratings.overall = sqrt(((ratings.lead *
+            (ratings.switchRating / switchShieldScenarios.length) *
+            (ratings.closer / closerShieldScenarios.length))))
         .floor();
 
     // Determine the best moveset based on usage

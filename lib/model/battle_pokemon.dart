@@ -216,6 +216,57 @@ class BattlePokemon extends PokemonBase {
     currentShields -= 1;
   }
 
+  ChargeMove lowestEnergyDeltaChargeMove() {
+    return selectedBattleChargeMoves.first.energyDelta >
+            selectedBattleChargeMoves.last.energyDelta
+        ? selectedBattleChargeMoves.first
+        : selectedBattleChargeMoves.last;
+  }
+
+  ChargeMove highestDamageChargeMove() {
+    return selectedBattleChargeMoves.first.damage >
+            selectedBattleChargeMoves.last.damage
+        ? selectedBattleChargeMoves.first
+        : selectedBattleChargeMoves.last;
+  }
+
+  void selectNextDecidedChargeMove(BattlePokemon opponent) {
+    if (opponent.hasShield) {
+      nextDecidedChargeMove = lowestEnergyDeltaChargeMove();
+    } else {
+      int turnsUntilSelfKO = (currentHp /
+              (opponent.selectedBattleFastMove.damage /
+                  opponent.selectedBattleFastMove.duration))
+          .ceil();
+
+      double energyToFirstCharge =
+          selectedBattleChargeMoves.first.energyDelta.abs() - energy;
+      double energyToSecondCharge =
+          selectedBattleChargeMoves.last.energyDelta.abs() - energy;
+
+      num turnsUntilFirstCharge =
+          energyToFirstCharge / selectedBattleFastMove.ept();
+      turnsUntilFirstCharge = (turnsUntilFirstCharge +
+              turnsUntilFirstCharge % selectedBattleFastMove.duration)
+          .ceil();
+
+      num turnsUntilSecondCharge =
+          energyToSecondCharge / selectedBattleFastMove.ept();
+      turnsUntilSecondCharge = (turnsUntilSecondCharge +
+              turnsUntilFirstCharge % selectedBattleFastMove.duration)
+          .ceil();
+
+      if (turnsUntilSelfKO > turnsUntilFirstCharge ||
+          turnsUntilSelfKO > turnsUntilSecondCharge) {
+        nextDecidedChargeMove = turnsUntilSelfKO > turnsUntilFirstCharge
+            ? selectedBattleChargeMoves.last
+            : selectedBattleChargeMoves.first;
+      } else {
+        nextDecidedChargeMove = highestDamageChargeMove();
+      }
+    }
+  }
+
   void applyFastMoveDamage(BattlePokemon opponent) {
     energy += selectedBattleFastMove.energyDelta;
     opponent.recieveDamage(selectedBattleFastMove.damage);

@@ -153,9 +153,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
           // Page title
           Text(
             'Team Analysis',
-            style: Theme.of(context).textTheme.headlineSmall?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
 
           // Spacer
@@ -183,9 +181,9 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
         pokemonTeam.length,
         (index) {
           return Padding(
-            padding: EdgeInsets.only(
-              top: Sizing.screenHeight(context) * .005,
-              bottom: Sizing.screenHeight(context) * .005,
+            padding: const EdgeInsets.only(
+              top: Sizing.listItemVerticalSpacing * .5,
+              bottom: Sizing.listItemVerticalSpacing * .5,
             ),
             child: PokemonNode.small(
               pokemon: pokemonTeam[index],
@@ -511,7 +509,6 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
       children: [
         Flexible(
           child: PokemonActionButton(
-            //width: Sizing.screenWidth(context) * .4,
             pokemon: pokemon,
             label: 'Team Swap',
             icon: const Icon(
@@ -524,7 +521,6 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
         Sizing.paneSpacer,
         Flexible(
           child: PokemonActionButton(
-            //width: Sizing.screenWidth(context) * .4,
             pokemon: pokemon,
             label: 'Counters',
             icon: const Icon(

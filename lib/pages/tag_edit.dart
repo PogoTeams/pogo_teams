@@ -131,47 +131,49 @@ class _TagEditState extends State<TagEdit> {
           top: Sizing.screenHeight(context) * .10,
           bottom: Sizing.screenHeight(context) * .10,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Name', style: Theme.of(context).textTheme.titleLarge),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Name', style: Theme.of(context).textTheme.titleLarge),
 
-            SizedBox(
-              height: Sizing.screenHeight(context) * .02,
-            ),
+              SizedBox(
+                height: Sizing.screenHeight(context) * .02,
+              ),
 
-            // Tag Name
-            TextField(
-              controller: _textController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+              // Tag Name
+              TextField(
+                controller: _textController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
                 ),
               ),
-            ),
 
-            SizedBox(
-              height: Sizing.screenHeight(context) * .02,
-            ),
+              SizedBox(
+                height: Sizing.screenHeight(context) * .02,
+              ),
 
-            Text('Color', style: Theme.of(context).textTheme.titleLarge),
+              Text('Color', style: Theme.of(context).textTheme.titleLarge),
 
-            SizedBox(
-              height: Sizing.screenHeight(context) * .02,
-            ),
+              SizedBox(
+                height: Sizing.screenHeight(context) * .02,
+              ),
 
-            // Color
-            ColorPicker(
-              paletteType: PaletteType.hsl,
-              enableAlpha: false,
-              colorPickerWidth: Sizing.screenWidth(context),
-              pickerAreaBorderRadius: BorderRadius.circular(10),
-              labelTypes: const [],
-              pickerColor: _selectedColor,
-              onColorChanged: (color) => _selectedColor = color,
-            ),
-          ],
+              // Color
+              ColorPicker(
+                paletteType: PaletteType.hsl,
+                enableAlpha: false,
+                colorPickerWidth: Sizing.screenWidth(context) * .75,
+                pickerAreaBorderRadius: BorderRadius.circular(10),
+                labelTypes: const [],
+                pickerColor: _selectedColor,
+                onColorChanged: (color) => _selectedColor = color,
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: _buildFloatingActionButtons(),

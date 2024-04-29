@@ -38,28 +38,12 @@ class OpponentTeamAnalysis extends StatelessWidget {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          // Page title
-          Text(
-            'Opponent Team Analysis',
-            style: Theme.of(context).textTheme.headlineSmall?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
-          ),
-
-          // Spacer
-          SizedBox(
-            width: Sizing.screenWidth(context) * .03,
-          ),
-
-          // Page icon
-          const Icon(
-            Icons.analytics,
-            size: Sizing.icon3,
-          ),
-        ],
+      title: const Align(
+        alignment: Alignment.centerRight,
+        child: Icon(
+          Icons.analytics,
+          size: Sizing.icon3,
+        ),
       ),
     );
   }
@@ -75,9 +59,9 @@ class OpponentTeamAnalysis extends StatelessWidget {
       children: List.generate(
         pokemonTeam.length,
         (index) => Padding(
-          padding: EdgeInsets.only(
-            top: Sizing.screenHeight(context) * .005,
-            bottom: Sizing.screenHeight(context) * .005,
+          padding: const EdgeInsets.only(
+            top: Sizing.listItemVerticalSpacing * .5,
+            bottom: Sizing.listItemVerticalSpacing * .5,
           ),
           child: PokemonNode.small(
             pokemon: pokemonTeam[index],
@@ -130,14 +114,6 @@ class OpponentTeamAnalysis extends StatelessWidget {
               height: Sizing.screenHeight(context) * .02,
             ),
 
-            TypeCoverage(
-              netEffectiveness: netEffectiveness,
-              defenseThreats: defenseThreats,
-              offenseCoverage: offenseCoverage,
-              includedTypesKeys: team.getCup().includedTypeKeys(),
-              teamSize: team.teamSize,
-            ),
-
             // Spacer
             SizedBox(
               height: Sizing.screenHeight(context) * .02,
@@ -151,7 +127,7 @@ class OpponentTeamAnalysis extends StatelessWidget {
 
             Divider(
               height: Sizing.screenHeight(context) * .05,
-              thickness: Sizing.screenHeight(context) * .005,
+              thickness: Sizing.borderWidth,
               indent: Sizing.screenWidth(context) * .02,
               endIndent: Sizing.screenWidth(context) * .02,
               color: Colors.white,

@@ -37,28 +37,12 @@ class LogsAnalysis extends StatelessWidget {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          // Page title
-          Text(
-            'Logged Opponents Net Analysis',
-            style: Theme.of(context).textTheme.titleLarge?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
-          ),
-
-          // Spacer
-          SizedBox(
-            width: Sizing.screenWidth(context) * .03,
-          ),
-
-          // Page icon
-          const Icon(
-            Icons.analytics,
-            size: Sizing.icon3,
-          ),
-        ],
+      title: const Align(
+        alignment: Alignment.centerRight,
+        child: Icon(
+          Icons.analytics,
+          size: Sizing.icon3,
+        ),
       ),
     );
   }
@@ -91,20 +75,6 @@ class LogsAnalysis extends StatelessWidget {
         padding: Sizing.horizontalWindowInsets(context).copyWith(),
         child: ListView(
           children: [
-            // PokemonType coverage widgets
-            TypeCoverage(
-              netEffectiveness: netEffectiveness,
-              defenseThreats: defenseThreats,
-              offenseCoverage: offenseCoverage,
-              includedTypesKeys: team.getCup().includedTypeKeys(),
-              teamSize: team.teamSize,
-            ),
-
-            // Spacer
-            SizedBox(
-              height: Sizing.screenHeight(context) * .02,
-            ),
-
             Text(
               'Top Counters',
               textAlign: TextAlign.center,
@@ -113,7 +83,7 @@ class LogsAnalysis extends StatelessWidget {
 
             Divider(
               height: Sizing.screenHeight(context) * .05,
-              thickness: Sizing.screenHeight(context) * .005,
+              thickness: Sizing.borderWidth,
               indent: Sizing.screenWidth(context) * .02,
               endIndent: Sizing.screenWidth(context) * .02,
               color: Colors.white,

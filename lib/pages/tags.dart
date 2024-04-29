@@ -36,8 +36,12 @@ class _TagsState extends State<Tags> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TagDot(
-                tag: tag,
+              SizedBox(
+                width: 25.0,
+                height: 25.0,
+                child: TagDot(
+                  tag: tag,
+                ),
               ),
               Text(
                 tag.name,

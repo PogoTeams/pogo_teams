@@ -52,9 +52,7 @@ class _BattleLogState extends State<BattleLog> {
           // Page title
           Text(
             'Battle Log',
-            style: Theme.of(context).textTheme.headlineSmall?.apply(
-                  fontStyle: FontStyle.italic,
-                ),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
 
           // Spacer
