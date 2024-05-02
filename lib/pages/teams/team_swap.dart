@@ -70,9 +70,8 @@ class _TeamSwapState extends State<TeamSwap> {
   }
 
   void _saveTeam() {
-    PogoRepository.updatePokemonTeamSync(
+    PogoRepository.putPokemonTeam(
       widget.team,
-      newPokemonTeam: _pokemonTeam,
     );
   }
 

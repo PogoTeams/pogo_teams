@@ -33,7 +33,7 @@ class _CupDropdownState extends State<CupDropdown>
     with AutomaticKeepAliveClientMixin {
   // List of dropdown menu items
   late final cupOptions =
-      PogoRepository.getCupsSync().map<DropdownMenuItem<String>>(
+      PogoRepository.getCups().map<DropdownMenuItem<String>>(
     (Cup cup) {
       return DropdownMenuItem(
         value: cup.cupId,

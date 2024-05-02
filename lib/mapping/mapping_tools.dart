@@ -65,7 +65,7 @@ void buildSnapshotReleasedIdsList() async {
 
   List<String> snapshotReleasedIds = [];
 
-  for (var pokemon in PogoRepository.getPokemonSync()) {
+  for (var pokemon in PogoRepository.getPokemon()) {
     if (pokemon.released) {
       snapshotReleasedIds.add(pokemon.pokemonId);
     }

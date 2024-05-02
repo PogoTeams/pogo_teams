@@ -1,14 +1,13 @@
 // Packages
-import 'package:isar/isar.dart';
 import 'package:pogo_teams/enums/rankings_categories.dart';
+import 'package:pogo_teams/modules/pogo_repository.dart';
 
 // Local
 import 'pokemon_base.dart';
 import 'pokemon.dart';
 import '../modules/pokemon_types.dart';
 import '../enums/cup_filter_type.dart';
-
-part 'cup.g.dart';
+import 'ratings.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -16,7 +15,6 @@ All data related to a cup or "league".
 -------------------------------------------------------------------------------
 */
 
-@Collection(accessor: 'cups')
 class Cup {
   Cup({
     required this.cupId,
@@ -29,20 +27,62 @@ class Cup {
   });
 
   factory Cup.fromJson(Map<String, dynamic> json) {
-    return Cup(
+    final cup = Cup(
       cupId: json['cupId'] as String,
       name: json['name'] as String,
       cp: json['cp'] as int,
       partySize: json['partySize'] as int,
       live: json['live'] as bool,
       publisher: json['publisher'] as String?,
-      uiColor: json['uiColor'],
+      uiColor: json['uiColor'] as String?,
     );
+
+    if (json.containsKey('include')) {
+      final List<CupFilter> includeFilters =
+          List<Map<String, dynamic>>.from(json['include'])
+              .map<CupFilter>((filter) => CupFilter.fromJson(filter))
+              .toList();
+      cup.includeFilters.addAll(includeFilters);
+    }
+
+    if (json.containsKey('exclude')) {
+      final List<CupFilter> excludeFilters =
+          List<Map<String, dynamic>>.from(json['exclude'])
+              .map<CupFilter>((filter) => CupFilter.fromJson(filter))
+              .toList();
+      cup.excludeFilters.addAll(excludeFilters);
+    }
+    for (var pokemon in json['rankings']) {
+      final basePokemon = PogoRepository.getPokemonById(pokemon['pokemonId']);
+      final rankedPokemon = CupPokemon(
+        ratings: Ratings.fromJson(pokemon['ratings']),
+        ivs: basePokemon.getIvs(cup.cp),
+        selectedFastMoveId: pokemon['idealMoveset']['fastMove'],
+        selectedChargeMoveIds:
+            List<String>.from(pokemon['idealMoveset']['chargeMoves']),
+        base: basePokemon,
+      );
+
+      cup.rankings.add(rankedPokemon);
+    }
+    return cup;
   }
 
-  Id id = Isar.autoIncrement;
+  Map<String, dynamic> toJson() {
+    return {
+      'cupId': cupId,
+      'name': name,
+      'cp': cp,
+      'partySize': partySize,
+      'live': live,
+      'publisher': publisher,
+      'uiColor': uiColor,
+      'include': includeFilters.map((e) => e.toJson()).toList(),
+      'exclude': excludeFilters.map((e) => e.toJson()).toList(),
+      'rankings': rankings.map((e) => e.toJson()).toList(),
+    };
+  }
 
-  @Index(unique: true)
   final String cupId;
   final String name;
   final int cp;
@@ -51,53 +91,28 @@ class Cup {
   final String? publisher;
   final String? uiColor;
 
-  final IsarLinks<CupFilter> includeFilters = IsarLinks<CupFilter>();
-  final IsarLinks<CupFilter> excludeFilters = IsarLinks<CupFilter>();
-  final IsarLinks<CupPokemon> rankings = IsarLinks<CupPokemon>();
+  final List<CupFilter> includeFilters = List<CupFilter>.empty(growable: true);
+  final List<CupFilter> excludeFilters = List<CupFilter>.empty(growable: true);
+  final List<CupPokemon> rankings = List<CupPokemon>.empty(growable: true);
 
-  IsarLinks<CupPokemon> getRankings() {
-    if (rankings.isAttached && !rankings.isLoaded) {
-      rankings.loadSync();
-    }
-
+  List<CupPokemon> getRankings() {
     return rankings;
   }
 
-  Future<IsarLinks<CupPokemon>> getRankingsAsync() async {
-    if (rankings.isAttached && !rankings.isLoaded) {
-      await rankings.load();
-    }
-
+  Future<List<CupPokemon>> getRankingsAsync() async {
     return rankings;
   }
 
-  IsarLinks<CupFilter> getIncludeFilters() {
-    if (includeFilters.isAttached && !includeFilters.isLoaded) {
-      includeFilters.loadSync();
-    }
-
+  List<CupFilter> getIncludeFilters() {
     return includeFilters;
   }
 
-  IsarLinks<CupFilter> getExcludeFilters() {
-    if (excludeFilters.isAttached && !excludeFilters.isLoaded) {
-      excludeFilters.loadSync();
-    }
-
+  List<CupFilter> getExcludeFilters() {
     return excludeFilters;
   }
 
   List<CupPokemon> getCupPokemonList(RankingsCategories rankingsCategory) {
     final List<CupPokemon> rankedPokemonList = getRankings().toList();
-    _sortRankingsByCategory(rankedPokemonList, rankingsCategory);
-
-    return rankedPokemonList;
-  }
-
-  Future<List<CupPokemon>> getCupPokemonListAsync(
-      RankingsCategories rankingsCategory) async {
-    final List<CupPokemon> rankedPokemonList =
-        (await getRankingsAsync()).toList();
     _sortRankingsByCategory(rankedPokemonList, rankingsCategory);
 
     return rankedPokemonList;
@@ -163,7 +178,6 @@ class Cup {
   }
 }
 
-@Collection(accessor: 'cupFilters')
 class CupFilter {
   CupFilter({
     required this.filterType,
@@ -179,9 +193,13 @@ class CupFilter {
     );
   }
 
-  Id id = Isar.autoIncrement;
+  Map<String, dynamic> toJson() {
+    return {
+      'filterType': filterType.name,
+      'values': values,
+    };
+  }
 
-  @Enumerated(EnumType.ordinal)
   final CupFilterType filterType;
   final List<String> values;
 

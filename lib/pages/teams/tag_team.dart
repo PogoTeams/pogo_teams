@@ -53,7 +53,7 @@ class _TagTeamState extends State<TagTeam> {
 
   @override
   Widget build(BuildContext context) {
-    final tags = PogoRepository.getTagsSync();
+    final tags = PogoRepository.getTags();
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -129,7 +129,7 @@ class _TagTeamState extends State<TagTeam> {
                     onChanged: (String? name) {
                       setState(() {
                         _selectedTag = tags[index];
-                        widget.team.tag.value = _selectedTag;
+                        widget.team.tag = _selectedTag;
                       });
                     },
                     // TODO: move color into ThemeData

@@ -247,6 +247,7 @@ class PogoDrawer extends StatelessWidget {
                             ),
                           ],
                         ),
+                        Sizing.lineItemSpacer,
                       ],
                     ),
                   ),

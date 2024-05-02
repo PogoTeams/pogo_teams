@@ -43,7 +43,7 @@ class _TeamEditState extends State<TeamEdit> {
 
     setState(() {
       _builderTeam.setCupById(newCup);
-      PogoRepository.updatePokemonTeamSync(_builderTeam);
+      PogoRepository.putPokemonTeam(_builderTeam);
     });
   }
 
@@ -52,20 +52,20 @@ class _TeamEditState extends State<TeamEdit> {
 
     setState(() {
       _builderTeam.teamSize = newSize;
-      PogoRepository.updatePokemonTeamSync(_builderTeam);
+      PogoRepository.putPokemonTeam(_builderTeam);
     });
   }
 
   void _onPokemonCleared(int index) {
     setState(() {
       _builderTeam.removePokemon(index);
-      PogoRepository.updatePokemonTeamSync(_builderTeam);
+      PogoRepository.putPokemonTeam(_builderTeam);
     });
   }
 
   void _onPokemonMoveChanged() {
     setState(() {
-      PogoRepository.updatePokemonTeamSync(_builderTeam);
+      PogoRepository.putPokemonTeam(_builderTeam);
     });
   }
 
@@ -173,7 +173,7 @@ class _TeamEditState extends State<TeamEdit> {
 
   @override
   Widget build(BuildContext context) {
-    _builderTeam = PogoRepository.getUserTeamSync(_builderTeam.id);
+    _builderTeam = PogoRepository.getUserTeam(_builderTeam.id);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

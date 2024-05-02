@@ -37,7 +37,6 @@ dependencies:
   build_runner: ^2.2.0
   http: ^1.2.1
   url_launcher: ^6.0.17
-  isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
   isar_generator: ^3.0.2
   hive: ^2.2.3

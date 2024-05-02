@@ -78,38 +78,30 @@ class SwapList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: PogoRepository.getCupPokemon(
-          team.getCup(),
-          types,
-          RankingsCategories.overall,
-          limit: 20,
+    List<CupPokemon> pokemon = PogoRepository.getCupPokemon(
+      team.getCup(),
+      types,
+      RankingsCategories.overall,
+      limit: 20,
+    );
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: pokemon.length,
+      itemBuilder: (context, index) => Padding(
+        padding: EdgeInsets.only(
+          top: Sizing.screenHeight(context) * .005,
+          bottom: Sizing.screenHeight(context) * .005,
         ),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<CupPokemon>> snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) => Padding(
-                padding: EdgeInsets.only(
-                  top: Sizing.screenHeight(context) * .005,
-                  bottom: Sizing.screenHeight(context) * .005,
-                ),
-                child: PokemonNode.large(
-                  pokemon: snapshot.data![index],
-                  context: context,
-                  footer: _buildFooter(
-                    context,
-                    snapshot.data![index],
-                  ),
-                ),
-              ),
-              physics: const NeverScrollableScrollPhysics(),
-            );
-          } else {
-            return const CircularProgressIndicator();
-          }
-        });
+        child: PokemonNode.large(
+          pokemon: pokemon[index],
+          context: context,
+          footer: _buildFooter(
+            context,
+            pokemon[index],
+          ),
+        ),
+      ),
+      physics: const NeverScrollableScrollPhysics(),
+    );
   }
 }

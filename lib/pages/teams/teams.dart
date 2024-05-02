@@ -80,7 +80,7 @@ class _TeamsState extends State<Teams> {
   // Remove the team at specified index
   void _onClearTeam(UserPokemonTeam team) {
     setState(() {
-      PogoRepository.deleteUserPokemonTeamSync(team);
+      PogoRepository.deleteUserPokemonTeam(team);
     });
   }
 
@@ -135,7 +135,7 @@ class _TeamsState extends State<Teams> {
     if (selectedTag != null) {
       setState(() {
         team.setTag(selectedTag);
-        PogoRepository.updatePokemonTeamSync(team);
+        PogoRepository.putPokemonTeam(team);
       });
     }
   }
@@ -180,7 +180,7 @@ class _TeamsState extends State<Teams> {
   void _onLockTeam(UserPokemonTeam team) {
     setState(() {
       team.toggleLock();
-      PogoRepository.updatePokemonTeamSync(team);
+      PogoRepository.putPokemonTeam(team);
     });
   }
 
@@ -188,7 +188,7 @@ class _TeamsState extends State<Teams> {
   void _onAddTeam() async {
     UserPokemonTeam newTeam = UserPokemonTeam()
       ..dateCreated = DateTime.now().toUtc()
-      ..cup.value = PogoRepository.getCupsSync().first;
+      ..cup = PogoRepository.getCups().first;
 
     await Navigator.push(
       context,
@@ -237,7 +237,7 @@ class _TeamsState extends State<Teams> {
 
   @override
   Widget build(BuildContext context) {
-    _teams = PogoRepository.getUserTeamsSync(tag: _selectedTag);
+    _teams = PogoRepository.getUserTeams(tag: _selectedTag);
 
     return Scaffold(
       body: _buildTeamsList(context),

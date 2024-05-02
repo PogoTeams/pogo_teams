@@ -27,7 +27,7 @@ class Tags extends StatefulWidget {
 class _TagsState extends State<Tags> {
   Widget _buildTagsListView() {
     return ListView(
-      children: PogoRepository.getTagsSync().map((tag) {
+      children: PogoRepository.getTags().map((tag) {
         return ListTile(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -88,7 +88,7 @@ class _TagsState extends State<Tags> {
   }
 
   void _onRemoveTag(Tag tag) async {
-    int affectedTeamsCount = PogoRepository.getUserTeamsSync(tag: tag).length;
+    int affectedTeamsCount = PogoRepository.getUserTeams(tag: tag).length;
     if (affectedTeamsCount > 0 &&
         !await getConfirmation(
           context,
@@ -98,7 +98,7 @@ class _TagsState extends State<Tags> {
       return;
     }
     setState(() {
-      PogoRepository.deleteTagSync(tag.id);
+      PogoRepository.deleteTag(tag.name);
     });
   }
 

@@ -1,12 +1,9 @@
-// Packages
-import 'package:isar/isar.dart';
-
 // Local
+import 'package:pogo_teams/modules/pogo_repository.dart';
+
 import 'pokemon_typing.dart';
 import 'move.dart';
 import 'pokemon_stats.dart';
-
-part 'pokemon_base.g.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -15,7 +12,6 @@ isn't related to state is managed here.
 -------------------------------------------------------------------------------
 */
 
-@Collection(accessor: 'basePokemon')
 class PokemonBase {
   PokemonBase({
     required this.dex,
@@ -50,7 +46,7 @@ class PokemonBase {
       tags.add('shadow');
     }
 
-    return PokemonBase(
+    final pokemonBase = PokemonBase(
       dex: json['dex'] as int,
       pokemonId: (shadowForm ? json['shadow']['pokemonId'] : json['pokemonId'])
           as String,
@@ -62,8 +58,8 @@ class PokemonBase {
       eliteFastMoveIds: json.containsKey('eliteFastMoves')
           ? List<String>.from(json['eliteFastMoves'])
           : null,
-      eliteChargeMoveIds: json.containsKey('eliteChargeMove')
-          ? List<String>.from(json['eliteChargeMove'])
+      eliteChargeMoveIds: json.containsKey('eliteChargeMoves')
+          ? List<String>.from(json['eliteChargeMoves'])
           : null,
       thirdMoveCost: json.containsKey('thirdMoveCost')
           ? ThirdMoveCost.fromJson(json['thirdMoveCost'])
@@ -75,8 +71,8 @@ class PokemonBase {
       released:
           (shadowForm ? json['shadow']['released'] : json['released']) as bool,
       tags: tags,
-      littleCupIVs: json.containsKey('littlecupsivs')
-          ? IVs.fromJson(json['littlecupsivs'])
+      littleCupIVs: json.containsKey('littleCupIVs')
+          ? IVs.fromJson(json['littleCupIVs'])
           : null,
       greatLeagueIVs: json.containsKey('greatLeagueIVs')
           ? IVs.fromJson(json['greatLeagueIVs'])
@@ -85,6 +81,88 @@ class PokemonBase {
           ? IVs.fromJson(json['ultraLeagueIVs'])
           : null,
     );
+
+    if (json.containsKey('fastMoves')) {
+      for (var moveId in List<String>.from(json['fastMoves'])) {
+        pokemonBase.fastMoves.add(PogoRepository.getFastMoveById(moveId));
+      }
+    }
+
+    if (json.containsKey('chargeMoves')) {
+      for (var moveId in List<String>.from(json['chargeMoves'])) {
+        pokemonBase.chargeMoves.add(PogoRepository.getChargeMoveById(moveId));
+      }
+    }
+
+    if (json.containsKey('eliteFastMoves')) {
+      for (var moveId in List<String>.from(json['eliteFastMoves'])) {
+        pokemonBase.fastMoves.add(PogoRepository.getFastMoveById(moveId));
+      }
+    }
+
+    if (json.containsKey('eliteChargeMoves')) {
+      for (var moveId in List<String>.from(json['eliteChargeMoves'])) {
+        pokemonBase.chargeMoves.add(PogoRepository.getChargeMoveById(moveId));
+      }
+    }
+
+    if (json.containsKey('shadow') && json['shadow']['released']) {
+      final moveId = json['shadow']['purifiedChargeMove'];
+      pokemonBase.chargeMoves.add(PogoRepository.getChargeMoveById(moveId));
+    }
+
+    return pokemonBase;
+  }
+
+  Map<String, dynamic> toJson() {
+    final json = {
+      'dex': dex,
+      'pokemonId': pokemonId,
+      'name': name,
+      'typing': typing.toJson(),
+      'stats': stats.toJson(),
+      'fastMoves': fastMoves.map((e) => e.moveId).toList(),
+      'chargeMoves': chargeMoves.map((e) => e.moveId).toList(),
+      'form': form,
+      'familyId': familyId,
+      'evolutions': evolutions.map((e) => e.toJson()).toList(),
+      'tempEvolutions': tempEvolutions.map((e) => e.toJson()).toList(),
+      'released': released,
+    };
+
+    if (tags != null) {
+      json['tags'] = tags!;
+    }
+
+    if (eliteFastMoveIds != null) {
+      json['eliteFastMoveIds'] = eliteFastMoveIds!;
+    }
+
+    if (eliteChargeMoveIds != null) {
+      json['eliteChargeMoveIds'] = eliteChargeMoveIds!;
+    }
+
+    if (thirdMoveCost != null) {
+      json['thirdMoveCost'] = thirdMoveCost!.toJson();
+    }
+
+    if (shadow != null) {
+      json['shadow'] = shadow!.toJson();
+    }
+
+    if (littleCupIVs != null) {
+      json['littleCupIVs'] = littleCupIVs!.toJson();
+    }
+
+    if (greatLeagueIVs != null) {
+      json['greatLeagueIVs'] = greatLeagueIVs!.toJson();
+    }
+
+    if (ultraLeagueIVs != null) {
+      json['ultraLeagueIVs'] = ultraLeagueIVs!.toJson();
+    }
+
+    return json;
   }
 
   factory PokemonBase.tempEvolutionFromJson(
@@ -123,8 +201,8 @@ class PokemonBase {
       familyId: json['familyId'] as String,
       released: overridesJson['released'] as bool,
       tags: tags,
-      littleCupIVs: overridesJson.containsKey('littlecupsivs')
-          ? IVs.fromJson(overridesJson['littlecupsivs'])
+      littleCupIVs: overridesJson.containsKey('littleCupIVs')
+          ? IVs.fromJson(overridesJson['littleCupIVs'])
           : null,
       greatLeagueIVs: overridesJson.containsKey('greatLeagueIVs')
           ? IVs.fromJson(overridesJson['greatLeagueIVs'])
@@ -148,75 +226,49 @@ class PokemonBase {
     );
   }
 
-  Id id = Isar.autoIncrement;
-
   final int dex;
-  @Index(unique: true)
   final String pokemonId;
   final String name;
   final PokemonTyping typing;
   final BaseStats stats;
-  final IsarLinks<FastMove> fastMoves = IsarLinks<FastMove>();
-  final IsarLinks<ChargeMove> chargeMoves = IsarLinks<ChargeMove>();
+  final List<FastMove> fastMoves = List<FastMove>.empty(growable: true);
+  final List<ChargeMove> chargeMoves = List<ChargeMove>.empty(growable: true);
   final List<String>? eliteFastMoveIds;
   final List<String>? eliteChargeMoveIds;
   final ThirdMoveCost? thirdMoveCost;
   final Shadow? shadow;
   final String form;
   final String familyId;
-  final IsarLinks<Evolution> evolutions = IsarLinks<Evolution>();
-  final IsarLinks<TempEvolution> tempEvolutions = IsarLinks<TempEvolution>();
+  final List<Evolution> evolutions = List<Evolution>.empty(growable: true);
+  final List<TempEvolution> tempEvolutions =
+      List<TempEvolution>.empty(growable: true);
   final bool released;
   final List<String>? tags;
   final IVs? littleCupIVs;
   final IVs? greatLeagueIVs;
   final IVs? ultraLeagueIVs;
 
-  IsarLinks<FastMove> getFastMoves() {
-    if (fastMoves.isAttached && !fastMoves.isLoaded) {
-      fastMoves.loadSync();
-    }
-
+  List<FastMove> getFastMoves() {
     return fastMoves;
   }
 
-  IsarLinks<ChargeMove> getChargeMoves() {
-    if (chargeMoves.isAttached && !chargeMoves.isLoaded) {
-      chargeMoves.loadSync();
-    }
-
+  List<ChargeMove> getChargeMoves() {
     return chargeMoves;
   }
 
-  Future<IsarLinks<FastMove>> getFastMovesAsync() async {
-    if (fastMoves.isAttached && !fastMoves.isLoaded) {
-      await fastMoves.load();
-    }
-
+  Future<List<FastMove>> getFastMovesAsync() async {
     return fastMoves;
   }
 
-  Future<IsarLinks<ChargeMove>> getChargeMovesAsync() async {
-    if (chargeMoves.isAttached && !chargeMoves.isLoaded) {
-      await chargeMoves.load();
-    }
-
+  Future<List<ChargeMove>> getChargeMovesAsync() async {
     return chargeMoves;
   }
 
-  IsarLinks<Evolution> getEvolutions() {
-    if (evolutions.isAttached && !evolutions.isLoaded) {
-      evolutions.loadSync();
-    }
-
+  List<Evolution> getEvolutions() {
     return evolutions;
   }
 
-  IsarLinks<TempEvolution> getTempEvolutions() {
-    if (tempEvolutions.isAttached && !tempEvolutions.isLoaded) {
-      tempEvolutions.loadSync();
-    }
-
+  List<TempEvolution> getTempEvolutions() {
     return tempEvolutions;
   }
 
@@ -274,7 +326,6 @@ class PokemonBase {
   }
 }
 
-@embedded
 class ThirdMoveCost {
   ThirdMoveCost({
     this.stardust = 0,
@@ -288,11 +339,17 @@ class ThirdMoveCost {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'stardust': stardust,
+      'candy': candy,
+    };
+  }
+
   int stardust;
   int candy;
 }
 
-@embedded
 class Shadow {
   Shadow({
     this.pokemonId,
@@ -314,6 +371,17 @@ class Shadow {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'pokemonId': pokemonId,
+      'purificationStardust': purificationStardust,
+      'purificationCandy': purificationCandy,
+      'purifiedChargeMove': purifiedChargeMove,
+      'shadowChargeMove': shadowChargeMove,
+      'released': released,
+    };
+  }
+
   String? pokemonId;
   int? purificationStardust;
   int? purificationCandy;
@@ -322,7 +390,6 @@ class Shadow {
   bool? released;
 }
 
-@Collection(accessor: 'evolutions')
 class Evolution {
   Evolution({
     this.pokemonId,
@@ -338,14 +405,19 @@ class Evolution {
     );
   }
 
-  Id id = Isar.autoIncrement;
+  Map<String, dynamic> toJson() {
+    return {
+      'pokemonId': pokemonId,
+      'candyCost': candyCost,
+      'purifiedEvolutionCost': purifiedEvolutionCost,
+    };
+  }
 
   String? pokemonId;
   int? candyCost;
   int? purifiedEvolutionCost;
 }
 
-@Collection(accessor: 'tempEvolutions')
 class TempEvolution {
   TempEvolution({
     required this.tempEvolutionId,
@@ -363,7 +435,14 @@ class TempEvolution {
     );
   }
 
-  Id id = Isar.autoIncrement;
+  Map<String, dynamic> toJson() {
+    return {
+      'tempEvolutionId': tempEvolutionId,
+      'typing': typing.toJson(),
+      'stats': stats?.toJson(),
+      'released': released,
+    };
+  }
 
   String? tempEvolutionId;
   PokemonTyping typing;

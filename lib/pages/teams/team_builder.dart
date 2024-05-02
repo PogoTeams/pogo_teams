@@ -155,9 +155,8 @@ class _TeamBuilderState extends State<TeamBuilder> {
       onPokemonSelected: (Pokemon pokemon) {
         setState(() {
           UserPokemon userPokemon = UserPokemon.fromPokemon(pokemon);
-          userPokemon.id = PogoRepository.updateUserPokemonSync(userPokemon);
           _team.setPokemonAt(_builderIndex, userPokemon);
-          PogoRepository.updatePokemonTeamSync(_team, updatePokemon: true);
+          PogoRepository.putPokemonTeam(_team);
           _updateWorkingIndex(_builderIndex + 1);
         });
       },
@@ -181,9 +180,8 @@ class _TeamBuilderState extends State<TeamBuilder> {
 
   void _saveTeam() {
     _team.setCupById(_cup.cupId);
-    PogoRepository.updatePokemonTeamSync(
+    PogoRepository.putPokemonTeam(
       _team,
-      newPokemonTeam: _team.getOrderedPokemonListFilled(),
     );
   }
 
@@ -215,7 +213,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
       }
 
       _team.setTeamSize(newSize);
-      PogoRepository.updatePokemonTeamSync(_team, updatePokemon: true);
+      PogoRepository.putPokemonTeam(_team);
     });
   }
 

@@ -71,7 +71,7 @@ class _TagEditState extends State<TagEdit> {
           'The tag name "${_textController.text}" already exists.',
         );
       } else {
-        PogoRepository.updateTagSync(
+        PogoRepository.putTag(
           Tag(
             name: _textController.text,
             uiColor: _selectedColor.value.toRadixString(10),
@@ -92,12 +92,12 @@ class _TagEditState extends State<TagEdit> {
           'The tag name "${_textController.text}" already exists.',
         );
       } else {
-        PogoRepository.updateTagSync(
+        PogoRepository.putTag(
           Tag(
             name: _textController.text,
             uiColor: _selectedColor.value.toRadixString(10),
             dateCreated: widget.tag!.dateCreated,
-          )..id = widget.tag!.id,
+          ),
         );
 
         Navigator.pop(context);

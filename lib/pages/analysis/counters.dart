@@ -91,7 +91,7 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
 
   @override
   Widget build(BuildContext context) {
-    _team = PogoRepository.getUserTeamSync(_team.id);
+    _team = PogoRepository.getUserTeam(_team.id);
 
     return Scaffold(
       body: SafeArea(

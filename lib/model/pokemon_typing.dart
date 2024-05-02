@@ -1,18 +1,15 @@
 // Packages
-import 'package:isar/isar.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 // Local
 import '../modules/globals.dart';
 import '../modules/pokemon_types.dart';
-
-part 'pokemon_typing.g.dart';
 
 /*
 -------------------------------------------------------------------------------
 Manages a Pokemon's typing which can be exactly 1 or 2 types.
 -------------------------------------------------------------------------------
 */
-@embedded
 class PokemonTyping {
   PokemonTyping();
 
@@ -80,13 +77,18 @@ class PokemonTyping {
 
     return '${typeA.typeId} / ${typeB?.typeId}';
   }
+
+  Map<String, dynamic> toJson() {
+    return isMonoType()
+        ? {'typeA': typeA.typeId}
+        : {'typeA': typeA.typeId, 'typeB': typeB!.typeId};
+  }
 }
 
 /*
 Manages all data cooresponding to a single type. This can be a type from a
 Pokemon's duo / mono typing or a Pokemon move.
 */
-@embedded
 class PokemonType {
   PokemonType({this.typeId = 'none'});
 

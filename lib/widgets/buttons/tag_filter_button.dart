@@ -46,7 +46,7 @@ class TagFilterButton extends StatelessWidget {
       child: PopupMenuButton<Tag?>(
         onSelected: onTagChanged,
         itemBuilder: (context) {
-          return PogoRepository.getTagsSync().map<PopupMenuItem<Tag?>>((tag) {
+          return PogoRepository.getTags().map<PopupMenuItem<Tag?>>((tag) {
             return PopupMenuItem<Tag?>(
               value: tag,
               child: Row(

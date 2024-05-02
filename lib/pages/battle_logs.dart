@@ -113,7 +113,7 @@ class _RankingsState extends State<BattleLogs> {
   @override
   Widget build(BuildContext context) {
     final List<OpponentPokemonTeam> opponents =
-        PogoRepository.getOpponentTeamsSync(tag: _selectedTag);
+        PogoRepository.getOpponentTeams(tag: _selectedTag);
 
     double winRate = 0.0;
     if (opponents.isNotEmpty) {

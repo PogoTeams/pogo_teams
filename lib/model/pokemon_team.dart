@@ -1,6 +1,3 @@
-// Packages
-import 'package:isar/isar.dart';
-
 // Local Imports
 import 'pokemon.dart';
 import 'cup.dart';
@@ -8,8 +5,6 @@ import 'tag.dart';
 import '../modules/pokemon_types.dart';
 import '../modules/pogo_repository.dart';
 import '../enums/battle_outcome.dart';
-
-part 'pokemon_team.g.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -23,25 +18,23 @@ abstractions manage the data that a user creates and modifies in the app.
 class PokemonTeam {
   PokemonTeam();
 
-  Id id = Isar.autoIncrement;
+  int id = -1;
+
   DateTime? dateCreated;
   bool locked = false;
   int teamSize = 3;
 
   // The list of pokemon managed by this team
-  final IsarLinks<UserPokemon> pokemonTeam = IsarLinks<UserPokemon>();
+  List<UserPokemon> pokemonTeam = List<UserPokemon>.empty(growable: true);
 
-  final IsarLink<Tag> tag = IsarLink<Tag>();
+  Tag? tag;
 
   Tag? getTag() {
-    if (tag.isAttached && tag.value == null || !tag.isLoaded) {
-      tag.loadSync();
-    }
-    return tag.value;
+    return tag;
   }
 
   void setTag(Tag newTag) {
-    tag.value = newTag;
+    tag = newTag;
   }
 
   // A list of this pokemon team's net effectiveness
@@ -50,21 +43,13 @@ class PokemonTeam {
   }
 
   // The selected PVP cup for this team
-  final IsarLink<Cup> cup = IsarLink<Cup>();
+  Cup cup = PogoRepository.getCups().first;
 
-  IsarLinks<UserPokemon> getPokemonTeam() {
-    if (pokemonTeam.isAttached && !pokemonTeam.isLoaded) {
-      pokemonTeam.loadSync();
-    }
-
+  List<UserPokemon> getPokemonTeam() {
     return pokemonTeam;
   }
 
-  Future<IsarLinks<UserPokemon>> getPokemonTeamAsync() async {
-    if (pokemonTeam.isAttached && !pokemonTeam.isLoaded) {
-      await pokemonTeam.load();
-    }
-
+  Future<List<UserPokemon>> getPokemonTeamAsync() async {
     return pokemonTeam;
   }
 
@@ -96,29 +81,21 @@ class PokemonTeam {
   }
 
   Cup getCup() {
-    if (cup.isAttached && (cup.value == null || !cup.isLoaded)) {
-      cup.loadSync();
-    }
-
-    return cup.value ?? PogoRepository.getCupsSync().first;
+    return cup;
   }
 
   Future<Cup> getCupAsync() async {
-    if (cup.isAttached && (cup.value == null || !cup.isLoaded)) {
-      await cup.load();
-    }
-
-    return cup.value ?? PogoRepository.getCupsSync().first;
+    return cup;
   }
 
   Future<void> saveSync() async {
-    await getPokemonTeam().save();
-    if (cup.value != null) await cup.save();
+    //await getPokemonTeam().save();
+    //if (cup.value != null) await cup.save();
   }
 
   // Switch to a different cup with the specified cupTitle
   void setCupById(String cupId) {
-    cup.value = PogoRepository.getCupById(cupId);
+    cup = PogoRepository.getCupById(cupId);
     for (UserPokemon pokemon in getPokemonTeam()) {
       pokemon.initializeStats(getCup().cp);
     }
@@ -182,58 +159,78 @@ class PokemonTeam {
   }
 
   // Build and return a json serializable list of the Pokemon Team
-  List<Map<String, dynamic>> _pokemonTeamToExportJson() {
-    return getPokemonTeam().map((pokemon) => pokemon.toExportJson()).toList();
+  List<Map<String, dynamic>> _pokemonTeamToJson() {
+    return getPokemonTeam().map((pokemon) => pokemon.toJson()).toList();
+  }
+
+  static List<UserPokemon> _pokemonTeamFromJson(List<dynamic> pokemonTeamJson) {
+    List<UserPokemon> pokemonTeam = [];
+
+    for (var pokemonEntry in pokemonTeamJson) {
+      final UserPokemon pokemon = UserPokemon.fromJson(pokemonEntry);
+      pokemon.base =
+          PogoRepository.getPokemonById(pokemonEntry['pokemonId'] as String);
+      pokemonTeam.add(pokemon);
+    }
+
+    return pokemonTeam;
   }
 }
 
 // A user's team
-@Collection(accessor: 'userPokemonTeams')
-@Name('userPokemonTeam')
 class UserPokemonTeam extends PokemonTeam {
   UserPokemonTeam();
 
   factory UserPokemonTeam.fromJson(Map<String, dynamic> json) {
     final userPokemonTeam = UserPokemonTeam()
+      ..id = json['id'] as int
       ..dateCreated = DateTime.tryParse(json['dateCreated'] ?? '')
       ..locked = json['locked'] as bool
       ..teamSize = json['teamSize'] as int
-      ..cup.value = PogoRepository.getCupById(json['cup'] as String);
+      ..cup = PogoRepository.getCupById(json['cup'] as String)
+      ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(json['pokemonTeam']);
+
+    if (json.containsKey('tag')) {
+      userPokemonTeam.tag = PogoRepository.getTagByName(json['tag']);
+    }
+
+    for (var opponentJson in json['opponents']) {
+      userPokemonTeam.opponents.add(
+        OpponentPokemonTeam.fromJson(opponentJson),
+      );
+    }
 
     return userPokemonTeam;
   }
 
-  Map<String, dynamic> toExportJson() {
+  Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = {
+      'id': id,
       'dateCreated': dateCreated.toString(),
       'locked': locked,
       'teamSize': teamSize,
       'cup': getCup().cupId,
-      'pokemonTeam': _pokemonTeamToExportJson(),
+      'pokemonTeam': _pokemonTeamToJson(),
       'opponents': _opponentsToJson(),
     };
 
     if (getTag() != null) {
-      json['tag'] = tag.value!.name;
+      json['tag'] = tag!.name;
     }
 
     return json;
   }
 
   List<Map<String, dynamic>> _opponentsToJson() {
-    return getOpponents().map((opponent) => opponent.toExportJson()).toList();
+    return getOpponents().map((opponent) => opponent.toJson()).toList();
   }
 
   // A list of logged opponent teams on this team
   // The user can report wins, ties, and losses given this list
-  final IsarLinks<OpponentPokemonTeam> opponents =
-      IsarLinks<OpponentPokemonTeam>();
+  final List<OpponentPokemonTeam> opponents =
+      List<OpponentPokemonTeam>.empty(growable: true);
 
-  IsarLinks<OpponentPokemonTeam> getOpponents() {
-    if (opponents.isAttached && !opponents.isLoaded) {
-      opponents.loadSync();
-    }
-
+  List<OpponentPokemonTeam> getOpponents() {
     return opponents;
   }
 
@@ -255,7 +252,6 @@ class UserPokemonTeam extends PokemonTeam {
 }
 
 // A logged opponent team
-@Collection(accessor: 'opponentPokemonTeams')
 class OpponentPokemonTeam extends PokemonTeam {
   OpponentPokemonTeam() {
     locked = true;
@@ -263,11 +259,13 @@ class OpponentPokemonTeam extends PokemonTeam {
 
   factory OpponentPokemonTeam.fromJson(Map<String, dynamic> json) {
     final userPokemonTeam = OpponentPokemonTeam()
+      ..id = json['id'] as int
       ..dateCreated = DateTime.tryParse(json['dateCreated'] ?? '')
       ..locked = json['locked'] as bool
       ..teamSize = json['teamSize'] as int
       ..battleOutcome = _fromOutcomeName(json['battleOutcome'])
-      ..cup.value = PogoRepository.getCupById(json['cup'] as String);
+      ..cup = PogoRepository.getCupById(json['cup'] as String)
+      ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(json['pokemonTeam']);
 
     return userPokemonTeam;
   }
@@ -285,18 +283,19 @@ class OpponentPokemonTeam extends PokemonTeam {
     }
   }
 
-  Map<String, dynamic> toExportJson() {
+  Map<String, dynamic> toJson() {
     final json = {
+      'id': id,
       'dateCreated': dateCreated.toString(),
       'locked': locked,
       'teamSize': teamSize,
       'battleOutcome': battleOutcome.name,
       'cup': getCup().cupId,
-      'pokemonTeam': _pokemonTeamToExportJson(),
+      'pokemonTeam': _pokemonTeamToJson(),
     };
 
     if (getTag() != null) {
-      json['tag'] = tag.value!.name;
+      json['tag'] = tag!.name;
     }
 
     return json;
@@ -306,7 +305,6 @@ class OpponentPokemonTeam extends PokemonTeam {
   // Win
   // Loss
   // Tie
-  @Enumerated(EnumType.ordinal)
   BattleOutcome battleOutcome = BattleOutcome.win;
 
   bool isWin() {

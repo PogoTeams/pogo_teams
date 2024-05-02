@@ -306,7 +306,7 @@ class _BattleLogState extends State<BattleLog> {
   // Remove the team at specified index
   void _onClearTeam(int teamIndex) {
     setState(() {
-      PogoRepository.deleteOpponentPokemonTeamSync(
+      PogoRepository.deleteOpponentPokemonTeam(
           _team.getOpponents().elementAt(teamIndex).id);
     });
   }
@@ -351,9 +351,9 @@ class _BattleLogState extends State<BattleLog> {
   void _onAddTeam() async {
     OpponentPokemonTeam? opponent = OpponentPokemonTeam()
       ..dateCreated = DateTime.now().toUtc()
-      ..cup.value = _team.getCup()
-      ..tag.value = _team.getTag();
-    final Id opponentId = PogoRepository.updatePokemonTeamSync(opponent);
+      ..cup = _team.getCup()
+      ..tag = _team.getTag();
+    PogoRepository.putPokemonTeam(opponent);
 
     opponent = await Navigator.push(
       context,
@@ -369,9 +369,7 @@ class _BattleLogState extends State<BattleLog> {
     setState(() {
       if (opponent != null) {
         _team.opponents.add(opponent);
-        PogoRepository.updatePokemonTeamSync(_team);
-      } else {
-        PogoRepository.deleteOpponentPokemonTeamSync(opponentId);
+        PogoRepository.putPokemonTeam(_team);
       }
     });
   }
@@ -398,7 +396,7 @@ class _BattleLogState extends State<BattleLog> {
     setState(() {
       final opponent = _team.getOpponents().elementAt(teamIndex);
       opponent.toggleLock();
-      PogoRepository.updatePokemonTeamSync(opponent);
+      PogoRepository.putPokemonTeam(opponent);
     });
   }
 
@@ -417,7 +415,7 @@ class _BattleLogState extends State<BattleLog> {
 
   @override
   Widget build(BuildContext context) {
-    _team = PogoRepository.getUserTeamSync(widget.team.id);
+    _team = PogoRepository.getUserTeam(widget.team.id);
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildScaffoldBody(),

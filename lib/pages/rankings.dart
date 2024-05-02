@@ -126,7 +126,7 @@ class _RankingsState extends State<Rankings> {
   void initState() {
     super.initState();
 
-    cup = PogoRepository.getCupsSync().first;
+    cup = PogoRepository.getCups().first;
     _filterCategory(_selectedCategory);
 
     // Start listening to changes.

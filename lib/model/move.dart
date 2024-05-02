@@ -1,16 +1,11 @@
 // Dart
 import 'dart:math';
 
-// Packages
-import 'package:isar/isar.dart';
-
 // Local
 import 'pokemon_typing.dart';
 import 'battle_pokemon.dart';
 import '../modules/stats.dart';
 import '../modules/pogo_debugging.dart';
-
-part 'move.g.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -35,22 +30,26 @@ class Move {
     required this.energyDelta,
   });
 
-  Id id = Isar.autoIncrement;
+  Map<String, dynamic> toJson() {
+    return {
+      'moveId': moveId,
+      'name': name,
+      'type': type.typeId,
+      'power': power,
+      'energyDelta': energyDelta,
+    };
+  }
 
-  @Index(unique: true)
   final String moveId;
   final String name;
   final PokemonType type;
   final double power;
   final double energyDelta;
 
-  @ignore
   double rating = 0;
 
-  @ignore
   double damage = 0;
 
-  @ignore
   int usage = 0;
 
   bool isNone() => moveId == 'none';
@@ -98,7 +97,6 @@ class Move {
   }
 }
 
-@Collection(accessor: 'fastMoves')
 class FastMove extends Move {
   FastMove({
     required super.moveId,
@@ -133,6 +131,13 @@ class FastMove extends Move {
     );
   }
 
+  @override
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json['duration'] = duration;
+    return json;
+  }
+
   final int duration;
 
   static final FastMove none = FastMove(
@@ -163,7 +168,6 @@ class FastMove extends Move {
   }
 }
 
-@Collection(accessor: 'chargeMoves')
 class ChargeMove extends Move {
   ChargeMove({
     required super.moveId,
@@ -199,6 +203,13 @@ class ChargeMove extends Move {
     );
   }
 
+  @override
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json['buffs'] = buffs?.toJson();
+    return json;
+  }
+
   final MoveBuffs? buffs;
 
   static final ChargeMove none = ChargeMove(
@@ -226,7 +237,6 @@ class ChargeMove extends Move {
   }
 }
 
-@embedded
 class MoveBuffs {
   MoveBuffs({
     this.chance = 0,
@@ -244,6 +254,16 @@ class MoveBuffs {
       opponentAttack: json['opponentAttack'] as int?,
       opponentDefense: json['opponentDefense'] as int?,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'chance': chance,
+      'selfAttack': selfAttack,
+      'selfDefense': selfDefense,
+      'opponentAttack': opponentAttack,
+      'opponentDefense': opponentDefense,
+    };
   }
 
   final double chance;

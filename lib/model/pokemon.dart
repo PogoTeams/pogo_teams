@@ -1,5 +1,4 @@
-// Packages
-import 'package:isar/isar.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 // Local
 import 'pokemon_base.dart';
@@ -9,8 +8,6 @@ import 'ratings.dart';
 import 'pokemon_stats.dart';
 import 'battle_pokemon.dart';
 import '../enums/rankings_categories.dart';
-
-part 'pokemon.g.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -27,25 +24,17 @@ class Pokemon {
     required this.ivs,
     required this.selectedFastMoveId,
     required this.selectedChargeMoveIds,
-    PokemonBase? base,
-  }) {
-    this.base.value = base;
-  }
-
-  Id id = Isar.autoIncrement;
+    this.base,
+  });
 
   Ratings ratings;
   IVs ivs;
   String selectedFastMoveId;
   List<String> selectedChargeMoveIds;
-  final IsarLink<PokemonBase> base = IsarLink<PokemonBase>();
+  PokemonBase? base;
 
   PokemonBase getBase() {
-    if (base.isAttached && (base.value == null || !base.isLoaded)) {
-      base.loadSync();
-    }
-
-    return base.value ?? PokemonBase.missingNo();
+    return base ?? PokemonBase.missingNo();
   }
 
   FastMove getSelectedFastMove() {
@@ -66,11 +55,7 @@ class Pokemon {
   }
 
   Future<PokemonBase> getBaseAsync() async {
-    if (base.isAttached && (base.value == null || !base.isLoaded)) {
-      await base.load();
-    }
-
-    return base.value ?? PokemonBase.missingNo();
+    return base ?? PokemonBase.missingNo();
   }
 
   Future<FastMove> getSelectedFastMoveAsync() async {
@@ -145,7 +130,6 @@ class Pokemon {
   }
 }
 
-@Collection(accessor: 'cupPokemon')
 class CupPokemon extends Pokemon {
   CupPokemon({
     required super.ratings,
@@ -177,9 +161,20 @@ class CupPokemon extends Pokemon {
       base: base,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'pokemonId': getBase().pokemonId,
+      'ratings': ratings.toJson(),
+      'ivs': ivs.toJson(),
+      'idealMoveset': {
+        'fastMove': selectedFastMoveId,
+        'chargeMoves': selectedChargeMoveIds,
+      },
+    };
+  }
 }
 
-@Collection(accessor: 'userPokemon')
 class UserPokemon extends Pokemon {
   UserPokemon({
     required super.ratings,
@@ -210,7 +205,7 @@ class UserPokemon extends Pokemon {
     );
   }
 
-  Map<String, dynamic> toExportJson() {
+  Map<String, dynamic> toJson() {
     return {
       'pokemonId': getBase().pokemonId,
       'ratings': ratings.toJson(),

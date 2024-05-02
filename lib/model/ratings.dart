@@ -1,12 +1,8 @@
-// Packages
-import 'package:isar/isar.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 // Local
 import '../enums/rankings_categories.dart';
 
-part 'ratings.g.dart';
-
-@embedded
 class Ratings {
   Ratings({
     this.overall = 0,

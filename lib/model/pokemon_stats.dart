@@ -1,10 +1,8 @@
 // Packages
-import 'package:isar/isar.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 // Local
 import '../modules/globals.dart';
-
-part 'pokemon_stats.g.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -24,7 +22,6 @@ class PokemonStats {
   int cp = 0;
 }
 
-@embedded
 class BaseStats {
   BaseStats({
     this.atk = 0,
@@ -48,12 +45,19 @@ class BaseStats {
     );
   }
 
+  Map<String, num> toJson() {
+    return <String, num>{
+      'atk': atk,
+      'def': def,
+      'hp': hp,
+    };
+  }
+
   final int atk;
   final int def;
   final int hp;
 }
 
-@embedded
 class IVs {
   IVs({
     this.level = 1,

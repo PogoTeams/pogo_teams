@@ -28,34 +28,26 @@ class TypeFilteredPokemonList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: PogoRepository.getCupPokemon(
-          cup,
-          types,
-          RankingsCategories.overall,
-          limit: 50,
-        ),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<CupPokemon>> snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              children: snapshot.data!
-                  .map(
-                    (pokemon) => Padding(
-                      padding: EdgeInsets.only(
-                        bottom: Sizing.screenWidth(context) * .02,
-                      ),
-                      child: PokemonNode.small(
-                        pokemon: pokemon,
-                        context: context,
-                      ),
-                    ),
-                  )
-                  .toList(),
-            );
-          } else {
-            return const CircularProgressIndicator();
-          }
-        });
+    List<CupPokemon> pokemon = PogoRepository.getCupPokemon(
+      cup,
+      types,
+      RankingsCategories.overall,
+      limit: 20,
+    );
+    return Column(
+      children: pokemon
+          .map(
+            (pokemon) => Padding(
+              padding: EdgeInsets.only(
+                bottom: Sizing.screenWidth(context) * .02,
+              ),
+              child: PokemonNode.small(
+                pokemon: pokemon,
+                context: context,
+              ),
+            ),
+          )
+          .toList(),
+    );
   }
 }

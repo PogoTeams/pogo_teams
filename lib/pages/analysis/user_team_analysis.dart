@@ -189,7 +189,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
               pokemon: pokemonTeam[index],
               context: context,
               onMoveChanged: () {
-                PogoRepository.updateUserPokemonSync(pokemonTeam[index]);
+                PogoRepository.putPokemonTeam(_team);
                 widget.onTeamChanged();
               },
               lead: ((pokemonTeam[index].teamIndex ?? -1) == 0),
@@ -551,7 +551,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
 
   @override
   Widget build(BuildContext context) {
-    _team = PogoRepository.getUserTeamSync(_team.id);
+    _team = PogoRepository.getUserTeam(_team.id);
 
     if (_generateRankings) {
       _generateRankings = false;
