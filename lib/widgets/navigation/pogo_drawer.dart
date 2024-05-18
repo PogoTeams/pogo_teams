@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Local Imports
-import '../../pages/pogo_pages.dart';
+import '../../app/views/app_views.dart';
 import '../../modules/globals.dart';
 import '../../app/ui/sizing.dart';
 import '../drive_backup.dart';
@@ -20,13 +20,13 @@ accessible to the user by any screen that contains a scaffold app bar.
 class PogoDrawer extends StatelessWidget {
   const PogoDrawer({
     super.key,
-    required this.onNavSelected,
+    required this.onDestinationSelected,
     required this.currentPage,
     this.isModal = true,
   });
 
-  final Function(PogoPages) onNavSelected;
-  final PogoPages currentPage;
+  final Function(AppViews) onDestinationSelected;
+  final AppViews currentPage;
   final bool isModal;
 
   void _launchGitHubUrl() async => await launchUrl(Uri.https(
@@ -92,14 +92,16 @@ class PogoDrawer extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${PogoPages.teams.displayName}  ',
+                                      '${AppViews.teams.displayName}  ',
                                     ),
-                                    PogoPages.teams.icon,
+                                    Icon(
+                                      AppViews.teams.icon,
+                                    ),
                                   ],
                                 ),
-                                selected: currentPage == PogoPages.teams,
+                                selected: currentPage == AppViews.teams,
                                 onTap: () {
-                                  onNavSelected(PogoPages.teams);
+                                  onDestinationSelected(AppViews.teams);
                                   if (isModal) Navigator.pop(context);
                                 },
                               ),
@@ -114,14 +116,16 @@ class PogoDrawer extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${PogoPages.tags.displayName}  ',
+                                      '${AppViews.tags.displayName}  ',
                                     ),
-                                    PogoPages.tags.icon,
+                                    Icon(
+                                      AppViews.tags.icon,
+                                    ),
                                   ],
                                 ),
-                                selected: currentPage == PogoPages.tags,
+                                selected: currentPage == AppViews.tags,
                                 onTap: () async {
-                                  onNavSelected(PogoPages.tags);
+                                  onDestinationSelected(AppViews.tags);
                                   if (isModal) Navigator.pop(context);
                                 },
                               ),
@@ -136,14 +140,16 @@ class PogoDrawer extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${PogoPages.battleLogs.displayName}  ',
+                                      '${AppViews.battleLogs.displayName}  ',
                                     ),
-                                    PogoPages.battleLogs.icon,
+                                    Icon(
+                                      AppViews.battleLogs.icon,
+                                    ),
                                   ],
                                 ),
-                                selected: currentPage == PogoPages.battleLogs,
+                                selected: currentPage == AppViews.battleLogs,
                                 onTap: () {
-                                  onNavSelected(PogoPages.battleLogs);
+                                  onDestinationSelected(AppViews.battleLogs);
                                   if (isModal) Navigator.pop(context);
                                 },
                               ),
@@ -158,14 +164,16 @@ class PogoDrawer extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${PogoPages.rankings.displayName}  ',
+                                      '${AppViews.rankings.displayName}  ',
                                     ),
-                                    PogoPages.rankings.icon,
+                                    Icon(
+                                      AppViews.rankings.icon,
+                                    ),
                                   ],
                                 ),
-                                selected: currentPage == PogoPages.rankings,
+                                selected: currentPage == AppViews.rankings,
                                 onTap: () {
-                                  onNavSelected(PogoPages.rankings);
+                                  onDestinationSelected(AppViews.rankings);
                                   if (isModal) Navigator.pop(context);
                                 },
                               ),
@@ -181,13 +189,15 @@ class PogoDrawer extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                '${PogoPages.sync.displayName}  ',
+                                '${AppViews.sync.displayName}  ',
                               ),
-                              PogoPages.sync.icon,
+                              Icon(
+                                AppViews.sync.icon,
+                              ),
                             ],
                           ),
                           onTap: () {
-                            onNavSelected(PogoPages.sync);
+                            onDestinationSelected(AppViews.sync);
                             if (isModal) Navigator.pop(context);
                           },
                         ),
@@ -202,14 +212,16 @@ class PogoDrawer extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                '${PogoPages.settings.displayName}  ',
+                                '${AppViews.settings.displayName}  ',
                               ),
-                              PogoPages.settings.icon,
+                              Icon(
+                                AppViews.settings.icon,
+                              )
                             ],
                           ),
-                          selected: currentPage == PogoPages.settings,
+                          selected: currentPage == AppViews.settings,
                           onTap: () async {
-                            onNavSelected(PogoPages.settings);
+                            onDestinationSelected(AppViews.settings);
                             if (isModal) Navigator.pop(context);
                           },
                         ),

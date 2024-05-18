@@ -163,13 +163,13 @@ class PokemonTeam {
     return getPokemonTeam().map((pokemon) => pokemon.toJson()).toList();
   }
 
-  static List<UserPokemon> _pokemonTeamFromJson(List<dynamic> pokemonTeamJson) {
+  static List<UserPokemon> _pokemonTeamFromJson(
+      List<Map<String, dynamic>> jsonArray) {
     List<UserPokemon> pokemonTeam = [];
 
-    for (var pokemonEntry in pokemonTeamJson) {
-      final UserPokemon pokemon = UserPokemon.fromJson(pokemonEntry);
-      pokemon.base =
-          PogoRepository.getPokemonById(pokemonEntry['pokemonId'] as String);
+    for (var json in jsonArray) {
+      final UserPokemon pokemon = UserPokemon.fromJson(json);
+      pokemon.base = PogoRepository.getPokemonById(json['pokemonId'] as String);
       pokemonTeam.add(pokemon);
     }
 
@@ -188,7 +188,8 @@ class UserPokemonTeam extends PokemonTeam {
       ..locked = json['locked'] as bool
       ..teamSize = json['teamSize'] as int
       ..cup = PogoRepository.getCupById(json['cup'] as String)
-      ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(json['pokemonTeam']);
+      ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(
+          List<Map<String, dynamic>>.from(json['pokemonTeam']));
 
     if (json.containsKey('tag')) {
       userPokemonTeam.tag = PogoRepository.getTagByName(json['tag']);

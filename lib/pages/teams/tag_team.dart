@@ -6,7 +6,7 @@ import '../../model/pokemon_team.dart';
 import '../../model/tag.dart';
 import '../../modules/pogo_repository.dart';
 import '../../app/ui/sizing.dart';
-import '../tag_edit.dart';
+import '../../app/views/tag_edit.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/tag_dot.dart';
 

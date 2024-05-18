@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 // Local Imports
-import '../app/ui/sizing.dart';
-import '../model/tag.dart';
-import '../widgets/buttons/exit_button.dart';
-import '../widgets/dialogs.dart';
-import '../modules/pogo_repository.dart';
+import '../ui/sizing.dart';
+import '../../model/tag.dart';
+import '../../widgets/buttons/exit_button.dart';
+import '../../widgets/dialogs.dart';
+import '../../modules/pogo_repository.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams

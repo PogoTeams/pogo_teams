@@ -2,12 +2,13 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../model/tag.dart';
-import '../modules/pogo_repository.dart';
-import '../app/ui/sizing.dart';
-import '../widgets/tag_dot.dart';
-import '../widgets/dialogs.dart';
-import '../widgets/buttons/gradient_button.dart';
+import '../../model/tag.dart';
+import '../../modules/pogo_repository.dart';
+import '../ui/sizing.dart';
+import '../../widgets/tag_dot.dart';
+import '../../widgets/dialogs.dart';
+import '../../widgets/buttons/gradient_button.dart';
+import 'app_views.dart';
 import 'tag_edit.dart';
 
 /*

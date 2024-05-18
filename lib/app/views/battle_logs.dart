@@ -2,14 +2,14 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../model/pokemon_team.dart';
-import '../model/tag.dart';
-import '../app/ui/sizing.dart';
-import '../modules/pogo_repository.dart';
-import '../widgets/tag_dot.dart';
-import '../widgets/buttons/tag_filter_button.dart';
-import '../widgets/nodes/team_node.dart';
-import '../widgets/nodes/win_loss_node.dart';
+import '../../model/pokemon_team.dart';
+import '../../model/tag.dart';
+import '../ui/sizing.dart';
+import '../../modules/pogo_repository.dart';
+import '../../widgets/tag_dot.dart';
+import '../../widgets/buttons/tag_filter_button.dart';
+import '../../widgets/nodes/team_node.dart';
+import '../../widgets/nodes/win_loss_node.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -103,11 +103,6 @@ class _BattleLogsState extends State<BattleLogs> {
         ],
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override

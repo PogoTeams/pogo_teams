@@ -48,6 +48,7 @@ dependencies:
   collection: any
   sign_in_button: ^3.2.0
   isar: any
+  material_design_icons_flutter: ^7.0.7296
 dev_dependencies:
   flutter_test:
     sdk: flutter

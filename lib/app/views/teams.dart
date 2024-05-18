@@ -3,17 +3,18 @@ import 'dart:ui';
 
 // Packages
 import 'package:flutter/material.dart';
+import 'package:pogo_teams/model/pokemon.dart';
 
 // Local
-import 'battle_log.dart';
-import 'team_edit.dart';
-import 'team_builder.dart';
-import 'tag_team.dart';
-import '../analysis/analysis.dart';
+import '../../pages/teams/battle_log.dart';
+import '../../pages/teams/team_edit.dart';
+import '../../pages/teams/team_builder.dart';
+import '../../pages/teams/tag_team.dart';
+import '../../pages/analysis/analysis.dart';
 import '../../widgets/nodes/team_node.dart';
 import '../../widgets/buttons/gradient_button.dart';
 import '../../widgets/buttons/tag_filter_button.dart';
-import '../../app/ui/sizing.dart';
+import '../ui/sizing.dart';
 import '../../model/pokemon_team.dart';
 import '../../model/tag.dart';
 import '../../modules/pogo_repository.dart';
@@ -34,6 +35,7 @@ class Teams extends StatefulWidget {
 
 class _TeamsState extends State<Teams> {
   late List<UserPokemonTeam> _teams;
+  UserPokemonTeam? _selectedTeam;
   Tag? _selectedTag;
 
   // Build the list of TeamNodes, with the necessary callbacks
@@ -142,18 +144,24 @@ class _TeamsState extends State<Teams> {
 
   // Edit the team at specified index
   void _onBuildTeam(UserPokemonTeam team) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => TeamBuilder(
-          team: team,
-          cup: team.getCup(),
-          focusIndex: 0,
+    if (Sizing.isExpanded(context)) {
+      setState(() {
+        _selectedTeam = team;
+      });
+    } else {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => TeamBuilder(
+            team: team,
+            cup: team.getCup(),
+            focusIndex: 0,
+          ),
         ),
-      ),
-    );
+      );
 
-    setState(() {});
+      setState(() {});
+    }
   }
 
   void _onEditTeam(BuildContext context, UserPokemonTeam team) async {
@@ -190,35 +198,45 @@ class _TeamsState extends State<Teams> {
       ..dateCreated = DateTime.now().toUtc()
       ..cup = PogoRepository.getCups().first;
 
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => TeamBuilder(
-          team: newTeam,
-          cup: newTeam.getCup(),
-          focusIndex: 0,
+    if (Sizing.isExpanded(context)) {
+      PogoRepository.putPokemonTeam(newTeam);
+      _selectedTeam = newTeam;
+    } else {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => TeamBuilder(
+            team: newTeam,
+            cup: newTeam.getCup(),
+            focusIndex: 0,
+          ),
         ),
-      ),
-    );
-
+      );
+    }
     setState(() {});
   }
 
   // Navigate to the team build search page, with focus on the specified
   // nodeIndex
   void _onEmptyPressed(UserPokemonTeam team, int nodeIndex) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) {
-        return TeamBuilder(
-          team: team,
-          cup: team.getCup(),
-          focusIndex: nodeIndex,
-        );
-      }),
-    );
+    if (Sizing.isExpanded(context)) {
+      setState(() {
+        _selectedTeam = team;
+      });
+    } else {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) {
+          return TeamBuilder(
+            team: team,
+            cup: team.getCup(),
+            focusIndex: nodeIndex,
+          );
+        }),
+      );
 
-    setState(() {});
+      setState(() {});
+    }
   }
 
   void _onTagChanged(Tag? tag) {
@@ -237,14 +255,34 @@ class _TeamsState extends State<Teams> {
 
   @override
   Widget build(BuildContext context) {
+    final isExpanded = Sizing.isExpanded(context);
     _teams = PogoRepository.getUserTeams(tag: _selectedTag);
 
     return Scaffold(
-      body: _buildTeamsList(context),
+      body: Row(
+        children: [
+          if (Sizing.isExpanded(context))
+            Flexible(
+              flex: 1,
+              child: _buildTeamsList(context),
+            ),
+          _selectedTeam == null
+              ? const Flexible(flex: 1, child: Text('Detail View'))
+              : Flexible(
+                  flex: 1,
+                  child: TeamBuilder(
+                    team: _selectedTeam!,
+                    cup: _selectedTeam!.getCup(),
+                    focusIndex: 0,
+                  ),
+                ),
+        ],
+      ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Expanded(
+          Flexible(
+            flex: 1,
             child: GradientButton(
               onPressed: _onAddTeam,
               width: double.infinity,
@@ -269,6 +307,7 @@ class _TeamsState extends State<Teams> {
             onTagChanged: _onTagChanged,
             width: Sizing.fabLargeHeight,
           ),
+          if (isExpanded) Flexible(flex: 1, child: Container()),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

@@ -259,6 +259,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    final isExpanded = Sizing.isExpanded(context);
     //Display all Pokemon if there is no input
     if (_filteredPokemon.isEmpty && _searchController.text.isEmpty) {
       _filteredPokemon = _pokemon;
@@ -271,7 +272,9 @@ class _TeamBuilderState extends State<TeamBuilder> {
           padding: Sizing.horizontalWindowInsets(context),
           child: Column(
             children: [
-              _buildTeamNode(),
+              if (isExpanded) Sizing.listItemSpacer,
+
+              isExpanded ? _buildTeamNodeFooter() : _buildTeamNode(),
 
               Sizing.listItemSpacer,
 
@@ -313,7 +316,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
           ),
         ),
       ),
-      floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButton: isExpanded ? null : _buildFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }

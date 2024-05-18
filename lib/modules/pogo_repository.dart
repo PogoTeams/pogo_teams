@@ -14,7 +14,6 @@ import '../model/pokemon_base.dart';
 import '../model/pokemon.dart';
 import '../model/pokemon_typing.dart';
 import '../model/move.dart';
-import '../model/ratings.dart';
 import '../model/cup.dart';
 import '../model/tag.dart';
 import '../model/pokemon_team.dart';
@@ -27,36 +26,26 @@ All Isar database interaction is managed by this module.
 */
 
 class PogoRepository {
-  static late final Box fastMovesBox;
-  static late final Box chargeMovesBox;
-  static late final Box cupsBox;
-  static late final Box basePokemonBox;
-  static late final Box userPokemonTeamsBox;
-  static late final Box opponentPokemonTeamsBox;
-  static late final Box tagsBox;
+  static Map<String, FastMove> fastMoves = {};
+  static Map<String, ChargeMove> chargeMoves = {};
+  static Map<String, Cup> cups = {};
+  static Map<String, PokemonBase> basePokemon = {};
+  static Map<int, UserPokemonTeam> userPokemonTeams = {};
+  static Map<int, OpponentPokemonTeam> opponentPokemonTeams = {};
+  static Map<String, Tag> tags = {};
 
   static Map<String, dynamic>? _rankingsJsonLookup;
 
-  static Future<void> init() async {
-    fastMovesBox = await Hive.openBox('fastMoves');
-    chargeMovesBox = await Hive.openBox('chargeMoves');
-    cupsBox = await Hive.openBox('cups');
-    basePokemonBox = await Hive.openBox('basePokemon');
-    userPokemonTeamsBox = await Hive.openBox('userPokemonTeams');
-    opponentPokemonTeamsBox = await Hive.openBox('opponentPokemonTeams');
-    tagsBox = await Hive.openBox('tags');
-  }
+  static Future<void> init() async {}
 
   static Future<void> clear() async {
-    Future.wait([
-      fastMovesBox.clear(),
-      chargeMovesBox.clear(),
-      cupsBox.clear(),
-      basePokemonBox.clear(),
-      userPokemonTeamsBox.clear(),
-      opponentPokemonTeamsBox.clear(),
-      tagsBox.clear(),
-    ]);
+    fastMoves.clear();
+    chargeMoves.clear();
+    cups.clear();
+    basePokemon.clear();
+    userPokemonTeams.clear();
+    opponentPokemonTeams.clear();
+    tags.clear();
   }
 
   // --------------------------------------------------------------------------
@@ -224,13 +213,13 @@ class PogoRepository {
 
   static Future<void> loadFastMoves(List<dynamic> fastMovesJson) async {
     for (var json in List<Map<String, dynamic>>.from(fastMovesJson)) {
-      await fastMovesBox.put(json['moveId'], json);
+      fastMoves[json['moveId']] = FastMove.fromJson(json);
     }
   }
 
   static Future<void> loadChargeMoves(List<dynamic> chargeMovesJson) async {
     for (var json in List<Map<String, dynamic>>.from(chargeMovesJson)) {
-      await chargeMovesBox.put(json['moveId'], json);
+      chargeMoves[json['moveId']] = ChargeMove.fromJson(json);
     }
   }
 
@@ -264,7 +253,7 @@ class PogoRepository {
       pokemon.tempEvolutions.addAll(evolutions);
     }
 
-    await basePokemonBox.put(pokemon.pokemonId, pokemon.toJson());
+    basePokemon[pokemon.pokemonId] = pokemon;
 
     // Shadow entries
     if (pokemonEntry.containsKey('shadow')) {
@@ -277,14 +266,11 @@ class PogoRepository {
         shadowPokemon.evolutions.addAll(evolutions);
       }
 
-      final json =
-          chargeMovesBox.get(pokemonEntry['shadow']['shadowChargeMove']);
-      if (json != null) {
-        shadowPokemon.chargeMoves
-            .add(ChargeMove.fromJson(Map<String, dynamic>.from(json)));
-      }
+      final shadowChargeMove =
+          getChargeMoveById(pokemonEntry['shadow']['shadowChargeMove']);
+      shadowPokemon.chargeMoves.add(shadowChargeMove);
 
-      await basePokemonBox.put(shadowPokemon.pokemonId, shadowPokemon.toJson());
+      basePokemon[shadowPokemon.pokemonId] = shadowPokemon;
     }
 
     // Temporary evolution entries
@@ -299,10 +285,7 @@ class PogoRepository {
         tempEvoPokemon.fastMoves.addAll(pokemon.fastMoves);
         tempEvoPokemon.chargeMoves.addAll(pokemon.chargeMoves);
 
-        await basePokemonBox.put(
-          tempEvoPokemon.pokemonId,
-          tempEvoPokemon.toJson(),
-        );
+        basePokemon[tempEvoPokemon.pokemonId] = tempEvoPokemon;
       }
     }
   }
@@ -314,37 +297,9 @@ class PogoRepository {
       if (_rankingsJsonLookup!.containsKey(cupEntry['cupId'])) {
         cupEntry['rankings'] = _rankingsJsonLookup![cupEntry['cupId']];
         final Cup cup = Cup.fromJson(cupEntry);
-        await cupsBox.put(cup.cupId, cup.toJson());
+        cups[cup.cupId] = cup;
       }
     }
-  }
-
-  static Future<List<CupPokemon>> _loadRankings(Cup cup) async {
-    final List<dynamic> rankingsJson = _rankingsJsonLookup![cup.cupId];
-    final int cp = cup.cp;
-
-    List<CupPokemon> cupPokemon = [];
-
-    for (var rankingsEntry in List<Map<String, dynamic>>.from(rankingsJson)) {
-      final List<String> selectedChargeMoveIds =
-          List<String>.from(rankingsEntry['idealMoveset']['chargeMoves']);
-
-      final json = basePokemonBox.get(rankingsEntry['pokemonId']);
-      if (json == null) continue;
-
-      final PokemonBase pokemon = PokemonBase.fromJson(json);
-      final rankedPokemon = CupPokemon(
-        ratings: Ratings.fromJson(rankingsEntry['ratings']),
-        ivs: pokemon.getIvs(cp),
-        selectedFastMoveId: rankingsEntry['idealMoveset']['fastMove'],
-        selectedChargeMoveIds: selectedChargeMoveIds,
-        base: pokemon,
-      );
-
-      cupPokemon.add(rankedPokemon);
-    }
-
-    return cupPokemon;
   }
 
   // --------------------------------------------------------------------------
@@ -356,12 +311,12 @@ class PogoRepository {
     final List<Map<String, dynamic>> teamsJson = [];
     final List<Map<String, dynamic>> tagsJson = [];
 
-    for (var team in userPokemonTeamsBox.values) {
-      teamsJson.add(team);
+    for (var team in userPokemonTeams.values) {
+      teamsJson.add(team.toJson());
     }
 
-    for (var tag in tagsBox.values) {
-      tagsJson.add(tag);
+    for (var tag in tags.values) {
+      tagsJson.add(tag.toJson());
     }
 
     userDataJson['teams'] = teamsJson;
@@ -370,26 +325,26 @@ class PogoRepository {
   }
 
   static Future<void> importUserDataFromJson(Map<String, dynamic> json) async {
-    for (var tagEntry in List<Map<String, dynamic>>.from(json['tags'])) {
-      putTag(Tag.fromJson(tagEntry));
+    for (var tagEntry in json['tags']) {
+      putTag(Tag.fromJson(jsonDecode(tagEntry)));
     }
 
-    for (var teamEntry in List<Map<String, dynamic>>.from(json['teams'])) {
-      final team = UserPokemonTeam.fromJson(teamEntry);
+    for (var teamEntry in json['teams']) {
+      final team = UserPokemonTeam.fromJson(jsonDecode(teamEntry));
 
       for (var opponentEntry
           in List<Map<String, dynamic>>.from(teamEntry['opponents'])) {
         final opponent = OpponentPokemonTeam.fromJson(opponentEntry);
 
         if (opponentEntry.containsKey('tag')) {
-          opponent.tag = tagsBox.get(teamEntry['tag']);
+          opponent.tag = tags[teamEntry['tag']];
         }
 
         team.opponents.add(opponent);
       }
 
       if (teamEntry.containsKey('tag')) {
-        team.tag = tagsBox.get(teamEntry['tag']);
+        team.tag = tags[teamEntry['tag']];
       }
     }
   }
@@ -399,73 +354,47 @@ class PogoRepository {
   // --------------------------------------------------------------------------
 
   static FastMove getFastMoveById(String moveId) {
-    final json = fastMovesBox.get(moveId);
-    if (json == null) return FastMove.none;
-    return FastMove.fromJson(Map<String, dynamic>.from(json));
+    return fastMoves[moveId] ?? FastMove.none;
   }
 
   static ChargeMove getChargeMoveById(String moveId) {
-    final json = chargeMovesBox.get(moveId);
-    if (json == null) return ChargeMove.none;
-    return ChargeMove.fromJson(Map<String, dynamic>.from(json));
+    return chargeMoves[moveId] ?? ChargeMove.none;
   }
 
   static List<PokemonBase> getPokemon() {
-    List<PokemonBase> pokemon = [];
-    for (var pokemonJson in basePokemonBox.values) {
-      pokemon.add(PokemonBase.fromJson(Map<String, dynamic>.from(pokemonJson)));
-    }
-
-    return pokemon;
+    return basePokemon.values.toList();
   }
 
   static PokemonBase getPokemonById(String pokemonId) {
-    final pokemonJson = basePokemonBox.get(pokemonId);
-    if (pokemonJson == null) return PokemonBase.missingNo();
-
-    return PokemonBase.fromJson(Map<String, dynamic>.from(pokemonJson));
+    return basePokemon[pokemonId] ?? PokemonBase.missingNo();
   }
 
   static List<Cup> getCups() {
-    List<Cup> cups = [];
-    for (var cupJson in cupsBox.values) {
-      cups.add(Cup.fromJson(Map<String, dynamic>.from(cupJson)));
-    }
-
-    return cups;
+    return cups.values.toList();
   }
 
   static Cup getCupById(String cupId) {
-    final cupJson = cupsBox.get(cupId) ?? cupsBox.getAt(0);
-    return Cup.fromJson(Map<String, dynamic>.from(cupJson));
+    return cups[cupId] ?? cups.values.first;
   }
 
   static Tag? getTagByName(String tagName) {
-    final json = tagsBox.get(tagName);
-    if (json == null) return null;
-
-    return Tag.fromJson(Map<String, dynamic>.from(json));
+    return tags[tagName];
   }
 
   static List<Tag> getTags() {
-    List<Tag> tags = [];
-    for (var tagJson in tagsBox.values) {
-      tags.add(Tag.fromJson(Map<String, dynamic>.from(tagJson)));
-    }
-
-    return tags;
+    return tags.values.toList();
   }
 
   static bool tagNameExists(String tagName) {
-    return tagsBox.containsKey(tagName);
+    return tags.containsKey(tagName);
   }
 
   static void putTag(Tag tag) {
-    tagsBox.put(tag.name, tag.toJson());
+    tags[tag.name] = tag;
   }
 
   static void deleteTag(String tagName) async {
-    await tagsBox.delete(tagName);
+    tags.remove(tagName);
   }
 
   static List<PokemonBase> getCupFilteredPokemonList(Cup cup) {
@@ -508,50 +437,30 @@ class PogoRepository {
   }
 
   static UserPokemonTeam getUserTeam(int id) {
-    final json = userPokemonTeamsBox.get(id);
-    if (json == null) return UserPokemonTeam();
-    return UserPokemonTeam.fromJson(jsonDecode(json));
+    return userPokemonTeams[id] ?? UserPokemonTeam();
   }
 
   static List<UserPokemonTeam> getUserTeams({Tag? tag}) {
-    List<UserPokemonTeam> userPokemonTeams = [];
-    for (var json in userPokemonTeamsBox.values) {
-      userPokemonTeams.add(UserPokemonTeam.fromJson(jsonDecode(json)));
-    }
-
-    if (tag == null) {
-      return userPokemonTeams;
-    }
-
-    return userPokemonTeams
+    if (tag == null) return userPokemonTeams.values.toList();
+    return userPokemonTeams.values
         .where((team) => team.tag?.name == tag.name)
         .toList();
   }
 
   static List<OpponentPokemonTeam> getOpponentTeams({Tag? tag}) {
-    List<OpponentPokemonTeam> opponentPokemonTeams = [];
-    for (var json in opponentPokemonTeamsBox.values) {
-      opponentPokemonTeams.add(OpponentPokemonTeam.fromJson(jsonDecode(json)));
-    }
-
-    if (tag == null) {
-      return opponentPokemonTeams;
-    }
-
-    return opponentPokemonTeams
+    if (tag == null) return opponentPokemonTeams.values.toList();
+    return opponentPokemonTeams.values
         .where((team) => team.tag?.name == tag.name)
         .toList();
   }
 
   static void putPokemonTeam(PokemonTeam team) {
     if (team.runtimeType == UserPokemonTeam) {
-      if (team.id == -1) team.id = userPokemonTeamsBox.length + 1;
-      userPokemonTeamsBox.put(
-          team.id, jsonEncode((team as UserPokemonTeam).toJson()));
+      if (team.id == -1) team.id = userPokemonTeams.length + 1;
+      userPokemonTeams[team.id] = (team as UserPokemonTeam);
     } else if (team.runtimeType == OpponentPokemonTeam) {
-      if (team.id == -1) team.id = opponentPokemonTeamsBox.length + 1;
-      opponentPokemonTeamsBox.put(
-          team.id, jsonEncode((team as OpponentPokemonTeam).toJson()));
+      if (team.id == -1) team.id = opponentPokemonTeams.length + 1;
+      opponentPokemonTeams[team.id] = (team as OpponentPokemonTeam);
     }
   }
 
@@ -560,18 +469,16 @@ class PogoRepository {
       deleteOpponentPokemonTeam(opponentTeam.id);
     }
 
-    userPokemonTeamsBox.delete(userTeam.id);
+    userPokemonTeams.remove(userTeam.id);
   }
 
   static void deleteOpponentPokemonTeam(int id) {
-    opponentPokemonTeamsBox.delete(id);
+    opponentPokemonTeams.remove(id);
   }
 
   static Future<void> clearUserData() async {
-    await Future.wait([
-      tagsBox.clear(),
-      userPokemonTeamsBox.clear(),
-      opponentPokemonTeamsBox.clear(),
-    ]);
+    tags.clear();
+    userPokemonTeams.clear();
+    opponentPokemonTeams.clear();
   }
 }

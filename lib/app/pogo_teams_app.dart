@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:pogo_teams/pages/pogo_data_sync.dart';
 
 // Local Imports
 import '../pages/pogo_scaffold.dart';
@@ -114,7 +115,11 @@ class PogoTeamsApp extends StatelessWidget {
       darkTheme: _buildDarkTheme(context),
       themeMode: ThemeMode.dark,
 
-      home: const PogoScaffold(),
+      routes: {
+        PogoDataSync.routeName: (context) => const PogoDataSync(),
+        PogoScaffold.routeName: (context) => const PogoScaffold(),
+      },
+      initialRoute: PogoDataSync.routeName,
 
       //Removes the debug banner
       debugShowCheckedModeBanner: false,
