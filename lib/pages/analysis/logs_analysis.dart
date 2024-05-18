@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Local Imports
-import '../../widgets/analysis/type_coverage.dart';
 import '../../widgets/pokemon_list.dart';
 import '../../model/pokemon.dart';
 import '../../model/pokemon_team.dart';
@@ -53,7 +52,7 @@ class LogsAnalysis extends StatelessWidget {
   ) async {
     final counterTypes = defenseThreats.map((typeData) => typeData.a).toList();
 
-    List<CupPokemon> counters = await PogoRepository.getCupPokemon(
+    List<CupPokemon> counters = PogoRepository.getCupPokemon(
       team.getCup(),
       counterTypes,
       RankingsCategories.overall,

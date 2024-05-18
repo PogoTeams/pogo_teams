@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 0.2.0
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ^3.3.4
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -47,6 +47,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   collection: any
   sign_in_button: ^3.2.0
+  isar: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -62,6 +63,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^3.0.2
 
+  isar: any
 flutter_icons:
   android: true
   ios: true

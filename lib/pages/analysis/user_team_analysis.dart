@@ -114,7 +114,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
         includedTypesKeys,
       );
     }
-    List<CupPokemon> counters = await PogoRepository.getCupPokemon(
+    List<CupPokemon> counters = PogoRepository.getCupPokemon(
       _team.getCup(),
       counterTypes,
       RankingsCategories.overall,
@@ -205,7 +205,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
     _leadThreats.clear();
     _overallThreats.clear();
 
-    List<CupPokemon> opponents = await PogoRepository.getCupPokemon(
+    List<CupPokemon> opponents = PogoRepository.getCupPokemon(
       await _team.getCupAsync(),
       PokemonTypes.typeList,
       RankingsCategories.overall,

@@ -1,5 +1,4 @@
 // Packages
-import 'package:hive_flutter/hive_flutter.dart';
 
 // Local
 import '../modules/globals.dart';

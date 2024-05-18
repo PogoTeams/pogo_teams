@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pogo_teams/pages/analysis/analysis.dart';
 
 // Packages
-import 'package:isar/isar.dart';
 
 // Local Imports
 import 'team_builder.dart';

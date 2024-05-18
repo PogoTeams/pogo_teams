@@ -115,7 +115,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
           if (battleOutcome == null) return;
 
           setState(() {
-            (_team as OpponentPokemonTeam).battleOutcome = battleOutcome;
+            (_team).battleOutcome = battleOutcome;
           });
         },
         width: Sizing.screenWidth(context),

@@ -1,4 +1,3 @@
-import 'package:hive_flutter/hive_flutter.dart';
 
 // Local
 import '../enums/rankings_categories.dart';
