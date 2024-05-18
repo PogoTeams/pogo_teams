@@ -23,7 +23,7 @@ class TeamSizeDropdown extends StatefulWidget {
   final int size;
 
   @override
-  _TeamSizeDropdownState createState() => _TeamSizeDropdownState();
+  State<TeamSizeDropdown> createState() => _TeamSizeDropdownState();
 }
 
 class _TeamSizeDropdownState extends State<TeamSizeDropdown>

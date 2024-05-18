@@ -28,7 +28,7 @@ class TagTeam extends StatefulWidget {
   final String? winRate;
 
   @override
-  _TagTeamState createState() => _TagTeamState();
+  State<TagTeam> createState() => _TagTeamState();
 }
 
 class _TagTeamState extends State<TagTeam> {

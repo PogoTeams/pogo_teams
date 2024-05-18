@@ -30,7 +30,7 @@ class TeamEdit extends StatefulWidget {
   final PokemonTeam team;
 
   @override
-  _TeamEditState createState() => _TeamEditState();
+  State<TeamEdit> createState() => _TeamEditState();
 }
 
 class _TeamEditState extends State<TeamEdit> {

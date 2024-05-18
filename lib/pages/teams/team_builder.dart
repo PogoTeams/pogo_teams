@@ -38,7 +38,7 @@ class TeamBuilder extends StatefulWidget {
   final int focusIndex;
 
   @override
-  _TeamBuilderState createState() => _TeamBuilderState();
+  State<TeamBuilder> createState() => _TeamBuilderState();
 }
 
 class _TeamBuilderState extends State<TeamBuilder> {

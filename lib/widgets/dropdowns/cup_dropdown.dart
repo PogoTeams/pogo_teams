@@ -26,7 +26,7 @@ class CupDropdown extends StatefulWidget {
   final void Function(String?) onCupChanged;
 
   @override
-  _CupDropdownState createState() => _CupDropdownState();
+  State<CupDropdown> createState() => _CupDropdownState();
 }
 
 class _CupDropdownState extends State<CupDropdown>

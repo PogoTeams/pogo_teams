@@ -31,7 +31,7 @@ class BattleLog extends StatefulWidget {
   final UserPokemonTeam team;
 
   @override
-  _BattleLogState createState() => _BattleLogState();
+  State<BattleLog> createState() => _BattleLogState();
 }
 
 class _BattleLogState extends State<BattleLog> {

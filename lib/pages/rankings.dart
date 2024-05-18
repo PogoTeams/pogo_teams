@@ -26,7 +26,7 @@ class Rankings extends StatefulWidget {
   const Rankings({super.key});
 
   @override
-  _RankingsState createState() => _RankingsState();
+  State<Rankings> createState() => _RankingsState();
 }
 
 class _RankingsState extends State<Rankings> {

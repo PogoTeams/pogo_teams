@@ -56,7 +56,7 @@ class UserTeamAnalysis extends StatefulWidget {
   final Function onTeamChanged;
 
   @override
-  _UserTeamAnalysisState createState() => _UserTeamAnalysisState();
+  State<UserTeamAnalysis> createState() => _UserTeamAnalysisState();
 }
 
 class _UserTeamAnalysisState extends State<UserTeamAnalysis>

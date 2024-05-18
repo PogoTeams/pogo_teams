@@ -22,10 +22,10 @@ class BattleLogs extends StatefulWidget {
   const BattleLogs({super.key});
 
   @override
-  _RankingsState createState() => _RankingsState();
+  State<BattleLogs> createState() => _BattleLogsState();
 }
 
-class _RankingsState extends State<BattleLogs> {
+class _BattleLogsState extends State<BattleLogs> {
   Tag? _selectedTag;
 
   Widget _buildLoggedBattles(List<OpponentPokemonTeam> opponents) {

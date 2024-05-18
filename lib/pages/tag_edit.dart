@@ -28,7 +28,7 @@ class TagEdit extends StatefulWidget {
   final bool create;
 
   @override
-  _TagEditState createState() => _TagEditState();
+  State<TagEdit> createState() => _TagEditState();
 }
 
 class _TagEditState extends State<TagEdit> {

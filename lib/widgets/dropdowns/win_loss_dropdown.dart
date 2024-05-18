@@ -26,7 +26,7 @@ class WinLossDropdown extends StatefulWidget {
   final double width;
 
   @override
-  _WinLossDropdownState createState() => _WinLossDropdownState();
+  State<WinLossDropdown> createState() => _WinLossDropdownState();
 }
 
 class _WinLossDropdownState extends State<WinLossDropdown>

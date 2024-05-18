@@ -28,7 +28,7 @@ class TeamSwap extends StatefulWidget {
   final UserPokemon swap;
 
   @override
-  _TeamSwapState createState() => _TeamSwapState();
+  State<TeamSwap> createState() => _TeamSwapState();
 }
 
 class _TeamSwapState extends State<TeamSwap> {

@@ -22,7 +22,7 @@ class PogoScaffold extends StatefulWidget {
   const PogoScaffold({super.key});
 
   @override
-  _PogoScaffoldState createState() => _PogoScaffoldState();
+  State<PogoScaffold> createState() => _PogoScaffoldState();
 }
 
 class _PogoScaffoldState extends State<PogoScaffold>

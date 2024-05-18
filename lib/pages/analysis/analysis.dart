@@ -37,7 +37,7 @@ class Analysis extends StatefulWidget {
   final List<OpponentPokemonTeam>? opponentTeams;
 
   @override
-  _AnalysisState createState() => _AnalysisState();
+  State<Analysis> createState() => _AnalysisState();
 }
 
 class _AnalysisState extends State<Analysis> {

@@ -34,7 +34,7 @@ class MoveDropdowns extends StatefulWidget {
   late final List<String> chargedMoveIds = pokemon.chargeMoveIds();
 
   @override
-  _MoveDropdownsState createState() => _MoveDropdownsState();
+  State<MoveDropdowns> createState() => _MoveDropdownsState();
 }
 
 class _MoveDropdownsState extends State<MoveDropdowns> {

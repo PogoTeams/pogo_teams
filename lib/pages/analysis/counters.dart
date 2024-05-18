@@ -31,7 +31,7 @@ class PokemonCountersList extends StatefulWidget {
   final List<CupPokemon> counters;
 
   @override
-  _PokemonCountersListState createState() => _PokemonCountersListState();
+  State<PokemonCountersList> createState() => _PokemonCountersListState();
 }
 
 class _PokemonCountersListState extends State<PokemonCountersList> {

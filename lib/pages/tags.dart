@@ -21,7 +21,7 @@ class Tags extends StatefulWidget {
   const Tags({super.key});
 
   @override
-  _TagsState createState() => _TagsState();
+  State<Tags> createState() => _TagsState();
 }
 
 class _TagsState extends State<Tags> {
