@@ -530,7 +530,7 @@ class PogoRepository {
 
   static List<OpponentPokemonTeam> getOpponentTeams({Tag? tag}) {
     List<OpponentPokemonTeam> opponentPokemonTeams = [];
-    for (var json in userPokemonTeamsBox.values) {
+    for (var json in opponentPokemonTeamsBox.values) {
       opponentPokemonTeams.add(OpponentPokemonTeam.fromJson(jsonDecode(json)));
     }
 

@@ -10,7 +10,7 @@ class Globals {
   static const bool testing = false;
 
   // Set to true to force a synchronization with a Pogo data source
-  static const bool forceUpdate = true;
+  static const bool forceUpdate = false;
   // --------------------------------------------------------------------------
 
   // The current app version
