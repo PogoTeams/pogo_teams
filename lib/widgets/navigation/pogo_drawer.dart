@@ -1,4 +1,5 @@
 // Flutter
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Local Imports
-import '../../app/views/app_views.dart';
+import '../../app/app_views/app_views.dart';
 import '../../modules/globals.dart';
 import '../../app/ui/sizing.dart';
 import '../drive_backup.dart';
@@ -41,38 +42,55 @@ class PogoDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      width: isModal ? Sizing.modalDrawerWidth(context) : null,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Container(
-            decoration: _buildGradientDecoration(),
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: constraints.copyWith(
-                  minHeight: constraints.maxHeight,
-                  maxHeight: double.infinity,
-                ),
-                child: IntrinsicHeight(
-                  child: SafeArea(
-                    left: false,
-                    right: false,
-                    child: _PogoDrawerContents(
-                      isModal: isModal,
+    return BlocBuilder<PogoScaffoldBloc, PogoScaffoldState>(
+      builder: (context, state) {
+        final isExpanded = Sizing.isExpanded(context);
+        double? width;
+        if (isModal) {
+          width = kIsWeb
+              ? Sizing.expandedModalDrawerWidth
+              : Sizing.mobileModalDrawerWidth(context);
+        } else if (isExpanded) {
+          width = state.drawerIsCompact
+              ? Sizing.compactDrawerWidth
+              : Sizing.expandedModalDrawerWidth;
+        }
+        return Drawer(
+          width: width,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Container(
+                decoration: _buildGradientDecoration(),
+                child: SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: constraints.copyWith(
+                      minHeight: constraints.maxHeight,
+                      maxHeight: double.infinity,
+                    ),
+                    child: IntrinsicHeight(
+                      child: SafeArea(
+                        left: false,
+                        right: false,
+                        child: _PogoDrawerContents(
+                          isModal: isModal,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
 
 class _PogoDrawerContents extends StatelessWidget {
-  const _PogoDrawerContents({required this.isModal});
+  const _PogoDrawerContents({
+    required this.isModal,
+  });
 
   final bool isModal;
 
@@ -85,9 +103,41 @@ class _PogoDrawerContents extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PogoScaffoldBloc, PogoScaffoldState>(
       builder: (context, state) {
+        MainAxisAlignment listTileAlignment = state.drawerIsCompact
+            ? MainAxisAlignment.center
+            : MainAxisAlignment.start;
         return Column(
+          mainAxisAlignment: listTileAlignment,
           children: [
-            const DriveBackup(),
+            if (!isModal)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: Sizing.listItemVerticalSpacing,
+                    left: 15.0,
+                  ),
+                  child: IconButton(
+                    onPressed: () => context.read<PogoScaffoldBloc>().add(
+                          DrawerCompactToggled(),
+                        ),
+                    icon: RotatedBox(
+                      quarterTurns: state.drawerIsCompact ? 0 : 1,
+                      child: const Icon(
+                        Icons.menu_rounded,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            SizedBox(
+              height: Sizing.screenHeight(context) * .27,
+              width: double.infinity,
+              child: DrawerHeader(
+                child:
+                    state.drawerIsCompact ? Container() : const DriveBackup(),
+              ),
+            ),
             Expanded(
               child: Column(
                 children: [
@@ -96,11 +146,12 @@ class _PogoDrawerContents extends StatelessWidget {
                     titleTextStyle: Theme.of(context).textTheme.headlineSmall,
                     selectedColor: Theme.of(context).colorScheme.background,
                     title: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: listTileAlignment,
                       children: [
-                        Text(
-                          '${AppViews.teams.displayName}  ',
-                        ),
+                        if (!state.drawerIsCompact)
+                          Text(
+                            '${AppViews.teams.displayName}  ',
+                          ),
                         Icon(
                           AppViews.teams.icon,
                         ),
@@ -122,11 +173,12 @@ class _PogoDrawerContents extends StatelessWidget {
                     titleTextStyle: Theme.of(context).textTheme.headlineSmall,
                     selectedColor: Theme.of(context).colorScheme.background,
                     title: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: listTileAlignment,
                       children: [
-                        Text(
-                          '${AppViews.tags.displayName}  ',
-                        ),
+                        if (!state.drawerIsCompact)
+                          Text(
+                            '${AppViews.tags.displayName}  ',
+                          ),
                         Icon(
                           AppViews.tags.icon,
                         ),
@@ -148,11 +200,12 @@ class _PogoDrawerContents extends StatelessWidget {
                     titleTextStyle: Theme.of(context).textTheme.headlineSmall,
                     selectedColor: Theme.of(context).colorScheme.background,
                     title: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: listTileAlignment,
                       children: [
-                        Text(
-                          '${AppViews.battleLogs.displayName}  ',
-                        ),
+                        if (!state.drawerIsCompact)
+                          Text(
+                            '${AppViews.battleLogs.displayName}  ',
+                          ),
                         Icon(
                           AppViews.battleLogs.icon,
                         ),
@@ -174,11 +227,12 @@ class _PogoDrawerContents extends StatelessWidget {
                     titleTextStyle: Theme.of(context).textTheme.headlineSmall,
                     selectedColor: Theme.of(context).colorScheme.background,
                     title: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: listTileAlignment,
                       children: [
-                        Text(
-                          '${AppViews.rankings.displayName}  ',
-                        ),
+                        if (!state.drawerIsCompact)
+                          Text(
+                            '${AppViews.rankings.displayName}  ',
+                          ),
                         Icon(
                           AppViews.rankings.icon,
                         ),
@@ -202,11 +256,12 @@ class _PogoDrawerContents extends StatelessWidget {
             ListTile(
               titleTextStyle: Theme.of(context).textTheme.headlineSmall,
               title: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: listTileAlignment,
                 children: [
-                  Text(
-                    '${AppViews.sync.displayName}  ',
-                  ),
+                  if (!state.drawerIsCompact)
+                    Text(
+                      '${AppViews.sync.displayName}  ',
+                    ),
                   Icon(
                     AppViews.sync.icon,
                   ),
@@ -227,11 +282,12 @@ class _PogoDrawerContents extends StatelessWidget {
               titleTextStyle: Theme.of(context).textTheme.headlineSmall,
               selectedColor: Theme.of(context).colorScheme.background,
               title: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: listTileAlignment,
                 children: [
-                  Text(
-                    '${AppViews.settings.displayName}  ',
-                  ),
+                  if (!state.drawerIsCompact)
+                    Text(
+                      '${AppViews.settings.displayName}  ',
+                    ),
                   Icon(
                     AppViews.settings.icon,
                   )
@@ -250,7 +306,7 @@ class _PogoDrawerContents extends StatelessWidget {
 
             // Footer
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: listTileAlignment,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 const SizedBox(
@@ -258,7 +314,7 @@ class _PogoDrawerContents extends StatelessWidget {
                 ),
                 // GitHub link
                 SizedBox(
-                  width: Sizing.shortedSide(context) * .1,
+                  width: Sizing.icon1,
                   child: IconButton(
                     padding: EdgeInsets.zero,
                     onPressed: _launchGitHubUrl,
@@ -269,15 +325,18 @@ class _PogoDrawerContents extends StatelessWidget {
                 Sizing.paneSpacer,
 
                 // Version
-                Text(
-                  Globals.version,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontStyle: FontStyle.italic,
-                      ),
-                ),
+                if (!state.drawerIsCompact)
+                  Text(
+                    Globals.version,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontStyle: FontStyle.italic,
+                        ),
+                  ),
               ],
             ),
-            Sizing.lineItemSpacer,
+            const SizedBox(
+              height: Sizing.listItemVerticalSpacing * 2.0,
+            ),
           ],
         );
       },

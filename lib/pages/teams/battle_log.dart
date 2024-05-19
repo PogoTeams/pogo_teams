@@ -23,18 +23,19 @@ logged opponenents associated with their team.
 -------------------------------------------------------------------------------
 */
 
-class BattleLog extends StatefulWidget {
+class BattleLog extends StatelessWidget {
   const BattleLog({
     super.key,
-    required this.team,
   });
 
-  final UserPokemonTeam team;
-
   @override
-  State<BattleLog> createState() => _BattleLogState();
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
 }
 
+/*
 class _BattleLogState extends State<BattleLog> {
   late UserPokemonTeam _team = widget.team;
 
@@ -425,3 +426,4 @@ class _BattleLogState extends State<BattleLog> {
     );
   }
 }
+*/

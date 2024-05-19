@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 // Local Imports
-import 'app/pogo_teams_app.dart';
+import 'app/app.dart';
 import 'modules/pogo_repository.dart';
 import 'modules/google_drive_repository.dart';
 
@@ -26,5 +26,5 @@ void main() async {
     FlutterError.presentError(details);
   };
 
-  runApp(PogoTeamsApp(pogoRepository: pogoRepository));
+  runApp(App(pogoRepository: pogoRepository));
 }

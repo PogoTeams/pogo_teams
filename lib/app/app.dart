@@ -12,8 +12,8 @@ import 'pogo_scaffold/pogo_scaffold.dart';
 -------------------------------------------------------------------------------
 */
 
-class PogoTeamsApp extends StatelessWidget {
-  const PogoTeamsApp({
+class App extends StatelessWidget {
+  const App({
     super.key,
     required this.pogoRepository,
   });

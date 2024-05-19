@@ -89,88 +89,78 @@ class _DriveBackupState extends State<DriveBackup> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: Sizing.screenHeight(context) * .27,
-      width: double.infinity,
-      child: GoogleDriveRepository.isSignedIn
-          ? DrawerHeader(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SizedBox(
-                      width: Sizing.screenHeight(context) * .1,
-                      height: Sizing.screenHeight(context) * .1,
-                      child: GoogleUserCircleAvatar(
-                        identity: GoogleDriveRepository.account!,
-                      ),
-                    ),
+    return GoogleDriveRepository.isSignedIn
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  width: Sizing.screenHeight(context) * .1,
+                  height: Sizing.screenHeight(context) * .1,
+                  child: GoogleUserCircleAvatar(
+                    identity: GoogleDriveRepository.account!,
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      GoogleDriveRepository.linkedBackupFile == null
-                          ? 'Linked Backup: none'
-                          : 'Linked Backup: ${GoogleDriveRepository.linkedBackupFile!.nameWithoutExtension}\nLast Modified: ${DateFormat.yMMMMd().add_jm().format(GoogleDriveRepository.linkedBackupFile!.modifiedTime!.toLocal())}',
-                      style: Theme.of(context).textTheme.bodySmall?.apply(
-                            fontStyle: FontStyle.italic,
-                          ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (GoogleDriveRepository.linkedBackupFile != null)
-                        _syncBackup,
-                      ElevatedButton(
-                        onPressed: _onLinkBackupFilePressed,
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all(const CircleBorder()),
-                        ),
-                        child: Icon(
-                          Icons.backup_rounded,
-                          color: Theme.of(context).iconTheme.color,
-                          size: Sizing.icon3,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: _signOut,
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all(const CircleBorder()),
-                        ),
-                        child: Icon(
-                          Icons.logout,
-                          color: Theme.of(context).iconTheme.color,
-                          size: Sizing.icon3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                ),
               ),
-            )
-          : DrawerHeader(
-              child: Column(
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  GoogleDriveRepository.linkedBackupFile == null
+                      ? 'Linked Backup: none'
+                      : 'Linked Backup: ${GoogleDriveRepository.linkedBackupFile!.nameWithoutExtension}\nLast Modified: ${DateFormat.yMMMMd().add_jm().format(GoogleDriveRepository.linkedBackupFile!.modifiedTime!.toLocal())}',
+                  style: Theme.of(context).textTheme.bodySmall?.apply(
+                        fontStyle: FontStyle.italic,
+                      ),
+                ),
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SignInButton(
-                    Buttons.google,
-                    text: 'Sign in with Google',
-                    onPressed: _signIn,
+                  if (GoogleDriveRepository.linkedBackupFile != null)
+                    _syncBackup,
+                  ElevatedButton(
+                    onPressed: _onLinkBackupFilePressed,
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(const CircleBorder()),
+                    ),
+                    child: Icon(
+                      Icons.backup_rounded,
+                      color: Theme.of(context).iconTheme.color,
+                      size: Sizing.icon3,
+                    ),
                   ),
-                  Text(
-                    '*Backup your data via Google Drive',
-                    style: Theme.of(context).textTheme.bodySmall?.apply(
-                          fontStyle: FontStyle.italic,
-                        ),
+                  ElevatedButton(
+                    onPressed: _signOut,
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(const CircleBorder()),
+                    ),
+                    child: Icon(
+                      Icons.logout,
+                      color: Theme.of(context).iconTheme.color,
+                      size: Sizing.icon3,
+                    ),
                   ),
                 ],
               ),
-            ),
-    );
+            ],
+          )
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SignInButton(
+                Buttons.google,
+                text: 'Sign in with Google',
+                onPressed: _signIn,
+              ),
+              Text(
+                '*Backup your data via Google Drive',
+                style: Theme.of(context).textTheme.bodySmall?.apply(
+                      fontStyle: FontStyle.italic,
+                    ),
+              ),
+            ],
+          );
   }
 }
 

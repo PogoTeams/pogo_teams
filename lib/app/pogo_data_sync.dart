@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pogo_teams/app/bloc/app_bloc.dart';
 import 'package:pogo_teams/app/pogo_scaffold/pogo_scaffold.dart';
+import 'package:pogo_teams/modules/globals.dart';
 import 'package:pogo_teams/modules/pogo_repository.dart';
 
 // Local Imports
@@ -26,7 +27,7 @@ class PogoDataSync extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => AppBloc(pogoRepository: context.read<PogoRepository>())
-        ..add(PogoDataFetched()),
+        ..add(PogoDataFetched(forceUpdate: Globals.forceUpdate)),
       child: const PogoDataSyncView(),
     );
   }

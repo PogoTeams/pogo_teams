@@ -17,7 +17,7 @@ import 'cups.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
-All Isar database interaction is managed by this module.
+All database interaction is managed by this module.
 -------------------------------------------------------------------------------
 */
 
@@ -291,6 +291,7 @@ class PogoRepository {
   }
 
   Future loadUserData() async {
+    return;
     for (var key in _tagsBox.keys) {
       final json =
           Map<String, dynamic>.from(jsonDecode(await _tagsBox.get(key)));
