@@ -1,6 +1,7 @@
 // Flutter
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import 'user_team_analysis.dart';
@@ -197,7 +198,7 @@ class _AnalysisState extends State<Analysis> {
 
   @override
   Widget build(BuildContext context) {
-    _team = PogoRepository.getUserTeam(widget.team.id);
+    _team = context.read<PogoRepository>().getUserTeam(widget.team.id);
     List<String> includedTypesKeys = _team.getCup().includedTypeKeys();
 
     // Analysis will be on all logged opponent teams

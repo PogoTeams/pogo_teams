@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import 'team_builder.dart';
@@ -38,12 +39,12 @@ class _TeamEditState extends State<TeamEdit> {
   late PokemonTeam _builderTeam = widget.team;
 
   // SETTER CALLBACKS
-  void _onCupChanged(String? newCup) {
+  void _onCupChanged(Cup? newCup) {
     if (newCup == null) return;
 
     setState(() {
-      _builderTeam.setCupById(newCup);
-      PogoRepository.putPokemonTeam(_builderTeam);
+      _builderTeam.setCup(newCup);
+      context.read<PogoRepository>().putPokemonTeam(_builderTeam);
     });
   }
 
@@ -52,20 +53,20 @@ class _TeamEditState extends State<TeamEdit> {
 
     setState(() {
       _builderTeam.teamSize = newSize;
-      PogoRepository.putPokemonTeam(_builderTeam);
+      context.read<PogoRepository>().putPokemonTeam(_builderTeam);
     });
   }
 
   void _onPokemonCleared(int index) {
     setState(() {
       _builderTeam.removePokemon(index);
-      PogoRepository.putPokemonTeam(_builderTeam);
+      context.read<PogoRepository>().putPokemonTeam(_builderTeam);
     });
   }
 
   void _onPokemonMoveChanged() {
     setState(() {
-      PogoRepository.putPokemonTeam(_builderTeam);
+      context.read<PogoRepository>().putPokemonTeam(_builderTeam);
     });
   }
 
@@ -173,7 +174,7 @@ class _TeamEditState extends State<TeamEdit> {
 
   @override
   Widget build(BuildContext context) {
-    _builderTeam = PogoRepository.getUserTeam(_builderTeam.id);
+    _builderTeam = context.read<PogoRepository>().getUserTeam(_builderTeam.id);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../../widgets/dialogs.dart';
@@ -53,7 +54,9 @@ class _SettingsState extends State<Settings> {
       'Clear All',
       'All local data will be removed from this device.',
     )) {
-      await PogoRepository.clearUserData();
+      if (mounted) {
+        await context.read<PogoRepository>().clearUserData();
+      }
 
       if (mounted) {
         processFinished(

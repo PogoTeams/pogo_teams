@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Packages
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -64,20 +65,20 @@ class _TagEditState extends State<TagEdit> {
   void _onSave() async {
     // Create tag
     if (widget.create) {
-      if (PogoRepository.tagNameExists(_textController.text)) {
+      if (context.read<PogoRepository>().tagNameExists(_textController.text)) {
         displayMessageOK(
           context,
           'Invalid Tag Name',
           'The tag name "${_textController.text}" already exists.',
         );
       } else {
-        PogoRepository.putTag(
-          Tag(
-            name: _textController.text,
-            uiColor: _selectedColor.value.toRadixString(10),
-            dateCreated: widget.create ? DateTime.now() : null,
-          ),
-        );
+        context.read<PogoRepository>().putTag(
+              Tag(
+                name: _textController.text,
+                uiColor: _selectedColor.value.toRadixString(10),
+                dateCreated: widget.create ? DateTime.now() : null,
+              ),
+            );
         Navigator.pop(context);
       }
     }
@@ -85,20 +86,20 @@ class _TagEditState extends State<TagEdit> {
     // Update tag
     else {
       if (widget.tag!.name != _textController.text &&
-          PogoRepository.tagNameExists(_textController.text)) {
+          context.read<PogoRepository>().tagNameExists(_textController.text)) {
         displayMessageOK(
           context,
           'Invalid Tag Name',
           'The tag name "${_textController.text}" already exists.',
         );
       } else {
-        PogoRepository.putTag(
-          Tag(
-            name: _textController.text,
-            uiColor: _selectedColor.value.toRadixString(10),
-            dateCreated: widget.tag!.dateCreated,
-          ),
-        );
+        context.read<PogoRepository>().putTag(
+              Tag(
+                name: _textController.text,
+                uiColor: _selectedColor.value.toRadixString(10),
+                dateCreated: widget.tag!.dateCreated,
+              ),
+            );
 
         Navigator.pop(context);
       }

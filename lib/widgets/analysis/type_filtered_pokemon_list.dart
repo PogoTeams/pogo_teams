@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../../model/pokemon_typing.dart';
@@ -28,12 +29,12 @@ class TypeFilteredPokemonList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<CupPokemon> pokemon = PogoRepository.getCupPokemon(
-      cup,
-      types,
-      RankingsCategories.overall,
-      limit: 20,
-    );
+    List<CupPokemon> pokemon = context.read<PogoRepository>().getCupPokemon(
+          cup,
+          types,
+          RankingsCategories.overall,
+          limit: 20,
+        );
     return Column(
       children: pokemon
           .map(

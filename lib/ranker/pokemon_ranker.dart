@@ -163,11 +163,12 @@ class PokemonRanker {
     String selfId,
     String opponentId,
     int cp,
+    PogoRepository pogoRepository,
   ) {
     BattlePokemon self =
-        BattlePokemon.fromPokemon(PogoRepository.getPokemonById(selfId));
+        BattlePokemon.fromPokemon(pogoRepository.getPokemonById(selfId));
     BattlePokemon opponent =
-        BattlePokemon.fromPokemon(PogoRepository.getPokemonById(opponentId));
+        BattlePokemon.fromPokemon(pogoRepository.getPokemonById(opponentId));
 
     self.initializeStats(cp);
     opponent.initializeStats(cp);

@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../../model/pokemon_team.dart';
@@ -53,7 +54,7 @@ class _TagTeamState extends State<TagTeam> {
 
   @override
   Widget build(BuildContext context) {
-    final tags = PogoRepository.getTags();
+    final tags = context.read<PogoRepository>().getTags();
 
     return Align(
       alignment: Alignment.bottomCenter,

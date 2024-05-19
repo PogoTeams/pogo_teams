@@ -3,13 +3,9 @@ import 'dart:convert';
 
 // Packages
 import 'package:hive/hive.dart';
-import 'package:http/http.dart';
-import 'package:http/retry.dart';
 
 // Local
-import 'globals.dart';
 import '../enums/rankings_categories.dart';
-import '../utils/pair.dart';
 import '../model/pokemon_base.dart';
 import '../model/pokemon.dart';
 import '../model/pokemon_typing.dart';
@@ -26,27 +22,25 @@ All Isar database interaction is managed by this module.
 */
 
 class PogoRepository {
-  static Map<String, FastMove> fastMoves = {};
-  static Map<String, ChargeMove> chargeMoves = {};
-  static Map<String, Cup> cups = {};
-  static Map<String, PokemonBase> basePokemon = {};
-  static Map<int, UserPokemonTeam> userPokemonTeams = {};
-  static Map<int, OpponentPokemonTeam> opponentPokemonTeams = {};
-  static Map<String, Tag> tags = {};
+  Map<String, FastMove> fastMoves = {};
+  Map<String, ChargeMove> chargeMoves = {};
+  Map<String, Cup> cups = {};
+  Map<String, PokemonBase> basePokemon = {};
+  Map<int, UserPokemonTeam> userPokemonTeams = {};
+  Map<int, OpponentPokemonTeam> opponentPokemonTeams = {};
+  Map<String, Tag> tags = {};
 
-  static Map<String, dynamic>? _rankingsJsonLookup;
+  late Box _userPokemonTeamsBox;
+  late Box _opponentPokemonTeamsBox;
+  late Box _tagsBox;
 
-  static late Box _userPokemonTeamsBox;
-  static late Box _opponentPokemonTeamsBox;
-  static late Box _tagsBox;
-
-  static Future<void> init() async {
+  Future<void> init() async {
     _userPokemonTeamsBox = await Hive.openBox('userPokemonTeams');
     _opponentPokemonTeamsBox = await Hive.openBox('opponentPokemonTeams');
     _tagsBox = await Hive.openBox('tags');
   }
 
-  static Future<void> clear() async {
+  Future<void> clear() async {
     fastMoves.clear();
     chargeMoves.clear();
     cups.clear();
@@ -63,191 +57,41 @@ class PogoRepository {
   }
 
   // --------------------------------------------------------------------------
-  // Pogo Data Source Synchronization
-  // --------------------------------------------------------------------------
-
-  static Stream<Pair<String, double>> loadPogoData(
-      {bool forceUpdate = false}) async* {
-    String loadMessagePrefix = ''; // For indicating testing
-
-    String pathPrefix = '/';
-
-    // TRUE FOR TESTING ONLY
-    if (Globals.testing) {
-      pathPrefix += 'test/';
-      loadMessagePrefix = '[ TEST ]  ';
-    }
-
-    Box localSettings = await Hive.openBox('pogoSettings');
-
-    // Implicitly invoke an app update via HTTPS
-    if (forceUpdate) {
-      await localSettings.put('timestamp', Globals.earliestTimestamp);
-    }
-
-    String message = loadMessagePrefix; // Message above progress bar
-
-    final client = RetryClient(Client());
-
-    try {
-      // If an update is available
-      // make an http request for the new data
-      if (await _updateAvailable(localSettings, client, pathPrefix)) {
-        message = '${loadMessagePrefix}Syncing Pogo Data...';
-
-        Stopwatch stopwatch = Stopwatch();
-        stopwatch.start();
-
-        // Retrieve gamemaster
-        String response = await client.read(Uri.https(Globals.pogoBucketDomain,
-            '${Globals.pogoDataSourcePath}${pathPrefix}pogo_data_source.json'));
-
-        yield Pair(a: message, b: .5);
-        // If request was successful, load in the new gamemaster,
-        final Map<String, dynamic> pogoDataSourceJson =
-            Map<String, dynamic>.from(jsonDecode(response));
-
-        stopwatch.stop();
-        if (stopwatch.elapsed.inSeconds < 1) {
-          await Future.delayed(
-              Duration(seconds: 1 - stopwatch.elapsed.inSeconds));
-        }
-
-        yield Pair(a: message, b: .6);
-        message = '${loadMessagePrefix}Syncing Rankings...';
-
-        stopwatch.reset();
-        stopwatch.start();
-
-        await downloadRankings(
-          client,
-          pathPrefix,
-          List<Map<String, dynamic>>.from(pogoDataSourceJson['cups']),
-        );
-
-        stopwatch.stop();
-        if (stopwatch.elapsed.inSeconds < Globals.minLoadDisplaySeconds) {
-          await Future.delayed(Duration(
-              seconds:
-                  Globals.minLoadDisplaySeconds - stopwatch.elapsed.inSeconds));
-        }
-
-        stopwatch.reset();
-        stopwatch.start();
-
-        yield Pair(a: message, b: .7);
-
-        message = '${loadMessagePrefix}Syncing Local Data...';
-        await rebuildFromJson(pogoDataSourceJson);
-        await loadUserData();
-
-        if (stopwatch.elapsed.inSeconds < Globals.minLoadDisplaySeconds) {
-          await Future.delayed(Duration(
-              seconds:
-                  Globals.minLoadDisplaySeconds - stopwatch.elapsed.inSeconds));
-        }
-
-        yield Pair(a: message, b: .9);
-      }
-    }
-
-    // If HTTP request or json decoding fails
-    catch (error) {
-      message = '${loadMessagePrefix}Update Failed...';
-      await Future.delayed(
-          const Duration(seconds: Globals.minLoadDisplaySeconds));
-      yield Pair(a: message, b: .9);
-    } finally {
-      client.close();
-      localSettings.close();
-    }
-
-    yield Pair(a: message, b: 1.0);
-    await Future.delayed(
-        const Duration(seconds: Globals.minLoadDisplaySeconds));
-  }
-
-  static Future<bool> _updateAvailable(
-      Box localSettings, Client client, String pathPrefix) async {
-    bool updateAvailable = false;
-
-    // Retrieve local timestamp
-    final String timestampString =
-        localSettings.get('timestamp') ?? Globals.earliestTimestamp;
-    DateTime localTimeStamp = DateTime.parse(timestampString);
-
-    // Retrieve server timestamp
-    String response = await client.read(Uri.https(Globals.pogoBucketDomain,
-        '${Globals.pogoDataSourcePath}${pathPrefix}timestamp.txt'));
-
-    // If request is successful, compare timestamps to determine update
-    final latestTimestamp = DateTime.tryParse(response);
-
-    if (latestTimestamp != null &&
-        !localTimeStamp.isAtSameMomentAs(latestTimestamp)) {
-      updateAvailable = true;
-      localTimeStamp = latestTimestamp;
-    }
-
-    // Store the timestamp in the local db
-    await localSettings.put('timestamp', localTimeStamp.toString());
-
-    return updateAvailable;
-  }
-
-  static Future<void> downloadRankings(
-    Client client,
-    String pathPrefix,
-    List<Map<String, dynamic>> cupsJsonList,
-  ) async {
-    _rankingsJsonLookup ??= {};
-    for (Map<String, dynamic> cupEntry in cupsJsonList) {
-      if (cupEntry.containsKey('cupId')) {
-        String cupId = cupEntry['cupId'];
-        try {
-          String response = await client.read(Uri.https(
-              Globals.pogoBucketDomain,
-              '${Globals.pogoDataSourcePath}${pathPrefix}rankings/$cupId.json'));
-          _rankingsJsonLookup![cupId] = jsonDecode(response);
-        } catch (_) {}
-      }
-    }
-  }
-
-  // --------------------------------------------------------------------------
   // JSON Initialization
   // --------------------------------------------------------------------------
 
-  static Future<void> rebuildFromJson(Map<String, dynamic> json) async {
+  Future<void> buildDataSourceFromJson(
+    Map<String, dynamic> pogoDataSourceJson,
+    Map<String, dynamic> rankingsJson,
+  ) async {
     // Load Pogo data collections
-    await loadFastMoves(json['fastMoves']);
-    await loadChargeMoves(json['chargeMoves']);
-    await loadPokemon(json['pokemon']);
-    await loadCups(json['cups']);
+    await loadFastMoves(pogoDataSourceJson['fastMoves']);
+    await loadChargeMoves(pogoDataSourceJson['chargeMoves']);
+    await loadPokemon(pogoDataSourceJson['pokemon']);
+    await loadCups(pogoDataSourceJson['cups'], rankingsJson);
   }
 
-  static Future<void> loadFastMoves(List<dynamic> fastMovesJson) async {
+  Future<void> loadFastMoves(List<dynamic> fastMovesJson) async {
     for (var json in List<Map<String, dynamic>>.from(fastMovesJson)) {
       fastMoves[json['moveId']] = FastMove.fromJson(json);
     }
   }
 
-  static Future<void> loadChargeMoves(List<dynamic> chargeMovesJson) async {
+  Future<void> loadChargeMoves(List<dynamic> chargeMovesJson) async {
     for (var json in List<Map<String, dynamic>>.from(chargeMovesJson)) {
       chargeMoves[json['moveId']] = ChargeMove.fromJson(json);
     }
   }
 
-  static Future<void> loadPokemon(List<dynamic> pokemonJson) async {
+  Future<void> loadPokemon(List<dynamic> pokemonJson) async {
     for (var pokemonEntry in List<Map<String, dynamic>>.from(pokemonJson)) {
       await _processPokemonEntry(pokemonEntry);
     }
   }
 
-  static Future<void> _processPokemonEntry(
-      Map<String, dynamic> pokemonEntry) async {
+  Future<void> _processPokemonEntry(Map<String, dynamic> pokemonEntry) async {
     // Standard Pokemon entries
-    PokemonBase pokemon = PokemonBase.fromJson(pokemonEntry);
+    PokemonBase pokemon = PokemonBase.fromJson(pokemonEntry, this);
     List<Evolution>? evolutions;
 
     if (pokemonEntry.containsKey('evolutions')) {
@@ -273,7 +117,7 @@ class PogoRepository {
     // Shadow entries
     if (pokemonEntry.containsKey('shadow')) {
       PokemonBase shadowPokemon =
-          PokemonBase.fromJson(pokemonEntry, shadowForm: true);
+          PokemonBase.fromJson(pokemonEntry, this, shadowForm: true);
 
       if (evolutions != null) {
         shadowPokemon.evolutions.addAll(evolutions);
@@ -299,13 +143,14 @@ class PogoRepository {
     }
   }
 
-  static Future<void> loadCups(List<dynamic> cupsJson) async {
-    if (_rankingsJsonLookup == null) return;
-
+  Future<void> loadCups(
+    List<dynamic> cupsJson,
+    Map<String, dynamic> rankingsJson,
+  ) async {
     for (var cupEntry in List<Map<String, dynamic>>.from(cupsJson)) {
-      if (_rankingsJsonLookup!.containsKey(cupEntry['cupId'])) {
-        cupEntry['rankings'] = _rankingsJsonLookup![cupEntry['cupId']];
-        final Cup cup = Cup.fromJson(cupEntry);
+      if (rankingsJson.containsKey(cupEntry['cupId'])) {
+        cupEntry['rankings'] = rankingsJson[cupEntry['cupId']];
+        final Cup cup = Cup.fromJson(cupEntry, this);
         cups[cup.cupId] = cup;
       }
     }
@@ -315,7 +160,7 @@ class PogoRepository {
   // Import / Export
   // --------------------------------------------------------------------------
 
-  static Future<Map<String, dynamic>> exportUserDataToJson() async {
+  Future<Map<String, dynamic>> exportUserDataToJson() async {
     final Map<String, dynamic> userDataJson = {};
     final List<Map<String, dynamic>> teamsJson = [];
     final List<Map<String, dynamic>> tagsJson = [];
@@ -333,17 +178,17 @@ class PogoRepository {
     return userDataJson;
   }
 
-  static Future<void> importUserDataFromJson(Map<String, dynamic> json) async {
+  Future<void> importUserDataFromJson(Map<String, dynamic> json) async {
     for (var tagEntry in json['tags']) {
       putTag(Tag.fromJson(jsonDecode(tagEntry)));
     }
 
     for (var teamEntry in json['teams']) {
-      final team = UserPokemonTeam.fromJson(jsonDecode(teamEntry));
+      final team = UserPokemonTeam.fromJson(jsonDecode(teamEntry), this);
 
       for (var opponentEntry
           in List<Map<String, dynamic>>.from(teamEntry['opponents'])) {
-        final opponent = OpponentPokemonTeam.fromJson(opponentEntry);
+        final opponent = OpponentPokemonTeam.fromJson(opponentEntry, this);
 
         if (opponentEntry.containsKey('tag')) {
           opponent.tag = tags[teamEntry['tag']];
@@ -362,51 +207,51 @@ class PogoRepository {
   // Data Access
   // --------------------------------------------------------------------------
 
-  static FastMove getFastMoveById(String moveId) {
+  FastMove getFastMoveById(String moveId) {
     return fastMoves[moveId] ?? FastMove.none;
   }
 
-  static ChargeMove getChargeMoveById(String moveId) {
+  ChargeMove getChargeMoveById(String moveId) {
     return chargeMoves[moveId] ?? ChargeMove.none;
   }
 
-  static List<PokemonBase> getPokemon() {
+  List<PokemonBase> getPokemon() {
     return basePokemon.values.toList();
   }
 
-  static PokemonBase getPokemonById(String pokemonId) {
+  PokemonBase getPokemonById(String pokemonId) {
     return basePokemon[pokemonId] ?? PokemonBase.missingNo();
   }
 
-  static List<Cup> getCups() {
+  List<Cup> getCups() {
     return cups.values.toList();
   }
 
-  static Cup getCupById(String cupId) {
+  Cup getCupById(String cupId) {
     return cups[cupId] ?? cups.values.first;
   }
 
-  static Tag? getTagByName(String tagName) {
+  Tag? getTagByName(String tagName) {
     return tags[tagName];
   }
 
-  static List<Tag> getTags() {
+  List<Tag> getTags() {
     return tags.values.toList();
   }
 
-  static bool tagNameExists(String tagName) {
+  bool tagNameExists(String tagName) {
     return tags.containsKey(tagName);
   }
 
-  static void putTag(Tag tag) {
+  void putTag(Tag tag) {
     tags[tag.name] = tag;
   }
 
-  static void deleteTag(String tagName) async {
+  void deleteTag(String tagName) async {
     tags.remove(tagName);
   }
 
-  static List<PokemonBase> getCupFilteredPokemonList(Cup cup) {
+  List<PokemonBase> getCupFilteredPokemonList(Cup cup) {
     List<PokemonBase> pokemon = getPokemon();
 
     return pokemon.where((pkmn) {
@@ -421,7 +266,7 @@ class PogoRepository {
   // Get a list of Pokemon that contain one of the specified types
   // The rankings category
   // The list length will be up to the limit
-  static List<CupPokemon> getCupPokemon(
+  List<CupPokemon> getCupPokemon(
     Cup cup,
     List<PokemonType> types,
     RankingsCategories rankingsCategory, {
@@ -445,7 +290,7 @@ class PogoRepository {
     return rankedList.getRange(0, limit).toList();
   }
 
-  static Future loadUserData() async {
+  Future loadUserData() async {
     for (var key in _tagsBox.keys) {
       final json =
           Map<String, dynamic>.from(jsonDecode(await _tagsBox.get(key)));
@@ -456,37 +301,37 @@ class PogoRepository {
     for (var key in _userPokemonTeamsBox.keys) {
       final json = Map<String, dynamic>.from(
           jsonDecode(await _userPokemonTeamsBox.get(key)));
-      final team = UserPokemonTeam.fromJson(json);
+      final team = UserPokemonTeam.fromJson(json, this);
       userPokemonTeams[team.id] = team;
     }
 
     for (var key in _opponentPokemonTeamsBox.keys) {
       final json = Map<String, dynamic>.from(
           jsonDecode(await _opponentPokemonTeamsBox.get(key)));
-      final team = OpponentPokemonTeam.fromJson(json);
+      final team = OpponentPokemonTeam.fromJson(json, this);
       opponentPokemonTeams[team.id] = team;
     }
   }
 
-  static UserPokemonTeam getUserTeam(int id) {
-    return userPokemonTeams[id] ?? UserPokemonTeam();
+  UserPokemonTeam getUserTeam(int id) {
+    return userPokemonTeams[id] ?? UserPokemonTeam(cup: getCups().first);
   }
 
-  static List<UserPokemonTeam> getUserTeams({Tag? tag}) {
+  List<UserPokemonTeam> getUserTeams({Tag? tag}) {
     if (tag == null) return userPokemonTeams.values.toList();
     return userPokemonTeams.values
         .where((team) => team.tag?.name == tag.name)
         .toList();
   }
 
-  static List<OpponentPokemonTeam> getOpponentTeams({Tag? tag}) {
+  List<OpponentPokemonTeam> getOpponentTeams({Tag? tag}) {
     if (tag == null) return opponentPokemonTeams.values.toList();
     return opponentPokemonTeams.values
         .where((team) => team.tag?.name == tag.name)
         .toList();
   }
 
-  static void putPokemonTeam(PokemonTeam team) {
+  void putPokemonTeam(PokemonTeam team) {
     if (team.runtimeType == UserPokemonTeam) {
       if (team.id == -1) team.id = userPokemonTeams.length + 1;
       userPokemonTeams[team.id] = (team as UserPokemonTeam);
@@ -498,7 +343,7 @@ class PogoRepository {
     }
   }
 
-  static void deleteUserPokemonTeam(UserPokemonTeam userTeam) {
+  void deleteUserPokemonTeam(UserPokemonTeam userTeam) {
     for (OpponentPokemonTeam opponentTeam in userTeam.opponents) {
       deleteOpponentPokemonTeam(opponentTeam.id);
     }
@@ -507,12 +352,12 @@ class PogoRepository {
     _userPokemonTeamsBox.delete(userTeam.id);
   }
 
-  static void deleteOpponentPokemonTeam(int id) {
+  void deleteOpponentPokemonTeam(int id) {
     opponentPokemonTeams.remove(id);
     _opponentPokemonTeamsBox.delete(id);
   }
 
-  static Future<void> clearUserData() async {
+  Future<void> clearUserData() async {
     tags.clear();
     userPokemonTeams.clear();
     opponentPokemonTeams.clear();

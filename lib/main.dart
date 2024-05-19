@@ -18,12 +18,13 @@ void main() async {
   //await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   await Hive.initFlutter();
-  await PogoRepository.init();
+  final PogoRepository pogoRepository = PogoRepository();
+  await pogoRepository.init();
   await GoogleDriveRepository.init();
 
   FlutterError.onError = (details) {
     FlutterError.presentError(details);
   };
 
-  runApp(const PogoTeamsApp());
+  runApp(PogoTeamsApp(pogoRepository: pogoRepository));
 }

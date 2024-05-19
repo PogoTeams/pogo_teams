@@ -3,6 +3,7 @@ import 'dart:ui';
 
 // Packages
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local
 import '../../pages/teams/battle_log.dart';
@@ -80,7 +81,7 @@ class _TeamsState extends State<Teams> {
   // Remove the team at specified index
   void _onClearTeam(UserPokemonTeam team) {
     setState(() {
-      PogoRepository.deleteUserPokemonTeam(team);
+      context.read<PogoRepository>().deleteUserPokemonTeam(team);
     });
   }
 
@@ -135,7 +136,7 @@ class _TeamsState extends State<Teams> {
     if (selectedTag != null) {
       setState(() {
         team.setTag(selectedTag);
-        PogoRepository.putPokemonTeam(team);
+        context.read<PogoRepository>().putPokemonTeam(team);
       });
     }
   }
@@ -180,15 +181,15 @@ class _TeamsState extends State<Teams> {
   void _onLockTeam(UserPokemonTeam team) {
     setState(() {
       team.toggleLock();
-      PogoRepository.putPokemonTeam(team);
+      context.read<PogoRepository>().putPokemonTeam(team);
     });
   }
 
   // Add a new empty team
   void _onAddTeam() async {
-    UserPokemonTeam newTeam = UserPokemonTeam()
-      ..dateCreated = DateTime.now().toUtc()
-      ..cup = PogoRepository.getCups().first;
+    UserPokemonTeam newTeam =
+        UserPokemonTeam(cup: context.read<PogoRepository>().getCups().first)
+          ..dateCreated = DateTime.now().toUtc();
 
     await Navigator.push(
       context,
@@ -237,7 +238,7 @@ class _TeamsState extends State<Teams> {
   @override
   Widget build(BuildContext context) {
     final isExpanded = Sizing.isExpanded(context);
-    _teams = PogoRepository.getUserTeams(tag: _selectedTag);
+    _teams = context.read<PogoRepository>().getUserTeams(tag: _selectedTag);
 
     return Scaffold(
       body: Row(

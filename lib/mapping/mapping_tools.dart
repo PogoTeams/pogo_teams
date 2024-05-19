@@ -59,13 +59,14 @@ void buildSnapshotReleasedIdsList() async {
       await JsonTools.loadJson('bin/json/niantic-snapshot');
   if (snapshot == null) return;
 
-  await PogoRepository.init();
-  await PogoRepository.clear();
-  await PogoRepository.rebuildFromJson(snapshot);
+  final PogoRepository pogoRepository = PogoRepository();
+  await pogoRepository.init();
+  await pogoRepository.clear();
+  await pogoRepository.buildDataSourceFromJson(snapshot, {});
 
   List<String> snapshotReleasedIds = [];
 
-  for (var pokemon in PogoRepository.getPokemon()) {
+  for (var pokemon in pogoRepository.getPokemon()) {
     if (pokemon.released) {
       snapshotReleasedIds.add(pokemon.pokemonId);
     }

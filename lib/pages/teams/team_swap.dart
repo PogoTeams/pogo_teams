@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../../app/ui/sizing.dart';
@@ -70,9 +71,9 @@ class _TeamSwapState extends State<TeamSwap> {
   }
 
   void _saveTeam() {
-    PogoRepository.putPokemonTeam(
-      widget.team,
-    );
+    context.read<PogoRepository>().putPokemonTeam(
+          widget.team,
+        );
   }
 
   Widget _buildPokemonNode(int index) {

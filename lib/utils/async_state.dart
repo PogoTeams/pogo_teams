@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 enum AsyncStatus { init, inProgress, success, failure }
 
 extension AsyncStatusExtension on AsyncStatus {
@@ -7,7 +9,7 @@ extension AsyncStatusExtension on AsyncStatus {
   bool get isFailure => this == AsyncStatus.failure;
 }
 
-class AsyncState {
+class AsyncState extends Equatable {
   const AsyncState({
     this.status = AsyncStatus.init,
     this.errorMessage,
@@ -22,7 +24,7 @@ class AsyncState {
         errorMessage,
       ];
 
-  AsyncState init() => const AsyncState();
+  static const AsyncState init = AsyncState();
 
   AsyncState inProgress() => copyWith(status: AsyncStatus.inProgress);
 
