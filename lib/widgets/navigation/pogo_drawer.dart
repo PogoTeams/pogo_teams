@@ -231,12 +231,12 @@ class PogoDrawer extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            SizedBox(
-                              width: Sizing.screenWidth(context) * .05,
+                            const SizedBox(
+                              width: 15.0,
                             ),
                             // GitHub link
                             SizedBox(
-                              width: Sizing.screenWidth(context) * .1,
+                              width: Sizing.shortedSide(context) * .1,
                               child: IconButton(
                                 padding: EdgeInsets.zero,
                                 onPressed: _launchGitHubUrl,

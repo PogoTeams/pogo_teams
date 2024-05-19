@@ -3,7 +3,6 @@ import 'dart:ui';
 
 // Packages
 import 'package:flutter/material.dart';
-import 'package:pogo_teams/model/pokemon.dart';
 
 // Local
 import '../../pages/teams/battle_log.dart';
@@ -35,7 +34,6 @@ class Teams extends StatefulWidget {
 
 class _TeamsState extends State<Teams> {
   late List<UserPokemonTeam> _teams;
-  UserPokemonTeam? _selectedTeam;
   Tag? _selectedTag;
 
   // Build the list of TeamNodes, with the necessary callbacks
@@ -144,24 +142,18 @@ class _TeamsState extends State<Teams> {
 
   // Edit the team at specified index
   void _onBuildTeam(UserPokemonTeam team) async {
-    if (Sizing.isExpanded(context)) {
-      setState(() {
-        _selectedTeam = team;
-      });
-    } else {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => TeamBuilder(
-            team: team,
-            cup: team.getCup(),
-            focusIndex: 0,
-          ),
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => TeamBuilder(
+          team: team,
+          cup: team.getCup(),
+          focusIndex: 0,
         ),
-      );
+      ),
+    );
 
-      setState(() {});
-    }
+    setState(() {});
   }
 
   void _onEditTeam(BuildContext context, UserPokemonTeam team) async {
@@ -198,45 +190,34 @@ class _TeamsState extends State<Teams> {
       ..dateCreated = DateTime.now().toUtc()
       ..cup = PogoRepository.getCups().first;
 
-    if (Sizing.isExpanded(context)) {
-      PogoRepository.putPokemonTeam(newTeam);
-      _selectedTeam = newTeam;
-    } else {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => TeamBuilder(
-            team: newTeam,
-            cup: newTeam.getCup(),
-            focusIndex: 0,
-          ),
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => TeamBuilder(
+          team: newTeam,
+          cup: newTeam.getCup(),
+          focusIndex: 0,
         ),
-      );
-    }
+      ),
+    );
     setState(() {});
   }
 
   // Navigate to the team build search page, with focus on the specified
   // nodeIndex
   void _onEmptyPressed(UserPokemonTeam team, int nodeIndex) async {
-    if (Sizing.isExpanded(context)) {
-      setState(() {
-        _selectedTeam = team;
-      });
-    } else {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) {
-          return TeamBuilder(
-            team: team,
-            cup: team.getCup(),
-            focusIndex: nodeIndex,
-          );
-        }),
-      );
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) {
+        return TeamBuilder(
+          team: team,
+          cup: team.getCup(),
+          focusIndex: nodeIndex,
+        );
+      }),
+    );
 
-      setState(() {});
-    }
+    setState(() {});
   }
 
   void _onTagChanged(Tag? tag) {
@@ -260,57 +241,52 @@ class _TeamsState extends State<Teams> {
 
     return Scaffold(
       body: Row(
-        children: [
-          if (Sizing.isExpanded(context))
-            Flexible(
-              flex: 1,
-              child: _buildTeamsList(context),
-            ),
-          _selectedTeam == null
-              ? const Flexible(flex: 1, child: Text('Detail View'))
-              : Flexible(
-                  flex: 1,
-                  child: TeamBuilder(
-                    team: _selectedTeam!,
-                    cup: _selectedTeam!.getCup(),
-                    focusIndex: 0,
-                  ),
-                ),
-        ],
-      ),
-      floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Flexible(
             flex: 1,
-            child: GradientButton(
-              onPressed: _onAddTeam,
-              width: double.infinity,
-              height: Sizing.fabLargeHeight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            child: Scaffold(
+              body: _buildTeamsList(context),
+              floatingActionButton: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Add Team  ',
-                    style: Theme.of(context).textTheme.titleLarge,
+                  Flexible(
+                    flex: 1,
+                    child: GradientButton(
+                      onPressed: _onAddTeam,
+                      width: double.infinity,
+                      height: Sizing.fabLargeHeight,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Add Team  ',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const Icon(
+                            Icons.add,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  const Icon(
-                    Icons.add,
+                  Sizing.paneSpacer,
+                  TagFilterButton(
+                    tag: _selectedTag,
+                    onTagChanged: _onTagChanged,
+                    width: Sizing.fabLargeHeight,
                   ),
                 ],
               ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
             ),
           ),
-          Sizing.paneSpacer,
-          TagFilterButton(
-            tag: _selectedTag,
-            onTagChanged: _onTagChanged,
-            width: Sizing.fabLargeHeight,
-          ),
-          if (isExpanded) Flexible(flex: 1, child: Container()),
+          if (isExpanded)
+            // TODO: Detail View
+            Flexible(flex: 1, child: Container()),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

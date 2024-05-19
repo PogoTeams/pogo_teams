@@ -36,6 +36,9 @@ class PokemonBase {
     Map<String, dynamic> json, {
     bool shadowForm = false,
   }) {
+    if (json['pokemonId'] == 'swampert_shadow') {
+      print('swampert_shadow');
+    }
     List<String>? tags;
     if (json.containsKey('tags')) {
       tags = List<String>.from(json['tags']);

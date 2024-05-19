@@ -241,23 +241,12 @@ class Sizing {
 
 // utils --------------------------------------------------------------------
   static Size screenSize(BuildContext context) => MediaQuery.of(context).size;
-  static double screenWidth(BuildContext context, {bool oriented = false}) {
-    if (oriented) {
-      return screenSize(context).width;
-    }
-    return isLandscape(context)
-        ? screenSize(context).height
-        : screenSize(context).width;
-  }
+  static double shortedSide(BuildContext context) =>
+      screenSize(context).shortestSide;
+  static double screenWidth(BuildContext context) => screenSize(context).width;
 
-  static double screenHeight(BuildContext context, {bool oriented = false}) {
-    if (oriented) {
-      return screenSize(context).height;
-    }
-    return isLandscape(context)
-        ? screenSize(context).width
-        : screenSize(context).height;
-  }
+  static double screenHeight(BuildContext context) =>
+      screenSize(context).height;
 
   /// https://m3.material.io/foundations/layout/applying-layout/window-size-classes
   static WindowSizeClass windowSizeClass(BuildContext context) {

@@ -31,11 +31,13 @@ class TeamBuilder extends StatefulWidget {
     required this.team,
     required this.cup,
     required this.focusIndex,
+    this.onTeamChanged,
   });
 
   final PokemonTeam team;
   final Cup cup;
   final int focusIndex;
+  final Function(int)? onTeamChanged;
 
   @override
   State<TeamBuilder> createState() => _TeamBuilderState();
@@ -153,12 +155,16 @@ class _TeamBuilderState extends State<TeamBuilder> {
     return PokemonList(
       pokemon: _filteredPokemon,
       onPokemonSelected: (Pokemon pokemon) {
-        setState(() {
-          UserPokemon userPokemon = UserPokemon.fromPokemon(pokemon);
-          _team.setPokemonAt(_builderIndex, userPokemon);
-          PogoRepository.putPokemonTeam(_team);
-          _updateWorkingIndex(_builderIndex + 1);
-        });
+        UserPokemon userPokemon = UserPokemon.fromPokemon(pokemon);
+        _team.setPokemonAt(_builderIndex, userPokemon);
+        PogoRepository.putPokemonTeam(_team);
+        _updateWorkingIndex(_builderIndex + 1);
+
+        if (widget.onTeamChanged != null) {
+          widget.onTeamChanged!(_builderIndex);
+        } else {
+          setState(() {});
+        }
       },
     );
   }
@@ -183,6 +189,11 @@ class _TeamBuilderState extends State<TeamBuilder> {
     PogoRepository.putPokemonTeam(
       _team,
     );
+    if (widget.onTeamChanged != null) {
+      widget.onTeamChanged!(_builderIndex);
+    } else {
+      setState(() {});
+    }
   }
 
   // Update the working index, will be set via a callback or
@@ -202,19 +213,23 @@ class _TeamBuilderState extends State<TeamBuilder> {
       _cup = PogoRepository.getCupById(newCup);
       _filterCategory(_selectedCategory);
     });
+    if (widget.onTeamChanged != null) widget.onTeamChanged!(_builderIndex);
   }
 
   void _onTeamSizeChanged(int? newSize) {
     if (newSize == null) return;
 
-    setState(() {
-      if (_builderIndex > newSize - 1) {
-        _builderIndex = newSize - 1;
-      }
+    if (_builderIndex > newSize - 1) {
+      _builderIndex = newSize - 1;
+    }
 
-      _team.setTeamSize(newSize);
-      PogoRepository.putPokemonTeam(_team);
-    });
+    _team.setTeamSize(newSize);
+    PogoRepository.putPokemonTeam(_team);
+    if (widget.onTeamChanged != null) {
+      widget.onTeamChanged!(_builderIndex);
+    } else {
+      setState(() {});
+    }
   }
 
   // Callback for the FilterButton
@@ -270,54 +285,87 @@ class _TeamBuilderState extends State<TeamBuilder> {
         bottom: false,
         child: Padding(
           padding: Sizing.horizontalWindowInsets(context),
-          child: Column(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (isExpanded) Sizing.listItemSpacer,
-
-              isExpanded ? _buildTeamNodeFooter() : _buildTeamNode(),
-
-              Sizing.listItemSpacer,
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  // User input text field
-                  Flexible(
-                    flex: 6,
-                    child: PogoTextField(
-                      controller: _searchController,
-                      onClear: () => setState(() {
-                        _searchController.clear();
-                      }),
-                    ),
+              if (isExpanded)
+                Flexible(
+                  flex: 1,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints.tightFor(
+                        height: Sizing.screenHeight(context) * .5),
+                    child: _buildTeamNode(),
                   ),
+                ),
+              if (isExpanded) Sizing.paneSpacer,
+              Flexible(
+                flex: 1,
+                child: Column(
+                  children: [
+                    if (!isExpanded) _buildTeamNode(),
 
-                  Sizing.paneSpacer,
+                    Sizing.listItemSpacer,
 
-                  // Filter by ranking category
-                  Flexible(
-                    flex: 1,
-                    child: RankingsCategoryButton(
-                      onSelected: _filterCategory,
-                      selectedCategory: _selectedCategory,
-                      dex: true,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        // User input text field
+                        Flexible(
+                          flex: 6,
+                          child: PogoTextField(
+                            controller: _searchController,
+                            onClear: () => setState(() {
+                              _searchController.clear();
+                            }),
+                          ),
+                        ),
+
+                        Sizing.paneSpacer,
+
+                        // Filter by ranking category
+                        Flexible(
+                          flex: 1,
+                          child: RankingsCategoryButton(
+                            onSelected: _filterCategory,
+                            selectedCategory: _selectedCategory,
+                            dex: true,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
 
-              // Spacer
-              SizedBox(
-                height: Sizing.screenHeight(context) * .01,
-              ),
+                    // Spacer
+                    SizedBox(
+                      height: Sizing.screenHeight(context) * .01,
+                    ),
 
-              _buildPokemonList(),
+                    _buildPokemonList(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
-      floatingActionButton: isExpanded ? null : _buildFloatingActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: SafeArea(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Flexible(
+              flex: 1,
+              child: _buildFloatingActionButton(),
+            ),
+            if (isExpanded)
+              Flexible(
+                flex: 1,
+                child: Container(),
+              ),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

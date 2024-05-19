@@ -1,4 +1,5 @@
 // Flutter
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Local Imports
@@ -34,8 +35,9 @@ class PokemonNode extends StatelessWidget {
     this.padding,
     this.lead = false,
   }) {
-    width = Sizing.screenWidth(context) * .25;
-    height = Sizing.screenWidth(context) * .25;
+    width = min(
+        Sizing.screenWidth(context) * .25, Sizing.screenHeight(context) * .12);
+    height = width;
     cup = null;
     dropdowns = false;
 
@@ -58,7 +60,7 @@ class PokemonNode extends StatelessWidget {
     this.lead = false,
   }) {
     width = double.infinity;
-    height = Sizing.screenHeight(context) * .12;
+    height = Sizing.screenHeight(context) * .14;
 
     body = _SmallNodeBody(
       pokemon: pokemon!,
@@ -134,7 +136,7 @@ class PokemonNode extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      //height: height,
+      height: height,
       child: lead
           ? Stack(
               fit: StackFit.passthrough,
@@ -211,7 +213,6 @@ class _SquareNodeBody extends StatelessWidget {
             flex: 1,
             child: TraitsIcons(
               pokemon: pokemon.getBase(),
-              scale: .7,
             ),
           ),
 

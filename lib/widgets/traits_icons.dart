@@ -18,11 +18,9 @@ class TraitsIcons extends StatelessWidget {
   const TraitsIcons({
     super.key,
     required this.pokemon,
-    this.scale = 1.0,
   });
 
   final PokemonBase pokemon;
-  final double scale;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +29,7 @@ class TraitsIcons extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           //pokemon.isXL ? XlIcon(scale: scale) : Container(),
-          pokemon.isShadow() ? ShadowIcon(scale: scale) : Container(),
+          pokemon.isShadow() ? ShadowIcon() : Container(),
         ],
       ),
     );
@@ -75,17 +73,13 @@ class XlIcon extends StatelessWidget {
 class ShadowIcon extends StatelessWidget {
   const ShadowIcon({
     super.key,
-    required this.scale,
   });
-
-  final double scale;
 
   @override
   Widget build(BuildContext context) {
     return Icon(
       Icons.local_fire_department_rounded,
       color: Colors.purple[900]!,
-      size: Sizing.screenWidth(context) * .06 * scale,
     );
   }
 }
