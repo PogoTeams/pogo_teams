@@ -80,7 +80,7 @@ class SwapList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<CupPokemon> pokemon = context.read<PogoRepository>().getCupPokemon(
-          team.getCup(),
+          team.cup,
           types,
           RankingsCategories.overall,
           limit: 20,

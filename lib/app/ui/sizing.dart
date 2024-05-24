@@ -86,7 +86,7 @@ class Sizing {
   static double mobileModalDrawerWidth(BuildContext context) =>
       screenWidth(context) * .8;
 
-  static const double expandedModalDrawerWidth = 350.0;
+  static const double expandedModalDrawerWidth = 300.0;
 
   static const double compactDrawerWidth = 75.0;
 

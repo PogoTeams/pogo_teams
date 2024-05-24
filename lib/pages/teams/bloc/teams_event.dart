@@ -4,15 +4,9 @@ sealed class TeamsEvent extends Equatable {
   const TeamsEvent();
 }
 
-class TeamsLoaded extends TeamsEvent {
-  const TeamsLoaded({
-    required this.userPokemonTeams,
-  });
-
-  final List<UserPokemonTeam> userPokemonTeams;
-
+class TeamsRequested extends TeamsEvent {
   @override
-  List<Object?> get props => [userPokemonTeams];
+  List<Object?> get props => [];
 }
 
 class TeamDetailViewChanged extends TeamsEvent {
@@ -23,7 +17,7 @@ class TeamDetailViewChanged extends TeamsEvent {
   });
 
   final TeamDetailView teamDetailView;
-  final UserPokemonTeam selectedTeam;
+  final PokemonTeam selectedTeam;
   final int builderIndex;
 
   @override
@@ -58,15 +52,15 @@ class TeamAdded extends TeamsEvent {
   List<Object?> get props => [];
 }
 
-class TeamChanged extends TeamsEvent {
-  const TeamChanged({
-    required this.userTeam,
+class PokemonAddedToTeam extends TeamsEvent {
+  const PokemonAddedToTeam({
+    required this.pokemon,
   });
 
-  final UserPokemonTeam userTeam;
+  final CupPokemon pokemon;
 
   @override
-  List<Object?> get props => [userTeam];
+  List<Object?> get props => [pokemon];
 }
 
 class CupChanged extends TeamsEvent {
@@ -78,6 +72,17 @@ class CupChanged extends TeamsEvent {
 
   @override
   List<Object?> get props => [cup];
+}
+
+class TeamChanged extends TeamsEvent {
+  const TeamChanged({
+    required this.team,
+  });
+
+  final PokemonTeam team;
+
+  @override
+  List<Object?> get props => [team];
 }
 
 class TeamSizeChanged extends TeamsEvent {
@@ -108,7 +113,7 @@ class TeamTagged extends TeamsEvent {
     required this.tag,
   });
 
-  final UserPokemonTeam userTeam;
+  final PokemonTeam userTeam;
   final Tag tag;
 
   @override
@@ -117,35 +122,35 @@ class TeamTagged extends TeamsEvent {
 
 class TeamAnalyzed extends TeamsEvent {
   const TeamAnalyzed({
-    required this.userTeam,
+    required this.team,
   });
 
-  final UserPokemonTeam userTeam;
+  final PokemonTeam team;
 
   @override
-  List<Object?> get props => [userTeam];
+  List<Object?> get props => [team];
 }
 
 class OpponentTeamLogged extends TeamsEvent {
   const OpponentTeamLogged({
-    required this.userTeam,
+    required this.pokemonTeam,
     required this.opponentTeam,
   });
 
-  final UserPokemonTeam userTeam;
+  final PokemonTeam pokemonTeam;
   final OpponentPokemonTeam opponentTeam;
 
   @override
-  List<Object?> get props => [userTeam, opponentTeam];
+  List<Object?> get props => [pokemonTeam, opponentTeam];
 }
 
 class TeamCleared extends TeamsEvent {
   const TeamCleared({
-    required this.userTeam,
+    required this.pokemonTeam,
   });
 
-  final UserPokemonTeam userTeam;
+  final PokemonTeam pokemonTeam;
 
   @override
-  List<Object?> get props => [userTeam];
+  List<Object?> get props => [pokemonTeam];
 }

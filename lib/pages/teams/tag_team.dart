@@ -56,9 +56,8 @@ class TagTeam extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Add Tag',
-                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     SizedBox(
                       width: Sizing.screenWidth(context) * .02,

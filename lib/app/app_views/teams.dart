@@ -1,6 +1,3 @@
-// Dart
-import 'dart:ui';
-
 // Packages
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,7 +32,9 @@ class Teams extends StatelessWidget {
       create: (_) => TeamsBloc(
         pogoRepository: context.read<PogoRepository>(),
         opponentTeams: false,
-      ),
+      )..add(
+          TeamsRequested(),
+        ),
       child: _TeamsView(),
     );
   }
@@ -45,17 +44,7 @@ class _TeamsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isExpanded = Sizing.isExpanded(context);
-    return BlocConsumer<TeamsBloc, TeamsState>(
-      listenWhen: (previous, current) =>
-          !isExpanded && previous.teamDetailView != current.teamDetailView,
-      listener: (context, state) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => state.teamDetailView.view!,
-          ),
-        );
-      },
+    return BlocBuilder<TeamsBloc, TeamsState>(
       builder: (context, state) {
         return Scaffold(
           body: Row(
@@ -103,10 +92,10 @@ class _TeamsView extends StatelessWidget {
                       FloatingActionButtonLocation.centerFloat,
                 ),
               ),
-              if (isExpanded && state.teamDetailView.view != null)
+              if (isExpanded)
                 Flexible(
                   flex: 1,
-                  child: state.teamDetailView.view!,
+                  child: state.teamDetailView.view(),
                 ),
             ],
           ),
@@ -117,11 +106,29 @@ class _TeamsView extends StatelessWidget {
 }
 
 class _TeamsListView extends StatelessWidget {
+  _pushDetailView(BuildContext context) {
+    final TeamsBloc teamsBloc = context.read<TeamsBloc>();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider.value(
+          value: teamsBloc,
+          child: teamsBloc.state.teamDetailView.view(),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isExpanded = Sizing.isExpanded(context);
     return BlocBuilder<TeamsBloc, TeamsState>(
       builder: (context, state) {
         return ListView.builder(
+          padding: const EdgeInsets.only(
+            left: 15.0,
+            right: 15.0,
+          ),
           shrinkWrap: true,
           itemCount: state.pokemonTeams.length,
           itemBuilder: (context, index) {
@@ -131,20 +138,31 @@ class _TeamsListView extends StatelessWidget {
                   ? EdgeInsets.only(bottom: Sizing.screenHeight(context) * .11)
                   : EdgeInsets.zero,
               child: TeamNode(
-                onEmptyPressed: (nodeIndex) => context.read<TeamsBloc>().add(
-                      TeamDetailViewChanged(
-                        teamDetailView: TeamDetailView.builder,
-                        selectedTeam: team,
-                        builderIndex: nodeIndex,
-                      ),
-                    ),
-                onPressed: (nodeIndex) => context.read<TeamsBloc>().add(
-                      TeamDetailViewChanged(
-                        teamDetailView: TeamDetailView.builder,
-                        selectedTeam: team,
-                        builderIndex: nodeIndex,
-                      ),
-                    ),
+                focusIndex: isExpanded && state.selectedTeam == team
+                    ? state.builderIndex
+                    : null,
+                onEmptyPressed: (nodeIndex) {
+                  context.read<TeamsBloc>().add(
+                        TeamDetailViewChanged(
+                          teamDetailView: TeamDetailView.builder,
+                          selectedTeam: team,
+                          builderIndex: nodeIndex,
+                        ),
+                      );
+
+                  if (!isExpanded) _pushDetailView(context);
+                },
+                onPressed: (nodeIndex) {
+                  context.read<TeamsBloc>().add(
+                        TeamDetailViewChanged(
+                          teamDetailView: TeamDetailView.builder,
+                          selectedTeam: team,
+                          builderIndex: nodeIndex,
+                        ),
+                      );
+
+                  if (!isExpanded) _pushDetailView(context);
+                },
                 team: team,
                 header: UserTeamNodeHeader(
                   team: team,
@@ -153,26 +171,37 @@ class _TeamsListView extends StatelessWidget {
                 footer: UserTeamNodeFooter(
                   team: team,
                   onClear: (_) => context.read<TeamsBloc>().add(TeamCleared(
-                        userTeam: team,
+                        pokemonTeam: team,
                       )),
-                  onBuild: (_) => context.read<TeamsBloc>().add(
-                        TeamDetailViewChanged(
-                          teamDetailView: TeamDetailView.builder,
-                          selectedTeam: team,
-                        ),
-                      ),
-                  onTag: (_) => context.read<TeamsBloc>().add(
-                        TeamDetailViewChanged(
-                          teamDetailView: TeamDetailView.tag,
-                          selectedTeam: team,
-                        ),
-                      ),
-                  onLog: (_) => context.read<TeamsBloc>().add(
-                        TeamDetailViewChanged(
-                          teamDetailView: TeamDetailView.battleLogs,
-                          selectedTeam: team,
-                        ),
-                      ),
+                  onBuild: (_) {
+                    context.read<TeamsBloc>().add(
+                          TeamDetailViewChanged(
+                            teamDetailView: TeamDetailView.builder,
+                            selectedTeam: team,
+                          ),
+                        );
+                    if (!isExpanded) _pushDetailView(context);
+                  },
+                  onTag: (_) {
+                    context.read<TeamsBloc>().add(
+                          TeamDetailViewChanged(
+                            teamDetailView: TeamDetailView.tag,
+                            selectedTeam: team,
+                          ),
+                        );
+
+                    if (!isExpanded) _pushDetailView(context);
+                  },
+                  onLog: (_) {
+                    context.read<TeamsBloc>().add(
+                          TeamDetailViewChanged(
+                            teamDetailView: TeamDetailView.battleLogs,
+                            selectedTeam: team,
+                          ),
+                        );
+
+                    if (!isExpanded) _pushDetailView(context);
+                  },
                   onAnalyze: (_) => context.read<TeamsBloc>().add(
                         TeamDetailViewChanged(
                           teamDetailView: TeamDetailView.analysis,

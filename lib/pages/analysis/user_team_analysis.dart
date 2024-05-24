@@ -1,14 +1,11 @@
-// Dart
-import 'dart:math';
-
 // Flutter
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pogo_teams/enums/rankings_categories.dart';
+import 'package:pogo_teams/pages/teams/bloc/teams_bloc.dart';
+import 'package:pogo_teams/utils/async_state.dart';
 
 // Local
-import '../../enums/rankings_categories.dart';
-import '../../model/battle_pokemon.dart';
-import '../../battle/battle_result.dart';
 import 'counters.dart';
 import '../../widgets/analysis/type_coverage.dart';
 import '../../widgets/nodes/pokemon_node.dart';
@@ -21,9 +18,6 @@ import '../../model/pokemon_typing.dart';
 import '../../modules/pokemon_types.dart';
 import '../../modules/pogo_repository.dart';
 import '../../app/ui/sizing.dart';
-import '../../utils/pair.dart';
-import '../../ranker/pokemon_ranker.dart';
-import '../../ranker/ranking_data.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -41,20 +35,7 @@ the top threats.
 */
 
 class UserTeamAnalysis extends StatefulWidget {
-  const UserTeamAnalysis({
-    super.key,
-    required this.team,
-    required this.defenseThreats,
-    required this.offenseCoverage,
-    required this.netEffectiveness,
-    required this.onTeamChanged,
-  });
-
-  final UserPokemonTeam team;
-  final List<Pair<PokemonType, double>> defenseThreats;
-  final List<Pair<PokemonType, double>> offenseCoverage;
-  final List<Pair<PokemonType, double>> netEffectiveness;
-  final Function onTeamChanged;
+  const UserTeamAnalysis({super.key});
 
   @override
   State<UserTeamAnalysis> createState() => _UserTeamAnalysisState();
@@ -62,41 +43,28 @@ class UserTeamAnalysis extends StatefulWidget {
 
 class _UserTeamAnalysisState extends State<UserTeamAnalysis>
     with TickerProviderStateMixin {
-  bool _teamExpanded = false;
-  late UserPokemonTeam _team = widget.team;
-
-  final Map<int, RankingData> _teamRankingData = {};
-  final List<CupPokemon> _leadThreats = [];
-  final List<CupPokemon> _overallThreats = [];
-  bool _generateRankings = true;
-
-  // The included type keys of the team's given cup
-  late final List<String> includedTypesKeys =
-      widget.team.getCup().includedTypeKeys();
-
   final ScrollController _scrollController = ScrollController();
   late final TabController _tabController;
   late final TabController _threatsTabController;
+  bool _teamExpanded = false;
 
   // When the team is changed from a swap page, animate to the top of to
   // display the new team
-  void _onSwap(Pokemon swapPokemon) async {
+  void _onSwap(PokemonTeam team, Pokemon swapPokemon) async {
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) {
           return TeamSwap(
-            team: _team,
+            team: team,
             swap: UserPokemon.fromPokemon(swapPokemon),
           );
         },
       ),
     );
-
-    widget.onTeamChanged();
   }
 
-  void _onCounters(Pokemon pokemon) async {
+  void _onCounters(PokemonTeam team, Pokemon pokemon) async {
     List<PokemonType> counterTypes;
 
     if (pokemon.getBase().isMonoType()) {
@@ -104,7 +72,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
         [
           pokemon.getBase().typing.typeA,
         ],
-        includedTypesKeys,
+        team.cup.includedTypeKeys(),
       );
     } else {
       counterTypes = PokemonTypes.getCounterTypes(
@@ -112,11 +80,12 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
           pokemon.getBase().typing.typeA,
           pokemon.getBase().typing.typeB!,
         ],
-        includedTypesKeys,
+        team.cup.includedTypeKeys(),
       );
     }
+
     List<CupPokemon> counters = context.read<PogoRepository>().getCupPokemon(
-          _team.getCup(),
+          team.cup,
           counterTypes,
           RankingsCategories.overall,
           limit: 50,
@@ -128,7 +97,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
         MaterialPageRoute(
           builder: (BuildContext context) {
             return PokemonCountersList(
-              team: _team,
+              team: team,
               pokemon: pokemon,
               counters: counters,
             );
@@ -136,8 +105,6 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
         ),
       );
     }
-
-    widget.onTeamChanged();
   }
 
   AppBar _buildAppBar() {
@@ -173,7 +140,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
   }
 
   // Build the list of either 3 or 6 PokemonNodes that make up this team
-  Widget _buildPokemonNodes(List<UserPokemon> pokemonTeam) {
+  Widget _buildPokemonNodes(PokemonTeam team) {
+    List<UserPokemon> pokemonTeam = team.getNonNullPokemonList();
     return ListView(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
@@ -190,8 +158,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
               pokemon: pokemonTeam[index],
               context: context,
               onMoveChanged: () {
-                context.read<PogoRepository>().putPokemonTeam(_team);
-                widget.onTeamChanged();
+                context.read<TeamsBloc>().add(TeamChanged(team: team));
               },
               lead: ((pokemonTeam[index].teamIndex ?? -1) == 0),
             ),
@@ -201,116 +168,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
     );
   }
 
-  Future<void> _generateTeamRankings() async {
-    _teamRankingData.clear();
-    _leadThreats.clear();
-    _overallThreats.clear();
-
-    List<CupPokemon> opponents = context.read<PogoRepository>().getCupPokemon(
-          await _team.getCupAsync(),
-          PokemonTypes.typeList,
-          RankingsCategories.overall,
-          limit: 100,
-        );
-
-    List<BattleResult> losses = [];
-
-    // Simulate battles against the top meta for this cup
-    for (UserPokemon pokemon in await _team.getOrderedPokemonListAsync()) {
-      BattlePokemon battlePokemon =
-          await BattlePokemon.fromPokemonAsync(await pokemon.getBaseAsync())
-            ..selectedBattleFastMove = await pokemon.getSelectedFastMoveAsync()
-            ..selectedBattleChargeMoves =
-                await pokemon.getSelectedChargeMovesAsync();
-
-      battlePokemon.initializeStats((await _team.getCupAsync()).cp);
-
-      int pokemonIndex = pokemon.teamIndex ?? -1;
-      if (pokemonIndex != -1) {
-        _teamRankingData[pokemon.teamIndex ?? 0] = await PokemonRanker.rankApp(
-          battlePokemon,
-          await _team.getCupAsync(),
-          opponents,
-        );
-
-        // Accumulate lead outcomes
-        int len = min(
-            10, _teamRankingData[pokemonIndex]!.leadOutcomes!.losses.length);
-        losses.addAll(_teamRankingData[pokemonIndex]!
-            .leadOutcomes!
-            .losses
-            .getRange(0, len));
-
-        // Accumulate switch outcomes
-        len = min(
-            10, _teamRankingData[pokemonIndex]!.switchOutcomes!.losses.length);
-        losses.addAll(_teamRankingData[pokemonIndex]!
-            .switchOutcomes!
-            .losses
-            .getRange(0, len));
-
-        // Accumulate closer outcomes
-        len = min(
-            10, _teamRankingData[pokemonIndex]!.closerOutcomes!.losses.length);
-        losses.addAll(_teamRankingData[pokemonIndex]!
-            .closerOutcomes!
-            .losses
-            .getRange(0, len));
-      }
-    }
-
-    losses.sort((loss1, loss2) =>
-        loss2.opponent.currentRating > loss1.opponent.currentRating ? -1 : 1);
-
-    for (BattleResult loss in losses) {
-      // Avoid adding duplicate Pokemon
-      if (-1 ==
-          _overallThreats.indexWhere((threat) =>
-              threat.getBase().pokemonId == loss.opponent.pokemonId)) {
-        _overallThreats.add(CupPokemon.fromBattlePokemon(
-          loss.opponent,
-          context
-              .read<PogoRepository>()
-              .getPokemonById(loss.opponent.pokemonId),
-        ));
-      }
-
-      if (_overallThreats.length == 20) break;
-    }
-
-    // If the user's team has a lead Pokemon
-    if (_teamRankingData.containsKey(0)) {
-      List<BattleResult> leadLosses = _teamRankingData[0]!.leadOutcomes!.losses;
-      // Scale opponent's outcome rating to it's rating against the meta.
-      /*
-      for (BattleResult result in leadLosses) {
-        int i = opponents.indexWhere((pokemon) =>
-            pokemon.getBase().pokemonId == result.opponent.pokemonId);
-        if (i == -1) {
-          result.opponent.currentRating = 0;
-        } else {
-          result.opponent.currentRating *= opponents[i].ratings.lead;
-        }
-      }
-
-      // Resort the losses after scaling
-      leadLosses.sort((r1, r2) =>
-          (r2.opponent.currentRating > r1.opponent.currentRating ? -1 : 1));
-          */
-
-      int len = min(leadLosses.length, 20);
-      for (BattleResult result in leadLosses.getRange(0, len)) {
-        _leadThreats.add(CupPokemon.fromBattlePokemon(
-          result.opponent,
-          context
-              .read<PogoRepository>()
-              .getPokemonById(result.opponent.pokemonId),
-        ));
-      }
-    }
-  }
-
-  Widget _buildScaffoldBody() {
+  Widget _buildScaffoldBody(TeamsState state) {
+    final team = state.selectedTeam!;
     return Column(
       children: [
         ExpansionPanelList(
@@ -341,7 +200,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
                   left: Sizing.screenWidth(context) * .02,
                   right: Sizing.screenWidth(context) * .02,
                 ),
-                child: _buildPokemonNodes(_team.getOrderedPokemonList()),
+                child: _buildPokemonNodes(team),
               ),
               isExpanded: _teamExpanded,
             ),
@@ -377,13 +236,13 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
               controller: _tabController,
               children: [
                 TypeCoverage(
-                  netEffectiveness: widget.netEffectiveness,
-                  defenseThreats: widget.defenseThreats,
-                  offenseCoverage: widget.offenseCoverage,
-                  includedTypesKeys: includedTypesKeys,
-                  teamSize: _team.teamSize,
+                  netEffectiveness: state.netEffectiveness!,
+                  defenseThreats: state.defenseThreats!,
+                  offenseCoverage: state.offenseCoverage!,
+                  includedTypesKeys: state.selectedTeam!.cup.includedTypeKeys(),
+                  teamSize: team.teamSize,
                 ),
-                _buildThreats(),
+                _buildThreats(state),
               ],
             ),
           ),
@@ -392,8 +251,8 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
     );
   }
 
-  Widget _buildThreats() {
-    UserPokemon? leadPokemon = _team.getPokemon(0);
+  Widget _buildThreats(TeamsState state) {
+    UserPokemon? leadPokemon = state.selectedTeam!.getPokemon(0);
     return Column(
       children: [
         Padding(
@@ -447,7 +306,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
               ListView.builder(
                 padding: EdgeInsets.zero,
                 shrinkWrap: true,
-                itemCount: _overallThreats.length,
+                itemCount: state.overallThreats!.length,
                 itemBuilder: (context, index) {
                   return MaterialButton(
                     padding: EdgeInsets.zero,
@@ -459,10 +318,13 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
                         bottom: Sizing.screenHeight(context) * .005,
                       ),
                       child: PokemonNode.large(
-                        pokemon: _overallThreats[index],
+                        pokemon: state.overallThreats![index],
                         context: context,
                         footer: _buildPokemonNodeFooter(
-                            context, _overallThreats[index]),
+                          state.selectedTeam!,
+                          context,
+                          state.overallThreats![index],
+                        ),
                       ),
                     ),
                   );
@@ -479,7 +341,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
                   : ListView.builder(
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,
-                      itemCount: _leadThreats.length,
+                      itemCount: state.leadThreats!.length,
                       itemBuilder: (context, index) {
                         return MaterialButton(
                           padding: EdgeInsets.zero,
@@ -491,10 +353,13 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
                               bottom: Sizing.screenHeight(context) * .005,
                             ),
                             child: PokemonNode.large(
-                              pokemon: _leadThreats[index],
+                              pokemon: state.leadThreats![index],
                               context: context,
                               footer: _buildPokemonNodeFooter(
-                                  context, _leadThreats[index]),
+                                state.selectedTeam!,
+                                context,
+                                state.leadThreats![index],
+                              ),
                             ),
                           ),
                         );
@@ -508,7 +373,11 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
     );
   }
 
-  Widget _buildPokemonNodeFooter(BuildContext context, CupPokemon pokemon) {
+  Widget _buildPokemonNodeFooter(
+    PokemonTeam team,
+    BuildContext context,
+    CupPokemon pokemon,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -520,7 +389,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
               Icons.move_up,
               color: Colors.white,
             ),
-            onPressed: _onSwap,
+            onPressed: (pokemon) => _onSwap(team, pokemon),
           ),
         ),
         Sizing.paneSpacer,
@@ -532,7 +401,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
               Icons.block,
               color: Colors.white,
             ),
-            onPressed: _onCounters,
+            onPressed: (pokemon) => _onCounters(team, pokemon),
           ),
         ),
       ],
@@ -556,52 +425,39 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
 
   @override
   Widget build(BuildContext context) {
-    _team = context.read<PogoRepository>().getUserTeam(_team.id);
-
-    if (_generateRankings) {
-      _generateRankings = false;
-
-      return Scaffold(
-        appBar: _buildAppBar(),
-        body: FutureBuilder(
-          future: _generateTeamRankings(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10.0),
-                      child: SizedBox(
-                        width: Sizing.screenWidth(context) * .07,
-                        height: Sizing.screenWidth(context) * .07,
-                        child: const CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.cyan),
-                          semanticsLabel: 'Pogo Teams Loading Indicator',
-                          backgroundColor: Colors.transparent,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      'Analyzing Team & Simulating Battles',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            return _buildScaffoldBody();
-          },
-        ),
-      );
-    }
-
     return Scaffold(
       appBar: _buildAppBar(),
-      body: _buildScaffoldBody(),
+      body: BlocBuilder<TeamsBloc, TeamsState>(
+        builder: (context, state) {
+          if (state.analysisAsyncState.status.isInProgress) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: SizedBox(
+                      width: Sizing.screenWidth(context) * .07,
+                      height: Sizing.screenWidth(context) * .07,
+                      child: const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+                        semanticsLabel: 'Pogo Teams Loading Indicator',
+                        backgroundColor: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'Analyzing Team & Simulating Battles',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return _buildScaffoldBody(state);
+        },
+      ),
     );
   }
 }

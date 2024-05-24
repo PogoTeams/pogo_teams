@@ -127,14 +127,13 @@ class _TagsState extends State<Tags> {
           onPressed: _onEditTag,
           width: Sizing.screenWidth(context) * .85,
           height: Sizing.screenHeight(context) * .085,
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Add Tag  ',
-                style: Theme.of(context).textTheme.titleLarge,
               ),
-              const Icon(
+              Icon(
                 Icons.add,
               ),
             ],

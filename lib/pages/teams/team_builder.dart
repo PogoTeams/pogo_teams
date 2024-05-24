@@ -46,10 +46,13 @@ class TeamBuilder extends StatelessWidget {
           child: BlocBuilder<TeamsBloc, TeamsState>(
             builder: (context, state) {
               return Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   if (!isExpanded) _TeamNode(),
                   Sizing.listItemSpacer,
-                  const PokemonList(dropdowns: true),
+                  const Expanded(
+                    child: PokemonList(dropdowns: true),
+                  ),
                 ],
               );
             },
@@ -80,6 +83,7 @@ class _TeamNode extends StatelessWidget {
     return BlocBuilder<TeamsBloc, TeamsState>(
       builder: (context, state) {
         return TeamNode(
+          focusIndex: state.builderIndex,
           onEmptyPressed: (nodeIndex) => context.read<TeamsBloc>().add(
                 TeamBuilderIndexChanged(
                   builderIndex: nodeIndex,

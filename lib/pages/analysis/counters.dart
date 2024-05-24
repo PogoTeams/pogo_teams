@@ -27,7 +27,7 @@ class PokemonCountersList extends StatefulWidget {
     required this.counters,
   });
 
-  final UserPokemonTeam team;
+  final PokemonTeam team;
   final Pokemon pokemon;
   final List<CupPokemon> counters;
 
@@ -36,7 +36,7 @@ class PokemonCountersList extends StatefulWidget {
 }
 
 class _PokemonCountersListState extends State<PokemonCountersList> {
-  late UserPokemonTeam _team = widget.team;
+  late PokemonTeam _team = widget.team;
 
   void _onSwap(Pokemon swapPokemon) async {
     await Navigator.push(

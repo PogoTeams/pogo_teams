@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pogo_teams/modules/pogo_repository.dart';
+import 'package:pogo_teams/pages/teams/bloc/teams_bloc.dart';
 import 'package:pogo_teams/widgets/buttons/rankings_category_button.dart';
 import 'package:pogo_teams/widgets/pogo_text_field.dart';
 import 'package:pogo_teams/widgets/pokemon_list/bloc/pokemon_list_bloc.dart';
@@ -62,6 +63,7 @@ class _PokemonListView extends StatelessWidget {
         if (state.filteredPokemon == null) return Container();
         return Column(
           children: [
+            Sizing.listItemSpacer,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -130,7 +132,11 @@ class _PokemonListView extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return MaterialButton(
                         padding: EdgeInsets.zero,
-                        onPressed: () {},
+                        onPressed: () => context.read<TeamsBloc>().add(
+                              PokemonAddedToTeam(
+                                pokemon: state.filteredPokemon![index],
+                              ),
+                            ),
                         onLongPress: () {},
                         child: Padding(
                           padding: EdgeInsets.only(

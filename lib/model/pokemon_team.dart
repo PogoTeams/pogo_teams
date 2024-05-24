@@ -22,13 +22,13 @@ class PokemonTeam {
 
   DateTime? dateCreated;
   bool locked = false;
-  int teamSize = 3;
+  int get teamSize => pokemonTeam.length;
 
   // The selected PVP cup for this team
   Cup cup;
 
   // The list of pokemon managed by this team
-  List<UserPokemon> pokemonTeam = List<UserPokemon>.empty(growable: true);
+  List<UserPokemon?> pokemonTeam = List<UserPokemon?>.filled(3, null);
 
   Tag? tag;
 
@@ -42,115 +42,78 @@ class PokemonTeam {
 
   // A list of this pokemon team's net effectiveness
   List<double> getTeamTypeffectiveness() {
-    return PokemonTypes.getNetEffectiveness(getOrderedPokemonList());
+    return PokemonTypes.getNetEffectiveness(getNonNullPokemonList());
   }
 
-  List<UserPokemon> getPokemonTeam() {
-    return pokemonTeam;
-  }
-
-  Future<List<UserPokemon>> getPokemonTeamAsync() async {
-    return pokemonTeam;
-  }
-
-  List<UserPokemon> getOrderedPokemonList() {
-    List<UserPokemon> orderedPokemonList = getPokemonTeam().toList();
-    orderedPokemonList
-        .sort((p1, p2) => (p1.teamIndex ?? 0) - (p2.teamIndex ?? 0));
-
-    return orderedPokemonList;
-  }
-
-  Future<List<UserPokemon>> getOrderedPokemonListAsync() async {
-    List<UserPokemon> orderedPokemonList =
-        (await getPokemonTeamAsync()).toList();
-    orderedPokemonList
-        .sort((p1, p2) => (p1.teamIndex ?? 0) - (p2.teamIndex ?? 0));
-
-    return orderedPokemonList;
-  }
-
-  List<UserPokemon?> getOrderedPokemonListFilled() {
-    List<UserPokemon?> orderedPokemonList = List.filled(teamSize, null);
-
-    for (int i = 0; i < teamSize; ++i) {
-      orderedPokemonList[i] = getPokemon(i);
-    }
-
-    return orderedPokemonList;
-  }
-
-  Cup getCup() {
-    return cup;
-  }
-
-  Future<Cup> getCupAsync() async {
-    return cup;
+  List<UserPokemon> getNonNullPokemonList() {
+    return pokemonTeam.whereType<UserPokemon>().toList();
   }
 
   Future<void> saveSync() async {
-    //await getPokemonTeam().save();
+    //await pokemonTeam.save();
     //if (cup.value != null) await cup.save();
   }
 
   // Switch to a different cup with the specified cupTitle
   void setCup(Cup newCup) {
     cup = newCup;
-    for (UserPokemon pokemon in getPokemonTeam()) {
-      pokemon.initializeStats(getCup().cp);
+    for (UserPokemon? pokemon in pokemonTeam) {
+      if (pokemon != null) {
+        pokemon.initializeStats(cup.cp);
+      }
     }
   }
 
   UserPokemon? getPokemon(int index) {
-    for (var pokemon in getPokemonTeam()) {
-      if (pokemon.teamIndex == index) return pokemon;
-    }
-    return null;
+    if (index < 0 || index > pokemonTeam.length) return null;
+    return pokemonTeam[index];
   }
 
   void removePokemon(int index) {
-    getPokemonTeam().removeWhere((p) => p.teamIndex == index);
+    if (index < 0 || index > pokemonTeam.length) return;
+    pokemonTeam[index] = null;
   }
 
   // Add newPokemon if there is free space in the team
   bool tryAddPokemon(UserPokemon newPokemon) {
-    final List<UserPokemon> pokemonList = getOrderedPokemonList();
-    bool added = false;
-    for (int i = 0; i < teamSize && !added; ++i) {
-      if (pokemonList.indexWhere((pokemon) => pokemon.teamIndex == i) == -1) {
+    for (int i = 0; i < teamSize; ++i) {
+      if (pokemonTeam[i] == null) {
         newPokemon.teamIndex = i;
-        pokemonTeam.add(newPokemon);
-        added = true;
+        pokemonTeam[i] = newPokemon;
+        return true;
       }
     }
 
-    return added;
+    return false;
   }
 
   void setPokemonAt(int index, UserPokemon newPokemon) {
-    removePokemon(index);
+    if (index < 0 || index > teamSize) return;
     newPokemon.teamIndex = index;
-    getPokemonTeam().add(newPokemon);
+    pokemonTeam[index] = newPokemon;
   }
 
   void setTeamSize(int newSize) {
     if (teamSize == newSize) return;
 
-    getPokemonTeam().where((UserPokemon pokemon) =>
-        pokemon.teamIndex == null || pokemon.teamIndex! >= newSize);
-    teamSize = newSize;
+    List<UserPokemon?> newTeam = List.filled(newSize, null);
+    for (int i = 0; i < newSize; ++i) {
+      newTeam[i] = pokemonTeam[i];
+    }
+
+    pokemonTeam = newTeam;
   }
 
   // True if there are no Pokemon on the team
-  bool isEmpty() => getPokemonTeam().isEmpty;
+  bool isEmpty() => getNonNullPokemonList().isEmpty;
 
   // True if one of the team refs is null
   bool hasSpace() {
-    return teamSize > getOrderedPokemonList().length;
+    return teamSize > getNonNullPokemonList().length;
   }
 
   // The size of the Pokemon team (1 - 3)
-  int getSize() => getPokemonTeam().length;
+  int getSize() => getNonNullPokemonList().length;
 
   // Toggle a lock on this team
   // When a team is locked, the team cannot be changed or removed
@@ -160,7 +123,10 @@ class PokemonTeam {
 
   // Build and return a json serializable list of the Pokemon Team
   List<Map<String, dynamic>> _pokemonTeamToJson() {
-    return getPokemonTeam().map((pokemon) => pokemon.toJson()).toList();
+    return pokemonTeam
+        .whereType<UserPokemon>()
+        .map((pokemon) => pokemon.toJson())
+        .toList();
   }
 
   static List<UserPokemon> _pokemonTeamFromJson(
@@ -192,7 +158,7 @@ class UserPokemonTeam extends PokemonTeam {
           ..id = json['id'] as int
           ..dateCreated = DateTime.tryParse(json['dateCreated'] ?? '')
           ..locked = json['locked'] as bool
-          ..teamSize = json['teamSize'] as int
+          ..setTeamSize(json['teamSize'] as int)
           ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(
             List<Map<String, dynamic>>.from(json['pokemonTeam']),
             pogoRepository,
@@ -217,7 +183,7 @@ class UserPokemonTeam extends PokemonTeam {
       'dateCreated': dateCreated.toString(),
       'locked': locked,
       'teamSize': teamSize,
-      'cup': getCup().cupId,
+      'cup': cup.cupId,
       'pokemonTeam': _pokemonTeamToJson(),
       'opponents': _opponentsToJson(),
     };
@@ -274,7 +240,7 @@ class OpponentPokemonTeam extends PokemonTeam {
       ..id = json['id'] as int
       ..dateCreated = DateTime.tryParse(json['dateCreated'] ?? '')
       ..locked = json['locked'] as bool
-      ..teamSize = json['teamSize'] as int
+      ..setTeamSize(json['teamSize'] as int)
       ..battleOutcome = _fromOutcomeName(json['battleOutcome'])
       ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(
         json['pokemonTeam'],
@@ -304,7 +270,7 @@ class OpponentPokemonTeam extends PokemonTeam {
       'locked': locked,
       'teamSize': teamSize,
       'battleOutcome': battleOutcome.name,
-      'cup': getCup().cupId,
+      'cup': cup.cupId,
       'pokemonTeam': _pokemonTeamToJson(),
     };
 
