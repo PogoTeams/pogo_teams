@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
-import '../../widgets/pokemon_list/pokemon_list.dart';
+import '../../widgets/pokemon_list.dart';
 import '../../widgets/nodes/pokemon_node.dart';
 import '../../model/pokemon.dart';
 import '../../model/pokemon_typing.dart';

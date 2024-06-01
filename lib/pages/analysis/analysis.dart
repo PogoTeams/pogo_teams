@@ -25,19 +25,22 @@ team(s). This widget is used to branch unique analysis pages for a :
 -------------------------------------------------------------------------------
 */
 
-class Analysis extends StatelessWidget {
+class Analysis extends StatefulWidget {
   const Analysis({
     super.key,
+    required this.team,
+    this.opponentTeam,
+    this.opponentTeams,
   });
 
+  final UserPokemonTeam team;
+  final OpponentPokemonTeam? opponentTeam;
+  final List<OpponentPokemonTeam>? opponentTeams;
+
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
+  State<Analysis> createState() => _AnalysisState();
 }
 
-/*
 class _AnalysisState extends State<Analysis> {
   late UserPokemonTeam _team = widget.team;
 
@@ -244,4 +247,3 @@ class _AnalysisState extends State<Analysis> {
     );
   }
 }
-*/

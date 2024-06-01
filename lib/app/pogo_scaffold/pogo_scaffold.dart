@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pogo_teams/app/pogo_data_sync.dart';
 
 // Local Imports
-import '../app_views/app_views.dart';
+import '../views/app_views.dart';
 import '../ui/sizing.dart';
 import '../../widgets/navigation/pogo_drawer.dart';
 import '../../modules/pogo_repository.dart';
@@ -27,8 +27,8 @@ class PogoScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PogoScaffoldBloc>(
-      create: (_) => PogoScaffoldBloc(),
+    return BlocProvider(
+      create: (_) => AppBloc(pogoRepository: context.read<PogoRepository>()),
       child: const PogoScaffoldView(),
     );
   }
@@ -80,12 +80,12 @@ class PogoScaffoldView extends StatelessWidget {
                     ],
                   ),
                 ),
-          drawer: isExpanded ? null : const PogoDrawer(),
+          drawer: isExpanded ? null : PogoDrawer(),
           extendBody: true,
           body: Row(
             children: [
               if (isExpanded)
-                const PogoDrawer(
+                PogoDrawer(
                   isModal: false,
                 ),
               Expanded(

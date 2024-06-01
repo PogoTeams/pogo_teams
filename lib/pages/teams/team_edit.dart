@@ -74,7 +74,11 @@ class _TeamEditState extends State<TeamEdit> {
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (BuildContext context) {
-        return const TeamBuilder();
+        return TeamBuilder(
+          team: _builderTeam,
+          cup: _builderTeam.getCup(),
+          focusIndex: nodeIndex,
+        );
       }),
     );
 

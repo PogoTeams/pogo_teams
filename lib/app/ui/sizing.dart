@@ -83,12 +83,8 @@ class Sizing {
   static const double borderWidth = 3.0;
   static const double borderWidthThin = 1.1;
 
-  static double mobileModalDrawerWidth(BuildContext context) =>
+  static double modalDrawerWidth(BuildContext context) =>
       screenWidth(context) * .8;
-
-  static const double expandedModalDrawerWidth = 350.0;
-
-  static const double compactDrawerWidth = 75.0;
 
   /// https://m3.material.io/components/top-app-bar/specs
   static const AppBarSizing smallTopAppBar = AppBarSizing(

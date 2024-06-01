@@ -16,22 +16,27 @@ class PogoTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.onClear,
-    this.onChanged,
     this.label,
   });
 
   final TextEditingController controller;
   final VoidCallback onClear;
   final Widget? label;
-  final Function(String?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: Sizing.formFieldHeight,
       child: TextField(
-        onChanged: onChanged,
         controller: controller,
+
+        // Native toolbar options
+        toolbarOptions: const ToolbarOptions(
+          copy: true,
+          cut: true,
+          paste: true,
+          selectAll: true,
+        ),
 
         // Styling
         keyboardAppearance: Brightness.dark,

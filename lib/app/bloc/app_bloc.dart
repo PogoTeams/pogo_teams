@@ -33,13 +33,17 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
     Box localSettings = await Hive.openBox('pogoSettings');
 
+    // Implicitly invoke an app update via HTTPS
+    if (event.forceUpdate) {
+      await localSettings.put('timestamp', Globals.earliestTimestamp);
+    }
+
     final client = RetryClient(Client());
 
     try {
       // If an update is available
       // make an http request for the new data
-      if (event.forceUpdate ||
-          await _updateAvailable(localSettings, client, pathPrefix)) {
+      if (await _updateAvailable(localSettings, client, pathPrefix)) {
         // Retrieve gamemaster
         String response = await client.read(Uri.https(Globals.pogoBucketDomain,
             '${Globals.pogoDataSourcePath}${pathPrefix}pogo_data_source.json'));
