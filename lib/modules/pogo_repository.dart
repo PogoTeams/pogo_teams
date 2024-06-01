@@ -291,6 +291,7 @@ class PogoRepository {
   }
 
   Future loadUserData() async {
+    return;
     for (var key in _tagsBox.keys) {
       final json =
           Map<String, dynamic>.from(jsonDecode(await _tagsBox.get(key)));
@@ -345,16 +346,16 @@ class PogoRepository {
 
   void deleteUserPokemonTeam(UserPokemonTeam userTeam) {
     for (OpponentPokemonTeam opponentTeam in userTeam.opponents) {
-      deleteOpponentPokemonTeam(opponentTeam);
+      deleteOpponentPokemonTeam(opponentTeam.id);
     }
 
     userPokemonTeams.remove(userTeam.id);
     _userPokemonTeamsBox.delete(userTeam.id);
   }
 
-  void deleteOpponentPokemonTeam(OpponentPokemonTeam opponentPokemonTeam) {
-    opponentPokemonTeams.remove(opponentPokemonTeam.id);
-    _opponentPokemonTeamsBox.delete(opponentPokemonTeam.id);
+  void deleteOpponentPokemonTeam(int id) {
+    opponentPokemonTeams.remove(id);
+    _opponentPokemonTeamsBox.delete(id);
   }
 
   Future<void> clearUserData() async {

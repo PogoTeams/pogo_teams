@@ -40,7 +40,7 @@ class TeamNode extends StatelessWidget {
   final bool collapsible;
 
   bool _pokemonTeamIsEmpty() {
-    for (var pokemon in team.pokemonTeam) {
+    for (var pokemon in team.getOrderedPokemonListFilled()) {
       if (pokemon != null) return false;
     }
     return true;
@@ -135,7 +135,7 @@ class TeamNode extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomRight,
             colors: [
-              PogoColors.getCupColor(team.cup),
+              PogoColors.getCupColor(team.getCup()),
               const Color(0xBF29F19C),
             ],
             tileMode: TileMode.clamp,
@@ -197,7 +197,7 @@ class UserTeamNodeHeader extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 5.0),
                 child: Text(
-                  team.cup.name,
+                  team.getCup().name,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -292,7 +292,7 @@ class UserTeamNodeFooter extends StatelessWidget {
         IconButton(
           onPressed: () => onTag(team),
           icon: const Icon(
-            Icons.tag_rounded,
+            Icons.tag,
             size: Sizing.icon2,
           ),
           tooltip: 'Tag Team',
@@ -303,7 +303,7 @@ class UserTeamNodeFooter extends StatelessWidget {
         IconButton(
           onPressed: () => onLog(team),
           icon: const Icon(
-            Icons.query_stats_rounded,
+            Icons.query_stats,
             size: Sizing.icon2,
           ),
           tooltip: 'Log Team',
@@ -353,7 +353,7 @@ class UserTeamNodeFooter extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Icon(
-                Icons.analytics_rounded,
+                Icons.analytics,
                 size: Sizing.icon2,
               ),
               SizedBox(

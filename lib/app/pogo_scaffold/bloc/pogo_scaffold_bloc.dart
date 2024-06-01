@@ -10,7 +10,7 @@ class PogoScaffoldBloc extends Bloc<PogoScaffoldEvent, PogoScaffoldState> {
       : super(
           const PogoScaffoldState(
             currentView: AppViews.defaultView,
-            drawerIsCompact: true,
+            drawerIsCompact: false,
           ),
         ) {
     on<DestinationSelected>(_onDestinationSelected);

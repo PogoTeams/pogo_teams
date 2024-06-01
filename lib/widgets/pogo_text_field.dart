@@ -52,6 +52,7 @@ class PogoTextField extends StatelessWidget {
               : IconButton(
                   onPressed: onClear,
                   icon: const Icon(Icons.clear),
+                  iconSize: Sizing.screenWidth(context) * .05,
                   color: Colors.white,
                 ),
         ),

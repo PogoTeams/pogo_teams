@@ -52,7 +52,7 @@ class _TeamEditState extends State<TeamEdit> {
     if (newSize == null) return;
 
     setState(() {
-      _builderTeam.setTeamSize(newSize);
+      _builderTeam.teamSize = newSize;
       context.read<PogoRepository>().putPokemonTeam(_builderTeam);
     });
   }
@@ -153,7 +153,7 @@ class _TeamEditState extends State<TeamEdit> {
               context: context,
               onEmptyPressed: () => _onSearchPressed(index),
               onMoveChanged: _onPokemonMoveChanged,
-              cup: _builderTeam.cup,
+              cup: _builderTeam.getCup(),
               footer: _buildNodeFooter(_builderTeam.getPokemon(index), index),
               padding: EdgeInsets.only(
                 top: Sizing.screenHeight(context) * .007,
@@ -183,7 +183,7 @@ class _TeamEditState extends State<TeamEdit> {
             left: Sizing.screenWidth(context) * .02,
             right: Sizing.screenWidth(context) * .02,
           ),
-          child: _buildHeaderDropdowns(_builderTeam.cup),
+          child: _buildHeaderDropdowns(_builderTeam.getCup()),
         ),
         _buildPokemonNodes(),
         MaterialButton(

@@ -339,7 +339,7 @@ class _BattleLogState extends State<BattleLog> {
       MaterialPageRoute(builder: (BuildContext context) {
         return TeamBuilder(
           team: opponent,
-          cup: opponent.cup,
+          cup: opponent.getCup(),
           focusIndex: 0,
         );
       }),
@@ -350,7 +350,7 @@ class _BattleLogState extends State<BattleLog> {
 
   // Add a new empty team
   void _onAddTeam() async {
-    OpponentPokemonTeam? opponent = OpponentPokemonTeam(cup: _team.cup)
+    OpponentPokemonTeam? opponent = OpponentPokemonTeam(cup: _team.getCup())
       ..dateCreated = DateTime.now().toUtc()
       ..tag = _team.getTag();
     context.read<PogoRepository>().putPokemonTeam(opponent);
@@ -360,7 +360,7 @@ class _BattleLogState extends State<BattleLog> {
       MaterialPageRoute<OpponentPokemonTeam>(builder: (BuildContext context) {
         return TeamBuilder(
           team: opponent!,
-          cup: _team.cup,
+          cup: _team.getCup(),
           focusIndex: 0,
         );
       }),
@@ -383,7 +383,7 @@ class _BattleLogState extends State<BattleLog> {
       MaterialPageRoute(builder: (BuildContext context) {
         return TeamBuilder(
           team: opponent,
-          cup: opponent.cup,
+          cup: opponent.getCup(),
           focusIndex: nodeIndex,
         );
       }),

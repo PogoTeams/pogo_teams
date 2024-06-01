@@ -55,7 +55,7 @@ class LogsAnalysis extends StatelessWidget {
     final counterTypes = defenseThreats.map((typeData) => typeData.a).toList();
 
     List<CupPokemon> counters = context.read<PogoRepository>().getCupPokemon(
-          team.cup,
+          team.getCup(),
           counterTypes,
           RankingsCategories.overall,
           limit: 50,

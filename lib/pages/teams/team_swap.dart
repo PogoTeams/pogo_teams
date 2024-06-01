@@ -1,7 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pogo_teams/pages/teams/bloc/teams_bloc.dart';
 
 // Local Imports
 import '../../app/ui/sizing.dart';
@@ -59,7 +58,7 @@ class _TeamSwapState extends State<TeamSwap> {
   Widget _buildFloatingActionButton() {
     return GradientButton(
       onPressed: () {
-        context.read<TeamsBloc>().add(TeamChanged(team: widget.team));
+        _saveTeam();
         Navigator.pop(context);
       },
       width: Sizing.screenWidth(context) * .85,
@@ -69,6 +68,12 @@ class _TeamSwapState extends State<TeamSwap> {
         size: Sizing.icon2,
       ),
     );
+  }
+
+  void _saveTeam() {
+    context.read<PogoRepository>().putPokemonTeam(
+          widget.team,
+        );
   }
 
   Widget _buildPokemonNode(int index) {
@@ -82,7 +87,7 @@ class _TeamSwapState extends State<TeamSwap> {
   @override
   void initState() {
     super.initState();
-    _pokemonTeam = widget.team.getNonNullPokemonList();
+    _pokemonTeam = widget.team.getOrderedPokemonList();
     _swap = widget.swap;
   }
 

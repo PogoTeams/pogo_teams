@@ -39,9 +39,10 @@ class EmptyNode extends StatelessWidget {
         // Evaluate button transparency
         child: emptyTransparent
             ? Container()
-            : const Icon(
+            : Icon(
                 Icons.add,
                 color: Colors.white54,
+                size: Sizing.screenWidth(context) * .15,
               ),
       ),
     );
