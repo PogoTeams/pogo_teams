@@ -95,9 +95,6 @@ class PogoRepository {
       if (await _updateAvailable(localSettings, client, pathPrefix)) {
         message = '${loadMessagePrefix}Syncing Pogo Data...';
 
-        Stopwatch stopwatch = Stopwatch();
-        stopwatch.start();
-
         // Retrieve gamemaster
         String response = await client.read(Uri.https(Globals.pogoBucketDomain,
             '${Globals.pogoDataSourcePath}${pathPrefix}pogo_data_source.json'));
@@ -107,17 +104,8 @@ class PogoRepository {
         final Map<String, dynamic> pogoDataSourceJson =
             Map<String, dynamic>.from(jsonDecode(response));
 
-        stopwatch.stop();
-        if (stopwatch.elapsed.inSeconds < 1) {
-          await Future.delayed(
-              Duration(seconds: 1 - stopwatch.elapsed.inSeconds));
-        }
-
         yield Pair(a: message, b: .6);
         message = '${loadMessagePrefix}Syncing Rankings...';
-
-        stopwatch.reset();
-        stopwatch.start();
 
         await downloadRankings(
           client,
@@ -125,27 +113,11 @@ class PogoRepository {
           List<Map<String, dynamic>>.from(pogoDataSourceJson['cups']),
         );
 
-        stopwatch.stop();
-        if (stopwatch.elapsed.inSeconds < Globals.minLoadDisplaySeconds) {
-          await Future.delayed(Duration(
-              seconds:
-                  Globals.minLoadDisplaySeconds - stopwatch.elapsed.inSeconds));
-        }
-
-        stopwatch.reset();
-        stopwatch.start();
-
         yield Pair(a: message, b: .7);
 
         message = '${loadMessagePrefix}Syncing Local Data...';
         await rebuildFromJson(pogoDataSourceJson);
         await loadUserData();
-
-        if (stopwatch.elapsed.inSeconds < Globals.minLoadDisplaySeconds) {
-          await Future.delayed(Duration(
-              seconds:
-                  Globals.minLoadDisplaySeconds - stopwatch.elapsed.inSeconds));
-        }
 
         yield Pair(a: message, b: .9);
       }

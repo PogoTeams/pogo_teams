@@ -3,8 +3,10 @@ import 'dart:ui';
 import 'dart:convert';
 
 // flutter
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_web/web_only.dart';
 
 // packages
 import 'package:sign_in_button/sign_in_button.dart';
@@ -83,6 +85,10 @@ class _DriveBackupState extends State<DriveBackup> {
   @override
   void initState() {
     _syncBackup = _SyncButton(onPressed: _onSyncBackup);
+    GoogleDriveRepository.googleSignIn.onCurrentUserChanged.listen((user) {
+      print(user?.email ?? 'null');
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -155,11 +161,17 @@ class _DriveBackupState extends State<DriveBackup> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SignInButton(
-                    Buttons.google,
-                    text: 'Sign in with Google',
-                    onPressed: _signIn,
-                  ),
+                  kIsWeb
+                      ? renderButton(
+                          configuration: GSIButtonConfiguration(
+                            type: GSIButtonType.standard,
+                          ),
+                        )
+                      : SignInButton(
+                          Buttons.google,
+                          text: 'Sign in with Google',
+                          onPressed: _signIn,
+                        ),
                   Text(
                     '*Backup your data via Google Drive',
                     style: Theme.of(context).textTheme.bodySmall?.apply(
