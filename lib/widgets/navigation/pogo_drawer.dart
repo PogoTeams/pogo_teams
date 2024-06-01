@@ -23,11 +23,15 @@ class PogoDrawer extends StatelessWidget {
     required this.onDestinationSelected,
     required this.currentPage,
     this.isModal = true,
+    this.onToggleCollapse,
+    this.isCollapsed = false,
   });
 
   final Function(AppViews) onDestinationSelected;
   final AppViews currentPage;
   final bool isModal;
+  final Function()? onToggleCollapse;
+  final bool isCollapsed;
 
   void _launchGitHubUrl() async => await launchUrl(Uri.https(
         'github.com',
@@ -60,8 +64,17 @@ class PogoDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double? width;
+    if (isModal) {
+      width = Sizing.modalDrawerWidth(context);
+    } else if (isCollapsed) {
+      width = Sizing.collapsedDrawerWidth;
+    } else {
+      width = null;
+    }
+
     return Drawer(
-      width: isModal ? Sizing.modalDrawerWidth(context) : null,
+      width: width,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
@@ -78,7 +91,22 @@ class PogoDrawer extends StatelessWidget {
                     right: false,
                     child: Column(
                       children: [
-                        const DriveBackup(),
+                        if (!isModal)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: RotatedBox(
+                              quarterTurns: isCollapsed ? 0 : 1,
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.menu,
+                                ),
+                                onPressed: onToggleCollapse,
+                              ),
+                            ),
+                          ),
+                        DriveBackup(
+                          isCollapsed: isCollapsed,
+                        ),
                         Expanded(
                           child: Column(
                             children: [
@@ -91,9 +119,10 @@ class PogoDrawer extends StatelessWidget {
                                 title: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      '${AppViews.teams.displayName}  ',
-                                    ),
+                                    if (!isCollapsed)
+                                      Text(
+                                        '${AppViews.teams.displayName}  ',
+                                      ),
                                     Icon(
                                       AppViews.teams.icon,
                                     ),
@@ -115,9 +144,10 @@ class PogoDrawer extends StatelessWidget {
                                 title: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      '${AppViews.tags.displayName}  ',
-                                    ),
+                                    if (!isCollapsed)
+                                      Text(
+                                        '${AppViews.tags.displayName}  ',
+                                      ),
                                     Icon(
                                       AppViews.tags.icon,
                                     ),
@@ -139,9 +169,10 @@ class PogoDrawer extends StatelessWidget {
                                 title: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      '${AppViews.battleLogs.displayName}  ',
-                                    ),
+                                    if (!isCollapsed)
+                                      Text(
+                                        '${AppViews.battleLogs.displayName}  ',
+                                      ),
                                     Icon(
                                       AppViews.battleLogs.icon,
                                     ),
@@ -163,9 +194,10 @@ class PogoDrawer extends StatelessWidget {
                                 title: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      '${AppViews.rankings.displayName}  ',
-                                    ),
+                                    if (!isCollapsed)
+                                      Text(
+                                        '${AppViews.rankings.displayName}  ',
+                                      ),
                                     Icon(
                                       AppViews.rankings.icon,
                                     ),
@@ -188,9 +220,10 @@ class PogoDrawer extends StatelessWidget {
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(
-                                '${AppViews.sync.displayName}  ',
-                              ),
+                              if (!isCollapsed)
+                                Text(
+                                  '${AppViews.sync.displayName}  ',
+                                ),
                               Icon(
                                 AppViews.sync.icon,
                               ),
@@ -211,9 +244,10 @@ class PogoDrawer extends StatelessWidget {
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(
-                                '${AppViews.settings.displayName}  ',
-                              ),
+                              if (!isCollapsed)
+                                Text(
+                                  '${AppViews.settings.displayName}  ',
+                                ),
                               Icon(
                                 AppViews.settings.icon,
                               )
@@ -235,28 +269,32 @@ class PogoDrawer extends StatelessWidget {
                               width: 15.0,
                             ),
                             // GitHub link
-                            SizedBox(
-                              width: Sizing.shortedSide(context) * .1,
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                onPressed: _launchGitHubUrl,
-                                icon: Image.asset(
-                                    'assets/GitHub-Mark-Light-64px.png'),
+                            Align(
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                width: Sizing.minSelectableTarget,
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: _launchGitHubUrl,
+                                  icon: Image.asset(
+                                      'assets/GitHub-Mark-Light-64px.png'),
+                                ),
                               ),
                             ),
 
                             Sizing.paneSpacer,
 
                             // Version
-                            Text(
-                              Globals.version,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                            ),
+                            if (!isCollapsed)
+                              Text(
+                                Globals.version,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                              ),
                           ],
                         ),
                         Sizing.lineItemSpacer,

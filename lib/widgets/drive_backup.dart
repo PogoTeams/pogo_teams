@@ -21,7 +21,12 @@ import '../modules/google_drive_repository.dart';
 import '../pages/drive_backups.dart';
 
 class DriveBackup extends StatefulWidget {
-  const DriveBackup({super.key});
+  const DriveBackup({
+    super.key,
+    required this.isCollapsed,
+  });
+
+  final bool isCollapsed;
 
   @override
   State<DriveBackup> createState() => _DriveBackupState();
@@ -164,7 +169,9 @@ class _DriveBackupState extends State<DriveBackup> {
                   kIsWeb
                       ? renderButton(
                           configuration: GSIButtonConfiguration(
-                            type: GSIButtonType.standard,
+                            type: widget.isCollapsed
+                                ? GSIButtonType.icon
+                                : GSIButtonType.standard,
                           ),
                         )
                       : SignInButton(
@@ -172,12 +179,13 @@ class _DriveBackupState extends State<DriveBackup> {
                           text: 'Sign in with Google',
                           onPressed: _signIn,
                         ),
-                  Text(
-                    '*Backup your data via Google Drive',
-                    style: Theme.of(context).textTheme.bodySmall?.apply(
-                          fontStyle: FontStyle.italic,
-                        ),
-                  ),
+                  if (!widget.isCollapsed)
+                    Text(
+                      '*Backup your data via Google Drive',
+                      style: Theme.of(context).textTheme.bodySmall?.apply(
+                            fontStyle: FontStyle.italic,
+                          ),
+                    ),
                 ],
               ),
             ),

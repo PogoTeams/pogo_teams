@@ -135,8 +135,6 @@ class PogoRepository {
     }
 
     yield Pair(a: message, b: 1.0);
-    await Future.delayed(
-        const Duration(seconds: Globals.minLoadDisplaySeconds));
   }
 
   static Future<bool> _updateAvailable(

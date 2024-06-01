@@ -85,6 +85,7 @@ class Sizing {
 
   static double modalDrawerWidth(BuildContext context) =>
       screenWidth(context) * .8;
+  static const double collapsedDrawerWidth = 90.0;
 
   /// https://m3.material.io/components/top-app-bar/specs
   static const AppBarSizing smallTopAppBar = AppBarSizing(
@@ -241,7 +242,7 @@ class Sizing {
 
 // utils --------------------------------------------------------------------
   static Size screenSize(BuildContext context) => MediaQuery.of(context).size;
-  static double shortedSide(BuildContext context) =>
+  static double shortestSide(BuildContext context) =>
       screenSize(context).shortestSide;
   static double screenWidth(BuildContext context) => screenSize(context).width;
 

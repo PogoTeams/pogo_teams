@@ -30,6 +30,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
   late final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   AppViews currentPage = AppViews.defaultPage;
+  bool? drawerCollapsed;
 
   void _onDestinationSelected(AppViews page) {
     if (page == AppViews.sync) {
@@ -77,6 +78,7 @@ class _PogoScaffoldState extends State<PogoScaffold>
   @override
   Widget build(BuildContext context) {
     final bool isExpanded = Sizing.isExpanded(context);
+    drawerCollapsed ??= isExpanded;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -95,6 +97,12 @@ class _PogoScaffoldState extends State<PogoScaffold>
               onDestinationSelected: _onDestinationSelected,
               currentPage: currentPage,
               isModal: false,
+              onToggleCollapse: () {
+                setState(() {
+                  drawerCollapsed = !drawerCollapsed!;
+                });
+              },
+              isCollapsed: drawerCollapsed!,
             ),
           Expanded(
             child: Padding(
