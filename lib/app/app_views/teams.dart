@@ -202,16 +202,12 @@ class _TeamsListView extends StatelessWidget {
 
                     if (!isExpanded) _pushDetailView(context);
                   },
-                  onAnalyze: (_) {
-                    context.read<TeamsBloc>().add(
-                          TeamDetailViewChanged(
-                            teamDetailView: TeamDetailView.analysis,
-                            selectedTeam: team,
-                          ),
-                        );
-
-                    if (!isExpanded) _pushDetailView(context);
-                  },
+                  onAnalyze: (_) => context.read<TeamsBloc>().add(
+                        TeamDetailViewChanged(
+                          teamDetailView: TeamDetailView.analysis,
+                          selectedTeam: team,
+                        ),
+                      ),
                   onLock: (_) {}, //_onLockTeam,
                 ),
               ),

@@ -55,12 +55,9 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
       context,
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return BlocProvider.value(
-            value: context.read<TeamsBloc>(),
-            child: TeamSwap(
-              team: team,
-              swap: UserPokemon.fromPokemon(swapPokemon),
-            ),
+          return TeamSwap(
+            team: team,
+            swap: UserPokemon.fromPokemon(swapPokemon),
           );
         },
       ),
@@ -185,29 +182,28 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
             });
           },
           children: [
-            if (!Sizing.isExpanded(context))
-              ExpansionPanel(
-                headerBuilder: (BuildContext context, bool isExpanded) {
-                  return Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
-                      child: Text(
-                        'Team',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
+            ExpansionPanel(
+              headerBuilder: (BuildContext context, bool isExpanded) {
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12.0),
+                    child: Text(
+                      'Team',
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
-                  );
-                },
-                body: Padding(
-                  padding: EdgeInsets.only(
-                    left: Sizing.screenWidth(context) * .02,
-                    right: Sizing.screenWidth(context) * .02,
                   ),
-                  child: _buildPokemonNodes(team),
+                );
+              },
+              body: Padding(
+                padding: EdgeInsets.only(
+                  left: Sizing.screenWidth(context) * .02,
+                  right: Sizing.screenWidth(context) * .02,
                 ),
-                isExpanded: _teamExpanded,
+                child: _buildPokemonNodes(team),
               ),
+              isExpanded: _teamExpanded,
+            ),
           ],
         ),
         Padding(
@@ -430,7 +426,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Sizing.isExpanded(context) ? null : _buildAppBar(),
+      appBar: _buildAppBar(),
       body: BlocBuilder<TeamsBloc, TeamsState>(
         builder: (context, state) {
           if (state.analysisAsyncState.status.isInProgress) {

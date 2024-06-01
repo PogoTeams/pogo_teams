@@ -67,10 +67,6 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamsState> {
 
   Future _onTeamDetailViewChanged(
       TeamDetailViewChanged event, Emitter<TeamsState> emit) async {
-    if (event.teamDetailView == TeamDetailView.analysis) {
-      add(TeamAnalyzed(team: event.selectedTeam));
-    }
-
     emit(
       state.copyWith(
         teamDetailView: event.teamDetailView,
@@ -207,36 +203,8 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamsState> {
       analysisAsyncState: AsyncState.init,
     ));
 
-    final List<Pair<PokemonType, double>> defenseThreats = [];
-    final List<Pair<PokemonType, double>> offenseCoverage = [];
-    final List<Pair<PokemonType, double>> netEffectiveness = [];
-    final Map<int, RankingData> teamRankingData = {};
-    final List<CupPokemon> leadThreats = [];
-    final List<CupPokemon> overallThreats = [];
-
-    _calculateSingleCoverage(
-      event.team,
-      defenseThreats,
-      offenseCoverage,
-      netEffectiveness,
-    );
-
-    _generateTeamRankings(
-      event.team,
-      teamRankingData,
-      leadThreats,
-      overallThreats,
-    );
-
-    emit(state.copyWith(
-      analysisAsyncState: AsyncState.success(),
-      defenseThreats: defenseThreats,
-      offenseCoverage: offenseCoverage,
-      netEffectiveness: netEffectiveness,
-      teamRankingData: teamRankingData,
-      leadThreats: leadThreats,
-      overallThreats: overallThreats,
-    ));
+    _calculateSingleCoverage(event.team, emit);
+    _generateTeamRankings(event.team, emit);
   }
 
   void _onOpponentTeamLogged(
@@ -276,9 +244,7 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamsState> {
 
   void _calculateSingleCoverage(
     PokemonTeam team,
-    List<Pair<PokemonType, double>> defenseThreats,
-    List<Pair<PokemonType, double>> offenseCoverage,
-    List<Pair<PokemonType, double>> netEffectiveness,
+    Emitter<TeamsState> emit,
   ) {
     final List<UserPokemon> pokemonTeam = team.getNonNullPokemonList();
     final List<double> effectiveness = team.getTeamTypeffectiveness();
@@ -292,12 +258,10 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamsState> {
         PokemonTypes.getOffenseCoverage(pokemonTeam, includedTypesKeys);
 
     // Get an overall effectiveness for the bar graph display
-    netEffectiveness.addAll(
-      PokemonTypes.getMovesWeightedEffectiveness(
-        defense,
-        offense,
-        includedTypesKeys,
-      ),
+    final netEffectiveness = PokemonTypes.getMovesWeightedEffectiveness(
+      defense,
+      offense,
+      includedTypesKeys,
     );
 
     if (team.teamSize > 3) {
@@ -325,10 +289,11 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamsState> {
     }
 
     // Filter to the key values
-    defenseThreats.addAll(defense.where((pair) => pair.b > pokemonTeam.length));
+    final defenseThreats =
+        defense.where((pair) => pair.b > pokemonTeam.length).toList();
 
-    offenseCoverage
-        .addAll(offense.where((pair) => pair.b > pokemonTeam.length));
+    final offenseCoverage =
+        offense.where((pair) => pair.b > pokemonTeam.length).toList();
 
     // Remove any threats that are covered offensively
     for (var offCoverage in offenseCoverage) {
@@ -347,6 +312,12 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamsState> {
     final double teamLength = pokemonTeam.length * PokemonTypes.notEffective;
     void scaleEffectiveness(typeData) => typeData.b *= teamLength;
     netEffectiveness.forEach(scaleEffectiveness);
+
+    emit(state.copyWith(
+      defenseThreats: defenseThreats,
+      offenseCoverage: offenseCoverage,
+      netEffectiveness: netEffectiveness,
+    ));
   }
 
   // For the logged opponent teams, calculate the net coverage
@@ -422,10 +393,12 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamsState> {
 
   Future _generateTeamRankings(
     PokemonTeam team,
-    Map<int, RankingData> teamRankingData,
-    List<CupPokemon> leadThreats,
-    List<CupPokemon> overallThreats,
+    Emitter<TeamsState> emit,
   ) async {
+    final Map<int, RankingData> teamRankingData = {};
+    final List<CupPokemon> leadThreats = [];
+    final List<CupPokemon> overallThreats = [];
+
     List<CupPokemon> opponents = pogoRepository.getCupPokemon(
       state.selectedTeam!.cup,
       PokemonTypes.typeList,
@@ -524,5 +497,11 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamsState> {
         ));
       }
     }
+
+    emit(state.copyWith(
+      teamRankingData: teamRankingData,
+      leadThreats: leadThreats,
+      overallThreats: overallThreats,
+    ));
   }
 }
