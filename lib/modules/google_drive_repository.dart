@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Packages
+import 'package:flutter/foundation.dart';
 import 'package:googleapis/drive/v3.dart' as drive_api;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
@@ -18,6 +19,8 @@ class GoogleDriveRepository {
   static GoogleSignInAccount? account;
   static bool get isSignedIn => account != null;
 
+  static late final GoogleSignIn googleSignIn;
+
   static drive_api.File? _linkedBackupFile;
   static drive_api.File? get linkedBackupFile {
     return _linkedBackupFile;
@@ -32,7 +35,18 @@ class GoogleDriveRepository {
 
   static Future<void> init() async {
     _cache = await Hive.openBox('googleDriveRepositoryCache');
+    googleSignIn =
+        GoogleSignIn.standard(scopes: [drive_api.DriveApi.driveFileScope]);
+
+    if (kIsWeb) {
+      googleSignIn.onCurrentUserChanged.listen(_onCurrentUserChanged);
+    }
+
     await trySignInSilently();
+  }
+
+  static void _onCurrentUserChanged(GoogleSignInAccount? newAccount) {
+    account = newAccount;
   }
 
   static Future<void> tryLoadLinkedBackupFile() async {
@@ -58,8 +72,8 @@ class GoogleDriveRepository {
   }
 
   static Future<bool> trySignInSilently() async {
-    final googleSignIn =
-        GoogleSignIn.standard(scopes: [drive_api.DriveApi.driveFileScope]);
+    if (kIsWeb) return false;
+
     account = await googleSignIn.signInSilently();
 
     if (isSignedIn) {
@@ -70,8 +84,6 @@ class GoogleDriveRepository {
   }
 
   static Future<bool> signIn() async {
-    final googleSignIn =
-        GoogleSignIn.standard(scopes: [drive_api.DriveApi.driveFileScope]);
     account = await googleSignIn.signIn();
 
     if (isSignedIn) {

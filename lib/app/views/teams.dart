@@ -282,9 +282,6 @@ class _TeamsState extends State<Teams> {
                   FloatingActionButtonLocation.centerFloat,
             ),
           ),
-          if (isExpanded)
-            // TODO: Detail View
-            Flexible(flex: 1, child: Container()),
         ],
       ),
     );

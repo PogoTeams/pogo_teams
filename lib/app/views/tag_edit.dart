@@ -166,7 +166,7 @@ class _TagEditState extends State<TagEdit> {
               ColorPicker(
                 paletteType: PaletteType.hsl,
                 enableAlpha: false,
-                colorPickerWidth: Sizing.screenWidth(context) * .75,
+                //colorPickerWidth: Sizing.screenWidth(context) * .75,
                 pickerAreaBorderRadius: BorderRadius.circular(10),
                 labelTypes: const [],
                 pickerColor: _selectedColor,
