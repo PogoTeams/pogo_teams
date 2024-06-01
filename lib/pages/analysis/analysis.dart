@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pogo_teams/pages/teams/bloc/teams_bloc.dart';
+import 'package:pogo_teams/utils/async_state.dart';
 
 // Local Imports
 import 'user_team_analysis.dart';
@@ -26,7 +27,7 @@ class Analysis extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TeamsBloc, TeamsState>(builder: (context, state) {
-      if (state.selectedTeam == null) {
+      if (state.analysisAsyncState.status.isInProgress) {
         return const Center(
           child: CircularProgressIndicator(),
         );

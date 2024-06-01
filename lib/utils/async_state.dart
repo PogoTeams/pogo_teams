@@ -26,12 +26,13 @@ class AsyncState extends Equatable {
 
   static const AsyncState init = AsyncState();
 
-  AsyncState inProgress() => copyWith(status: AsyncStatus.inProgress);
+  static AsyncState inProgress() =>
+      const AsyncState(status: AsyncStatus.inProgress);
 
-  AsyncState success() => copyWith(status: AsyncStatus.success);
+  static AsyncState success() => const AsyncState(status: AsyncStatus.success);
 
-  AsyncState failure({String? errorMessage}) =>
-      copyWith(status: AsyncStatus.failure, errorMessage: errorMessage);
+  static AsyncState failure({String? errorMessage}) =>
+      AsyncState(status: AsyncStatus.failure, errorMessage: errorMessage);
 
   AsyncState copyWith({
     AsyncStatus? status,
