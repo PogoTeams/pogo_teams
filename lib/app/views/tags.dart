@@ -1,6 +1,5 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../../model/tag.dart';
@@ -29,7 +28,7 @@ class Tags extends StatefulWidget {
 class _TagsState extends State<Tags> {
   Widget _buildTagsListView() {
     return ListView(
-      children: context.read<PogoRepository>().getTags().map((tag) {
+      children: PogoRepository.getTags().map((tag) {
         return ListTile(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -90,8 +89,7 @@ class _TagsState extends State<Tags> {
   }
 
   void _onRemoveTag(Tag tag) async {
-    int affectedTeamsCount =
-        context.read<PogoRepository>().getUserTeams(tag: tag).length;
+    int affectedTeamsCount = PogoRepository.getUserTeams(tag: tag).length;
     if (affectedTeamsCount > 0 &&
         !await getConfirmation(
           context,
@@ -101,7 +99,7 @@ class _TagsState extends State<Tags> {
       return;
     }
     setState(() {
-      context.read<PogoRepository>().deleteTag(tag.name);
+      PogoRepository.deleteTag(tag.name);
     });
   }
 

@@ -4,7 +4,6 @@ import 'dart:convert';
 
 // flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 // packages
@@ -65,7 +64,7 @@ class _DriveBackupState extends State<DriveBackup> {
     });
 
     final Map<String, dynamic> backupJson =
-        await context.read<PogoRepository>().exportUserDataToJson();
+        await PogoRepository.exportUserDataToJson();
     final String backupJsonEncoded = jsonEncode(backupJson);
 
     GoogleDriveRepository.updateLinkedBackup(backupJsonEncoded).then((_) {

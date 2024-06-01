@@ -1,6 +1,5 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../../model/pokemon_team.dart';
@@ -79,12 +78,12 @@ class SwapList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<CupPokemon> pokemon = context.read<PogoRepository>().getCupPokemon(
-          team.getCup(),
-          types,
-          RankingsCategories.overall,
-          limit: 20,
-        );
+    List<CupPokemon> pokemon = PogoRepository.getCupPokemon(
+      team.getCup(),
+      types,
+      RankingsCategories.overall,
+      limit: 20,
+    );
     return ListView.builder(
       shrinkWrap: true,
       itemCount: pokemon.length,

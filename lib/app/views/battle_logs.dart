@@ -1,6 +1,5 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../../model/pokemon_team.dart';
@@ -109,7 +108,7 @@ class _BattleLogsState extends State<BattleLogs> {
   @override
   Widget build(BuildContext context) {
     final List<OpponentPokemonTeam> opponents =
-        context.read<PogoRepository>().getOpponentTeams(tag: _selectedTag);
+        PogoRepository.getOpponentTeams(tag: _selectedTag);
 
     double winRate = 0.0;
     if (opponents.isNotEmpty) {

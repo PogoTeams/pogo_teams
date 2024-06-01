@@ -26,10 +26,7 @@ class Cup {
     this.uiColor,
   });
 
-  factory Cup.fromJson(
-    Map<String, dynamic> json,
-    PogoRepository pogoRepository,
-  ) {
+  factory Cup.fromJson(Map<String, dynamic> json) {
     final cup = Cup(
       cupId: json['cupId'] as String,
       name: json['name'] as String,
@@ -56,7 +53,7 @@ class Cup {
       cup.excludeFilters.addAll(excludeFilters);
     }
     for (var pokemon in json['rankings']) {
-      final basePokemon = pogoRepository.getPokemonById(pokemon['pokemonId']);
+      final basePokemon = PogoRepository.getPokemonById(pokemon['pokemonId']);
       final rankedPokemon = CupPokemon(
         ratings: Ratings.fromJson(pokemon['ratings']),
         ivs: basePokemon.getIvs(cup.cp),

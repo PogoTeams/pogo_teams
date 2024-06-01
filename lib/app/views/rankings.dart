@@ -2,7 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../ui/sizing.dart';
@@ -43,10 +42,10 @@ class _RankingsState extends State<Rankings> {
 
   RankingsCategories _selectedCategory = RankingsCategories.overall;
 
-  void _onCupChanged(Cup? newCup) async {
-    if (newCup == null) return;
+  void _onCupChanged(String? newCupId) async {
+    if (newCupId == null) return;
 
-    cup = newCup;
+    cup = PogoRepository.getCupById(newCupId);
 
     setState(() {
       _filterCategory(_selectedCategory);
@@ -127,7 +126,7 @@ class _RankingsState extends State<Rankings> {
   void initState() {
     super.initState();
 
-    cup = context.read<PogoRepository>().getCups().first;
+    cup = PogoRepository.getCups().first;
     _filterCategory(_selectedCategory);
 
     // Start listening to changes.

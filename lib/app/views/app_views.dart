@@ -56,7 +56,7 @@ enum AppViews {
   final IconData icon;
   final Widget page;
 
-  static const AppViews defaultView = teams;
+  static AppViews get defaultPage => teams;
 
   static fromIndex(int index) {
     switch (index) {

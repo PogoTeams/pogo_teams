@@ -1,6 +1,5 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../../model/tag.dart';
@@ -47,10 +46,7 @@ class TagFilterButton extends StatelessWidget {
       child: PopupMenuButton<Tag?>(
         onSelected: onTagChanged,
         itemBuilder: (context) {
-          return context
-              .read<PogoRepository>()
-              .getTags()
-              .map<PopupMenuItem<Tag?>>((tag) {
+          return PogoRepository.getTags().map<PopupMenuItem<Tag?>>((tag) {
             return PopupMenuItem<Tag?>(
               value: tag,
               child: Row(

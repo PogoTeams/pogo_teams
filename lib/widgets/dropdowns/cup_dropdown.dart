@@ -1,6 +1,5 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../../model/cup.dart';
@@ -24,7 +23,7 @@ class CupDropdown extends StatefulWidget {
   });
 
   final Cup cup;
-  final void Function(Cup?) onCupChanged;
+  final void Function(String?) onCupChanged;
 
   @override
   State<CupDropdown> createState() => _CupDropdownState();
@@ -34,10 +33,10 @@ class _CupDropdownState extends State<CupDropdown>
     with AutomaticKeepAliveClientMixin {
   // List of dropdown menu items
   late final cupOptions =
-      context.read<PogoRepository>().getCups().map<DropdownMenuItem<Cup>>(
+      PogoRepository.getCups().map<DropdownMenuItem<String>>(
     (Cup cup) {
       return DropdownMenuItem(
-        value: cup,
+        value: cup.cupId,
         child: Center(
           child: Text(
             cup.name,
@@ -81,10 +80,10 @@ class _CupDropdownState extends State<CupDropdown>
 
       // Cup dropdown button
       child: DropdownButtonHideUnderline(
-        child: DropdownButton<Cup>(
+        child: DropdownButton(
           borderRadius: BorderRadius.circular(5),
           isExpanded: true,
-          value: selectedCup,
+          value: selectedCup.cupId,
           icon: const Icon(
             Icons.arrow_drop_down_circle,
           ),

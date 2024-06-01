@@ -3,7 +3,6 @@ import 'dart:math';
 
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local
 import '../../enums/rankings_categories.dart';
@@ -115,12 +114,12 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
         includedTypesKeys,
       );
     }
-    List<CupPokemon> counters = context.read<PogoRepository>().getCupPokemon(
-          _team.getCup(),
-          counterTypes,
-          RankingsCategories.overall,
-          limit: 50,
-        );
+    List<CupPokemon> counters = PogoRepository.getCupPokemon(
+      _team.getCup(),
+      counterTypes,
+      RankingsCategories.overall,
+      limit: 50,
+    );
 
     if (mounted) {
       await Navigator.push(
@@ -190,7 +189,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
               pokemon: pokemonTeam[index],
               context: context,
               onMoveChanged: () {
-                context.read<PogoRepository>().putPokemonTeam(_team);
+                PogoRepository.putPokemonTeam(_team);
                 widget.onTeamChanged();
               },
               lead: ((pokemonTeam[index].teamIndex ?? -1) == 0),
@@ -206,12 +205,12 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
     _leadThreats.clear();
     _overallThreats.clear();
 
-    List<CupPokemon> opponents = context.read<PogoRepository>().getCupPokemon(
-          await _team.getCupAsync(),
-          PokemonTypes.typeList,
-          RankingsCategories.overall,
-          limit: 100,
-        );
+    List<CupPokemon> opponents = PogoRepository.getCupPokemon(
+      await _team.getCupAsync(),
+      PokemonTypes.typeList,
+      RankingsCategories.overall,
+      limit: 100,
+    );
 
     List<BattleResult> losses = [];
 
@@ -269,9 +268,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
               threat.getBase().pokemonId == loss.opponent.pokemonId)) {
         _overallThreats.add(CupPokemon.fromBattlePokemon(
           loss.opponent,
-          context
-              .read<PogoRepository>()
-              .getPokemonById(loss.opponent.pokemonId),
+          PogoRepository.getPokemonById(loss.opponent.pokemonId),
         ));
       }
 
@@ -302,9 +299,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
       for (BattleResult result in leadLosses.getRange(0, len)) {
         _leadThreats.add(CupPokemon.fromBattlePokemon(
           result.opponent,
-          context
-              .read<PogoRepository>()
-              .getPokemonById(result.opponent.pokemonId),
+          PogoRepository.getPokemonById(result.opponent.pokemonId),
         ));
       }
     }
@@ -556,7 +551,7 @@ class _UserTeamAnalysisState extends State<UserTeamAnalysis>
 
   @override
   Widget build(BuildContext context) {
-    _team = context.read<PogoRepository>().getUserTeam(_team.id);
+    _team = PogoRepository.getUserTeam(_team.id);
 
     if (_generateRankings) {
       _generateRankings = false;

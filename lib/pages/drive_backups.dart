@@ -4,7 +4,6 @@ import 'dart:convert';
 
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Packages
 import 'package:googleapis/drive/v3.dart' as drive_api;
@@ -111,9 +110,8 @@ class _DriveBackupsState extends State<DriveBackups> {
                       if (filename.isNotEmpty) {
                         Navigator.of(context).pop();
 
-                        final Map<String, dynamic> backupJson = await context
-                            .read<PogoRepository>()
-                            .exportUserDataToJson();
+                        final Map<String, dynamic> backupJson =
+                            await PogoRepository.exportUserDataToJson();
                         final String backupJsonEncoded = jsonEncode(backupJson);
 
                         setState(
@@ -376,11 +374,9 @@ class _DriveBackupsState extends State<DriveBackups> {
                       'improper formatting');
                 }
 
-                await context.read<PogoRepository>().clearUserData();
+                await PogoRepository.clearUserData();
 
-                await context
-                    .read<PogoRepository>()
-                    .importUserDataFromJson(userDataJson);
+                await PogoRepository.importUserDataFromJson(userDataJson);
                 String message;
                 if (file.name == null) {
                   message = 'The backup was successfully restored.';

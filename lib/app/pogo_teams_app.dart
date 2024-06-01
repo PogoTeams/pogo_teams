@@ -1,11 +1,9 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pogo_teams/app/pogo_data_sync.dart';
-import 'package:pogo_teams/modules/pogo_repository.dart';
+import 'package:pogo_teams/pages/pogo_data_sync.dart';
 
 // Local Imports
-import 'pogo_scaffold/pogo_scaffold.dart';
+import '../pages/pogo_scaffold.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -13,12 +11,7 @@ import 'pogo_scaffold/pogo_scaffold.dart';
 */
 
 class PogoTeamsApp extends StatelessWidget {
-  const PogoTeamsApp({
-    super.key,
-    required this.pogoRepository,
-  });
-
-  final PogoRepository pogoRepository;
+  const PogoTeamsApp({super.key});
 
   static const String _fontFamily = 'Futura';
 
@@ -116,23 +109,20 @@ class PogoTeamsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: pogoRepository,
-      child: MaterialApp(
-        title: 'Pogo Teams',
-        theme: _buildLightTheme(context),
-        darkTheme: _buildDarkTheme(context),
-        themeMode: ThemeMode.dark,
+    return MaterialApp(
+      title: 'Pogo Teams',
+      theme: _buildLightTheme(context),
+      darkTheme: _buildDarkTheme(context),
+      themeMode: ThemeMode.dark,
 
-        routes: {
-          PogoDataSync.routeName: (context) => const PogoDataSync(),
-          PogoScaffold.routeName: (context) => const PogoScaffold(),
-        },
-        initialRoute: PogoDataSync.routeName,
+      routes: {
+        PogoDataSync.routeName: (context) => const PogoDataSync(),
+        PogoScaffold.routeName: (context) => const PogoScaffold(),
+      },
+      initialRoute: PogoDataSync.routeName,
 
-        //Removes the debug banner
-        debugShowCheckedModeBanner: false,
-      ),
+      //Removes the debug banner
+      debugShowCheckedModeBanner: false,
     );
   }
 }

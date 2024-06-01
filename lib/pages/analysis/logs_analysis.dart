@@ -1,6 +1,5 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../../widgets/pokemon_list.dart';
@@ -49,17 +48,16 @@ class LogsAnalysis extends StatelessWidget {
 
   // Build a list of counters to the logged opponent teams
   Future<Widget> _buildCountersList(
-    BuildContext context,
     List<Pair<PokemonType, double>> defenseThreats,
   ) async {
     final counterTypes = defenseThreats.map((typeData) => typeData.a).toList();
 
-    List<CupPokemon> counters = context.read<PogoRepository>().getCupPokemon(
-          team.getCup(),
-          counterTypes,
-          RankingsCategories.overall,
-          limit: 50,
-        );
+    List<CupPokemon> counters = PogoRepository.getCupPokemon(
+      team.getCup(),
+      counterTypes,
+      RankingsCategories.overall,
+      limit: 50,
+    );
 
     return PokemonColumn(
       pokemon: counters,
@@ -92,7 +90,7 @@ class LogsAnalysis extends StatelessWidget {
 
             // A list of top counters to the logged opponent teams
             FutureBuilder(
-              future: _buildCountersList(context, defenseThreats),
+              future: _buildCountersList(defenseThreats),
               builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                 if (snapshot.hasData) {
                   return snapshot.data!;

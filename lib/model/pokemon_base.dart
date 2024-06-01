@@ -33,8 +33,7 @@ class PokemonBase {
   });
 
   factory PokemonBase.fromJson(
-    Map<String, dynamic> json,
-    PogoRepository pogoRepository, {
+    Map<String, dynamic> json, {
     bool shadowForm = false,
   }) {
     if (json['pokemonId'] == 'swampert_shadow') {
@@ -88,31 +87,31 @@ class PokemonBase {
 
     if (json.containsKey('fastMoves')) {
       for (var moveId in List<String>.from(json['fastMoves'])) {
-        pokemonBase.fastMoves.add(pogoRepository.getFastMoveById(moveId));
+        pokemonBase.fastMoves.add(PogoRepository.getFastMoveById(moveId));
       }
     }
 
     if (json.containsKey('chargeMoves')) {
       for (var moveId in List<String>.from(json['chargeMoves'])) {
-        pokemonBase.chargeMoves.add(pogoRepository.getChargeMoveById(moveId));
+        pokemonBase.chargeMoves.add(PogoRepository.getChargeMoveById(moveId));
       }
     }
 
     if (json.containsKey('eliteFastMoves')) {
       for (var moveId in List<String>.from(json['eliteFastMoves'])) {
-        pokemonBase.fastMoves.add(pogoRepository.getFastMoveById(moveId));
+        pokemonBase.fastMoves.add(PogoRepository.getFastMoveById(moveId));
       }
     }
 
     if (json.containsKey('eliteChargeMoves')) {
       for (var moveId in List<String>.from(json['eliteChargeMoves'])) {
-        pokemonBase.chargeMoves.add(pogoRepository.getChargeMoveById(moveId));
+        pokemonBase.chargeMoves.add(PogoRepository.getChargeMoveById(moveId));
       }
     }
 
     if (json.containsKey('shadow') && json['shadow']['released']) {
       final moveId = json['shadow']['purifiedChargeMove'];
-      pokemonBase.chargeMoves.add(pogoRepository.getChargeMoveById(moveId));
+      pokemonBase.chargeMoves.add(PogoRepository.getChargeMoveById(moveId));
     }
 
     return pokemonBase;

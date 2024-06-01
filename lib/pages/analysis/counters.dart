@@ -1,6 +1,5 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../../app/ui/sizing.dart';
@@ -92,7 +91,7 @@ class _PokemonCountersListState extends State<PokemonCountersList> {
 
   @override
   Widget build(BuildContext context) {
-    _team = context.read<PogoRepository>().getUserTeam(_team.id);
+    _team = PogoRepository.getUserTeam(_team.id);
 
     return Scaffold(
       body: SafeArea(

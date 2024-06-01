@@ -1,6 +1,5 @@
 // Flutter
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Local Imports
 import '../../model/pokemon.dart';
@@ -158,7 +157,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
       onPokemonSelected: (Pokemon pokemon) {
         UserPokemon userPokemon = UserPokemon.fromPokemon(pokemon);
         _team.setPokemonAt(_builderIndex, userPokemon);
-        context.read<PogoRepository>().putPokemonTeam(_team);
+        PogoRepository.putPokemonTeam(_team);
         _updateWorkingIndex(_builderIndex + 1);
 
         if (widget.onTeamChanged != null) {
@@ -186,10 +185,10 @@ class _TeamBuilderState extends State<TeamBuilder> {
   }
 
   void _saveTeam() {
-    _team.setCup(_cup);
-    context.read<PogoRepository>().putPokemonTeam(
-          _team,
-        );
+    _team.setCupById(_cup.cupId);
+    PogoRepository.putPokemonTeam(
+      _team,
+    );
     if (widget.onTeamChanged != null) {
       widget.onTeamChanged!(_builderIndex);
     } else {
@@ -207,11 +206,11 @@ class _TeamBuilderState extends State<TeamBuilder> {
   }
 
   // When the cup is changed, set the filter the new Pokemon rankings list
-  void _onCupChanged(Cup? newCup) {
+  void _onCupChanged(String? newCup) {
     if (newCup == null) return;
 
     setState(() {
-      _cup = newCup;
+      _cup = PogoRepository.getCupById(newCup);
       _filterCategory(_selectedCategory);
     });
     if (widget.onTeamChanged != null) widget.onTeamChanged!(_builderIndex);
@@ -225,7 +224,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
     }
 
     _team.setTeamSize(newSize);
-    context.read<PogoRepository>().putPokemonTeam(_team);
+    PogoRepository.putPokemonTeam(_team);
     if (widget.onTeamChanged != null) {
       widget.onTeamChanged!(_builderIndex);
     } else {

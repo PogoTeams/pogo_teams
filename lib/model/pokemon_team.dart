@@ -16,16 +16,13 @@ abstractions manage the data that a user creates and modifies in the app.
 // The data model for a Pokemon PVP Team
 // Every team page manages one instance of this class
 class PokemonTeam {
-  PokemonTeam({required this.cup});
+  PokemonTeam();
 
   int id = -1;
 
   DateTime? dateCreated;
   bool locked = false;
   int teamSize = 3;
-
-  // The selected PVP cup for this team
-  Cup cup;
 
   // The list of pokemon managed by this team
   List<UserPokemon> pokemonTeam = List<UserPokemon>.empty(growable: true);
@@ -44,6 +41,9 @@ class PokemonTeam {
   List<double> getTeamTypeffectiveness() {
     return PokemonTypes.getNetEffectiveness(getOrderedPokemonList());
   }
+
+  // The selected PVP cup for this team
+  Cup cup = PogoRepository.getCups().first;
 
   List<UserPokemon> getPokemonTeam() {
     return pokemonTeam;
@@ -94,8 +94,8 @@ class PokemonTeam {
   }
 
   // Switch to a different cup with the specified cupTitle
-  void setCup(Cup newCup) {
-    cup = newCup;
+  void setCupById(String cupId) {
+    cup = PogoRepository.getCupById(cupId);
     for (UserPokemon pokemon in getPokemonTeam()) {
       pokemon.initializeStats(getCup().cp);
     }
@@ -164,14 +164,12 @@ class PokemonTeam {
   }
 
   static List<UserPokemon> _pokemonTeamFromJson(
-    List<Map<String, dynamic>> jsonArray,
-    PogoRepository pogoRepository,
-  ) {
+      List<Map<String, dynamic>> jsonArray) {
     List<UserPokemon> pokemonTeam = [];
 
     for (var json in jsonArray) {
       final UserPokemon pokemon = UserPokemon.fromJson(json);
-      pokemon.base = pogoRepository.getPokemonById(json['pokemonId'] as String);
+      pokemon.base = PogoRepository.getPokemonById(json['pokemonId'] as String);
       pokemonTeam.add(pokemon);
     }
 
@@ -181,30 +179,25 @@ class PokemonTeam {
 
 // A user's team
 class UserPokemonTeam extends PokemonTeam {
-  UserPokemonTeam({required super.cup});
+  UserPokemonTeam();
 
-  factory UserPokemonTeam.fromJson(
-    Map<String, dynamic> json,
-    PogoRepository pogoRepository,
-  ) {
-    final userPokemonTeam =
-        UserPokemonTeam(cup: pogoRepository.getCupById(json['cup'] as String))
-          ..id = json['id'] as int
-          ..dateCreated = DateTime.tryParse(json['dateCreated'] ?? '')
-          ..locked = json['locked'] as bool
-          ..teamSize = json['teamSize'] as int
-          ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(
-            List<Map<String, dynamic>>.from(json['pokemonTeam']),
-            pogoRepository,
-          );
+  factory UserPokemonTeam.fromJson(Map<String, dynamic> json) {
+    final userPokemonTeam = UserPokemonTeam()
+      ..id = json['id'] as int
+      ..dateCreated = DateTime.tryParse(json['dateCreated'] ?? '')
+      ..locked = json['locked'] as bool
+      ..teamSize = json['teamSize'] as int
+      ..cup = PogoRepository.getCupById(json['cup'] as String)
+      ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(
+          List<Map<String, dynamic>>.from(json['pokemonTeam']));
 
     if (json.containsKey('tag')) {
-      userPokemonTeam.tag = pogoRepository.getTagByName(json['tag']);
+      userPokemonTeam.tag = PogoRepository.getTagByName(json['tag']);
     }
 
     for (var opponentJson in json['opponents']) {
       userPokemonTeam.opponents.add(
-        OpponentPokemonTeam.fromJson(opponentJson, pogoRepository),
+        OpponentPokemonTeam.fromJson(opponentJson),
       );
     }
 
@@ -261,25 +254,19 @@ class UserPokemonTeam extends PokemonTeam {
 
 // A logged opponent team
 class OpponentPokemonTeam extends PokemonTeam {
-  OpponentPokemonTeam({required super.cup}) {
+  OpponentPokemonTeam() {
     locked = true;
   }
 
-  factory OpponentPokemonTeam.fromJson(
-    Map<String, dynamic> json,
-    PogoRepository pogoRepository,
-  ) {
-    final userPokemonTeam = OpponentPokemonTeam(
-        cup: pogoRepository.getCupById(json['cup'] as String))
+  factory OpponentPokemonTeam.fromJson(Map<String, dynamic> json) {
+    final userPokemonTeam = OpponentPokemonTeam()
       ..id = json['id'] as int
       ..dateCreated = DateTime.tryParse(json['dateCreated'] ?? '')
       ..locked = json['locked'] as bool
       ..teamSize = json['teamSize'] as int
       ..battleOutcome = _fromOutcomeName(json['battleOutcome'])
-      ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(
-        json['pokemonTeam'],
-        pogoRepository,
-      );
+      ..cup = PogoRepository.getCupById(json['cup'] as String)
+      ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(json['pokemonTeam']);
 
     return userPokemonTeam;
   }
