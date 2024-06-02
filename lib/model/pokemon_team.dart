@@ -1,4 +1,6 @@
 // Local Imports
+import 'dart:convert';
+
 import 'pokemon.dart';
 import 'cup.dart';
 import 'tag.dart';
@@ -189,13 +191,14 @@ class UserPokemonTeam extends PokemonTeam {
       ..teamSize = json['teamSize'] as int
       ..cup = PogoRepository.getCupById(json['cup'] as String)
       ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(
-          List<Map<String, dynamic>>.from(json['pokemonTeam']));
+          List<Map<String, dynamic>>.from(jsonDecode(json['pokemonTeam'])));
 
     if (json.containsKey('tag')) {
       userPokemonTeam.tag = PogoRepository.getTagByName(json['tag']);
     }
 
-    for (var opponentJson in json['opponents']) {
+    for (var opponentJson
+        in List<Map<String, dynamic>>.from(jsonDecode(json['opponents']))) {
       userPokemonTeam.opponents.add(
         OpponentPokemonTeam.fromJson(opponentJson),
       );
@@ -211,8 +214,8 @@ class UserPokemonTeam extends PokemonTeam {
       'locked': locked,
       'teamSize': teamSize,
       'cup': getCup().cupId,
-      'pokemonTeam': _pokemonTeamToJson(),
-      'opponents': _opponentsToJson(),
+      'pokemonTeam': jsonEncode(_pokemonTeamToJson()),
+      'opponents': jsonEncode(_opponentsToJson()),
     };
 
     if (getTag() != null) {
@@ -266,7 +269,8 @@ class OpponentPokemonTeam extends PokemonTeam {
       ..teamSize = json['teamSize'] as int
       ..battleOutcome = _fromOutcomeName(json['battleOutcome'])
       ..cup = PogoRepository.getCupById(json['cup'] as String)
-      ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(json['pokemonTeam']);
+      ..pokemonTeam =
+          PokemonTeam._pokemonTeamFromJson(jsonDecode(json['pokemonTeam']));
 
     return userPokemonTeam;
   }

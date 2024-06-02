@@ -82,10 +82,11 @@ class Sizing {
   static const double fabCircular = fabMediumHeight;
   static const double borderWidth = 3.0;
   static const double borderWidthThin = 1.1;
+  static const double maxNodeHeight = 20.0;
 
   static double modalDrawerWidth(BuildContext context) =>
       screenWidth(context) * .8;
-  static const double collapsedDrawerWidth = 90.0;
+  static const double collapsedDrawerWidth = 75.0;
 
   /// https://m3.material.io/components/top-app-bar/specs
   static const AppBarSizing smallTopAppBar = AppBarSizing(

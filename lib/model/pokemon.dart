@@ -1,5 +1,6 @@
-
 // Local
+import 'dart:convert';
+
 import 'pokemon_base.dart';
 import 'pokemon_typing.dart';
 import 'move.dart';
@@ -168,7 +169,7 @@ class CupPokemon extends Pokemon {
       'ivs': ivs.toJson(),
       'idealMoveset': {
         'fastMove': selectedFastMoveId,
-        'chargeMoves': selectedChargeMoveIds,
+        'chargeMoves': jsonEncode(selectedChargeMoveIds),
       },
     };
   }
@@ -189,7 +190,8 @@ class UserPokemon extends Pokemon {
       ratings: Ratings.fromJson(json['ratings']),
       ivs: IVs.fromJson(json['ivs']),
       selectedFastMoveId: json['selectedFastMoveId'] as String,
-      selectedChargeMoveIds: List<String>.from(json['selectedChargeMoveIds']),
+      selectedChargeMoveIds:
+          List<String>.from(jsonDecode(json['selectedChargeMoveIds'])),
       teamIndex: json['teamIndex'],
     );
   }
@@ -210,7 +212,7 @@ class UserPokemon extends Pokemon {
       'ratings': ratings.toJson(),
       'ivs': ivs.toJson(),
       'selectedFastMoveId': selectedFastMoveId,
-      'selectedChargeMoveIds': selectedChargeMoveIds,
+      'selectedChargeMoveIds': jsonEncode(selectedChargeMoveIds),
       'teamIndex': teamIndex,
     };
   }

@@ -1,5 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in_web/google_sign_in_web.dart';
 
 // Packages
@@ -16,7 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Restrict view orientation to portrait only
-  //await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   await Hive.initFlutter();
   await PogoRepository.init();

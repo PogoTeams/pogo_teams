@@ -117,6 +117,7 @@ class GoogleDriveRepository {
   }
 
   static Future<void> loadOrCreateBackupFolder() async {
+    print(account?.email);
     if (!await tryFindDriveFolder()) {
       // Create a new backup folder
       final drive_api.File driveFolder = drive_api.File()

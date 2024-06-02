@@ -1,4 +1,6 @@
 // Flutter
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 // Local Imports
@@ -54,11 +56,15 @@ class TeamNode extends StatelessWidget {
       return _buildFocusNodes(context);
     }
 
+    final width = Sizing.screenWidth(context);
+    final height = min(500.0, width);
+
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisSpacing: Sizing.screenWidth(context) * .03,
         mainAxisSpacing: Sizing.screenWidth(context) * .03,
         crossAxisCount: 3,
+        childAspectRatio: width / height,
       ),
       shrinkWrap: true,
       itemCount: team.teamSize,
@@ -146,6 +152,7 @@ class TeamNode extends StatelessWidget {
         // The contents of the team node (Square Nodes and icons)
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
           children: [
             // Optional header build
             if (header != null) header!,

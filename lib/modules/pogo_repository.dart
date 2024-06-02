@@ -179,7 +179,10 @@ class PogoRepository {
               Globals.pogoBucketDomain,
               '${Globals.pogoDataSourcePath}${pathPrefix}rankings/$cupId.json'));
           _rankingsJsonLookup![cupId] = jsonDecode(response);
-        } catch (_) {}
+        } catch (e) {
+          // ignore: avoid_print
+          print(e);
+        }
       }
     }
   }
