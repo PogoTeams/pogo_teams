@@ -16,7 +16,7 @@ class PogoIcons {
   static Widget getPokemonTypeIcon(typeId, {double scale = 1.0}) {
     if (typeId == 'none') return Container();
     return Image.asset(
-      '${'assets/white_type_icons/' + typeId}.png',
+      '${'assets/white_type_icons/$typeId'}.png',
       scale: scale,
     );
   }

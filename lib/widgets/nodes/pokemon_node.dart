@@ -1,6 +1,12 @@
 // Flutter
 import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:pogo_teams/model/pokemon_typing.dart';
+import 'package:pogo_teams/modules/pokemon_types.dart';
+import 'package:pogo_teams/utils/pair.dart';
+import 'package:pogo_teams/widgets/analysis/coverage_grids.dart';
 
 // Local Imports
 import 'empty_node.dart';
@@ -262,14 +268,7 @@ class _SmallNodeBody extends StatelessWidget {
           TraitsIcons(pokemon: pokemon.getBase()),
 
           // Typing icon(s)
-          SizedBox(
-            width: 90.0,
-            height: 45.0,
-            child: Row(
-              children:
-                  PogoIcons.getPokemonTypingIcons(pokemon.getBase().typing),
-            ),
-          ),
+          _PokemonTypingIcons(pokemonTyping: pokemon.getBase().typing),
         ],
       );
     }
@@ -301,13 +300,7 @@ class _SmallNodeBody extends StatelessWidget {
         TraitsIcons(pokemon: pokemon.getBase()),
 
         // Typing icon(s)
-        SizedBox(
-          width: 90.0,
-          height: 45.0,
-          child: Row(
-            children: PogoIcons.getPokemonTypingIcons(pokemon.getBase().typing),
-          ),
-        ),
+        _PokemonTypingIcons(pokemonTyping: pokemon.getBase().typing),
       ],
     );
   }
@@ -381,13 +374,7 @@ class _LargeNodeBody extends StatelessWidget {
               ),
 
         // Typing icon(s)
-        SizedBox(
-          width: 90.0,
-          height: 45.0,
-          child: Row(
-            children: PogoIcons.getPokemonTypingIcons(pokemon.getBase().typing),
-          ),
-        ),
+        _PokemonTypingIcons(pokemonTyping: pokemon.getBase().typing),
       ],
     );
   }
@@ -416,6 +403,235 @@ class _LargeNodeBody extends StatelessWidget {
 
           if (footer != null) footer!,
         ],
+      ),
+    );
+  }
+}
+
+class _PokemonTypingIcons extends StatelessWidget {
+  const _PokemonTypingIcons({required this.pokemonTyping});
+
+  final PokemonTyping pokemonTyping;
+
+  Future _onPressed(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Dialog(
+            insetPadding: EdgeInsets.only(
+              left: Sizing.screenWidth(context) * .02,
+              right: Sizing.screenWidth(context) * .02,
+            ),
+            backgroundColor: Colors.transparent,
+            child: _PokemonTypingDialog(pokemonTyping: pokemonTyping),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 90.0,
+      height: 45.0,
+      child: MaterialButton(
+        padding: EdgeInsets.zero,
+        onPressed: () => _onPressed(context),
+        child: Row(
+          children: PogoIcons.getPokemonTypingIcons(
+            pokemonTyping,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PokemonTypingDialog extends StatelessWidget {
+  const _PokemonTypingDialog({required this.pokemonTyping});
+
+  final PokemonTyping pokemonTyping;
+
+  @override
+  Widget build(BuildContext context) {
+    final defense = PokemonTypes.getDefenseCoverage(
+      pokemonTyping.defenseEffectiveness(),
+      PokemonTypes.typeIndexMap.keys.toList(),
+    );
+
+    return Container(
+      width: min(
+        500.0,
+        Sizing.screenWidth(context),
+      ),
+      padding: Sizing.horizontalAppBarInsets().copyWith(
+        top: 10.0,
+      ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: BorderRadius.circular(25.0),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Defense Effectiveness',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(
+                  Icons.clear_rounded,
+                ),
+              ),
+            ],
+          ),
+          _PokemonTypingCoverage(
+            defense: defense,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PokemonTypingCoverage extends StatelessWidget {
+  const _PokemonTypingCoverage({
+    required this.defense,
+  });
+
+  final List<Pair<PokemonType, double>> defense;
+
+  @override
+  Widget build(BuildContext context) {
+    List<PokemonType> superEffective = defense
+        .where(
+          (t) => t.b >= PokemonTypes.superEffective,
+        )
+        .map((t) => t.a)
+        .toList();
+    List<PokemonType> neutral = defense
+        .where(
+          (t) => t.b == PokemonTypes.neutral,
+        )
+        .map((t) => t.a)
+        .toList();
+    List<PokemonType> notEffective = defense
+        .where(
+          (t) => t.b == PokemonTypes.notEffective,
+        )
+        .map((t) => t.a)
+        .toList();
+    List<PokemonType> immune = defense
+        .where(
+          (t) => t.b == PokemonTypes.immune,
+        )
+        .map((t) => t.a)
+        .toList();
+
+    // List of top defensiveThreats
+    return Column(
+      children: [
+        Sizing.listItemSpacer,
+        _TypeEffectivenessGrids(
+          types: superEffective,
+          gradientColors: const [
+            Color.fromARGB(255, 183, 28, 28),
+            Color.fromARGB(255, 239, 83, 80),
+          ],
+          headingText: 'Super Effective',
+        ),
+        Sizing.listItemSpacer,
+        _TypeEffectivenessGrids(
+          types: neutral,
+          gradientColors: const [
+            Color.fromARGB(255, 151, 151, 151),
+            Color.fromARGB(255, 232, 232, 232),
+          ],
+          headingText: 'Neutral',
+        ),
+        Sizing.listItemSpacer,
+        _TypeEffectivenessGrids(
+          types: superEffective,
+          gradientColors: [Colors.green[900]!, Colors.green[400]!],
+          headingText: 'Not Very Effective',
+        ),
+        Sizing.listItemSpacer,
+      ],
+    );
+  }
+}
+
+class _TypeEffectivenessGrids extends StatelessWidget {
+  const _TypeEffectivenessGrids({
+    required this.types,
+    required this.gradientColors,
+    required this.headingText,
+  });
+
+  final List<PokemonType> types;
+  final List<Color> gradientColors;
+  final String headingText;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: Container(
+        padding: const EdgeInsets.all(12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: gradientColors,
+            tileMode: TileMode.clamp,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  headingText,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleLarge?.apply(
+                        fontStyle: FontStyle.italic,
+                      ),
+                ),
+                Text(
+                  '${types.length} / ${PokemonTypes.typeIndexMap.length}',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ],
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 7.0),
+              // Threat type Icons
+              child: GridView.count(
+                shrinkWrap: true,
+                crossAxisSpacing: Sizing.screenWidth(context) * .001,
+                mainAxisSpacing: Sizing.screenHeight(context) * .005,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 9,
+                children: types
+                    .map((type) => PogoIcons.getPokemonTypeIcon(type.typeId))
+                    .toList(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

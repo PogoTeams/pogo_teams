@@ -1,7 +1,6 @@
 // Flutter
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in_web/google_sign_in_web.dart';
 
 // Packages
 import 'package:hive_flutter/hive_flutter.dart';
