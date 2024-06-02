@@ -44,6 +44,7 @@ class PogoRepository {
     _userPokemonTeamsBox = await Hive.openBox('userPokemonTeams');
     _opponentPokemonTeamsBox = await Hive.openBox('opponentPokemonTeams');
     _tagsBox = await Hive.openBox('tags');
+    //await clearUserData();
   }
 
   static Future<void> clear() async {
@@ -486,8 +487,8 @@ class PogoRepository {
   }
 
   static Future<void> clearUserData() async {
-    tags.clear();
-    userPokemonTeams.clear();
-    opponentPokemonTeams.clear();
+    _tagsBox.clear();
+    _userPokemonTeamsBox.clear();
+    _opponentPokemonTeamsBox.clear();
   }
 }

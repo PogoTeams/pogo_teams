@@ -161,17 +161,19 @@ class PokemonTeam {
   }
 
   // Build and return a json serializable list of the Pokemon Team
-  List<Map<String, dynamic>> _pokemonTeamToJson() {
-    return getPokemonTeam().map((pokemon) => pokemon.toJson()).toList();
+  List<String> _pokemonTeamToJson() {
+    return getPokemonTeam()
+        .map((pokemon) => jsonEncode(pokemon.toJson()))
+        .toList();
   }
 
-  static List<UserPokemon> _pokemonTeamFromJson(
-      List<Map<String, dynamic>> jsonArray) {
+  static List<UserPokemon> _pokemonTeamFromJson(List<String> jsonArray) {
     List<UserPokemon> pokemonTeam = [];
 
     for (var json in jsonArray) {
-      final UserPokemon pokemon = UserPokemon.fromJson(json);
-      pokemon.base = PogoRepository.getPokemonById(json['pokemonId'] as String);
+      final j = jsonDecode(json);
+      final UserPokemon pokemon = UserPokemon.fromJson(j);
+      pokemon.base = PogoRepository.getPokemonById(j['pokemonId']);
       pokemonTeam.add(pokemon);
     }
 
@@ -191,7 +193,7 @@ class UserPokemonTeam extends PokemonTeam {
       ..teamSize = json['teamSize'] as int
       ..cup = PogoRepository.getCupById(json['cup'] as String)
       ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(
-          List<Map<String, dynamic>>.from(jsonDecode(json['pokemonTeam'])));
+          List<String>.from(json['pokemonTeam']));
 
     if (json.containsKey('tag')) {
       userPokemonTeam.tag = PogoRepository.getTagByName(json['tag']);
@@ -214,7 +216,7 @@ class UserPokemonTeam extends PokemonTeam {
       'locked': locked,
       'teamSize': teamSize,
       'cup': getCup().cupId,
-      'pokemonTeam': jsonEncode(_pokemonTeamToJson()),
+      'pokemonTeam': _pokemonTeamToJson(),
       'opponents': jsonEncode(_opponentsToJson()),
     };
 
@@ -269,8 +271,8 @@ class OpponentPokemonTeam extends PokemonTeam {
       ..teamSize = json['teamSize'] as int
       ..battleOutcome = _fromOutcomeName(json['battleOutcome'])
       ..cup = PogoRepository.getCupById(json['cup'] as String)
-      ..pokemonTeam =
-          PokemonTeam._pokemonTeamFromJson(jsonDecode(json['pokemonTeam']));
+      ..pokemonTeam = PokemonTeam._pokemonTeamFromJson(
+          List<String>.from(json['pokemonTeam']));
 
     return userPokemonTeam;
   }
