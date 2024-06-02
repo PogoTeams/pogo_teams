@@ -132,6 +132,14 @@ class PokemonTypes {
         .toList();
   }
 
+  static List<PokemonType> generateTypeList(List<String> typeKeys) {
+    return typeKeys
+        .map(
+          (typeKey) => typeMap[typeKey]!,
+        )
+        .toList();
+  }
+
   // Get a list of types given the effectiveness and types to include
   // Used in analyzing team type coverages
   static List<Pair<PokemonType, double>> getDefenseCoverage(

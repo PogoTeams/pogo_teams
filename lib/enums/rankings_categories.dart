@@ -4,7 +4,7 @@ This enum expresses different categories for how Pokemon are ranked in a cup.
 -------------------------------------------------------------------------------
 */
 
-enum RankingsCategories { overall, leads, switches, closers, dex }
+enum RankingsCategories { overall, leads, switches, closers, dex, smart }
 
 extension RankingsCategoriesExt on RankingsCategories {
   String get displayName {
@@ -19,6 +19,8 @@ extension RankingsCategoriesExt on RankingsCategories {
         return 'closers';
       case RankingsCategories.dex:
         return 'dex';
+      case RankingsCategories.smart:
+        return 'smart';
     }
   }
 }

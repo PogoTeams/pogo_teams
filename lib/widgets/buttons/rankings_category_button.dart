@@ -19,11 +19,13 @@ class RankingsCategoryButton extends StatelessWidget {
     required this.onSelected,
     required this.selectedCategory,
     this.dex = false,
+    this.smart = false,
   });
 
   final void Function(RankingsCategories) onSelected;
   final RankingsCategories selectedCategory;
   final bool dex;
+  final bool smart;
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +86,18 @@ class RankingsCategoryButton extends StatelessWidget {
                 value: RankingsCategories.dex,
                 child: PopupItem(
                   category: RankingsCategories.dex,
+                  selectedCategory: selectedCategory,
+                ),
+              ),
+            );
+          }
+
+          if (smart) {
+            items.add(
+              PopupMenuItem<RankingsCategories>(
+                value: RankingsCategories.smart,
+                child: PopupItem(
+                  category: RankingsCategories.smart,
                   selectedCategory: selectedCategory,
                 ),
               ),

@@ -1,5 +1,14 @@
 // Flutter
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:pogo_teams/app/views/app_views.dart';
+import 'package:pogo_teams/battle/battle_result.dart';
+import 'package:pogo_teams/model/battle_pokemon.dart';
+import 'package:pogo_teams/model/pokemon_typing.dart';
+import 'package:pogo_teams/modules/pokemon_types.dart';
+import 'package:pogo_teams/ranker/pokemon_ranker.dart';
+import 'package:pogo_teams/ranker/ranking_data.dart';
 
 // Local Imports
 import '../../model/pokemon.dart';
@@ -165,6 +174,9 @@ class _TeamBuilderState extends State<TeamBuilder> {
         } else {
           setState(() {});
         }
+        if (_selectedCategory == RankingsCategories.smart) {
+          _filterCategory(_selectedCategory);
+        }
       },
     );
   }
@@ -237,9 +249,155 @@ class _TeamBuilderState extends State<TeamBuilder> {
   void _filterCategory(RankingsCategories rankingsCategory) async {
     _selectedCategory = rankingsCategory;
 
-    _pokemon = _cup.getCupPokemonList(rankingsCategory);
+    if (_team.getOrderedPokemonList().isNotEmpty &&
+        _selectedCategory == RankingsCategories.smart) {
+      _pokemon = await _getSmartCupPokemonList();
+    } else {
+      _pokemon = _cup.getCupPokemonList(rankingsCategory);
+    }
 
     _filterPokemonList();
+  }
+
+  Future<List<CupPokemon>> _getSmartCupPokemonList() async {
+    final Map<int, RankingData> teamRankingData = {};
+    final List<CupPokemon> leadThreats = [];
+    final List<CupPokemon> overallThreats = [];
+
+    List<CupPokemon> opponents = PogoRepository.getCupPokemon(
+      _team.cup,
+      PokemonTypes.generateTypeList(
+        _team.cup.includedTypeKeys(),
+      ),
+      RankingsCategories.overall,
+      limit: 100,
+    );
+
+    List<BattleResult> losses = [];
+
+    // Simulate battles against the top meta for this cup
+    for (UserPokemon pokemon in _team.getOrderedPokemonList()) {
+      BattlePokemon battlePokemon =
+          await BattlePokemon.fromPokemonAsync(await pokemon.getBaseAsync())
+            ..selectedBattleFastMove = await pokemon.getSelectedFastMoveAsync()
+            ..selectedBattleChargeMoves =
+                await pokemon.getSelectedChargeMovesAsync();
+
+      battlePokemon.initializeStats(_team.cup.cp);
+
+      int pokemonIndex = pokemon.teamIndex ?? -1;
+      if (pokemonIndex != -1) {
+        teamRankingData[pokemon.teamIndex ?? 0] = await PokemonRanker.rankApp(
+          battlePokemon,
+          _team.cup,
+          opponents,
+        );
+
+        // Accumulate lead outcomes
+        int len =
+            min(10, teamRankingData[pokemonIndex]!.leadOutcomes!.losses.length);
+        losses.addAll(teamRankingData[pokemonIndex]!
+            .leadOutcomes!
+            .losses
+            .getRange(0, len));
+
+        // Accumulate switch outcomes
+        len = min(
+            10, teamRankingData[pokemonIndex]!.switchOutcomes!.losses.length);
+        losses.addAll(teamRankingData[pokemonIndex]!
+            .switchOutcomes!
+            .losses
+            .getRange(0, len));
+
+        // Accumulate closer outcomes
+        len = min(
+            10, teamRankingData[pokemonIndex]!.closerOutcomes!.losses.length);
+        losses.addAll(teamRankingData[pokemonIndex]!
+            .closerOutcomes!
+            .losses
+            .getRange(0, len));
+      }
+    }
+
+    losses.sort((loss1, loss2) =>
+        loss2.opponent.currentRating > loss1.opponent.currentRating ? -1 : 1);
+
+    for (BattleResult loss in losses) {
+      // Avoid adding duplicate Pokemon
+      if (-1 ==
+          overallThreats.indexWhere((threat) =>
+              threat.getBase().pokemonId == loss.opponent.pokemonId)) {
+        overallThreats.add(CupPokemon.fromBattlePokemon(
+          loss.opponent,
+          PogoRepository.getPokemonById(loss.opponent.pokemonId),
+        ));
+      }
+
+      if (overallThreats.length == 20) break;
+    }
+
+    // If the user's team has a lead Pokemon
+    if (teamRankingData.containsKey(0)) {
+      List<BattleResult> leadLosses = teamRankingData[0]!.leadOutcomes!.losses;
+      // Scale opponent's outcome rating to it's rating against the meta.
+      /*
+      for (BattleResult result in leadLosses) {
+        int i = opponents.indexWhere((pokemon) =>
+            pokemon.getBase().pokemonId == result.opponent.pokemonId);
+        if (i == -1) {
+          result.opponent.currentRating = 0;
+        } else {
+          result.opponent.currentRating *= opponents[i].ratings.lead;
+        }
+      }
+
+      // Resort the losses after scaling
+      leadLosses.sort((r1, r2) =>
+          (r2.opponent.currentRating > r1.opponent.currentRating ? -1 : 1));
+          */
+
+      int len = min(leadLosses.length, 20);
+      for (BattleResult result in leadLosses.getRange(0, len)) {
+        leadThreats.add(CupPokemon.fromBattlePokemon(
+          result.opponent,
+          PogoRepository.getPokemonById(result.opponent.pokemonId),
+        ));
+      }
+    }
+
+    return overallThreats;
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: IconButton(
+        onPressed: () => Navigator.pop(
+          context,
+        ),
+        icon: const Icon(Icons.arrow_back_ios),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Page title
+          Text(
+            'Team Builder',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+
+          // Spacer
+          SizedBox(
+            width: Sizing.screenWidth(context) * .03,
+          ),
+
+          // Page icon
+          const Icon(
+            Icons.build_circle,
+            size: Sizing.icon3,
+          ),
+        ],
+      ),
+    );
   }
 
   // Setup the input controller
@@ -281,6 +439,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
     }
 
     return Scaffold(
+      appBar: isExpanded ? _buildAppBar() : null,
       body: SafeArea(
         bottom: false,
         child: Padding(
@@ -292,11 +451,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
               if (isExpanded)
                 Flexible(
                   flex: 1,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints.tightFor(
-                        height: Sizing.screenHeight(context) * .5),
-                    child: _buildTeamNode(),
-                  ),
+                  child: _buildTeamNode(),
                 ),
               if (isExpanded) Sizing.paneSpacer,
               Flexible(
@@ -330,6 +485,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
                             onSelected: _filterCategory,
                             selectedCategory: _selectedCategory,
                             dex: true,
+                            smart: true,
                           ),
                         ),
                       ],
@@ -348,23 +504,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
           ),
         ),
       ),
-      floatingActionButton: SafeArea(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Flexible(
-              flex: 1,
-              child: _buildFloatingActionButton(),
-            ),
-            if (isExpanded)
-              Flexible(
-                flex: 1,
-                child: Container(),
-              ),
-          ],
-        ),
-      ),
+      floatingActionButton: isExpanded ? null : _buildFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
