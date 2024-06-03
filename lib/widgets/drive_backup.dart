@@ -24,9 +24,11 @@ class DriveBackup extends StatefulWidget {
   const DriveBackup({
     super.key,
     required this.isCollapsed,
+    required this.onBackupRestored,
   });
 
   final bool isCollapsed;
+  final Function() onBackupRestored;
 
   @override
   State<DriveBackup> createState() => _DriveBackupState();
@@ -55,7 +57,9 @@ class _DriveBackupState extends State<DriveBackup> {
           child: Dialog(
             insetPadding: Sizing.horizontalWindowInsets(context),
             backgroundColor: Colors.transparent,
-            child: const DriveBackups(),
+            child: DriveBackups(
+              onBackupRestored: widget.onBackupRestored,
+            ),
           ),
         );
       },
@@ -64,7 +68,7 @@ class _DriveBackupState extends State<DriveBackup> {
   }
 
   Future _onSyncBackup() async {
-    if (!GoogleDriveRepository.isSignedIn) return;
+    if (!await GoogleDriveRepository.isSignedIn()) return;
 
     setState(() {
       _syncBackup = const _SyncButton(onPressed: null);
@@ -102,63 +106,106 @@ class _DriveBackupState extends State<DriveBackup> {
     return SizedBox(
       height: Sizing.screenHeight(context) * .27,
       width: double.infinity,
-      child: GoogleDriveRepository.isSignedIn
+      child: GoogleDriveRepository.account != null
           ? DrawerHeader(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SizedBox(
-                      width: Sizing.screenHeight(context) * .1,
-                      height: Sizing.screenHeight(context) * .1,
-                      child: GoogleUserCircleAvatar(
-                        identity: GoogleDriveRepository.account!,
+                  widget.isCollapsed
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GoogleUserCircleAvatar(
+                              identity: GoogleDriveRepository.account!,
+                            ),
+                            Sizing.listItemSpacer,
+                            if (GoogleDriveRepository.linkedBackupFile != null)
+                              _syncBackup,
+                            if (GoogleDriveRepository.linkedBackupFile != null)
+                              Sizing.listItemSpacer,
+                            ElevatedButton(
+                              onPressed: _onLinkBackupFilePressed,
+                              style: ButtonStyle(
+                                padding:
+                                    MaterialStateProperty.all(EdgeInsets.zero),
+                                shape: MaterialStateProperty.all(
+                                    const CircleBorder()),
+                              ),
+                              child: Icon(
+                                Icons.backup_rounded,
+                                color: Theme.of(context).iconTheme.color,
+                                size: Sizing.icon3,
+                              ),
+                            ),
+                            Sizing.listItemSpacer,
+                            ElevatedButton(
+                              onPressed: _signOut,
+                              style: ButtonStyle(
+                                padding:
+                                    MaterialStateProperty.all(EdgeInsets.zero),
+                                shape: MaterialStateProperty.all(
+                                    const CircleBorder()),
+                              ),
+                              child: Icon(
+                                Icons.logout,
+                                color: Theme.of(context).iconTheme.color,
+                                size: Sizing.icon3,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GoogleUserCircleAvatar(
+                              identity: GoogleDriveRepository.account!,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (GoogleDriveRepository.linkedBackupFile !=
+                                    null)
+                                  _syncBackup,
+                                ElevatedButton(
+                                  onPressed: _onLinkBackupFilePressed,
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all(
+                                        const CircleBorder()),
+                                  ),
+                                  child: Icon(
+                                    Icons.backup_rounded,
+                                    color: Theme.of(context).iconTheme.color,
+                                    size: Sizing.icon3,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: _signOut,
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all(
+                                        const CircleBorder()),
+                                  ),
+                                  child: Icon(
+                                    Icons.logout,
+                                    color: Theme.of(context).iconTheme.color,
+                                    size: Sizing.icon3,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                  if (!widget.isCollapsed)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        GoogleDriveRepository.linkedBackupFile == null
+                            ? 'Linked Backup: none'
+                            : 'Linked Backup: ${GoogleDriveRepository.linkedBackupFile!.nameWithoutExtension}\nLast Modified: ${DateFormat.yMMMMd().add_jm().format(GoogleDriveRepository.linkedBackupFile!.modifiedTime!.toLocal())}',
+                        style: Theme.of(context).textTheme.bodySmall?.apply(
+                              fontStyle: FontStyle.italic,
+                            ),
                       ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      GoogleDriveRepository.linkedBackupFile == null
-                          ? 'Linked Backup: none'
-                          : 'Linked Backup: ${GoogleDriveRepository.linkedBackupFile!.nameWithoutExtension}\nLast Modified: ${DateFormat.yMMMMd().add_jm().format(GoogleDriveRepository.linkedBackupFile!.modifiedTime!.toLocal())}',
-                      style: Theme.of(context).textTheme.bodySmall?.apply(
-                            fontStyle: FontStyle.italic,
-                          ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (GoogleDriveRepository.linkedBackupFile != null)
-                        _syncBackup,
-                      ElevatedButton(
-                        onPressed: _onLinkBackupFilePressed,
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all(const CircleBorder()),
-                        ),
-                        child: Icon(
-                          Icons.backup_rounded,
-                          color: Theme.of(context).iconTheme.color,
-                          size: Sizing.icon3,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: _signOut,
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all(const CircleBorder()),
-                        ),
-                        child: Icon(
-                          Icons.logout,
-                          color: Theme.of(context).iconTheme.color,
-                          size: Sizing.icon3,
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             )
@@ -233,6 +280,7 @@ class __SyncButtonState extends State<_SyncButton>
     return ElevatedButton(
       onPressed: widget.onPressed ?? () {},
       style: ButtonStyle(
+        padding: MaterialStateProperty.all(EdgeInsets.zero),
         shape: MaterialStateProperty.all(const CircleBorder()),
       ),
       child: RotationTransition(

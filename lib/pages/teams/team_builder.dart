@@ -225,6 +225,10 @@ class _TeamBuilderState extends State<TeamBuilder> {
       _cup = PogoRepository.getCupById(newCup);
       _filterCategory(_selectedCategory);
     });
+
+    _team.cup = _cup;
+    PogoRepository.putPokemonTeam(_team);
+
     if (widget.onTeamChanged != null) widget.onTeamChanged!(_builderIndex);
   }
 
@@ -373,6 +377,7 @@ class _TeamBuilderState extends State<TeamBuilder> {
       leading: IconButton(
         onPressed: () => Navigator.pop(
           context,
+          _team,
         ),
         icon: const Icon(Icons.arrow_back_ios),
       ),

@@ -1,12 +1,12 @@
 // Flutter
 import 'package:flutter/material.dart';
+import 'package:pogo_teams/pages/pogo_data_sync.dart';
 
 // Local Imports
 import '../../widgets/dialogs.dart';
 import '../../modules/pogo_repository.dart';
 import '../ui/sizing.dart';
 import '../../widgets/buttons/gradient_button.dart';
-import 'app_views.dart';
 
 /*
 -------------------------------------------------------------------- @PogoTeams
@@ -56,11 +56,20 @@ class _SettingsState extends State<Settings> {
       await PogoRepository.clearUserData();
 
       if (mounted) {
-        processFinished(
+        await processFinished(
           context,
           'All Local Data Cleared',
           'All Local Pogo Teams data was removed from this device.',
         );
+        if (mounted) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const PogoDataSync(
+                  forceUpdate: true,
+                ),
+              ));
+        }
       }
     }
   }

@@ -17,7 +17,16 @@ class GoogleDriveRepository {
   static List<drive_api.File> backupFiles = [];
 
   static GoogleSignInAccount? account;
-  static bool get isSignedIn => account != null;
+  static Future<bool> isSignedIn() async {
+    if (kIsWeb && account != null) {
+      return await googleSignIn.canAccessScopes(
+        [
+          drive_api.DriveApi.driveScope,
+        ],
+      );
+    }
+    return account != null;
+  }
 
   static late final GoogleSignIn googleSignIn;
 
@@ -45,12 +54,13 @@ class GoogleDriveRepository {
     await trySignInSilently();
   }
 
-  static void _onCurrentUserChanged(GoogleSignInAccount? newAccount) {
+  static void _onCurrentUserChanged(GoogleSignInAccount? newAccount) async {
     account = newAccount;
+    await googleSignIn.requestScopes([drive_api.DriveApi.driveScope]);
   }
 
   static Future<void> tryLoadLinkedBackupFile() async {
-    if (!isSignedIn || backupFiles.isEmpty) return;
+    if (!await isSignedIn() || backupFiles.isEmpty) return;
 
     String? id = await _cache.get('${account?.id}_linked_backup_file_id');
 
@@ -61,7 +71,7 @@ class GoogleDriveRepository {
   }
 
   static Future<void> putLinkedBackupFile() async {
-    if (!isSignedIn) return;
+    if (!await isSignedIn()) return;
 
     await _cache.put(
         '${account?.id}_linked_backup_file_id', _linkedBackupFile?.id);
@@ -72,25 +82,23 @@ class GoogleDriveRepository {
   }
 
   static Future<bool> trySignInSilently() async {
-    if (kIsWeb) return false;
-
     account = await googleSignIn.signInSilently();
 
-    if (isSignedIn) {
+    if (await isSignedIn()) {
       await loadBackups();
     }
 
-    return isSignedIn;
+    return isSignedIn();
   }
 
   static Future<bool> signIn() async {
     account = await googleSignIn.signIn();
 
-    if (isSignedIn) {
+    if (await isSignedIn()) {
       await loadBackups();
     }
 
-    return isSignedIn;
+    return isSignedIn();
   }
 
   static Future<void> signOut() async {
@@ -102,22 +110,25 @@ class GoogleDriveRepository {
 
   static Future<bool> tryFindDriveFolder() async {
     final drive = await getDrive();
-    final List<drive_api.File>? files = (await drive.files.list(
-      q: 'appProperties has { key=\'pogo_teams_backup_id\' and'
-          ' value=\'${Globals.driveBackupFolderGuid}\' }',
-    ))
-        .files;
+    try {
+      final List<drive_api.File>? files = (await drive.files.list(
+        q: 'appProperties has { key=\'pogo_teams_backup_id\' and'
+            ' value=\'${Globals.driveBackupFolderGuid}\' }',
+      ))
+          .files;
 
-    // TODO: let the user choose a folder from their drive
-    if (files != null && files.isNotEmpty) {
-      backupFolderId = files.first.id;
+      // TODO: let the user choose a folder from their drive
+      if (files != null && files.isNotEmpty) {
+        backupFolderId = files.first.id;
+      }
+    } catch (e) {
+      print(e);
     }
 
     return backupFolderId != null;
   }
 
   static Future<void> loadOrCreateBackupFolder() async {
-    print(account?.email);
     if (!await tryFindDriveFolder()) {
       // Create a new backup folder
       final drive_api.File driveFolder = drive_api.File()
@@ -150,7 +161,7 @@ class GoogleDriveRepository {
   }
 
   static Future<drive_api.Media?> getBackup(String id) async {
-    if (!isSignedIn) return null;
+    if (!await isSignedIn()) return null;
 
     final drive = await getDrive();
     return await drive.files.get(
@@ -190,7 +201,7 @@ class GoogleDriveRepository {
   static Future updateLinkedBackup(
     String backupJsonEncoded,
   ) async {
-    if (!isSignedIn || linkedBackupFile?.id == null) return;
+    if (!await isSignedIn() || linkedBackupFile?.id == null) return;
 
     final stream = Future.value(backupJsonEncoded.codeUnits)
         .asStream()

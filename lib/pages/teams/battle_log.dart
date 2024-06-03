@@ -307,6 +307,7 @@ class _BattleLogState extends State<BattleLog> {
     setState(() {
       PogoRepository.deleteOpponentPokemonTeam(
           _team.getOpponents().elementAt(teamIndex).id);
+      PogoRepository.putPokemonTeam(_team);
     });
   }
 
@@ -351,7 +352,8 @@ class _BattleLogState extends State<BattleLog> {
     OpponentPokemonTeam? opponent = OpponentPokemonTeam()
       ..dateCreated = DateTime.now().toUtc()
       ..cup = _team.getCup()
-      ..tag = _team.getTag();
+      ..tag = _team.getTag()
+      ..setTeamSize(_team.teamSize);
     PogoRepository.putPokemonTeam(opponent);
 
     opponent = await Navigator.push(

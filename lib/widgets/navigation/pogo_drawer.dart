@@ -106,6 +106,8 @@ class PogoDrawer extends StatelessWidget {
                           ),
                         DriveBackup(
                           isCollapsed: isCollapsed,
+                          onBackupRestored: () =>
+                              onDestinationSelected(AppViews.sync),
                         ),
                         Expanded(
                           child: Column(
@@ -272,7 +274,7 @@ class PogoDrawer extends StatelessWidget {
                             Align(
                               alignment: Alignment.center,
                               child: SizedBox(
-                                width: Sizing.minSelectableTarget,
+                                width: 35.0,
                                 child: IconButton(
                                   padding: EdgeInsets.zero,
                                   onPressed: _launchGitHubUrl,

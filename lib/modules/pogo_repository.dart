@@ -291,15 +291,15 @@ class PogoRepository {
 
   static Future<Map<String, dynamic>> exportUserDataToJson() async {
     final Map<String, dynamic> userDataJson = {};
-    final List<Map<String, dynamic>> teamsJson = [];
-    final List<Map<String, dynamic>> tagsJson = [];
+    final List<String> teamsJson = [];
+    final List<String> tagsJson = [];
 
     for (var team in userPokemonTeams.values) {
-      teamsJson.add(team.toJson());
+      teamsJson.add(jsonEncode(team.toJson()));
     }
 
     for (var tag in tags.values) {
-      tagsJson.add(tag.toJson());
+      tagsJson.add(jsonEncode(tag.toJson()));
     }
 
     userDataJson['teams'] = teamsJson;
@@ -313,22 +313,9 @@ class PogoRepository {
     }
 
     for (var teamEntry in json['teams']) {
-      final team = UserPokemonTeam.fromJson(jsonDecode(teamEntry));
-
-      for (var opponentEntry
-          in List<Map<String, dynamic>>.from(teamEntry['opponents'])) {
-        final opponent = OpponentPokemonTeam.fromJson(opponentEntry);
-
-        if (opponentEntry.containsKey('tag')) {
-          opponent.tag = tags[teamEntry['tag']];
-        }
-
-        team.opponents.add(opponent);
-      }
-
-      if (teamEntry.containsKey('tag')) {
-        team.tag = tags[teamEntry['tag']];
-      }
+      final teamJson = Map<String, dynamic>.from(jsonDecode(teamEntry));
+      final team = UserPokemonTeam.fromJson(teamJson);
+      putPokemonTeam(team);
     }
   }
 
@@ -373,11 +360,19 @@ class PogoRepository {
   }
 
   static void putTag(Tag tag) {
+    _tagsBox.put(tag.name, jsonEncode(tag.toJson()));
     tags[tag.name] = tag;
   }
 
   static void deleteTag(String tagName) async {
     tags.remove(tagName);
+
+    for (var team in userPokemonTeams.values) {
+      if (team.tag?.name == tagName) {
+        team.tag = null;
+        putPokemonTeam(team);
+      }
+    }
   }
 
   static List<PokemonBase> getCupFilteredPokemonList(Cup cup) {

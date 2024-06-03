@@ -26,7 +26,12 @@ using a Google account.
 */
 
 class DriveBackups extends StatefulWidget {
-  const DriveBackups({super.key});
+  const DriveBackups({
+    super.key,
+    required this.onBackupRestored,
+  });
+
+  final Function() onBackupRestored;
 
   @override
   State<DriveBackups> createState() => _DriveBackupsState();
@@ -45,15 +50,18 @@ class _DriveBackupsState extends State<DriveBackups> {
         'All data will be cleared and restored from ${GoogleDriveRepository.linkedBackupFile!.nameWithoutExtension ?? 'this file'}.')) {
       setState(() {
         _refreshBackupsList = true;
-        _beforeLoadBackups = () => _restoreBackup(
-              GoogleDriveRepository.linkedBackupFile!,
-            );
+        _beforeLoadBackups = () async {
+          await _restoreBackup(
+            GoogleDriveRepository.linkedBackupFile!,
+          );
+          widget.onBackupRestored();
+        };
       });
     }
   }
 
   Future<void> _onCreateBackup() async {
-    if (!GoogleDriveRepository.isSignedIn) return;
+    if (GoogleDriveRepository.account == null) return;
     await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -150,7 +158,7 @@ class _DriveBackupsState extends State<DriveBackups> {
   }
 
   Widget _buildScaffoldBody() {
-    if (!GoogleDriveRepository.isSignedIn) return Container();
+    if (GoogleDriveRepository.account == null) return Container();
     return Expanded(
       child: Column(
         children: [
@@ -203,7 +211,7 @@ class _DriveBackupsState extends State<DriveBackups> {
   }
 
   Future<void> _loadBackupFilesFromDrive() async {
-    if (!GoogleDriveRepository.isSignedIn) return;
+    if (!await GoogleDriveRepository.isSignedIn()) return;
 
     if (_beforeLoadBackups != null) {
       await _beforeLoadBackups!();
@@ -277,7 +285,7 @@ class _DriveBackupsState extends State<DriveBackups> {
   }
 
   Widget _buildFloatingActionButtons() {
-    if (GoogleDriveRepository.isSignedIn) {
+    if (GoogleDriveRepository.account != null) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
